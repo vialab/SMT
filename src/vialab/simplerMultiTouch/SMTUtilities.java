@@ -15,11 +15,16 @@ public final class SMTUtilities {
 	private static class TuioTimeComparator implements Comparator<TuioTime> {
 		@Override
 		public int compare(TuioTime timeA, TuioTime timeB) {
-			int temp = Long.compare(timeA.getSeconds(), timeB.getSeconds());
+			Long timeALong = new Long(timeA.getSeconds());
+			int temp = timeALong.compareTo(timeB.getSeconds());
+			// int temp = Long.compare(timeA.getSeconds(), timeB.getSeconds());
 			if (temp != 0) {
 				return temp;
 			}
-			return Long.compare(timeA.getMicroseconds(), timeB.getMicroseconds());
+			timeALong = new Long(timeA.getMicroseconds());
+			// return Long.compare(timeA.getMicroseconds(),
+			// timeB.getMicroseconds());
+			return timeALong.compareTo(timeB.getMicroseconds());
 		}
 	}
 
@@ -35,9 +40,9 @@ public final class SMTUtilities {
 		try {
 			return parent.getClass().getMethod(methodName, parameterTypes);
 		}
-		catch (NoSuchMethodException | SecurityException e) {
-			return null;
-		}
+		catch (NoSuchMethodException e) {}
+		catch (SecurityException e) {}
+		return null;
 	}
 
 	static Method getPMethod(PApplet parent, String methodPrefix, String methodSuffix,
@@ -54,9 +59,9 @@ public final class SMTUtilities {
 			try {
 				return method.invoke(parent, parameters);
 			}
-			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				// e.printStackTrace();
-			}
+			catch (IllegalAccessException e) {}
+			catch (IllegalArgumentException e) {}
+			catch (InvocationTargetException e) {}
 		}
 		return null;
 	}
@@ -70,7 +75,7 @@ public final class SMTUtilities {
 	 * @return TuioCursor
 	 */
 	public static Touch getLastTouch(TuioCursor c, TuioTime lastUpdate) {
-		Vector<TuioPoint> path = new Vector<>(c.getPath());
+		Vector<TuioPoint> path = new Vector<TuioPoint>(c.getPath());
 
 		Collections.reverse(path);
 		// path.remove(0); // this should be the current touch
@@ -89,4 +94,7 @@ public final class SMTUtilities {
 		return null;
 	}
 
+	public static void start(String... args) {
+		PApplet.main(args);
+	}
 }

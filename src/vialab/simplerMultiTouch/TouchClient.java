@@ -32,6 +32,10 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -283,17 +287,41 @@ public class TouchClient {
 		return tuioClient.getTuioObjects();
 	}
 
+	public Touch[] getUnassignedTouches() {
+		Map<Long, Touch> touches = getTouchMap();
+		for (Zone zone : zoneList) {
+			for (Touch touch : zone.getTouches()) {
+				touches.remove(touch.sessionID);
+			}
+		}
+		return touches.values().toArray(new Touch[touches.size()]);
+	}
+
+	public Touch[] getAssignedTouches() {
+		List<Touch> touches = new ArrayList<Touch>();
+		for (Zone zone : zoneList) {
+			for (Touch touch : zone.getTouches()) {
+				touches.add(touch);
+			}
+		}
+		return touches.toArray(new Touch[touches.size()]);
+	}
+
 	/**
 	 * Returns a vector containing all the current Touches(TuioCursors).
 	 * 
 	 * @return Vector<TuioCursor>
 	 */
 	public Touch[] getTouches() {
+		Collection<Touch> touchList = getTouchMap().values();
+		return touchList.toArray(new Touch[touchList.size()]);
+	}
+
+	public Map<Long, Touch> getTouchMap() {
 		Vector<TuioCursor> cursors = tuioClient.getTuioCursors();
-		Touch[] touches = new Touch[cursors.size()];
-		int i = 0;
+		HashMap<Long, Touch> touches = new HashMap<Long, Touch>();
 		for (TuioCursor c : cursors) {
-			touches[i++] = new Touch(c);
+			touches.put(c.getSessionID(), new Touch(c));
 		}
 		return touches;
 	}
@@ -316,12 +344,10 @@ public class TouchClient {
 	// return touches.toArray(new Touch[touches.size()]);
 	// }
 
-	public Zone[] getTouchedZones() {
-		ArrayList<Zone> zones = new ArrayList<>();
-		Touch[] touches = getTouches();
-		for (Touch touch : touches) {
-			Zone zone = picker.pick(touch);
-			if (zone != null) {
+	public Zone[] getActiveZones() {
+		ArrayList<Zone> zones = new ArrayList<Zone>();
+		for (Zone zone : zoneList) {
+			if (zone.isActive()) {
 				zones.add(zone);
 			}
 		}
@@ -332,7 +358,7 @@ public class TouchClient {
 		Set<Long> ids = zone.getIds();
 
 		Vector<TuioCursor> cursors = tuioClient.getTuioCursors();
-		ArrayList<Touch> touches = new ArrayList<>();
+		ArrayList<Touch> touches = new ArrayList<Touch>();
 		for (Long id : ids) {
 			TuioCursor tuioCursor = tuioClient.getTuioCursor(id);
 			if (cursors.contains(tuioCursor)) {
@@ -366,7 +392,7 @@ public class TouchClient {
 
 	public static Touch getPathStartTouch(long s_id) {
 		TuioCursor c = tuioClient.getTuioCursor(s_id);
-		Vector<TuioPoint> path = new Vector<>(c.getPath());
+		Vector<TuioPoint> path = new Vector<TuioPoint>(c.getPath());
 
 		TuioPoint start = path.firstElement();
 		return new Touch(start.getTuioTime(), c.getSessionID(), c.getCursorID(), start.getX(),

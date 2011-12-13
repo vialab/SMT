@@ -25,7 +25,7 @@ public class SMTZonePicker {
 	private Map<Integer, Zone> zonesByPickColor = Collections
 			.synchronizedMap(new LinkedHashMap<Integer, Zone>());
 
-	private SortedSet<Integer> activePickColors = new TreeSet<>();
+	private SortedSet<Integer> activePickColors = new TreeSet<Integer>();
 
 	public SMTZonePicker() {
 		this.applet = TouchClient.parent;
@@ -48,7 +48,8 @@ public class SMTZonePicker {
 	}
 
 	public Zone remove(Zone zone) {
-		return zonesByPickColor.remove(zone);
+		activePickColors.remove(zone.getPickColor());
+		return zonesByPickColor.remove(zone.getPickColor());
 	}
 
 	public Zone pick(TuioCursor t) {

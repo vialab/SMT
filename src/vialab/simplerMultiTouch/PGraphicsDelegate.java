@@ -192,11 +192,6 @@ class PGraphicsDelegate {
 		return pg.canDraw();
 	}
 
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return pg.clone();
-	}
-
 	public final int color(float arg0, float arg1, float arg2, float arg3) {
 		return pg.color(arg0, arg1, arg2, arg3);
 	}
@@ -349,11 +344,6 @@ class PGraphicsDelegate {
 		pg.endShape(arg0);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		return pg.equals(obj);
-	}
-
 	public void fill(float arg0, float arg1, float arg2, float arg3) {
 		pg.fill(arg0, arg1, arg2, arg3);
 	}
@@ -436,11 +426,6 @@ class PGraphicsDelegate {
 
 	public final float green(int arg0) {
 		return pg.green(arg0);
-	}
-
-	@Override
-	public int hashCode() {
-		return pg.hashCode();
 	}
 
 	public void hint(int arg0) {
@@ -984,11 +969,6 @@ class PGraphicsDelegate {
 
 	public void tint(int arg0) {
 		pg.tint(arg0);
-	}
-
-	@Override
-	public String toString() {
-		return pg.toString();
 	}
 
 	public void translate(float arg0, float arg1, float arg2) {

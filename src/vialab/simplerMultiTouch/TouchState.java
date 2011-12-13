@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import TUIO.TuioCursor;
 
 public class TouchState implements Iterable<Touch> {
-	private LinkedHashMap<Long, TuioCursor> idToTouches = new LinkedHashMap<>();
+	private LinkedHashMap<Long, TuioCursor> idToTouches = new LinkedHashMap<Long, TuioCursor>();
 
 	public TouchState() {
 	}
@@ -74,7 +74,7 @@ public class TouchState implements Iterable<Touch> {
 
 	@Override
 	public Iterator<Touch> iterator() {
-		ArrayList<Touch> touches = new ArrayList<>(idToTouches.size());
+		ArrayList<Touch> touches = new ArrayList<Touch>(idToTouches.size());
 		for (TuioCursor tcur : idToTouches.values()) {
 			touches.add(new Touch(tcur));
 		}

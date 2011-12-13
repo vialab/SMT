@@ -61,9 +61,9 @@ public class ImageZone extends Zone {
 		super(name, x, y, width, height);
 		this.img = img;
 
-		beginDraw();
-		image(img, 0, 0, this.width, this.height);
-		endDraw();
+		// beginDraw();
+		// image(img, 0, 0, this.width, this.height);
+		// endDraw();
 	}
 
 	public ImageZone(PImage img, int x, int y, int width, int height) {
@@ -101,8 +101,16 @@ public class ImageZone extends Zone {
 		this.img = img;
 	}
 
+	// @Override
+	// public void draw() {
+	// super.draw();
+	// }
+
 	@Override
-	public void draw() {
-		super.draw();
+	public void beginDraw() {
+		super.beginDraw();
+		background(0);
+		image(img, 0, 0, this.width, this.height);
 	}
+
 }

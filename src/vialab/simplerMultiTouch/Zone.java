@@ -73,7 +73,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	public Map<Long, Touch> activeTouches = Collections
 			.synchronizedMap(new LinkedHashMap<Long, Touch>());
 
-	protected ArrayList<Zone> children = new ArrayList<>();
+	protected ArrayList<Zone> children = new ArrayList<Zone>();
 
 	protected PGraphics drawGraphics;
 
@@ -81,7 +81,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	protected PGraphics touchGraphics;
 
-	private float pickColor = -1;
+	private int pickColor = -1;
 
 	private TuioTime lastUpdate = TuioTime.getSessionTime();
 
@@ -89,11 +89,15 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	private Zone parent = null;
 
+	private float rntRadius;
+
 	protected Method drawMethod = null;
 
 	protected Method pickDrawMethod = null;
 
 	protected Method touchMethod = null;
+
+	private String name = null;
 
 	/**
 	 * Zone constructor
@@ -119,17 +123,28 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		this.height = height;
 		this.width = width;
 
+		this.rntRadius = Math.min(width, height) / 4;
+
 		matrix.translate(x, y);
 	}
 
 	public Zone(String name, int x, int y, int width, int height) {
 		this(x, y, width, height);
+		setName(name);
+	}
 
+	public void setName(String name) {
 		if (name != null) {
 			drawMethod = SMTUtilities.getPMethod(applet, "draw", name, this.getClass());
 			pickDrawMethod = SMTUtilities.getPMethod(applet, "pickDraw", name, this.getClass());
 			touchMethod = SMTUtilities.getPMethod(applet, "touch", name, this.getClass());
 		}
+
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public Collection<Touch> getTouches() {
@@ -138,6 +153,14 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public Set<Long> getIds() {
 		return Collections.unmodifiableSet(activeTouches.keySet());
+	}
+
+	public Map<Long, Touch> getTouchMap() {
+		return Collections.unmodifiableMap(activeTouches);
+	}
+
+	public int getNumTouches() {
+		return activeTouches.size();
 	}
 
 	public boolean isActive() {
@@ -229,11 +252,11 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		matrix.preApply(touchGraphics.getMatrix(new PMatrix3D()));
 	}
 
-	public float getPickColor() {
+	public int getPickColor() {
 		return pickColor;
 	}
 
-	public void setPickColor(float color) {
+	public void setPickColor(int color) {
 		this.pickColor = color;
 	}
 
@@ -339,6 +362,14 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		return this.height;
 	}
 
+	public float getRntRadius() {
+		return rntRadius;
+	}
+
+	public void setRntRadius(float rntRadius) {
+		this.rntRadius = rntRadius;
+	}
+
 	/**
 	 * Tests to see if the x and y coordinates are in the zone. If the zone's
 	 * matrix has been changed, reset its inverse matrix. This method is also
@@ -425,15 +456,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	 * @param dragY
 	 */
 	public void drag(boolean dragX, boolean dragY) {
-		// Touch[] touches = client.getTouchesFromZone(this);
-
 		if (!activeTouches.isEmpty()) {
-			Touch to = getActiveTouch(0);
-			Touch from = SMTUtilities.getLastTouch(to, lastUpdate);
-			if (from == null) {
-				from = to;
-			}
-			drag(from, to, dragX, dragY);
+			List<TouchPair> pairs = getTouchPairs(1);
+			drag(pairs.get(0), dragX, dragY);
 		}
 	}
 
@@ -442,19 +467,28 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public void drag(Touch from, Touch to, boolean dragX, boolean dragY) {
+		drag(new TouchPair(from, to), dragX, dragY);
+	}
+
+	public void drag(TouchPair pair, boolean dragX, boolean dragY) {
+		if (pair.matches()) {
+			lastUpdate = maxTime(pair);
+			return;
+		}
+
 		if (dragX) {
-			translate(to.x - from.x, 0);
+			translate(pair.to.x - pair.from.x, 0);
 		}
 
 		if (dragY) {
-			translate(0, to.y - from.y);
+			translate(0, pair.to.y - pair.from.y);
 		}
 
-		lastUpdate = maxTime(from, to);
+		lastUpdate = maxTime(pair);
 	}
 
 	public void rst() {
-		rst(true, true, true);
+		rst(true, true, true, true);
 	}
 
 	public void rst(boolean rotate, boolean scale, boolean translate) {
@@ -473,16 +507,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	 */
 	public void rst(boolean rotate, boolean scale, boolean translateX, boolean translateY) {
 		if (!activeTouches.isEmpty()) {
-			Touch to1 = getActiveTouch(0);
-			// Touch from1 = TouchClient.getPathStartTouch(to1.sessionID);
-			Touch from1 = SMTUtilities.getLastTouch(to1, lastUpdate);
-
-			Touch to2 = getActiveTouch(1);
-			Touch from2 = null;
-			if (to2 != null) {
-				from2 = SMTUtilities.getLastTouch(to2, lastUpdate);
-			}
-			rst(from1, from2, to1, to2, rotate, scale, translateX, translateY);
+			List<TouchPair> pairs = getTouchPairs(2);
+			rst(pairs.get(0), pairs.get(1), rotate, scale, translateX, translateY);
 		}
 	}
 
@@ -497,17 +523,30 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public void rst(Touch from1, Touch from2, Touch to1, Touch to2, boolean rotate, boolean scale,
 			boolean translateX, boolean translateY) {
-		if (from1 == null) {
-			from1 = to1;
+		rst(new TouchPair(from1, to1), new TouchPair(from2, to2), rotate, scale, translateX,
+				translateY);
+	}
+
+	public void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale,
+			boolean translateX, boolean translateY) {
+
+		if (first.matches() && second.matches()) {
+			// nothing to do
+			lastUpdate = maxTime(first, second);
+			return;
+		}
+
+		if (first.from == null) {
+			first.from = first.to;
 		}
 
 		// PMatrix3D matrix = new PMatrix3D();
 		if (translateX || translateY) {
 			if (translateX) {
-				translate(to1.x, 0);
+				translate(first.to.x, 0);
 			}
 			if (translateY) {
-				translate(0, to1.y);
+				translate(0, first.to.y);
 			}
 		}
 		else {
@@ -518,12 +557,12 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			// centreOfRotation
 		}
 
-		if (from2 != null && to2 != null && (rotate || scale)) {
-			PVector fromVec = new PVector(from2.x, from2.y);
-			fromVec.sub(from1.x, from1.y, 0);
+		if (!second.isEmpty() && !second.isFirst() && (rotate || scale)) {
+			PVector fromVec = second.getFromVec();
+			fromVec.sub(first.getFromVec());
 
-			PVector toVec = new PVector(to2.x, to2.y);
-			toVec.sub(to1.x, to1.y, 0);
+			PVector toVec = second.getToVec();
+			toVec.sub(first.getToVec());
 
 			float toDist = toVec.mag();
 			float fromDist = fromVec.mag();
@@ -543,17 +582,17 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 		if (translateX || translateY) {
 			if (translateX) {
-				translate(-from1.x, 0);
+				translate(-first.from.x, 0);
 			}
 			if (translateY) {
-				translate(0, -from1.y);
+				translate(0, -first.from.y);
 			}
 		}
 		else {
 			// TODO: translate back to the zone's centre
 		}
 
-		lastUpdate = maxTime(from1, from2, to1, to2);
+		lastUpdate = maxTime(first, second);
 	}
 
 	/**
@@ -719,11 +758,27 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 	}
 
+	public void drawRntCircle() {
+		pushStyle();
+		pushMatrix();
+		noFill();
+		strokeWeight(5);
+		stroke(255, 127, 39, 155);
+		ellipseMode(RADIUS);
+		ellipse(width / 2, height / 2, rntRadius, rntRadius);
+		popMatrix();
+		popStyle();
+	}
+
 	public void touch() {
 		touch(true);
 	}
 
 	public void touch(boolean touchChildren) {
+		touchImpl(touchChildren, false);
+	}
+
+	protected void touchImpl(boolean touchChildren, boolean isChild) {
 		if (isActive()) {
 			beginTouch();
 			PGraphics temp = applet.g;
@@ -742,7 +797,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 					child.applyMatrix(matrix);
 					child.endTouch();
 
-					child.touch();
+					child.touchImpl(touchChildren, true);
 
 					child.beginTouch();
 					PMatrix3D inverse = new PMatrix3D();
@@ -755,40 +810,95 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 	}
 
-	public void beginTouchDown() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void endTouchDown() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void beginTouchMoved() {
-	}
-
-	public void endTouchMoved() {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void rnt() {
-		// TODO Auto-generated method stub
-
+		rnt(rntRadius);
 	}
 
-	public void beginTouchUp() {
-		// TODO Auto-generated method stub
-
+	public void rnt(float centreRadius) {
+		if (!activeTouches.isEmpty()) {
+			List<TouchPair> pairs = getTouchPairs(1);
+			rnt(pairs.get(0), centreRadius);
+		}
 	}
 
-	public void endTouchUp() {
-		// TODO Auto-generated method stub
-
+	public void rnt(Touch from, Touch to) {
+		rnt(new TouchPair(from, to), rntRadius);
 	}
 
-	private TuioTime maxTime(Touch... touches) {
+	public void rnt(Touch from, Touch to, float centreRadius) {
+		rnt(new TouchPair(from, to), centreRadius);
+	}
+
+	public void rnt(TouchPair pair, float centreRadius) {
+
+		if (pair.matches()) {
+			// nothing to do
+			lastUpdate = maxTime(pair);
+			return;
+		}
+
+		// PMatrix3D matrix = new PMatrix3D();
+		translate(pair.to.x, pair.to.y);
+
+		PVector centre = getCentre();
+
+		PVector fromVec = pair.getFromVec();
+		fromVec.sub(centre);
+
+		PVector toVec = pair.getToVec();
+		toVec.sub(centre);
+
+		float toDist = toVec.mag();
+		float fromDist = fromVec.mag();
+		if (toDist > 0 && fromDist > centreRadius) {
+			float angle = PVector.angleBetween(fromVec, toVec);
+			PVector cross = PVector.cross(fromVec, toVec, new PVector());
+			cross.normalize();
+
+			if (angle != 0 && cross.z != 0) {
+				rotate(angle, cross.x, cross.y, cross.z);
+			}
+		}
+
+		translate(-pair.from.x, -pair.from.y);
+		lastUpdate = maxTime(pair);
+
+		// Vector a (oldCentre, t);
+		// Vector b (oldCentre, tPrime);
+		// Vector cross = a.crossProduct(b);
+		// Vector trans(t, tPrime);
+		//
+		// glMatrixMode(GL_MODELVIEW);
+		// glPushMatrix();
+		// glLoadIdentity();
+		//
+		// glTranslatef( trans.x, trans.y, trans.z );
+		// glTranslatef( oldCentre.x + a.x, oldCentre.y + a.y, oldCentre.z +
+		// a.z);
+		// glRotatef( radToDeg( a.angleTo(b) ), cross.x, cross.y, cross.z );
+		// glTranslatef( -oldCentre.x - a.x, -oldCentre.y - a.y, -oldCentre.z -
+		// a.z);
+	}
+
+	// public boolean isPressed() {
+	// if (!activeTouches.isEmpty()) {
+	// List<TouchPair> pairs = getTouchPairs(1);
+	// if (pairs.get(0).isFirst()) {
+	//
+	// }
+	// }
+	// }
+	//
+	// public boolean isReleased() {
+	//
+	// }
+
+	public PVector getCentre() {
+		PVector centre = new PVector(width / 2, height / 2);
+		return matrix.mult(centre, new PVector());
+	}
+
+	private TuioTime maxTime(Iterable<Touch> touches) {
 		ArrayList<TuioTime> times = new ArrayList<TuioTime>();
 		for (Touch t : touches) {
 			if (t != null) {
@@ -796,6 +906,15 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			}
 		}
 		return Collections.max(times, SMTUtilities.tuioTimeComparator);
+	}
+
+	private TuioTime maxTime(TouchPair... pairs) {
+		ArrayList<Touch> touches = new ArrayList<Touch>(pairs.length * 2);
+		for (TouchPair pair : pairs) {
+			touches.add(pair.from);
+			touches.add(pair.to);
+		}
+		return maxTime(touches);
 	}
 
 	private Touch getActiveTouch(int n) {
@@ -807,6 +926,22 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			i++;
 		}
 		return null;
+	}
+
+	private List<TouchPair> getTouchPairs() {
+		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(activeTouches.size());
+		for (Touch touch : activeTouches.values()) {
+			pairs.add(new TouchPair(SMTUtilities.getLastTouch(touch, lastUpdate), touch));
+		}
+		return pairs;
+	}
+
+	private List<TouchPair> getTouchPairs(int minSize) {
+		List<TouchPair> pairs = getTouchPairs();
+		for (int i = pairs.size(); i < minSize; i++) {
+			pairs.add(new TouchPair());
+		}
+		return pairs;
 	}
 
 	public void touchDown(Touch touch) {
