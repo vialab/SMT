@@ -61,6 +61,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	/** The zone's transformation matrix */
 	protected PMatrix3D matrix = new PMatrix3D();
 
+	private PMatrix3D touchMatrix = new PMatrix3D();
+
 	/** The zone's inverse transformation matrix */
 	protected PMatrix3D inverse = new PMatrix3D();
 
@@ -112,11 +114,13 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public Zone(int x, int y, int width, int height) {
 		super();
-		drawGraphics = applet.createGraphics(width, height, applet.g.getClass().getName());
-		pickGraphics = applet.createGraphics(width, height, applet.g.getClass().getName());
-		touchGraphics = applet.createGraphics(width, height, applet.g.getClass().getName());
-
-		pg = drawGraphics;
+		// drawGraphics = applet.createGraphics(width, height, JAVA2D);
+		// pickGraphics = applet.createGraphics(width, height,
+		// applet.g.getClass().getName());
+		// touchGraphics = applet.createGraphics(width, height,
+		// applet.g.getClass().getName());
+		//
+		// pg = drawGraphics;
 
 		this.x = x;
 		this.y = y;
@@ -125,7 +129,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 		this.rntRadius = Math.min(width, height) / 4;
 
-		matrix.translate(x, y);
+		// matrix.translate(x, y);
+
+		init();
 	}
 
 	public Zone(String name, int x, int y, int width, int height) {
@@ -135,12 +141,24 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public void setName(String name) {
 		if (name != null) {
-			drawMethod = SMTUtilities.getPMethod(applet, "draw", name, this.getClass());
-			pickDrawMethod = SMTUtilities.getPMethod(applet, "pickDraw", name, this.getClass());
-			touchMethod = SMTUtilities.getPMethod(applet, "touch", name, this.getClass());
+			drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass());
+			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass());
+			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass());
 		}
 
 		this.name = name;
+	}
+
+	public void init() {
+		drawGraphics = applet.createGraphics(width, height, JAVA2D);
+		pickGraphics = applet.createGraphics(width, height, applet.g.getClass().getName());
+		touchGraphics = applet.createGraphics(width, height, applet.g.getClass().getName());
+
+		pg = drawGraphics;
+
+		resetMatrix();
+		// matrix.reset();
+		// matrix.translate(x, y);
 	}
 
 	public String getName() {
@@ -243,7 +261,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	public void beginTouch() {
 		pg = touchGraphics;
 		super.beginDraw();
-		super.setMatrix(new PMatrix3D());
+		touchMatrix.reset();
+		super.setMatrix(touchMatrix);
 	}
 
 	public void endTouch() {
@@ -303,7 +322,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	 */
 	@Override
 	public void resetMatrix() {
-		this.matrix.reset();
+		matrix.reset();
+		matrix.translate(x, y);
 	}
 
 	/**
@@ -323,6 +343,13 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		y = yIn;
 		width = wIn;
 		height = hIn;
+		init();
+	}
+
+	public void setLocation(int x, int y) {
+		this.x = x;
+		this.y = y;
+		resetMatrix();
 	}
 
 	/**

@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Vector;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
+import processing.core.PImage;
 import TUIO.TuioCursor;
 import TUIO.TuioPoint;
 import TUIO.TuioTime;
@@ -54,6 +56,28 @@ public final class SMTUtilities {
 		return getPMethod(parent, methodPrefix + suffix, parameterTypes);
 	}
 
+	static Method getAnyPMethod(PApplet parent, String methodPrefix, String methodSuffix,
+			Class<?> parameter) {
+		if (parameter == null) {
+			return null;
+		}
+
+		Method method = getPMethod(parent, methodPrefix, methodSuffix, parameter);
+		if (method == null) {
+			Class<?> superClass = parameter.getSuperclass();
+			method = getAnyPMethod(parent, methodPrefix, methodSuffix, superClass);
+		}
+		return method;
+	}
+
+	static Method getZoneMethod(PApplet parent, String methodPrefix, String name, Class<?> parameter) {
+		Method method = getAnyPMethod(parent, methodPrefix, name, parameter);
+		if (method == null) {
+			method = getAnyPMethod(parent, methodPrefix, "", parameter);
+		}
+		return method;
+	}
+
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
 		if (method != null) {
 			try {
@@ -97,4 +121,53 @@ public final class SMTUtilities {
 	public static void start(String... args) {
 		PApplet.main(args);
 	}
+
+	/**
+	 * This method draws the image at (x,y) within the specified width/height
+	 * parameters, but maintaining the aspect ratio of the image.
+	 * 
+	 * @param g
+	 *            the graphics context to draw the image in
+	 * @param image
+	 *            the image to draw
+	 * @param x
+	 *            the x-coordinate of the position to draw it at
+	 * @param y
+	 *            the y-coordinate of the position to draw it at
+	 * @param width
+	 *            the width to draw the image within
+	 * @param height
+	 *            the height to draw the image within
+	 */
+	public static void aspectImage(PGraphics g, PImage image, int x, int y, int width, int height) {
+		float bgX = 0;
+		float bgY = 0;
+		float bgWidth = width;
+		float bgHeight = height;
+
+		if (height == 0 || image.height == 0) {
+			return;
+		}
+
+		float aspectBoard = (float) width / height;
+		float aspectImage = (float) image.width / image.height;
+		if (aspectBoard < aspectImage && aspectImage != 0) {
+			bgHeight = bgWidth / aspectImage;
+			bgY += (height - bgHeight) / 2;
+		}
+		else if (aspectBoard > aspectImage) {
+			bgWidth = bgHeight * aspectImage;
+			bgX += (width - bgWidth) / 2;
+		}
+
+		g.image(image, bgX, bgY, bgWidth, bgHeight);
+	}
+
+	public static void aspectImage(PApplet applet, PImage image, int x, int y, int width, int height) {
+		aspectImage(applet.g, image, x, y, width, height);
+	}
+
+	// public static Rectangle fit(Rectangle outer, Rectangle inner) {
+	//
+	// }
 }

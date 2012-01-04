@@ -30,6 +30,7 @@ import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +40,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PMatrix3D;
 import vialab.mouseToTUIO.MouseToTUIO;
 import TUIO.TuioClient;
@@ -238,9 +250,119 @@ public class TouchClient {
 	 * @param zone
 	 *            Zone - The zone to add to the list.
 	 */
-	public void add(Zone zone) {
+	public void add(Zone... zones) {
+		for (Zone zone : zones) {
+			zoneList.add(zone);
+			picker.add(zone);
+		}
+	}
+
+	public Zone[] add(String xmlFilename) {
+		List<Zone> zoneList = new ArrayList<Zone>();
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(parent.createInput(xmlFilename));
+
+			NodeList zones = doc.getElementsByTagName("zone");
+			add(zones, zoneList);
+		}
+		catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		catch (SAXException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return zoneList.toArray(new Zone[zoneList.size()]);
+	}
+
+	public void grid(int x, int y, int width, int xSpace, int ySpace, Zone... zones) {
+		int currentX = x;
+		int currentY = y;
+
+		int rowHeight = 0;
+
+		for (Zone zone : zones) {
+			if (currentX > x + width) {
+				currentX = x;
+				currentY += rowHeight + ySpace;
+				rowHeight = 0;
+			}
+
+			zone.setLocation(currentX, currentY);
+
+			currentX += zone.width + xSpace;
+			rowHeight = Math.max(rowHeight, zone.height);
+		}
+	}
+
+	private void add(NodeList zones, List<Zone> zoneList) {
+		for (int i = 0; i < zones.getLength(); i++) {
+			Node zoneNode = zones.item(i);
+			if (zoneNode.getNodeType() == Node.ELEMENT_NODE
+					&& zoneNode.getNodeName().equalsIgnoreCase("zone")) {
+				add(zoneNode, zoneList);
+			}
+		}
+	}
+
+	private void add(Node node, List<Zone> zoneList) {
+		NamedNodeMap map = node.getAttributes();
+		Node nameNode = map.getNamedItem("name");
+		Node xNode = map.getNamedItem("x");
+		Node yNode = map.getNamedItem("y");
+		Node widthNode = map.getNamedItem("width");
+		Node heightNode = map.getNamedItem("height");
+
+		Node imgNode = map.getNamedItem("img");
+
+		Zone zone;
+
+		String name = null;
+		int x, y, width, height;
+		if (nameNode != null) {
+			name = nameNode.getNodeValue();
+		}
+
+		if (imgNode != null) {
+			String imgFilename = imgNode.getNodeValue();
+			PImage img = parent.loadImage(imgFilename);
+
+			if (xNode != null && yNode != null) {
+				x = Integer.parseInt(xNode.getNodeValue());
+				y = Integer.parseInt(yNode.getNodeValue());
+				if (widthNode != null && heightNode != null) {
+					width = Integer.parseInt(widthNode.getNodeValue());
+					height = Integer.parseInt(heightNode.getNodeValue());
+					zone = new ImageZone(name, img, x, y, width, height);
+				}
+				else {
+					zone = new ImageZone(name, img, x, y);
+				}
+			}
+			else {
+				zone = new ImageZone(name, img);
+			}
+		}
+		else {
+			if (xNode != null && yNode != null && widthNode != null && heightNode != null) {
+				x = Integer.parseInt(xNode.getNodeValue());
+				y = Integer.parseInt(yNode.getNodeValue());
+				width = Integer.parseInt(widthNode.getNodeValue());
+				height = Integer.parseInt(heightNode.getNodeValue());
+				zone = new Zone(name, x, y, width, height);
+			}
+			else {
+				zone = new Zone(name);
+			}
+		}
+
 		zoneList.add(zone);
-		picker.add(zone);
+		add(zone);
+		add(node.getChildNodes(), zoneList);
 	}
 
 	public boolean remove(Zone zone) {

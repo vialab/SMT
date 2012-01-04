@@ -70,6 +70,14 @@ public class ImageZone extends Zone {
 		this(null, img, x, y, width, height);
 	}
 
+	public ImageZone(PImage img) {
+		this(img, 0, 0, img.width, img.height);
+	}
+
+	public ImageZone(String name, PImage img) {
+		this(name, img, 0, 0, img.width, img.height);
+	}
+
 	/**
 	 * ImageZone constructor. Creates a rectangular zone and draws a PImage to
 	 * it. The width and height of the zone is set to the PImage's width and
@@ -109,7 +117,7 @@ public class ImageZone extends Zone {
 	@Override
 	public void beginDraw() {
 		super.beginDraw();
-		background(0);
+		background(0, 0, 0, 0);
 		image(img, 0, 0, this.width, this.height);
 	}
 
