@@ -396,7 +396,7 @@ class PGraphicsDelegate {
 		return pg.get(arg0, arg1);
 	}
 
-	public Object getCache(Object arg0) {
+	public Object getCache(PGraphics arg0) {
 		return pg.getCache(arg0);
 	}
 
@@ -614,7 +614,7 @@ class PGraphicsDelegate {
 		return pg.red(arg0);
 	}
 
-	public void removeCache(Object arg0) {
+	public void removeCache(PGraphics arg0) {
 		pg.removeCache(arg0);
 	}
 
@@ -694,7 +694,7 @@ class PGraphicsDelegate {
 		pg.set(arg0, arg1, arg2);
 	}
 
-	public void setCache(Object arg0, Object arg1) {
+	public void setCache(PGraphics arg0, Object arg1) {
 		pg.setCache(arg0, arg1);
 	}
 
@@ -752,14 +752,6 @@ class PGraphicsDelegate {
 
 	public void shininess(float arg0) {
 		pg.shininess(arg0);
-	}
-
-	public void skewX(float arg0) {
-		pg.skewX(arg0);
-	}
-
-	public void skewY(float arg0) {
-		pg.skewY(arg0);
 	}
 
 	public void smooth() {

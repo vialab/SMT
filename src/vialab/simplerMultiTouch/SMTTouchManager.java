@@ -187,19 +187,24 @@ public class SMTTouchManager {
 		idToTouched.put(touchPoint.getSessionID(), zone);
 
 		if (zone != null) {
-			if (!touchesPerObject.containsKey(zone)) {
-				touchesPerObject.put(zone, 0);
-			}
-			touchesPerObject.put(zone, touchesPerObject.get(zone) + 1);
-
 			Touch touch = new Touch(touchPoint);
-			activate(zone, touch);
-			zone.touchDown(touch);
+			assignTouch(zone, touch);
 		}
 
 		// upon a touch-down anywhere, we set all objects that don't currently
 		// have touches to inactive
 		resetActive();
+	}
+
+	public void assignTouch(Zone zone, Touch touch) {
+		idToTouched.put(touch.getSessionID(), zone);
+		if (!touchesPerObject.containsKey(zone)) {
+			touchesPerObject.put(zone, 0);
+		}
+		touchesPerObject.put(zone, touchesPerObject.get(zone) + 1);
+
+		activate(zone, touch);
+		zone.touchDown(touch);
 	}
 
 	/**

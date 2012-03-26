@@ -53,6 +53,7 @@ import org.xml.sax.SAXException;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PMatrix3D;
+import processing.opengl.PGraphicsOpenGL;
 import vialab.mouseToTUIO.MouseToTUIO;
 import TUIO.TuioClient;
 import TUIO.TuioCursor;
@@ -137,31 +138,33 @@ public class TouchClient {
 			parent.add(new MouseToTUIO(parent));
 		}
 
-		parent.frame.removeNotify();
-		if (fullscreen) {
-			parent.frame.setUndecorated(true);
-			parent.frame.setIgnoreRepaint(true);
-			parent.frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+		if (!(parent.g instanceof PGraphicsOpenGL)) {
+			parent.frame.removeNotify();
+			if (fullscreen) {
+				parent.frame.setUndecorated(true);
+				parent.frame.setIgnoreRepaint(true);
+				parent.frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
-			GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			GraphicsDevice displayDevice = environment.getDefaultScreenDevice();
+				GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+				GraphicsDevice displayDevice = environment.getDefaultScreenDevice();
 
-			DisplayMode mode = displayDevice.getDisplayMode();
-			Rectangle fullScreenRect = new Rectangle(0, 0, mode.getWidth(), mode.getHeight());
-			parent.frame.setBounds(fullScreenRect);
-			parent.frame.setVisible(true);
+				DisplayMode mode = displayDevice.getDisplayMode();
+				Rectangle fullScreenRect = new Rectangle(0, 0, mode.getWidth(), mode.getHeight());
+				parent.frame.setBounds(fullScreenRect);
+				parent.frame.setVisible(true);
 
-			// the following is exclusive mode
-			// displayDevice.setFullScreenWindow(parent.frame);
-			//
-			// Rectangle fullScreenRect = parent.frame.getBounds();
+				// the following is exclusive mode
+				// displayDevice.setFullScreenWindow(parent.frame);
+				//
+				// Rectangle fullScreenRect = parent.frame.getBounds();
 
-			parent.frame.setBounds(fullScreenRect);
-			parent.setBounds((fullScreenRect.width - parent.width) / 2,
-					(fullScreenRect.height - parent.height) / 2, parent.width, parent.height);
+				parent.frame.setBounds(fullScreenRect);
+				parent.setBounds((fullScreenRect.width - parent.width) / 2,
+						(fullScreenRect.height - parent.height) / 2, parent.width, parent.height);
+			}
+			parent.frame.addNotify();
+			parent.frame.toFront();
 		}
-		parent.frame.addNotify();
-		parent.frame.toFront();
 
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
@@ -210,6 +213,7 @@ public class TouchClient {
 	 */
 	public static void drawTouchPoints() {
 		Vector<TuioCursor> curs = tuioClient.getTuioCursors();
+		parent.pushStyle();
 		parent.strokeWeight(1);
 		parent.noFill();
 		if (curs.size() > 0) {
@@ -241,6 +245,7 @@ public class TouchClient {
 				}
 			}
 		}
+		parent.popStyle();
 	}
 
 	/**
@@ -427,6 +432,12 @@ public class TouchClient {
 			}
 		}
 		return touches.toArray(new Touch[touches.size()]);
+	}
+
+	public void assignTouches(Zone zone, Touch... touches) {
+		for (Touch touch : touches) {
+			manager.assignTouch(zone, touch);
+		}
 	}
 
 	/**

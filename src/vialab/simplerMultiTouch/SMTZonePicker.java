@@ -8,6 +8,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import TUIO.TuioCursor;
 
@@ -126,8 +127,10 @@ public class SMTZonePicker {
 	}
 
 	private void initPickBuffer() {
-		pickBuffer = applet.createGraphics(applet.g.width, applet.g.height, applet.g.getClass()
-				.getName());
+		// pickBuffer = applet.createGraphics(applet.g.width, applet.g.height,
+		// applet.g.getClass()
+		// .getName());
+		pickBuffer = applet.createGraphics(applet.g.width, applet.g.height, PConstants.P3D);
 		pickBuffer.noSmooth();
 		pickBuffer.noLights();
 		pickBuffer.noTint();

@@ -99,20 +99,38 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	protected Method touchMethod = null;
 
-	private String name = null;
+	protected String name = null;
+
+	protected String renderer = JAVA2D;
 
 	/**
 	 * Zone constructor
 	 */
 	public Zone() {
-		this(0, 0, 0, 0);
+		this(null);
 	}
 
 	public Zone(String name) {
-		this(name, 0, 0, 0, 0);
+		this(name, JAVA2D);
+	}
+
+	public Zone(String name, String renderer) {
+		this(name, 0, 0, 1, 1, renderer);
 	}
 
 	public Zone(int x, int y, int width, int height) {
+		this(x, y, width, height, JAVA2D);
+	}
+
+	public Zone(int x, int y, int width, int height, String renderer) {
+		this(null, x, y, width, height, renderer);
+	}
+
+	public Zone(String name, int x, int y, int width, int height) {
+		this(name, x, y, width, height, JAVA2D);
+	}
+
+	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
 		// drawGraphics = applet.createGraphics(width, height, JAVA2D);
 		// pickGraphics = applet.createGraphics(width, height,
@@ -121,6 +139,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		// applet.g.getClass().getName());
 		//
 		// pg = drawGraphics;
+
+		this.renderer = renderer;
 
 		this.x = x;
 		this.y = y;
@@ -132,10 +152,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		// matrix.translate(x, y);
 
 		init();
-	}
 
-	public Zone(String name, int x, int y, int width, int height) {
-		this(x, y, width, height);
 		setName(name);
 	}
 
@@ -150,9 +167,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public void init() {
-		drawGraphics = applet.createGraphics(width, height, JAVA2D);
-		pickGraphics = applet.createGraphics(width, height, applet.g.getClass().getName());
-		touchGraphics = applet.createGraphics(width, height, applet.g.getClass().getName());
+		drawGraphics = applet.createGraphics(width, height, renderer);
+		pickGraphics = applet.createGraphics(width, height, P3D);
+		touchGraphics = applet.createGraphics(1, 1, P3D);
 
 		pg = drawGraphics;
 
@@ -514,6 +531,20 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		lastUpdate = maxTime(pair);
 	}
 
+	public void drag(int fromX, int fromY, int toX, int toY) {
+		drag(fromX, fromY, toX, toY, true, true);
+	}
+
+	public void drag(int fromX, int fromY, int toX, int toY, boolean dragX, boolean dragY) {
+		if (dragX) {
+			translate(toX - fromX, 0);
+		}
+
+		if (dragY) {
+			translate(0, toY - fromY);
+		}
+	}
+
 	public void rst() {
 		rst(true, true, true, true);
 	}
@@ -653,6 +684,35 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	/**
+	 * Rotates the zone around the specified x- & y-coordinates
+	 * 
+	 * @param angle
+	 * @param x
+	 * @param y
+	 */
+	public void rotateAbout(float angle, int x, int y) {
+		translate(x, y);
+		rotate(angle);
+		translate(-x, -y);
+	}
+
+	/**
+	 * Rotates the zone around either the centre or corner
+	 * 
+	 * @param angle
+	 * @param mode
+	 *            CENTER or CORNER
+	 */
+	public void rotateAbout(float angle, int mode) {
+		if (mode == CORNER) {
+			rotateAbout(angle, x, y);
+		}
+		else if (mode == CENTER) {
+			rotateAbout(angle, x + width / 2, y + height / 2);
+		}
+	}
+
+	/**
 	 * Horizontal Swipe Event's default action is translating the zone in the
 	 * x-direction by half of the horizontal swipe's distance.
 	 * 
@@ -767,19 +827,19 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 
 		if (drawChildren) {
-			drawChildren(g, img);
+			drawChildren(g, img == pickGraphics);
 		}
 	}
 
-	protected void drawChildren(PGraphics g, PGraphics img) {
+	protected void drawChildren(PGraphics g, boolean picking) {
 		for (Zone child : children) {
 			g.pushMatrix();
 			g.applyMatrix(child.matrix);
-			if (img == drawGraphics) { // not picking
-				child.draw();
-			}
-			else if (img == pickGraphics) { // picking
+			if (picking) {
 				child.drawForPickBuffer(g);
+			}
+			else {
+				child.draw();
 			}
 			g.popMatrix();
 		}

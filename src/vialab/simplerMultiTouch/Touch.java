@@ -168,4 +168,13 @@ public class Touch extends TuioCursor {
 	public int getScreenY(int height) {
 		return super.getScreenY(height);
 	}
+
+	public TuioPoint getLastPoint() {
+		Vector<TuioPoint> path = getPath();
+		if (path.size() <= 1) {
+			return null;
+		}
+
+		return path.get(path.size() - 2);
+	}
 }
