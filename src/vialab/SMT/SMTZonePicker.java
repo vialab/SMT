@@ -7,13 +7,14 @@ import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.media.opengl.GL;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PGraphics;
 import TUIO.TuioCursor;
 
+//import processing.core.PConstants;
+//import javax.media.opengl.GL;
+//use GLGraphics instead now
 import codeanticode.glgraphics.*;
 
 public class SMTZonePicker {
