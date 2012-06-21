@@ -7,10 +7,14 @@ import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.media.opengl.GL;
+
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import TUIO.TuioCursor;
+
+import codeanticode.glgraphics.*;
 
 public class SMTZonePicker {
 	private final int BG_PICK_COLOR = 255;
@@ -19,7 +23,7 @@ public class SMTZonePicker {
 
 	private int currentPickColor = START_PICK_COLOR;
 
-	private PGraphics pickBuffer;
+	private GLGraphicsOffScreen pickBuffer;
 
 	private PApplet applet;
 
@@ -28,6 +32,10 @@ public class SMTZonePicker {
 
 	private SortedSet<Integer> activePickColors = new TreeSet<Integer>();
 
+	PGraphics getGraphics(){
+		return this.pickBuffer;
+	}
+	
 	public SMTZonePicker() {
 		this.applet = TouchClient.parent;
 		initPickBuffer();
@@ -42,6 +50,10 @@ public class SMTZonePicker {
 		pickBuffer.endDraw();
 		currentPickColor += PICK_COLOR_INC;
 		currentPickColor %= 256;
+		
+		for(Zone child: zone.children){
+			this.add(child);
+		}
 	}
 
 	public boolean contains(Zone zone) {
@@ -65,9 +77,19 @@ public class SMTZonePicker {
 		// }
 		int screenX = t.getScreenX(TouchClient.parent.width);
 		int screenY = t.getScreenY(TouchClient.parent.height);
-
-		int pickColor = pickBuffer.color(pickBuffer.get(screenX, screenY));
-		if (pickColor == pickBuffer.color((float) BG_PICK_COLOR)) {
+		
+		//new pixel color method that works when using GLGraphicsOffScreen
+		int[] pixels = new int[applet.width*applet.height];
+		pickBuffer.getTexture().getBuffer(pixels);
+		//was upsidedown with some settings
+		//int pickColor = pixels[(applet.height-screenY)*applet.width+screenX];
+		int pickColor = pixels[(screenY)*applet.width+screenX];
+		
+				//old method that doesn't work with GLGraphicsOffscreen
+				//pickBuffer.color(pickBuffer.get(screenX, screenY));
+		//System.out.print(screenX+" "+screenY+" "+pickColor+" "+pickBuffer.color((float)BG_PICK_COLOR)+" ");
+		
+		if (pickColor == pickBuffer.color((float)BG_PICK_COLOR)) {
 			return null;
 		}
 		else {
@@ -111,26 +133,25 @@ public class SMTZonePicker {
 
 		pickBuffer.beginDraw();
 		pickBuffer.background(BG_PICK_COLOR);
-
+		pickBuffer.endDraw();
 		for (Zone zone : zonesByPickColor.values()) {
 			if (zone.getParent() != null) {
 				// the parent should handle the drawing
 				continue;
 			}
-			pickBuffer.pushMatrix();
-			pickBuffer.applyMatrix(zone.matrix);
+			//pickBuffer.pushMatrix();
+			//pickBuffer.applyMatrix(zone.matrix);
 			zone.drawForPickBuffer(pickBuffer);
-			pickBuffer.popMatrix();
+			//pickBuffer.popMatrix();
 		}
-
-		pickBuffer.endDraw();
+		//pickBuffer.endDraw();
 	}
 
 	private void initPickBuffer() {
 		// pickBuffer = applet.createGraphics(applet.g.width, applet.g.height,
 		// applet.g.getClass()
 		// .getName());
-		pickBuffer = applet.createGraphics(applet.g.width, applet.g.height, PConstants.P3D);
+		pickBuffer = new GLGraphicsOffScreen(applet,applet.g.width, applet.g.height);
 		pickBuffer.noSmooth();
 		pickBuffer.noLights();
 		pickBuffer.noTint();

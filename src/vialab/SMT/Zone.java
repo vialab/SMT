@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import codeanticode.glgraphics.*;
+
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -100,8 +102,10 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	protected Method touchMethod = null;
 
 	protected String name = null;
+	
+	private static String defaultRenderer=GLGraphics.GLGRAPHICS;
 
-	protected String renderer = JAVA2D;
+	protected String renderer = defaultRenderer;
 
 	/**
 	 * Zone constructor
@@ -111,7 +115,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public Zone(String name) {
-		this(name, JAVA2D);
+		this(name, defaultRenderer);
 	}
 
 	public Zone(String name, String renderer) {
@@ -119,7 +123,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public Zone(int x, int y, int width, int height) {
-		this(x, y, width, height, JAVA2D);
+		this(x, y, width, height, defaultRenderer);
 	}
 
 	public Zone(int x, int y, int width, int height, String renderer) {
@@ -127,7 +131,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public Zone(String name, int x, int y, int width, int height) {
-		this(name, x, y, width, height, JAVA2D);
+		this(name, x, y, width, height, defaultRenderer);
 	}
 
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
@@ -167,10 +171,15 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public void init() {
-		drawGraphics = applet.createGraphics(width, height, renderer);
-		pickGraphics = applet.createGraphics(width, height, P3D);
+	    /*
+		drawGraphics = applet.createGraphics(width, height, GLGraphics.GLGRAPHICS);
+		pickGraphics = applet.createGraphics(width, height, GLGraphics.GLGRAPHICS);
 		touchGraphics = applet.createGraphics(1, 1, P3D);
-
+		*/
+		drawGraphics = new GLGraphicsOffScreen(applet,width, height);
+		pickGraphics = new GLGraphicsOffScreen(applet,width, height);
+		touchGraphics = new GLGraphicsOffScreen(applet,1,1);
+		
 		pg = drawGraphics;
 
 		resetMatrix();
@@ -808,7 +817,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			rect(0, 0, width, height);
 			endPickDraw();
 		}
-
+		
 		PGraphics temp = applet.g;
 		applet.g = drawGraphics;
 
@@ -817,13 +826,23 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		endPickDraw();
 
 		applet.g = temp;
-
 		drawImpl(pickBuffer, pickGraphics, drawChildren);
 	}
-
+ 
 	protected void drawImpl(PGraphics g, PGraphics img, boolean drawChildren) {
 		if (img != null) {
-			g.image(img, 0, 0);
+			if(img==pickGraphics){
+				g.beginDraw();
+				g.pushMatrix();
+				g.applyMatrix(matrix);
+			}
+			
+			g.image(((GLGraphicsOffScreen)img).getTexture(), 0, 0,width,height);
+			
+			if(img==pickGraphics){
+				g.popMatrix();
+				g.endDraw();
+			}
 		}
 
 		if (drawChildren) {
@@ -833,12 +852,15 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	protected void drawChildren(PGraphics g, boolean picking) {
 		for (Zone child : children) {
-			g.pushMatrix();
-			g.applyMatrix(child.matrix);
+			g.pushMatrix();			
 			if (picking) {
+				PMatrix3D backup=child.matrix.get();
+				child.matrix.apply(matrix);
 				child.drawForPickBuffer(g);
+				child.matrix=backup;
 			}
 			else {
+				g.applyMatrix(child.matrix);
 				child.draw();
 			}
 			g.popMatrix();

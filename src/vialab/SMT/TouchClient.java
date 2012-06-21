@@ -50,6 +50,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import codeanticode.glgraphics.GLGraphicsOffScreen;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PMatrix3D;
@@ -135,7 +137,13 @@ public class TouchClient {
 		parent.setLayout(new BorderLayout());
 
 		if (emulateTouches) {
-			parent.add(new MouseToTUIO(parent.width,parent.height));
+			MouseToTUIO mtt= new MouseToTUIO(parent.width,parent.height);
+			parent.add(mtt);
+			//register the listener if using opengl, as the component wont get the events otherwise
+			if (parent.g instanceof PGraphicsOpenGL) {
+				parent.registerMouseEvent(mtt);
+				parent.registerKeyEvent(mtt);
+			}
 		}
 
 		if (!(parent.g instanceof PGraphicsOpenGL)) {
@@ -396,7 +404,12 @@ public class TouchClient {
 			// zone.drawForPickBuffer(parent.g);
 			parent.popMatrix();
 		}
-
+		parent.g.pushMatrix();
+		//was upsidedown with certain settings
+		//parent.g.translate(0,parent.height/10,0);
+		//parent.g.scale(1,-1,1);
+		parent.g.image(((GLGraphicsOffScreen)picker.getGraphics()).getTexture(),0,0,parent.width/10,parent.height/10);
+		parent.g.popMatrix();
 		if (drawTouchPoints) {
 			drawTouchPoints();
 		}
