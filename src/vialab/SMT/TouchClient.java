@@ -50,6 +50,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import codeanticode.glgraphics.GLGraphics;
 import codeanticode.glgraphics.GLGraphicsOffScreen;
 
 import processing.core.PApplet;
@@ -134,6 +135,10 @@ public class TouchClient {
 	}
 
 	public TouchClient(PApplet parent, int port, boolean emulateTouches, boolean fullscreen) {
+		if (!(parent.g instanceof GLGraphics)) {
+			System.err.println("Error: Cannot display zones unless renderer is GLGraphics, make sure to import the GLGraphics library, and in setup use size(width,height,GLConstants.GLGRAPHICS)");
+		}
+		
 		parent.setLayout(new BorderLayout());
 
 		if (emulateTouches) {
