@@ -135,7 +135,7 @@ public class TouchClient {
 		parent.setLayout(new BorderLayout());
 
 		if (emulateTouches) {
-			parent.add(new MouseToTUIO(parent));
+			parent.add(new MouseToTUIO(parent.width,parent.height));
 		}
 
 		if (!(parent.g instanceof PGraphicsOpenGL)) {
