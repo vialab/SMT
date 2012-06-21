@@ -1,4 +1,4 @@
-package vialab.simplerMultiTouch;
+package vialab.SMT;
 
 import java.util.ArrayList;
 import java.util.Collection;

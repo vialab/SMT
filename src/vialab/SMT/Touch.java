@@ -1,4 +1,4 @@
-package vialab.simplerMultiTouch;
+package vialab.SMT;
 
 import java.util.Vector;
 

@@ -22,7 +22,7 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package vialab.simplerMultiTouch;
+package vialab.SMT;
 
 import java.awt.BorderLayout;
 import java.awt.DisplayMode;

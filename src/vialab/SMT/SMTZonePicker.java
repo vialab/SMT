@@ -1,4 +1,4 @@
-package vialab.simplerMultiTouch;
+package vialab.SMT;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
