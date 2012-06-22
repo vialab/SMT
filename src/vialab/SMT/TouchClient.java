@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -88,7 +89,7 @@ public class TouchClient {
 	static TuioClient tuioClient;
 
 	/** The main zone list */
-	protected static Vector<Zone> zoneList = new Vector<Zone>();
+	protected static CopyOnWriteArrayList<Zone> zoneList = new CopyOnWriteArrayList<Zone>();
 
 	/** Flag for drawing touch points */
 	static boolean drawTouchPoints = true;
@@ -206,7 +207,7 @@ public class TouchClient {
 	 * 
 	 * @return zoneList
 	 */
-	public Vector<Zone> getZones() {
+	public CopyOnWriteArrayList<Zone> getZones() {
 		return zoneList;
 	}
 
