@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -834,6 +835,17 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			if(img==pickGraphics){
 				g.beginDraw();
 				g.pushMatrix();
+				//list ancestors in order from most distant to closest, in order to apply their matrix's in order
+				LinkedList<Zone> ancestors=new LinkedList<Zone>();
+				Zone z=this;
+				while(z.getParent()!=null){
+					z=z.getParent();
+					ancestors.addFirst(z);
+				}
+				//apply ancestors matrix's in proper order to make sure image is correctly oriented
+				for(Zone i: ancestors){
+					g.applyMatrix(i.matrix);
+				}
 				g.applyMatrix(matrix);
 			}
 			
@@ -851,19 +863,16 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	protected void drawChildren(PGraphics g, boolean picking) {
-		for (Zone child : children) {
-			g.pushMatrix();			
+		for (Zone child : children) {			
 			if (picking) {
-				PMatrix3D backup=child.matrix.get();
-				child.matrix.apply(matrix);
 				child.drawForPickBuffer(g);
-				child.matrix=backup;
 			}
 			else {
+				g.pushMatrix();
 				g.applyMatrix(child.matrix);
 				child.draw();
+				g.popMatrix();
 			}
-			g.popMatrix();
 		}
 	}
 
@@ -1065,4 +1074,18 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		assign(currentLocalState);
 	}
 
+	@Override
+	public Zone clone() {
+		Zone clone=new Zone();
+		clone.setName(this.getName());
+		clone.x=this.x;
+		clone.y=this.y;
+		clone.width=this.width;
+		clone.height=this.height;
+		clone.resetMatrix();
+		for(Zone child:this.getChildren()){
+			clone.add(child.clone());
+		}
+		return clone;
+	}	
 }
