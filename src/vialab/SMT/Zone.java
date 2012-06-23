@@ -1076,13 +1076,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	@Override
 	public Zone clone() {
-		Zone clone=new Zone();
-		clone.setName(this.getName());
-		clone.x=this.x;
-		clone.y=this.y;
-		clone.width=this.width;
-		clone.height=this.height;
-		clone.resetMatrix();
+		Zone clone=new Zone(this.getName(),this.x,this.y,this.width,this.height);
+		clone.matrix=this.matrix.get();
+		clone.inverse=this.inverse.get();
 		for(Zone child:this.getChildren()){
 			clone.add(child.clone());
 		}
