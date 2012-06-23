@@ -45,10 +45,10 @@ public class SMTZonePicker {
 	public void add(Zone zone) {
 		// TODO: a uniform distribution would be ideal here
 		zone.setPickColor(currentPickColor);
-		pickBuffer.beginDraw();
+		//pickBuffer.beginDraw();
 		zonesByPickColor.put(currentPickColor, zone);
 		activePickColors.add(currentPickColor);
-		pickBuffer.endDraw();
+		//pickBuffer.endDraw();
 		currentPickColor += PICK_COLOR_INC;
 		currentPickColor %= 256;
 		
