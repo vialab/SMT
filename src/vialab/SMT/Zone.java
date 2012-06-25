@@ -65,6 +65,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	protected PMatrix3D matrix = new PMatrix3D();
 
 	private PMatrix3D touchMatrix = new PMatrix3D();
+	
+	private PMatrix3D backupMatrix = null;
 
 	/** The zone's inverse transformation matrix */
 	protected PMatrix3D inverse = new PMatrix3D();
@@ -911,11 +913,15 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		if (touchChildren) {
 			for (Zone child : children) {
 				if (child.isChildActive()) {
+					child.backupMatrix=child.matrix.get();
+					
 					child.beginTouch();
 					child.applyMatrix(matrix);
 					child.endTouch();
 
 					child.touchImpl(touchChildren, true);
+					
+					child.backupMatrix=null;
 
 					child.beginTouch();
 					PMatrix3D inverse = new PMatrix3D();
@@ -1077,7 +1083,11 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	@Override
 	public Zone clone() {
 		Zone clone=new Zone(this.getName(),this.x,this.y,this.width,this.height);
-		clone.matrix=this.matrix.get();
+		if(this.backupMatrix!=null){
+			clone.matrix=this.backupMatrix.get();
+		}else{
+			clone.matrix=this.matrix.get();
+		}
 		clone.inverse=this.inverse.get();
 		for(Zone child:this.getChildren()){
 			clone.add(child.clone());
