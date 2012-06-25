@@ -619,4 +619,13 @@ public class TouchClient {
 		};
 		serverThread.start();
 	}
+	
+	public void putZoneOnTop(Zone zone){
+		if(zoneList.indexOf(zone)<zoneList.size()-1){
+			zoneList.remove(zone);
+			zoneList.add(zone);
+			//change order of pickBuffer too
+			picker.putZoneOnTop(zone);
+		}
+	}
 }

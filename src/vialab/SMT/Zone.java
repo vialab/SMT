@@ -839,10 +839,10 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 				g.pushMatrix();
 				//list ancestors in order from most distant to closest, in order to apply their matrix's in order
 				LinkedList<Zone> ancestors=new LinkedList<Zone>();
-				Zone z=this;
-				while(z.getParent()!=null){
-					z=z.getParent();
-					ancestors.addFirst(z);
+				Zone zone=this;
+				while(zone.getParent()!=null){
+					zone=zone.getParent();
+					ancestors.addFirst(zone);
 				}
 				//apply ancestors matrix's in proper order to make sure image is correctly oriented
 				for(Zone i: ancestors){

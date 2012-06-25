@@ -159,4 +159,9 @@ public class SMTZonePicker {
 		// pickBuffer = applet.g;
 	}
 
+	public void putZoneOnTop(Zone zone) {
+		zonesByPickColor.remove(zone.getPickColor());
+	    zonesByPickColor.put(zone.getPickColor(),zone);
+	}
+
 }
