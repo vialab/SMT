@@ -256,25 +256,8 @@ public class TouchClient {
 				parent.ellipse(curs.get(i).getScreenX(parent.width),
 						curs.get(i).getScreenY(parent.height), 22, 22);
 				Vector<TuioPoint> path = curs.get(i).getPath();
-				if (path.size() > 1 && path.size()<=TouchClient.MAX_PATH_LENGTH) {
-					for (int j = 1; j < path.size(); j++) {
-						parent.stroke(255);
-						parent.line(path.get(j).getScreenX(parent.width) - 0.5f, path.get(j)
-								.getScreenY(parent.height) - 0.5f,
-								path.get(j - 1).getScreenX(parent.width) - 0.5f, path.get(j - 1)
-										.getScreenY(parent.height) - 0.5f);
-						parent.ellipse(path.get(j).getScreenX(parent.width), path.get(j)
-								.getScreenY(parent.height), 5, 5);
-						parent.stroke(0);
-						parent.line(path.get(j).getScreenX(parent.width) + 0.5f, path.get(j)
-								.getScreenY(parent.height) + 0.5f,
-								path.get(j - 1).getScreenX(parent.width) + 0.5f, path.get(j - 1)
-										.getScreenY(parent.height) + 0.5f);
-						parent.ellipse(path.get(j).getScreenX(parent.width), path.get(j)
-								.getScreenY(parent.height), 7, 7);
-					}
-				}else if(path.size()>TouchClient.MAX_PATH_LENGTH){
-					for (int j = path.size()-TouchClient.MAX_PATH_LENGTH+1; j < path.size(); j++) {
+				if (path.size() > 1) {
+					for (int j = 1 + Math.max(0,path.size()-TouchClient.MAX_PATH_LENGTH); j < path.size(); j++) {
 						parent.stroke(255);
 						parent.line(path.get(j).getScreenX(parent.width) - 0.5f, path.get(j)
 								.getScreenY(parent.height) - 0.5f,
