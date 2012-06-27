@@ -209,8 +209,8 @@ public class TouchClient {
 	 * 
 	 * @return zoneList
 	 */
-	public CopyOnWriteArrayList<Zone> getZones() {
-		return zoneList;
+	public Zone[] getZones() {
+		return zoneList.toArray(new Zone[0]);
 	}
 
 	/**
