@@ -10,12 +10,25 @@ import java.util.TreeSet;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.opengl.PGraphicsOpenGL;
 import TUIO.TuioCursor;
 
-//import processing.core.PConstants;
-//import javax.media.opengl.GL;
 //use GLGraphics instead now
+//import processing.core.PConstants;
+import javax.media.opengl.GL;
 import codeanticode.glgraphics.*;
+import java.nio.ByteBuffer;  
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+
+class CustomGLGraphicsOffScreen extends GLGraphicsOffScreen{
+	CustomGLGraphicsOffScreen(PApplet applet,int width,int height){
+		super(applet, width, height);
+	}
+	int getFramebufferID(){
+		return this.FBO.getFramebufferID();
+	}
+}
 
 public class SMTZonePicker {
 	private final int BG_PICK_COLOR = 255;
@@ -24,7 +37,7 @@ public class SMTZonePicker {
 
 	private int currentPickColor = START_PICK_COLOR;
 
-	private GLGraphicsOffScreen pickBuffer;
+	private CustomGLGraphicsOffScreen pickBuffer;
 
 	private PApplet applet;
 
@@ -32,6 +45,9 @@ public class SMTZonePicker {
 			.synchronizedMap(new LinkedHashMap<Integer, Zone>());
 
 	private SortedSet<Integer> activePickColors = new TreeSet<Integer>();
+
+	int SIZEOF_INT = Integer.SIZE / 8; 
+	IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT).order(ByteOrder.nativeOrder()).asIntBuffer();  
 
 	PGraphics getGraphics(){
 		return this.pickBuffer;
@@ -76,18 +92,35 @@ public class SMTZonePicker {
 		// return zone;
 		// }
 		// }
+		
 		int screenX = t.getScreenX(TouchClient.parent.width);
 		int screenY = t.getScreenY(TouchClient.parent.height);
 		
-		//new pixel color method that works when using GLGraphicsOffScreen
-		int[] pixels = new int[applet.width*applet.height];
-		pickBuffer.getTexture().getBuffer(pixels);
+		//new pixel read method that only reads the needed pixel for when using 
+		GL gl = pickBuffer.beginGL();
+		//bind FBO, read pixel, then unbind FBO
+		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT,pickBuffer.getFramebufferID());
+		gl.glReadPixels(screenX, screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
+		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT, 0);
+		
+		int pickColor=buffer.get(0);
+		//System.out.println("gray "+(pickColor & 0xFF)+" raw "+pickColor);
+		pickBuffer.endGL();
+		
+		/*
+		//pixel color method that works when using GLGraphicsOffScreen, but causes slowdown due to reading all pixels
+		//int[] pixels = new int[applet.width*applet.height];
+		//pickBuffer.getTexture().getBuffer(pixels);
 		//was upsidedown with some settings
 		//int pickColor = pixels[(applet.height-screenY)*applet.width+screenX];
-		int pickColor = pixels[(screenY)*applet.width+screenX];
-		
-				//old method that doesn't work with GLGraphicsOffscreen
-				//pickBuffer.color(pickBuffer.get(screenX, screenY));
+		GLTexture tex=pickBuffer.getTexture();
+		tex.loadPixels();
+		tex.updateTexture();
+		//pickBuffer.updatePixels();
+		int pickColor = tex.pixels[(screenY)*applet.width+screenX];
+		*/
+		//old method that doesn't work with GLGraphicsOffscreen
+		//int pickColor = pickBuffer.color(pickBuffer.get(screenX, screenY));
 		//System.out.print(screenX+" "+screenY+" "+pickColor+" "+pickBuffer.color((float)BG_PICK_COLOR)+" ");
 		
 		if (pickColor == pickBuffer.color((float)BG_PICK_COLOR)) {
@@ -152,7 +185,7 @@ public class SMTZonePicker {
 		// pickBuffer = applet.createGraphics(applet.g.width, applet.g.height,
 		// applet.g.getClass()
 		// .getName());
-		pickBuffer = new GLGraphicsOffScreen(applet,applet.g.width, applet.g.height);
+		pickBuffer = new CustomGLGraphicsOffScreen(applet,applet.g.width, applet.g.height);
 		pickBuffer.noSmooth();
 		pickBuffer.noLights();
 		pickBuffer.noTint();

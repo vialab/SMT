@@ -822,7 +822,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 		
 		PGraphics temp = applet.g;
-		applet.g = drawGraphics;
+		applet.g = pickGraphics;
 
 		beginPickDraw();
 		SMTUtilities.invoke(pickDrawMethod, applet, this);
