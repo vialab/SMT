@@ -257,7 +257,7 @@ public class TouchClient {
 						curs.get(i).getScreenY(parent.height), 22, 22);
 				Vector<TuioPoint> path = curs.get(i).getPath();
 				if (path.size() > 1) {
-					for (int j = 1 + Math.max(0,path.size()-TouchClient.MAX_PATH_LENGTH); j < path.size(); j++) {
+					for (int j = 1 + Math.max(0,path.size()-(TouchClient.MAX_PATH_LENGTH+2)); j < path.size(); j++) {
 						parent.stroke(255);
 						parent.line(path.get(j).getScreenX(parent.width) - 0.5f, path.get(j)
 								.getScreenY(parent.height) - 0.5f,
