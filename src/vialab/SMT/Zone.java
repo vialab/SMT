@@ -620,8 +620,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			}
 		}
 		else {
-			// TODO: translate to the zone's centre (for rotation and scale with
-			// no translate)
+			translate(this.x+this.width/2,this.y+this.height/2);
 			// TODO: even better, add a centreOfRotation parameter
 			// TODO: even more better, add a moving vs. non-moving
 			// centreOfRotation
@@ -659,10 +658,14 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			}
 		}
 		else {
-			// TODO: translate back to the zone's centre
+			translate(-(this.x+this.width/2),-(this.y+this.height/2));
 		}
 
 		lastUpdate = maxTime(first, second);
+	}
+	
+	public void rs(){
+		rst(true,true,false);
 	}
 
 	/**
