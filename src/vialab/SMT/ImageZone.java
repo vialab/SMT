@@ -23,6 +23,7 @@
  */
 package vialab.SMT;
 
+import codeanticode.glgraphics.*;
 import processing.core.PImage;
 
 /**
@@ -39,7 +40,7 @@ import processing.core.PImage;
  */
 public class ImageZone extends Zone {
 	/** The PImage that contains the image passed by the user */
-	public PImage img;
+	public GLTexture img;
 
 	/**
 	 * ImageZone constructor, creates a rectangular zone and draws a PImage to
@@ -59,7 +60,8 @@ public class ImageZone extends Zone {
 	 */
 	public ImageZone(String name, PImage img, int x, int y, int width, int height) {
 		super(name, x, y, width, height);
-		this.img = img;
+		this.img= new GLTexture(Zone.applet,width,height);
+		this.img.putImage(img);
 
 		// beginDraw();
 		// image(img, 0, 0, this.width, this.height);
@@ -106,7 +108,7 @@ public class ImageZone extends Zone {
 	 *            PImage
 	 */
 	public void setImage(PImage img) {
-		this.img = img;
+		this.img.putImage(img);
 	}
 
 	// @Override
