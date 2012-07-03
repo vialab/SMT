@@ -427,18 +427,23 @@ public class TouchClient {
 			// zone.drawForPickBuffer(parent.g);
 			parent.popMatrix();
 		}
-		parent.g.pushMatrix();
-		//was upsidedown with certain settings
-		//parent.g.translate(0,parent.height/10,0);
-		//parent.g.scale(1,-1,1);
-		parent.g.image(((GLGraphicsOffScreen)picker.getGraphics()).getTexture(),0,0,parent.width/5,parent.height/5);
-		parent.g.popMatrix();
 		if (drawTouchPoints) {
 			drawTouchPoints();
 		}
 
 		// PApplet.println(parent.color((float) 0));
 		// PApplet.println(parent.get(100, 100));
+	}
+	
+	/**
+	 * Draws a texture of the pickBuffer at the given x,y position with given width and height
+	 * @param x - the x position to draw the pickBuffer image at
+	 * @param y - the y position to draw the pickBuffer image at
+	 * @param w - the width of the pickBuffer image to draw
+	 * @param h - the height of the pickBuffer image to draw
+	 */
+	public void drawPickBuffer(int x, int y, int w, int h){
+		parent.g.image(((GLGraphicsOffScreen)picker.getGraphics()).getTexture(),x,y,w,h);
 	}
 
 	/**
