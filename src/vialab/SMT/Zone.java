@@ -1082,18 +1082,34 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	public void touchesMoved(List<Touch> currentLocalState) {
 		assign(currentLocalState);
 	}
-
+	
+	/**
+	 * Clones the zone and all child zones
+	 */
 	@Override
-	public Zone clone() {
+	public Zone clone(){
+		return clone(Integer.MAX_VALUE);
+	}
+
+	/**
+	 * Clones the zone and optionally any child zones
+	 * @param cloneMaxChildGenereations - Max limit on how many generations of children to clone (0 - None, 1 - First Generation children, ... , Integer.MAX_VALUE - All generations of children)
+	 */
+	public Zone clone(int cloneMaxChildGenerations) {
 		Zone clone=new Zone(this.getName(),this.x,this.y,this.width,this.height);
+		
+		//use the backupMatrix if the zone being clone has its matrix modified by parent, and so has backupMatrix set
 		if(this.backupMatrix!=null){
 			clone.matrix=this.backupMatrix.get();
 		}else{
 			clone.matrix=this.matrix.get();
 		}
 		clone.inverse=this.inverse.get();
-		for(Zone child:this.getChildren()){
-			clone.add(child.clone());
+		
+		if(cloneMaxChildGenerations>0){
+			for(Zone child:this.getChildren()){
+				clone.add(child.clone(cloneMaxChildGenerations-1));
+			}
 		}
 		return clone;
 	}	
