@@ -49,7 +49,7 @@ import TUIO.TuioTime;
  * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
  * <P>
  * 
- * @author Erik Paluka
+ * @author Erik Paluka, Zach Cook
  * @date Summer, 2011
  * @version 1.0
  */
