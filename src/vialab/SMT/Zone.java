@@ -163,20 +163,24 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		init();
 
 		setName(name);
-		
-		setup();
 	}
 	
 	private void setup() {
-		//run the setup method in the proper context to affect the zone
-		beginTouch();
-		PGraphics temp = applet.g;
-		applet.g = drawGraphics;
-
-		SMTUtilities.invoke(setupMethod, applet, this);
-
-		applet.g = temp;
-		endTouch();
+		resetMatrix();
+		
+		if(applet.g!=touchGraphics&&applet.g!=drawGraphics&&applet.g!=pickGraphics){
+			//run the setup method in the proper context to affect the zone
+			beginTouch();
+			PGraphics temp = applet.g;
+			applet.g = drawGraphics;
+	
+			SMTUtilities.invoke(setupMethod, applet, this);
+	
+			applet.g = temp;
+			endTouch();
+		}else{
+			SMTUtilities.invoke(setupMethod, applet, this);
+		}
 	}
 
 	public void setName(String name) {
@@ -188,6 +192,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 
 		this.name = name;
+		
+		setup();
 	}
 
 	public void init() {
