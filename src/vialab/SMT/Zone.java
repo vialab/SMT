@@ -148,6 +148,10 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		// applet.g.getClass().getName());
 		//
 		// pg = drawGraphics;
+		
+		if(applet==null){
+			System.err.println("Error: Cannot Instantiate zone before TouchClient");
+		}
 
 		this.renderer = renderer;
 
