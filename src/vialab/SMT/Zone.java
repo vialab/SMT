@@ -1134,6 +1134,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 		clone.inverse=this.inverse.get();
 		
+		setup();
+		
 		if(cloneMaxChildGenerations>0){
 			for(Zone child:this.getChildren()){
 				clone.add(child.clone(cloneMaxChildGenerations-1));
