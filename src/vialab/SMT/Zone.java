@@ -1125,7 +1125,6 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	 */
 	public Zone clone(int cloneMaxChildGenerations) {
 		Zone clone=new Zone(this.getName(),this.x,this.y,this.width,this.height);
-		
 		//use the backupMatrix if the zone being clone has its matrix modified by parent, and so has backupMatrix set
 		if(this.backupMatrix!=null){
 			clone.matrix=this.backupMatrix.get();
@@ -1134,7 +1133,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 		clone.inverse=this.inverse.get();
 		
-		setup();
+		clone.setup();
 		
 		if(cloneMaxChildGenerations>0){
 			for(Zone child:this.getChildren()){
