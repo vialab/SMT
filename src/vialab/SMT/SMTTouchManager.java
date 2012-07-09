@@ -131,9 +131,12 @@ public class SMTTouchManager {
 	protected void handleTouchesDown(PGraphics graphics, TouchState currentTouchState) {
 		SMTUtilities.invoke(touchDown, applet);
 		for (TuioCursor touchPoint : currentTouchState) {
-			if (idToTouched.get(touchPoint.getSessionID()) == null) {
+			//now either their is no zone it is mapped to or the zone mapped to doesn't have it active, so new touchDown to find where to assign it
+			if (idToTouched.get(touchPoint.getSessionID()) == null ||
+				!idToTouched.get(touchPoint.getSessionID()).activeTouches.containsKey(touchPoint.getSessionID())) {
 				// it's a new touch that just went down,
 				// or an old touch that just crossed an object
+				// or an old touch that was unassigned from an object
 				Zone picked = picker.pick(touchPoint);
 				doTouchDown(graphics, picked, touchPoint);
 			}
