@@ -1142,4 +1142,13 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 		return clone;
 	}	
+	
+	public PVector toZoneVector(PVector in){
+		this.inverse.reset();
+		this.inverse.apply(this.matrix);
+		this.inverse.invert();
+		PVector out = new PVector();
+		this.inverse.mult(in, out);
+		return out;
+	}
 }
