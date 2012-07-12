@@ -172,7 +172,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	private void setup() {
 		resetMatrix();
 		
-		if(applet.g!=touchGraphics&&applet.g!=drawGraphics&&applet.g!=pickGraphics){
+		if(!(applet.g instanceof GLGraphicsOffScreen)){
 			//run the setup method in the proper context to affect the zone
 			beginTouch();
 			PGraphics temp = applet.g;

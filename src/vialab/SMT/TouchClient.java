@@ -154,6 +154,8 @@ public class TouchClient {
 			}
 		}
 
+		//As of now, this code is dead, the toolkit only supports OpenGL, and
+		//specifically needs GLGraphics to work properly
 		if (!(parent.g instanceof PGraphicsOpenGL)) {
 			parent.frame.removeNotify();
 			if (fullscreen) {
