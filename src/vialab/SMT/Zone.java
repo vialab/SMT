@@ -86,7 +86,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	protected PGraphics pickGraphics;
 
-	protected PGraphics touchGraphics;
+	//protected PGraphics touchGraphics;
 
 	private int pickColor = -1;
 
@@ -208,7 +208,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		*/
 		drawGraphics = new GLGraphicsOffScreen(applet,width, height);
 		pickGraphics = new GLGraphicsOffScreen(applet,width, height);
-		touchGraphics = new GLGraphicsOffScreen(applet,1,1);
+		//touchGraphics = new GLGraphicsOffScreen(applet,1,1);
 		
 		pg = drawGraphics;
 
@@ -315,7 +315,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public void beginTouch() {
-		pg = touchGraphics;
+		pg = drawGraphics;
 		super.beginDraw();
 		touchMatrix.reset();
 		super.setMatrix(touchMatrix);
@@ -324,7 +324,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	public void endTouch() {
 		super.endDraw();
 
-		matrix.preApply(touchGraphics.getMatrix(new PMatrix3D()));
+		matrix.preApply(drawGraphics.getMatrix(new PMatrix3D()));
 	}
 
 	public int getPickColor() {
