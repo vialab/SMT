@@ -937,6 +937,10 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 			SMTUtilities.invoke(touchMethod, applet, this);
 
+			if(touchMethod==null){
+				unassignAll();
+			}
+			
 			applet.g = temp;
 			endTouch();
 		}
