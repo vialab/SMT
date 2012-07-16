@@ -33,7 +33,7 @@ class CustomGLGraphicsOffScreen extends GLGraphicsOffScreen{
 public class SMTZonePicker {
 	private final int BG_PICK_COLOR = 255;
 	private final int START_PICK_COLOR = 0;
-	private final int PICK_COLOR_INC = 75;
+	private final int PICK_COLOR_INC = 1;
 
 	private int currentPickColor = START_PICK_COLOR;
 
@@ -59,14 +59,21 @@ public class SMTZonePicker {
 	}
 
 	public void add(Zone zone) {
+		if(activePickColors.size()==255){
+			System.err.println("Error, added zone in unpickable, maximum is 255 zones");
+		}
+		
 		// TODO: a uniform distribution would be ideal here
 		zone.setPickColor(currentPickColor);
 		//pickBuffer.beginDraw();
 		zonesByPickColor.put(currentPickColor, zone);
 		activePickColors.add(currentPickColor);
 		//pickBuffer.endDraw();
+		do{
 		currentPickColor += PICK_COLOR_INC;
-		currentPickColor %= 256;
+		//mod 255 instead of mod 256, as to not choose background color
+		currentPickColor %= 255;
+		}while(activePickColors.contains(currentPickColor)&&activePickColors.size()<255);
 		
 		for(Zone child: zone.children){
 			this.add(child);
