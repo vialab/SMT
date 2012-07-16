@@ -33,7 +33,11 @@ class CustomGLGraphicsOffScreen extends GLGraphicsOffScreen{
 public class SMTZonePicker {
 	private final int BG_PICK_COLOR = 255;
 	private final int START_PICK_COLOR = 0;
-	private final int PICK_COLOR_INC = 1;
+	//PICK_COLOR_INC needs a a value that is fairly large to tell the difference between few zones by eye, and need to have a lcm(I,N)=IxN 
+	//where I is PICK_COLOR_INC and N is the max number of pickColors
+	//lcm(I,N)=IxN means that the the pick color will only loop after being added N times, and so assures that we use all pickColors
+	//74 is a valid solution for I when N is 255 
+	private final int PICK_COLOR_INC = 74;
 
 	private int currentPickColor = START_PICK_COLOR;
 
