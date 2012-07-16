@@ -60,7 +60,7 @@ public class SMTZonePicker {
 
 	public void add(Zone zone) {
 		if(activePickColors.size()==255){
-			System.err.println("Error, added zone in unpickable, maximum is 255 zones");
+			System.err.println("Warning, added zone is unpickable, maximum is 255 pickable zones");
 		}
 		
 		// TODO: a uniform distribution would be ideal here
