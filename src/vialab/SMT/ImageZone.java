@@ -61,7 +61,7 @@ public class ImageZone extends Zone {
 	public ImageZone(String name, PImage img, int x, int y, int width, int height) {
 		super(name, x, y, width, height);
 		this.img= new GLTexture(Zone.applet,width,height);
-		this.img.putImage(img);
+		this.img.putPixelsIntoTexture(img);
 
 		// beginDraw();
 		// image(img, 0, 0, this.width, this.height);
