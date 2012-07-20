@@ -435,6 +435,10 @@ public class TouchClient {
 
 		// PApplet.println(parent.color((float) 0));
 		// PApplet.println(parent.get(100, 100));
+		
+		for (Zone zone : zoneList) {
+			zone.resetGraphicsMatrix();
+		}
 	}
 	
 	/**
@@ -600,6 +604,10 @@ public class TouchClient {
 	 * zone's x and y friction values.
 	 */
 	public void pre() {
+		for(Zone zone : zoneList){
+			zone.loadMatrixFromGraphics();		
+		}
+		
 		// TODO: provide some default assignment of touches
 		manager.handleTouches(parent.g);
 		SMTUtilities.invoke(touch, parent);

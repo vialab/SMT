@@ -1155,4 +1155,12 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		this.inverse.mult(in, out);
 		return out;
 	}
+
+	public void loadMatrixFromGraphics() {
+		this.matrix.preApply(drawGraphics.getMatrix(new PMatrix3D()));
+	}
+
+	public void resetGraphicsMatrix() {
+		super.setMatrix(new PMatrix3D());
+	}
 }
