@@ -290,8 +290,15 @@ public class TouchClient {
 	 */
 	public void add(Zone... zones) {
 		for (Zone zone : zones) {
-			zoneList.add(zone);
+			addToZoneList(zone);
 			picker.add(zone);
+		}
+	}
+
+	private void addToZoneList(Zone zone) {
+		zoneList.add(zone);
+		for(Zone child: zone.children){
+			addToZoneList(child);
 		}
 	}
 
@@ -405,6 +412,13 @@ public class TouchClient {
 
 	public boolean remove(Zone zone) {
 		picker.remove(zone);
+		return removeFromZoneList(zone);
+	}
+
+	private boolean removeFromZoneList(Zone zone) {
+		for(Zone child : zone.children){
+			removeFromZoneList(child);
+		}
 		return zoneList.remove(zone);
 	}
 

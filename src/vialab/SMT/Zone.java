@@ -341,11 +341,19 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public boolean add(Zone zone) {
+		//if the parent already is in the client zoneList, then add the child
+		if(TouchClient.zoneList.contains(this)){
+			client.add(zone);
+		}
 		zone.parent = this;
 		return children.add(zone);
 	}
 
 	public boolean remove(Zone child) {
+		//if the parent is in the client zoneList, then remove the child from the zoneList, but only if it is in children
+		if(TouchClient.zoneList.contains(this)&&this.children.contains(child)){
+			client.remove(child);
+		}
 		child.parent = null;
 		return children.remove(child);
 	}
@@ -1158,15 +1166,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public void loadMatrixFromGraphics() {
 		this.matrix.preApply(drawGraphics.getMatrix(new PMatrix3D()));
-		for(Zone child : children){
-			child.loadMatrixFromGraphics();	
-		}
 	}
 
 	public void resetGraphicsMatrix() {
 		super.setMatrix(new PMatrix3D());
-		for(Zone child : children){
-			child.resetGraphicsMatrix();	
-		}
 	}
 }
