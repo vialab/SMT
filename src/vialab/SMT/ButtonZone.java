@@ -116,6 +116,8 @@ public class ButtonZone extends Zone {
 				return true;
 			}
 		}
+		//if none of the touches assigned are on the button, remove all of them
+		unassignAll();
 		return false;
 	}
 

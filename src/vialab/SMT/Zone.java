@@ -945,7 +945,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 			SMTUtilities.invoke(touchMethod, applet, this);
 
-			if(touchMethod==null){
+			if(touchMethod==null && !(this instanceof ButtonZone)){
 				unassignAll();
 			}
 			
