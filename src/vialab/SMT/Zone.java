@@ -1158,9 +1158,15 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public void loadMatrixFromGraphics() {
 		this.matrix.preApply(drawGraphics.getMatrix(new PMatrix3D()));
+		for(Zone child : children){
+			child.loadMatrixFromGraphics();	
+		}
 	}
 
 	public void resetGraphicsMatrix() {
 		super.setMatrix(new PMatrix3D());
+		for(Zone child : children){
+			child.resetGraphicsMatrix();	
+		}
 	}
 }
