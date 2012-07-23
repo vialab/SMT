@@ -476,13 +476,33 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	 * @return boolean True if x and y is in the zone, false otherwise.
 	 */
 	public boolean contains(float x, float y) {
+		PMatrix3D temp=new PMatrix3D();
+		//list ancestors in order from most distant to closest, in order to apply their matrix's in order
+		LinkedList<Zone> ancestors=new LinkedList<Zone>();
+		Zone zone=this;
+		while(zone.getParent()!=null){
+			zone=zone.getParent();
+			ancestors.addFirst(zone);
+		}
+		//apply ancestors matrix's in proper order to make sure image is correctly oriented
+		for(Zone i: ancestors){
+			temp.apply(i.matrix);
+		}
+		temp.apply(matrix);
+			
+		temp.invert();
+		PVector world = new PVector();
+		PVector mouse = new PVector(x, y);
+		temp.mult(mouse, world);
+		
+		/*
 		this.inverse.reset();
 		this.inverse.apply(this.matrix);
 		this.inverse.invert();
 		PVector world = new PVector();
 		PVector mouse = new PVector(x, y);
 		this.inverse.mult(mouse, world);
-
+		*/
 		// return (world.x > this.getX()) && (world.x < this.getX() +
 		// this.width)
 		// && (world.y > this.getY()) && (world.y < this.getY() + this.height);
