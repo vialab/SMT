@@ -333,6 +333,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public void setPickColor(int color) {
 		this.pickColor = color;
+		pickInitialized=false;
 	}
 
 	public void removePickColor() {

@@ -73,9 +73,9 @@ public class SMTZonePicker {
 			activePickColors.add(currentPickColor);
 			//pickBuffer.endDraw();
 			do{
-			currentPickColor += PICK_COLOR_INC;
-			//mod 255 instead of mod 256, as to not choose background color
-			currentPickColor %= 255;
+				currentPickColor += PICK_COLOR_INC;
+				//mod 255 instead of mod 256, as to not choose background color
+				currentPickColor %= 255;
 			}while(activePickColors.contains(currentPickColor)&&activePickColors.size()<255);
 			
 			for(Zone child: zone.children){
@@ -89,8 +89,13 @@ public class SMTZonePicker {
 	}
 
 	public Zone remove(Zone zone) {
+		for(Zone child: zone.children){
+			this.remove(child);
+		}
 		activePickColors.remove(zone.getPickColor());
-		return zonesByPickColor.remove(zone.getPickColor());
+		Zone removed = zonesByPickColor.remove(zone.getPickColor());
+		zone.setPickColor(-1);
+		return removed;
 	}
 
 	public Zone pick(TuioCursor t) {
