@@ -12,8 +12,8 @@ import java.util.Set;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import TUIO.TuioCursor;
-import TUIO.TuioObject;
-import TUIO.TuioTime;
+//import TUIO.TuioObject;
+//import TUIO.TuioTime;
 
 public class SMTTouchManager {
 	private PApplet applet;
@@ -44,9 +44,9 @@ public class SMTTouchManager {
 
 	// private Method addTouch, removeTouch, updateTouch;
 
-	private Method addObject, removeObject, updateObject;
+	//private Method addObject, removeObject, updateObject;
 
-	private Method refresh;
+	//private Method refresh;
 
 	public SMTTouchManager(SMTTuioListener touchListener, SMTZonePicker picker) {
 		this.touchListener = touchListener;
@@ -258,14 +258,15 @@ public class SMTTouchManager {
 		// updateTouch = SMTUtilities.getPMethod(parent, "updateTouch", new
 		// Class[] { Touch.class });
 
-		addObject = SMTUtilities.getPMethod(parent, "addObject", new Class[] { TuioObject.class });
+		/*addObject = SMTUtilities.getPMethod(parent, "addObject", new Class[] { TuioObject.class });
 		removeObject = SMTUtilities.getPMethod(parent, "removeObject",
 				new Class[] { TuioObject.class });
 		updateObject = SMTUtilities.getPMethod(parent, "updateObject",
 				new Class[] { TuioObject.class });
 
 		refresh = SMTUtilities.getPMethod(parent, "refresh", new Class[] { TuioTime.class });
-
+		*/
+		
 		touchDown = SMTUtilities.getPMethod(parent, "touchDown");
 		touchMoved = SMTUtilities.getPMethod(parent, "touchMoved");
 		touchUp = SMTUtilities.getPMethod(parent, "touchUp");

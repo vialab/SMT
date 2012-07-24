@@ -56,7 +56,7 @@ import codeanticode.glgraphics.GLGraphicsOffScreen;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.core.PMatrix3D;
+//import processing.core.PMatrix3D;
 import processing.opengl.PGraphicsOpenGL;
 import vialab.mouseToTUIO.MouseToTUIO;
 import TUIO.TuioClient;
@@ -97,7 +97,7 @@ public class TouchClient {
 	static boolean drawTouchPoints = true;
 
 	/** Matrix used to test if the zone has gone off the screen */
-	private PMatrix3D mTest = new PMatrix3D();
+	//private PMatrix3D mTest = new PMatrix3D();
 
 	private SMTZonePicker picker;
 

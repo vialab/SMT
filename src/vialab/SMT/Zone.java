@@ -1105,7 +1105,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		return maxTime(touches);
 	}
 
-	private Touch getActiveTouch(int n) {
+	public Touch getActiveTouch(int n) {
 		int i = 0;
 		for (Touch t : activeTouches.values()) {
 			if (i == n) {

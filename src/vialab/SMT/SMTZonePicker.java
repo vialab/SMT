@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.opengl.PGraphicsOpenGL;
+//import processing.opengl.PGraphicsOpenGL;
 import TUIO.TuioCursor;
 
 //use GLGraphics instead now
