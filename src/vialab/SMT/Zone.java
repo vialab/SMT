@@ -65,7 +65,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	protected PMatrix3D matrix = new PMatrix3D();
 
 	private PMatrix3D touchMatrix = new PMatrix3D();
-	
+
 	private PMatrix3D backupMatrix = null;
 
 	/** The zone's inverse transformation matrix */
@@ -86,7 +86,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	protected PGraphics pickGraphics;
 
-	//protected PGraphics touchGraphics;
+	// protected PGraphics touchGraphics;
 
 	private int pickColor = -1;
 
@@ -103,12 +103,12 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	protected Method pickDrawMethod = null;
 
 	protected Method touchMethod = null;
-	
+
 	protected Method setupMethod = null;
 
 	protected String name = null;
-	
-	private static String defaultRenderer=GLGraphics.GLGRAPHICS;
+
+	private static String defaultRenderer = GLGraphics.GLGRAPHICS;
 
 	protected String renderer = defaultRenderer;
 
@@ -148,8 +148,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		// applet.g.getClass().getName());
 		//
 		// pg = drawGraphics;
-		
-		if(applet==null){
+
+		if (applet == null) {
 			System.err.println("Error: Cannot Instantiate zone before TouchClient");
 		}
 
@@ -168,21 +168,22 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 		setName(name);
 	}
-	
+
 	private void setup() {
 		resetMatrix();
-		
-		if(!(applet.g instanceof GLGraphicsOffScreen)){
-			//run the setup method in the proper context to affect the zone
+
+		if (!(applet.g instanceof GLGraphicsOffScreen)) {
+			// run the setup method in the proper context to affect the zone
 			beginTouch();
 			PGraphics temp = applet.g;
 			applet.g = drawGraphics;
-	
+
 			SMTUtilities.invoke(setupMethod, applet, this);
-	
+
 			applet.g = temp;
 			endTouch();
-		}else{
+		}
+		else {
 			SMTUtilities.invoke(setupMethod, applet, this);
 		}
 	}
@@ -196,20 +197,21 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 
 		this.name = name;
-		
+
 		setup();
 	}
 
 	public void init() {
-	    /*
-		drawGraphics = applet.createGraphics(width, height, GLGraphics.GLGRAPHICS);
-		pickGraphics = applet.createGraphics(width, height, GLGraphics.GLGRAPHICS);
-		touchGraphics = applet.createGraphics(1, 1, P3D);
-		*/
-		drawGraphics = new GLGraphicsOffScreen(applet,width, height);
-		pickGraphics = new GLGraphicsOffScreen(applet,width, height);
-		//touchGraphics = new GLGraphicsOffScreen(applet,1,1);
-		
+		/*
+		 * drawGraphics = applet.createGraphics(width, height,
+		 * GLGraphics.GLGRAPHICS); pickGraphics = applet.createGraphics(width,
+		 * height, GLGraphics.GLGRAPHICS); touchGraphics =
+		 * applet.createGraphics(1, 1, P3D);
+		 */
+		drawGraphics = new GLGraphicsOffScreen(applet, width, height);
+		pickGraphics = new GLGraphicsOffScreen(applet, width, height);
+		// touchGraphics = new GLGraphicsOffScreen(applet,1,1);
+
 		pg = drawGraphics;
 
 		resetMatrix();
@@ -333,7 +335,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public void setPickColor(int color) {
 		this.pickColor = color;
-		pickInitialized=false;
+		pickInitialized = false;
 	}
 
 	public void removePickColor() {
@@ -342,8 +344,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public boolean add(Zone zone) {
-		//if the parent already is in the client zoneList, then add the child
-		if(TouchClient.zoneList.contains(this)){
+		// if the parent already is in the client zoneList, then add the child
+		if (TouchClient.zoneList.contains(this)) {
 			client.add(zone);
 		}
 		zone.parent = this;
@@ -351,8 +353,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public boolean remove(Zone child) {
-		//if the parent is in the client zoneList, then remove the child from the zoneList, but only if it is in children
-		if(TouchClient.zoneList.contains(this)&&this.children.contains(child)){
+		// if the parent is in the client zoneList, then remove the child from
+		// the zoneList, but only if it is in children
+		if (TouchClient.zoneList.contains(this) && this.children.contains(child)) {
 			client.remove(child);
 		}
 		child.parent = null;
@@ -477,33 +480,32 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	 * @return boolean True if x and y is in the zone, false otherwise.
 	 */
 	public boolean contains(float x, float y) {
-		PMatrix3D temp=new PMatrix3D();
-		//list ancestors in order from most distant to closest, in order to apply their matrix's in order
-		LinkedList<Zone> ancestors=new LinkedList<Zone>();
-		Zone zone=this;
-		while(zone.getParent()!=null){
-			zone=zone.getParent();
+		PMatrix3D temp = new PMatrix3D();
+		// list ancestors in order from most distant to closest, in order to
+		// apply their matrix's in order
+		LinkedList<Zone> ancestors = new LinkedList<Zone>();
+		Zone zone = this;
+		while (zone.getParent() != null) {
+			zone = zone.getParent();
 			ancestors.addFirst(zone);
 		}
-		//apply ancestors matrix's in proper order to make sure image is correctly oriented
-		for(Zone i: ancestors){
+		// apply ancestors matrix's in proper order to make sure image is
+		// correctly oriented
+		for (Zone i : ancestors) {
 			temp.apply(i.matrix);
 		}
 		temp.apply(matrix);
-			
+
 		temp.invert();
 		PVector world = new PVector();
 		PVector mouse = new PVector(x, y);
 		temp.mult(mouse, world);
-		
+
 		/*
-		this.inverse.reset();
-		this.inverse.apply(this.matrix);
-		this.inverse.invert();
-		PVector world = new PVector();
-		PVector mouse = new PVector(x, y);
-		this.inverse.mult(mouse, world);
-		*/
+		 * this.inverse.reset(); this.inverse.apply(this.matrix);
+		 * this.inverse.invert(); PVector world = new PVector(); PVector mouse =
+		 * new PVector(x, y); this.inverse.mult(mouse, world);
+		 */
 		// return (world.x > this.getX()) && (world.x < this.getX() +
 		// this.width)
 		// && (world.y > this.getY()) && (world.y < this.getY() + this.height);
@@ -677,7 +679,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			}
 		}
 		else {
-			translate(this.x+this.width/2,this.y+this.height/2);
+			translate(this.x + this.width / 2, this.y + this.height / 2);
 			// TODO: even better, add a centreOfRotation parameter
 			// TODO: even more better, add a moving vs. non-moving
 			// centreOfRotation
@@ -715,14 +717,14 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			}
 		}
 		else {
-			translate(-(this.x+this.width/2),-(this.y+this.height/2));
+			translate(-(this.x + this.width / 2), -(this.y + this.height / 2));
 		}
 
 		lastUpdate = maxTime(first, second);
 	}
-	
-	public void rs(){
-		rst(true,true,false);
+
+	public void rs() {
+		rst(true, true, false);
 	}
 
 	/**
@@ -880,7 +882,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			rect(0, 0, width, height);
 			endPickDraw();
 		}
-		
+
 		PGraphics temp = applet.g;
 		applet.g = pickGraphics;
 
@@ -891,29 +893,31 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		applet.g = temp;
 		drawImpl(pickBuffer, pickGraphics, drawChildren);
 	}
- 
+
 	protected void drawImpl(PGraphics g, PGraphics img, boolean drawChildren) {
 		if (img != null) {
-			if(img==pickGraphics){
+			if (img == pickGraphics) {
 				g.beginDraw();
 				g.pushMatrix();
-				//list ancestors in order from most distant to closest, in order to apply their matrix's in order
-				LinkedList<Zone> ancestors=new LinkedList<Zone>();
-				Zone zone=this;
-				while(zone.getParent()!=null){
-					zone=zone.getParent();
+				// list ancestors in order from most distant to closest, in
+				// order to apply their matrix's in order
+				LinkedList<Zone> ancestors = new LinkedList<Zone>();
+				Zone zone = this;
+				while (zone.getParent() != null) {
+					zone = zone.getParent();
 					ancestors.addFirst(zone);
 				}
-				//apply ancestors matrix's in proper order to make sure image is correctly oriented
-				for(Zone i: ancestors){
+				// apply ancestors matrix's in proper order to make sure image
+				// is correctly oriented
+				for (Zone i : ancestors) {
 					g.applyMatrix(i.matrix);
 				}
 				g.applyMatrix(matrix);
 			}
-		
-			g.image(((GLGraphicsOffScreen)img).getTexture(), 0, 0,width,height);
-			
-			if(img==pickGraphics){
+
+			g.image(((GLGraphicsOffScreen) img).getTexture(), 0, 0, width, height);
+
+			if (img == pickGraphics) {
 				g.popMatrix();
 				g.endDraw();
 			}
@@ -925,7 +929,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	protected void drawChildren(PGraphics g, boolean picking) {
-		for (Zone child : children) {			
+		for (Zone child : children) {
 			if (picking) {
 				child.drawForPickBuffer(g);
 			}
@@ -966,10 +970,10 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 			SMTUtilities.invoke(touchMethod, applet, this);
 
-			if(touchMethod==null && !(this instanceof ButtonZone)){
+			if (touchMethod == null && !(this instanceof ButtonZone)) {
 				unassignAll();
 			}
-			
+
 			applet.g = temp;
 			endTouch();
 		}
@@ -977,15 +981,15 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		if (touchChildren) {
 			for (Zone child : children) {
 				if (child.isChildActive()) {
-					child.backupMatrix=child.matrix.get();
-					
+					child.backupMatrix = child.matrix.get();
+
 					child.beginTouch();
 					child.applyMatrix(matrix);
 					child.endTouch();
 
 					child.touchImpl(touchChildren, true);
-					
-					child.backupMatrix=null;
+
+					child.backupMatrix = null;
 
 					child.beginTouch();
 					PMatrix3D inverse = new PMatrix3D();
@@ -1143,40 +1147,46 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	public void touchesMoved(List<Touch> currentLocalState) {
 		assign(currentLocalState);
 	}
-	
+
 	/**
 	 * Clones the zone and all child zones
 	 */
 	@Override
-	public Zone clone(){
+	public Zone clone() {
 		return clone(Integer.MAX_VALUE);
 	}
 
 	/**
 	 * Clones the zone and optionally any child zones
-	 * @param cloneMaxChildGenereations - Max limit on how many generations of children to clone (0 - None, 1 - First Generation children, ... , Integer.MAX_VALUE - All generations of children)
+	 * 
+	 * @param cloneMaxChildGenereations
+	 *            - Max limit on how many generations of children to clone (0 -
+	 *            None, 1 - First Generation children, ... , Integer.MAX_VALUE -
+	 *            All generations of children)
 	 */
 	public Zone clone(int cloneMaxChildGenerations) {
-		Zone clone=new Zone(this.getName(),this.x,this.y,this.width,this.height);
-		//use the backupMatrix if the zone being clone has its matrix modified by parent, and so has backupMatrix set
-		if(this.backupMatrix!=null){
-			clone.matrix=this.backupMatrix.get();
-		}else{
-			clone.matrix=this.matrix.get();
+		Zone clone = new Zone(this.getName(), this.x, this.y, this.width, this.height);
+		// use the backupMatrix if the zone being clone has its matrix modified
+		// by parent, and so has backupMatrix set
+		if (this.backupMatrix != null) {
+			clone.matrix = this.backupMatrix.get();
 		}
-		clone.inverse=this.inverse.get();
-		
+		else {
+			clone.matrix = this.matrix.get();
+		}
+		clone.inverse = this.inverse.get();
+
 		clone.setup();
-		
-		if(cloneMaxChildGenerations>0){
-			for(Zone child:this.getChildren()){
-				clone.add(child.clone(cloneMaxChildGenerations-1));
+
+		if (cloneMaxChildGenerations > 0) {
+			for (Zone child : this.getChildren()) {
+				clone.add(child.clone(cloneMaxChildGenerations - 1));
 			}
 		}
 		return clone;
-	}	
-	
-	public PVector toZoneVector(PVector in){
+	}
+
+	public PVector toZoneVector(PVector in) {
 		this.inverse.reset();
 		this.inverse.apply(this.matrix);
 		this.inverse.invert();

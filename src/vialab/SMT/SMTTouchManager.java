@@ -44,9 +44,9 @@ public class SMTTouchManager {
 
 	// private Method addTouch, removeTouch, updateTouch;
 
-	//private Method addObject, removeObject, updateObject;
+	// private Method addObject, removeObject, updateObject;
 
-	//private Method refresh;
+	// private Method refresh;
 
 	public SMTTouchManager(SMTTuioListener touchListener, SMTZonePicker picker) {
 		this.touchListener = touchListener;
@@ -131,9 +131,12 @@ public class SMTTouchManager {
 	protected void handleTouchesDown(PGraphics graphics, TouchState currentTouchState) {
 		SMTUtilities.invoke(touchDown, applet);
 		for (TuioCursor touchPoint : currentTouchState) {
-			//now either their is no zone it is mapped to or the zone mapped to doesn't have it active, so new touchDown to find where to assign it
-			if (idToTouched.get(touchPoint.getSessionID()) == null ||
-				!idToTouched.get(touchPoint.getSessionID()).activeTouches.containsKey(touchPoint.getSessionID())) {
+			// now either their is no zone it is mapped to or the zone mapped to
+			// doesn't have it active, so new touchDown to find where to assign
+			// it
+			if (idToTouched.get(touchPoint.getSessionID()) == null
+					|| !idToTouched.get(touchPoint.getSessionID()).activeTouches
+							.containsKey(touchPoint.getSessionID())) {
 				// it's a new touch that just went down,
 				// or an old touch that just crossed an object
 				// or an old touch that was unassigned from an object
@@ -258,15 +261,17 @@ public class SMTTouchManager {
 		// updateTouch = SMTUtilities.getPMethod(parent, "updateTouch", new
 		// Class[] { Touch.class });
 
-		/*addObject = SMTUtilities.getPMethod(parent, "addObject", new Class[] { TuioObject.class });
-		removeObject = SMTUtilities.getPMethod(parent, "removeObject",
-				new Class[] { TuioObject.class });
-		updateObject = SMTUtilities.getPMethod(parent, "updateObject",
-				new Class[] { TuioObject.class });
+		/*
+		 * addObject = SMTUtilities.getPMethod(parent, "addObject", new Class[]
+		 * { TuioObject.class }); removeObject = SMTUtilities.getPMethod(parent,
+		 * "removeObject", new Class[] { TuioObject.class }); updateObject =
+		 * SMTUtilities.getPMethod(parent, "updateObject", new Class[] {
+		 * TuioObject.class });
+		 * 
+		 * refresh = SMTUtilities.getPMethod(parent, "refresh", new Class[] {
+		 * TuioTime.class });
+		 */
 
-		refresh = SMTUtilities.getPMethod(parent, "refresh", new Class[] { TuioTime.class });
-		*/
-		
 		touchDown = SMTUtilities.getPMethod(parent, "touchDown");
 		touchMoved = SMTUtilities.getPMethod(parent, "touchMoved");
 		touchUp = SMTUtilities.getPMethod(parent, "touchUp");

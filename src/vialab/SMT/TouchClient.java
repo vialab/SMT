@@ -97,7 +97,7 @@ public class TouchClient {
 	static boolean drawTouchPoints = true;
 
 	/** Matrix used to test if the zone has gone off the screen */
-	//private PMatrix3D mTest = new PMatrix3D();
+	// private PMatrix3D mTest = new PMatrix3D();
 
 	private SMTZonePicker picker;
 
@@ -139,23 +139,25 @@ public class TouchClient {
 
 	public TouchClient(PApplet parent, int port, boolean emulateTouches, boolean fullscreen) {
 		if (!(parent.g instanceof GLGraphics)) {
-			System.err.println("Error: Cannot display zones unless renderer is GLGraphics, make sure to import the GLGraphics library, and in setup use size(width,height,GLConstants.GLGRAPHICS)");
+			System.err
+					.println("Error: Cannot display zones unless renderer is GLGraphics, make sure to import the GLGraphics library, and in setup use size(width,height,GLConstants.GLGRAPHICS)");
 		}
-		
+
 		parent.setLayout(new BorderLayout());
 
 		if (emulateTouches) {
-			MouseToTUIO mtt= new MouseToTUIO(parent.width,parent.height);
+			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
 			parent.add(mtt);
-			//register the listener if using opengl, as the component wont get the events otherwise
+			// register the listener if using opengl, as the component wont get
+			// the events otherwise
 			if (parent.g instanceof PGraphicsOpenGL) {
 				parent.registerMouseEvent(mtt);
 				parent.registerKeyEvent(mtt);
 			}
 		}
 
-		//As of now, this code is dead, the toolkit only supports OpenGL, and
-		//specifically needs GLGraphics to work properly
+		// As of now, this code is dead, the toolkit only supports OpenGL, and
+		// specifically needs GLGraphics to work properly
 		if (!(parent.g instanceof PGraphicsOpenGL)) {
 			parent.frame.removeNotify();
 			if (fullscreen) {
@@ -225,20 +227,21 @@ public class TouchClient {
 	public void setDrawTouchPoints(boolean drawTouchPoints) {
 		TouchClient.drawTouchPoints = drawTouchPoints;
 	}
-	
+
 	/**
 	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
-	 * points if flag is set to true. Sets the maximum path length to draw to be max_path_length
+	 * points if flag is set to true. Sets the maximum path length to draw to be
+	 * max_path_length
 	 * 
 	 * @param drawTouchPoints
 	 *            boolean - flag
-	 *            
+	 * 
 	 * @param max_path_length
 	 *            int - sets maximum path length to draw
 	 */
 	public void setDrawTouchPoints(boolean drawTouchPoints, int max_path_length) {
 		TouchClient.drawTouchPoints = drawTouchPoints;
-		TouchClient.MAX_PATH_LENGTH=max_path_length;
+		TouchClient.MAX_PATH_LENGTH = max_path_length;
 	}
 
 	/**
@@ -259,7 +262,8 @@ public class TouchClient {
 						curs.get(i).getScreenY(parent.height), 22, 22);
 				Vector<TuioPoint> path = curs.get(i).getPath();
 				if (path.size() > 1) {
-					for (int j = 1 + Math.max(0,path.size()-(TouchClient.MAX_PATH_LENGTH+2)); j < path.size(); j++) {
+					for (int j = 1 + Math.max(0, path.size() - (TouchClient.MAX_PATH_LENGTH + 2)); j < path
+							.size(); j++) {
 						parent.stroke(255);
 						parent.line(path.get(j).getScreenX(parent.width) - 0.5f, path.get(j)
 								.getScreenY(parent.height) - 0.5f,
@@ -297,7 +301,7 @@ public class TouchClient {
 
 	private void addToZoneList(Zone zone) {
 		zoneList.add(zone);
-		for(Zone child: zone.children){
+		for (Zone child : zone.children) {
 			addToZoneList(child);
 		}
 	}
@@ -416,7 +420,7 @@ public class TouchClient {
 	}
 
 	private boolean removeFromZoneList(Zone zone) {
-		for(Zone child : zone.children){
+		for (Zone child : zone.children) {
 			removeFromZoneList(child);
 		}
 		return zoneList.remove(zone);
@@ -449,21 +453,27 @@ public class TouchClient {
 
 		// PApplet.println(parent.color((float) 0));
 		// PApplet.println(parent.get(100, 100));
-		
+
 		for (Zone zone : zoneList) {
 			zone.resetGraphicsMatrix();
 		}
 	}
-	
+
 	/**
-	 * Draws a texture of the pickBuffer at the given x,y position with given width and height
-	 * @param x - the x position to draw the pickBuffer image at
-	 * @param y - the y position to draw the pickBuffer image at
-	 * @param w - the width of the pickBuffer image to draw
-	 * @param h - the height of the pickBuffer image to draw
+	 * Draws a texture of the pickBuffer at the given x,y position with given
+	 * width and height
+	 * 
+	 * @param x
+	 *            - the x position to draw the pickBuffer image at
+	 * @param y
+	 *            - the y position to draw the pickBuffer image at
+	 * @param w
+	 *            - the width of the pickBuffer image to draw
+	 * @param h
+	 *            - the height of the pickBuffer image to draw
 	 */
-	public void drawPickBuffer(int x, int y, int w, int h){
-		parent.g.image(((GLGraphicsOffScreen)picker.getGraphics()).getTexture(),x,y,w,h);
+	public void drawPickBuffer(int x, int y, int w, int h) {
+		parent.g.image(((GLGraphicsOffScreen) picker.getGraphics()).getTexture(), x, y, w, h);
 	}
 
 	/**
@@ -618,10 +628,10 @@ public class TouchClient {
 	 * zone's x and y friction values.
 	 */
 	public void pre() {
-		for(Zone zone : zoneList){
-			zone.loadMatrixFromGraphics();		
+		for (Zone zone : zoneList) {
+			zone.loadMatrixFromGraphics();
 		}
-		
+
 		// TODO: provide some default assignment of touches
 		manager.handleTouches(parent.g);
 		SMTUtilities.invoke(touch, parent);
@@ -665,12 +675,12 @@ public class TouchClient {
 		};
 		serverThread.start();
 	}
-	
-	public void putZoneOnTop(Zone zone){
-		if(zoneList.indexOf(zone)<zoneList.size()-1){
+
+	public void putZoneOnTop(Zone zone) {
+		if (zoneList.indexOf(zone) < zoneList.size() - 1) {
 			zoneList.remove(zone);
 			zoneList.add(zone);
-			//change order of pickBuffer too
+			// change order of pickBuffer too
 			picker.putZoneOnTop(zone);
 		}
 	}

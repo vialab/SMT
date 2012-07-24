@@ -7,7 +7,6 @@ import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-
 import processing.core.PApplet;
 import processing.core.PGraphics;
 //import processing.opengl.PGraphicsOpenGL;
@@ -17,15 +16,16 @@ import TUIO.TuioCursor;
 //import processing.core.PConstants;
 import javax.media.opengl.GL;
 import codeanticode.glgraphics.*;
-import java.nio.ByteBuffer;  
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-class CustomGLGraphicsOffScreen extends GLGraphicsOffScreen{
-	CustomGLGraphicsOffScreen(PApplet applet,int width,int height){
+class CustomGLGraphicsOffScreen extends GLGraphicsOffScreen {
+	CustomGLGraphicsOffScreen(PApplet applet, int width, int height) {
 		super(applet, width, height);
 	}
-	int getFramebufferID(){
+
+	int getFramebufferID() {
 		return this.FBO.getFramebufferID();
 	}
 }
@@ -33,10 +33,12 @@ class CustomGLGraphicsOffScreen extends GLGraphicsOffScreen{
 public class SMTZonePicker {
 	private final int BG_PICK_COLOR = 255;
 	private final int START_PICK_COLOR = 0;
-	//PICK_COLOR_INC needs a a value that is fairly large to tell the difference between few zones by eye, and need to have a lcm(I,N)=IxN 
-	//where I is PICK_COLOR_INC and N is the max number of pickColors
-	//lcm(I,N)=IxN means that the the pick color will only loop after being added N times, and so assures that we use all pickColors
-	//74 is a valid solution for I when N is 255 
+	// PICK_COLOR_INC needs a a value that is fairly large to tell the
+	// difference between few zones by eye, and need to have a lcm(I,N)=IxN
+	// where I is PICK_COLOR_INC and N is the max number of pickColors
+	// lcm(I,N)=IxN means that the the pick color will only loop after being
+	// added N times, and so assures that we use all pickColors
+	// 74 is a valid solution for I when N is 255
 	private final int PICK_COLOR_INC = 74;
 
 	private int currentPickColor = START_PICK_COLOR;
@@ -50,35 +52,37 @@ public class SMTZonePicker {
 
 	private SortedSet<Integer> activePickColors = new TreeSet<Integer>();
 
-	int SIZEOF_INT = Integer.SIZE / 8; 
-	IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT).order(ByteOrder.nativeOrder()).asIntBuffer();  
+	int SIZEOF_INT = Integer.SIZE / 8;
+	IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT).order(ByteOrder.nativeOrder())
+			.asIntBuffer();
 
-	PGraphics getGraphics(){
+	PGraphics getGraphics() {
 		return this.pickBuffer;
 	}
-	
+
 	public SMTZonePicker() {
 		this.applet = TouchClient.parent;
 		initPickBuffer();
 	}
 
 	public void add(Zone zone) {
-		if(activePickColors.size()==255){
+		if (activePickColors.size() == 255) {
 			System.err.println("Warning, added zone is unpickable, maximum is 255 pickable zones");
-		}else{
+		}
+		else {
 			// TODO: a uniform distribution would be ideal here
 			zone.setPickColor(currentPickColor);
-			//pickBuffer.beginDraw();
+			// pickBuffer.beginDraw();
 			zonesByPickColor.put(currentPickColor, zone);
 			activePickColors.add(currentPickColor);
-			//pickBuffer.endDraw();
-			do{
+			// pickBuffer.endDraw();
+			do {
 				currentPickColor += PICK_COLOR_INC;
-				//mod 255 instead of mod 256, as to not choose background color
+				// mod 255 instead of mod 256, as to not choose background color
 				currentPickColor %= 255;
-			}while(activePickColors.contains(currentPickColor)&&activePickColors.size()<255);
-			
-			for(Zone child: zone.children){
+			} while (activePickColors.contains(currentPickColor) && activePickColors.size() < 255);
+
+			for (Zone child : zone.children) {
 				this.add(child);
 			}
 		}
@@ -89,7 +93,7 @@ public class SMTZonePicker {
 	}
 
 	public Zone remove(Zone zone) {
-		for(Zone child: zone.children){
+		for (Zone child : zone.children) {
 			this.remove(child);
 		}
 		activePickColors.remove(zone.getPickColor());
@@ -108,38 +112,37 @@ public class SMTZonePicker {
 		// return zone;
 		// }
 		// }
-		
+
 		int screenX = t.getScreenX(TouchClient.parent.width);
 		int screenY = t.getScreenY(TouchClient.parent.height);
-		
-		//new pixel read method that only reads the needed pixel for when using 
+
+		// new pixel read method that only reads the needed pixel for when using
 		GL gl = pickBuffer.beginGL();
-		//bind FBO, read pixel, then unbind FBO
-		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT,pickBuffer.getFramebufferID());
+		// bind FBO, read pixel, then unbind FBO
+		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT, pickBuffer.getFramebufferID());
 		gl.glReadPixels(screenX, screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
 		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT, 0);
-		
-		int pickColor=buffer.get(0);
-		//System.out.println("gray "+(pickColor & 0xFF)+" raw "+pickColor);
+
+		int pickColor = buffer.get(0);
+		// System.out.println("gray "+(pickColor & 0xFF)+" raw "+pickColor);
 		pickBuffer.endGL();
-		
+
 		/*
-		//pixel color method that works when using GLGraphicsOffScreen, but causes slowdown due to reading all pixels
-		//int[] pixels = new int[applet.width*applet.height];
-		//pickBuffer.getTexture().getBuffer(pixels);
-		//was upsidedown with some settings
-		//int pickColor = pixels[(applet.height-screenY)*applet.width+screenX];
-		GLTexture tex=pickBuffer.getTexture();
-		tex.loadPixels();
-		tex.updateTexture();
-		//pickBuffer.updatePixels();
-		int pickColor = tex.pixels[(screenY)*applet.width+screenX];
-		*/
-		//old method that doesn't work with GLGraphicsOffscreen
-		//int pickColor = pickBuffer.color(pickBuffer.get(screenX, screenY));
-		//System.out.print(screenX+" "+screenY+" "+pickColor+" "+pickBuffer.color((float)BG_PICK_COLOR)+" ");
-		
-		if (pickColor == pickBuffer.color((float)BG_PICK_COLOR)) {
+		 * //pixel color method that works when using GLGraphicsOffScreen, but
+		 * causes slowdown due to reading all pixels //int[] pixels = new
+		 * int[applet.width*applet.height];
+		 * //pickBuffer.getTexture().getBuffer(pixels); //was upsidedown with
+		 * some settings //int pickColor =
+		 * pixels[(applet.height-screenY)*applet.width+screenX]; GLTexture
+		 * tex=pickBuffer.getTexture(); tex.loadPixels(); tex.updateTexture();
+		 * //pickBuffer.updatePixels(); int pickColor =
+		 * tex.pixels[(screenY)*applet.width+screenX];
+		 */
+		// old method that doesn't work with GLGraphicsOffscreen
+		// int pickColor = pickBuffer.color(pickBuffer.get(screenX, screenY));
+		// System.out.print(screenX+" "+screenY+" "+pickColor+" "+pickBuffer.color((float)BG_PICK_COLOR)+" ");
+
+		if (pickColor == pickBuffer.color((float) BG_PICK_COLOR)) {
 			return null;
 		}
 		else {
@@ -189,19 +192,19 @@ public class SMTZonePicker {
 				// the parent should handle the drawing
 				continue;
 			}
-			//pickBuffer.pushMatrix();
-			//pickBuffer.applyMatrix(zone.matrix);
+			// pickBuffer.pushMatrix();
+			// pickBuffer.applyMatrix(zone.matrix);
 			zone.drawForPickBuffer(pickBuffer);
-			//pickBuffer.popMatrix();
+			// pickBuffer.popMatrix();
 		}
-		//pickBuffer.endDraw();
+		// pickBuffer.endDraw();
 	}
 
 	private void initPickBuffer() {
 		// pickBuffer = applet.createGraphics(applet.g.width, applet.g.height,
 		// applet.g.getClass()
 		// .getName());
-		pickBuffer = new CustomGLGraphicsOffScreen(applet,applet.g.width, applet.g.height);
+		pickBuffer = new CustomGLGraphicsOffScreen(applet, applet.g.width, applet.g.height);
 		pickBuffer.noSmooth();
 		pickBuffer.noLights();
 		pickBuffer.noTint();
@@ -210,7 +213,7 @@ public class SMTZonePicker {
 
 	public void putZoneOnTop(Zone zone) {
 		zonesByPickColor.remove(zone.getPickColor());
-	    zonesByPickColor.put(zone.getPickColor(),zone);
+		zonesByPickColor.put(zone.getPickColor(), zone);
 	}
 
 }

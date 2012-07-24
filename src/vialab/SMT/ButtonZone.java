@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import processing.core.PFont;
 
 public class ButtonZone extends Zone {
-	
+
 	private int fontSize;
 
 	private String text;
@@ -57,7 +57,7 @@ public class ButtonZone extends Zone {
 	public ButtonZone(String name, int x, int y, int width, int height) {
 		this(name, x, y, width, height, null, 12, null, 0);
 	}
-	
+
 	public ButtonZone(String name, int x, int y, int width, int height, String text) {
 		this(name, x, y, width, height, text, 12, null, 0);
 	}
@@ -75,15 +75,16 @@ public class ButtonZone extends Zone {
 		this(name, x, y, width, height, text, fontSize, null, 0);
 	}
 
-	public ButtonZone(String name, int x, int y, int width, int height, String text, int fontSize, PFont font) {
+	public ButtonZone(String name, int x, int y, int width, int height, String text, int fontSize,
+			PFont font) {
 		this(name, x, y, width, height, text, fontSize, font, 0);
 	}
 
-	public ButtonZone(String name, int x, int y, int width, int height, String text, int fontSize, PFont font,
-			float angle) {
+	public ButtonZone(String name, int x, int y, int width, int height, String text, int fontSize,
+			PFont font, float angle) {
 		super(name, x, y, width, height);
 		this.text = text;
-		this.fontSize=fontSize;
+		this.fontSize = fontSize;
 		this.font = font;
 		setAngle(angle);
 	}
@@ -132,7 +133,7 @@ public class ButtonZone extends Zone {
 				return true;
 			}
 		}
-		//if none of the touches assigned are on the button, remove all of them
+		// if none of the touches assigned are on the button, remove all of them
 		unassignAll();
 		return false;
 	}
