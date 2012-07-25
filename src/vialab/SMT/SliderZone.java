@@ -134,6 +134,8 @@ public class SliderZone extends Zone {
 		ellipse((((currentValue-minValue)/(float)maxValue)*width*(float)8/10) + (width/10) -(width/20)/2,0,width/20,height);
 		fill(0);
 		text(currentValue,10,10);
+		text(minValue,5,height-5);
+		text(maxValue,width-30,height-5);
 		fill(255);
 		//draw the ticks
 		for(int i=minValue; i<=maxValue; i++){

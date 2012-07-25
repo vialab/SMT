@@ -300,7 +300,9 @@ public class TouchClient {
 	}
 
 	private void addToZoneList(Zone zone) {
-		zoneList.add(zone);
+		if(!zoneList.contains(zone)){
+			zoneList.add(zone);
+		}
 		for (Zone child : zone.children) {
 			addToZoneList(child);
 		}
