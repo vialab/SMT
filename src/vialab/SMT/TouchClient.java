@@ -680,6 +680,9 @@ public class TouchClient {
 
 	public void putZoneOnTop(Zone zone) {
 		if (zoneList.indexOf(zone) < zoneList.size() - 1) {
+			if(zone.getParent()!=null){
+				zone.getParent().putChildOnTop(zone);
+			}
 			zoneList.remove(zone);
 			zoneList.add(zone);
 			// change order of pickBuffer too

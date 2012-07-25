@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import codeanticode.glgraphics.*;
 
@@ -80,7 +81,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	public Map<Long, Touch> activeTouches = Collections
 			.synchronizedMap(new LinkedHashMap<Long, Touch>());
 
-	protected ArrayList<Zone> children = new ArrayList<Zone>();
+	protected CopyOnWriteArrayList<Zone> children = new CopyOnWriteArrayList<Zone>();
 
 	protected PGraphics drawGraphics;
 
@@ -1197,5 +1198,13 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public void resetGraphicsMatrix() {
 		super.setMatrix(new PMatrix3D());
+	}
+
+	public void putChildOnTop(Zone zone) {
+		//only remove and add if actually in the children arraylist and not already the last(top) already
+		if(this.children.contains(zone)&&(children.indexOf(zone) < children.size() - 1)){
+			this.children.remove(zone);
+			this.children.add(zone);
+		}
 	}
 }

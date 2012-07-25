@@ -116,10 +116,10 @@ public class SliderZone extends Zone {
 
 	private void moveKnob() {
 		for(Touch t : getTouches()){
-			if(this.contains(t.x, t.y)){
-				PVector touchInZone=this.toZoneVector(new PVector(t.x,t.y));
-				this.currentValue=Math.min((int) (minValue+(maxValue-minValue)*(Math.max(touchInZone.x-(width/10),0)/(width*(((float)8)/10)))),maxValue);
-			}
+			//if(this.contains(t.x, t.y)){
+			PVector touchInZone=this.toZoneVector(new PVector(t.x,t.y));
+			this.currentValue=Math.min((int) (minValue+(maxValue-minValue)*(Math.max(touchInZone.x-(width/10),0)/(width*(((float)8)/10)))),maxValue);
+			//}
 		}
 		
 	}
