@@ -35,9 +35,9 @@ import codeanticode.glgraphics.*;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
-import processing.core.PGraphics;
 import processing.core.PMatrix3D;
 import processing.core.PVector;
+import processing.opengl.PGraphicsOpenGL;
 import TUIO.TuioTime;
 
 /**
@@ -83,9 +83,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	protected CopyOnWriteArrayList<Zone> children = new CopyOnWriteArrayList<Zone>();
 
-	protected PGraphics drawGraphics;
+	protected PGraphicsOpenGL drawGraphics;
 
-	protected PGraphics pickGraphics;
+	protected PGraphicsOpenGL pickGraphics;
 
 	// protected PGraphics touchGraphics;
 
@@ -176,7 +176,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		if (!(applet.g instanceof GLGraphicsOffScreen)) {
 			// run the setup method in the proper context to affect the zone
 			beginTouch();
-			PGraphics temp = applet.g;
+			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 			applet.g = drawGraphics;
 
 			SMTUtilities.invoke(setupMethod, applet, this);
@@ -843,7 +843,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 		// temporarily make the current graphics context be this Zone's context
 		// ( that way we don't have to prefix every call with zone.whatever() )
-		PGraphics temp = applet.g;
+		PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 		applet.g = drawGraphics;
 
 		beginDraw();
@@ -852,21 +852,21 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 		applet.g = temp;
 
-		drawImpl(applet.g, drawGraphics, drawChildren);
+		drawImpl((PGraphicsOpenGL) applet.g, drawGraphics, drawChildren);
 	}
 
-	public void drawForPickBuffer(PGraphics pickBuffer) {
+	public void drawForPickBuffer(PGraphicsOpenGL pickBuffer) {
 		drawForPickBuffer(pickBuffer, true);
 	}
 
-	public void drawForPickBuffer(PGraphics pickBuffer, boolean drawChildren) {
+	public void drawForPickBuffer(PGraphicsOpenGL pickBuffer, boolean drawChildren) {
 		if (!pickInitialized && pickDrawMethod == null) {
 			beginPickDraw();
 			rect(0, 0, width, height);
 			endPickDraw();
 		}
 
-		PGraphics temp = applet.g;
+		PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 		applet.g = pickGraphics;
 
 		beginPickDraw();
@@ -877,7 +877,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		drawImpl(pickBuffer, pickGraphics, drawChildren);
 	}
 
-	protected void drawImpl(PGraphics g, PGraphics img, boolean drawChildren) {
+	protected void drawImpl(PGraphicsOpenGL g, PGraphicsOpenGL img, boolean drawChildren) {
 		if (img != null) {
 			if (img == pickGraphics) {
 				g.beginDraw();
@@ -911,7 +911,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 	}
 
-	protected void drawChildren(PGraphics g, boolean picking) {
+	protected void drawChildren(PGraphicsOpenGL g, boolean picking) {
 		for (Zone child : children) {
 			if (picking) {
 				child.drawForPickBuffer(g);
@@ -948,7 +948,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	protected void touchImpl(boolean touchChildren, boolean isChild) {
 		if (isActive()) {
 			beginTouch();
-			PGraphics temp = applet.g;
+			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 			applet.g = drawGraphics;
 
 			SMTUtilities.invoke(touchMethod, applet, this);
