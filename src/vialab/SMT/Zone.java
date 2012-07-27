@@ -215,7 +215,6 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 		pg = drawGraphics;
 
-		resetMatrix();
 		// matrix.reset();
 		// matrix.translate(x, y);
 	}
@@ -298,8 +297,15 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	@Override
 	public void beginDraw() {
+		this.applyMatrixFromGraphics();
 		pg = drawGraphics;
 		super.beginDraw();
+	}
+	
+	@Override
+	public void endDraw() {
+		super.endDraw();
+		this.resetGraphicsMatrix();
 	}
 
 	public void beginPickDraw() {
@@ -328,6 +334,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		super.endDraw();
 
 		matrix.preApply(drawGraphics.getMatrix(new PMatrix3D()));
+		this.resetGraphicsMatrix();
 	}
 
 	public int getPickColor() {
@@ -1192,12 +1199,12 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		return out;
 	}
 
-	public void loadMatrixFromGraphics() {
+	protected void applyMatrixFromGraphics() {
 		this.matrix.preApply(drawGraphics.getMatrix(new PMatrix3D()));
 	}
-
-	public void resetGraphicsMatrix() {
-		super.setMatrix(new PMatrix3D());
+	
+	protected void resetGraphicsMatrix(){
+		drawGraphics.resetMatrix();
 	}
 
 	public void putChildOnTop(Zone zone) {
