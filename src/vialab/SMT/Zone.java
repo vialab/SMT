@@ -113,6 +113,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	protected String renderer = defaultRenderer;
 
+	protected static boolean grayscale = false;
+
 	/**
 	 * Zone constructor
 	 */
@@ -301,7 +303,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		pg = drawGraphics;
 		super.beginDraw();
 	}
-	
+
 	@Override
 	public void endDraw() {
 		super.endDraw();
@@ -315,7 +317,12 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		noLights();
 		noTint();
 		noStroke();
-		fill(pickColor);
+		if (grayscale) {
+			fill(pickColor);
+		}
+		else {
+			fill(red(pickColor), green(pickColor), blue(pickColor));
+		}
 		pickInitialized = true;
 	}
 
@@ -960,7 +967,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 			SMTUtilities.invoke(touchMethod, applet, this);
 
-			if (touchMethod == null && !(this instanceof ButtonZone) && !(this instanceof SliderZone)) {
+			if (touchMethod == null && !(this instanceof ButtonZone)
+					&& !(this instanceof SliderZone)) {
 				unassignAll();
 			}
 
@@ -1202,14 +1210,15 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	protected void applyMatrixFromGraphics() {
 		this.matrix.preApply(drawGraphics.getMatrix(new PMatrix3D()));
 	}
-	
-	protected void resetGraphicsMatrix(){
+
+	protected void resetGraphicsMatrix() {
 		drawGraphics.resetMatrix();
 	}
 
 	public void putChildOnTop(Zone zone) {
-		//only remove and add if actually in the children arraylist and not already the last(top) already
-		if(this.children.contains(zone)&&(children.indexOf(zone) < children.size() - 1)){
+		// only remove and add if actually in the children arraylist and not
+		// already the last(top) already
+		if (this.children.contains(zone) && (children.indexOf(zone) < children.size() - 1)) {
 			this.children.remove(zone);
 			this.children.add(zone);
 		}

@@ -31,7 +31,11 @@ class CustomGLGraphicsOffScreen extends GLGraphicsOffScreen {
 }
 
 public class SMTZonePicker {
-	private final int BG_PICK_COLOR = 255;
+	private static boolean BIG_ENDIAN = ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN;
+
+	static int MAX_COLOR_VALUE = 0x000000ff;
+
+	private final int BG_PICK_COLOR = MAX_COLOR_VALUE;
 	private final int START_PICK_COLOR = 0;
 	// PICK_COLOR_INC needs a a value that is fairly large to tell the
 	// difference between few zones by eye, and need to have a lcm(I,N)=IxN
@@ -63,10 +67,13 @@ public class SMTZonePicker {
 	public SMTZonePicker() {
 		this.applet = TouchClient.parent;
 		initPickBuffer();
+		if (SMTZonePicker.MAX_COLOR_VALUE == 255) {
+			Zone.grayscale = true;
+		}
 	}
 
 	public void add(Zone zone) {
-		if (activePickColors.size() == 255) {
+		if (activePickColors.size() == MAX_COLOR_VALUE) {
 			System.err.println("Warning, added zone is unpickable, maximum is 255 pickable zones");
 		}
 		else {
@@ -79,8 +86,9 @@ public class SMTZonePicker {
 			do {
 				currentPickColor += PICK_COLOR_INC;
 				// mod 255 instead of mod 256, as to not choose background color
-				currentPickColor %= 255;
-			} while (activePickColors.contains(currentPickColor) && activePickColors.size() < 255);
+				currentPickColor %= MAX_COLOR_VALUE;
+			} while (activePickColors.contains(currentPickColor)
+					&& activePickColors.size() < MAX_COLOR_VALUE);
 
 			for (Zone child : zone.children) {
 				this.add(child);
@@ -127,6 +135,8 @@ public class SMTZonePicker {
 		// System.out.println("gray "+(pickColor & 0xFF)+" raw "+pickColor);
 		pickBuffer.endGL();
 
+		pickColor = nativeToJavaARGB(pickColor);
+
 		/*
 		 * //pixel color method that works when using GLGraphicsOffScreen, but
 		 * causes slowdown due to reading all pixels //int[] pixels = new
@@ -147,7 +157,7 @@ public class SMTZonePicker {
 		}
 		else {
 			try {
-				int pickColorGray = 0x000000ff & pickColor;
+				int pickColorGray = MAX_COLOR_VALUE & pickColor;
 
 				Zone zone = zonesByPickColor.get(pickColorGray);
 				if (zone != null) {
@@ -216,4 +226,17 @@ public class SMTZonePicker {
 		zonesByPickColor.put(zone.getPickColor(), zone);
 	}
 
+	/**
+	 * Converts input native OpenGL value (RGBA on big endian, ABGR on little
+	 * endian) to Java ARGB. Copied from processing 2.0 source code
+	 */
+	public static int nativeToJavaARGB(int color) {
+		if (BIG_ENDIAN) { // RGBA to ARGB
+			return (color & 0xff000000) | ((color >> 8) & 0x00ffffff);
+		}
+		else { // ABGR to ARGB
+			return (color & 0xff000000) | ((color << 16) & 0xff0000) | (color & 0xff00)
+					| ((color >> 16) & 0xff);
+		}
+	}
 }
