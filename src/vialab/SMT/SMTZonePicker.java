@@ -33,7 +33,7 @@ class CustomGLGraphicsOffScreen extends GLGraphicsOffScreen {
 public class SMTZonePicker {
 	private static boolean BIG_ENDIAN = ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN;
 
-	static int MAX_COLOR_VALUE = 0x000000ff;
+	static int MAX_COLOR_VALUE = 0x00ffffff;
 
 	private final int BG_PICK_COLOR = MAX_COLOR_VALUE;
 	private final int START_PICK_COLOR = 0;
@@ -42,7 +42,7 @@ public class SMTZonePicker {
 	// where I is PICK_COLOR_INC and N is the max number of pickColors
 	// lcm(I,N)=IxN means that the the pick color will only loop after being
 	// added N times, and so assures that we use all pickColors
-	// 74 is a valid solution for I when N is 255
+	// 74 is a valid solution for I when N is 2^8-1, 2^16-1, or 2^24-1
 	private final int PICK_COLOR_INC = 74;
 
 	private int currentPickColor = START_PICK_COLOR;
