@@ -105,8 +105,6 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	protected Method touchMethod = null;
 
-	protected Method setupMethod = null;
-
 	protected String name = null;
 
 	private static String defaultRenderer = GLGraphics.GLGRAPHICS;
@@ -200,27 +198,8 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		// matrix.translate(x, y);
 
 		init();
-
-		setName(name);
-	}
-
-	private void setup() {
 		resetMatrix();
-
-		if (!(applet.g instanceof GLGraphicsOffScreen)) {
-			// run the setup method in the proper context to affect the zone
-			beginTouch();
-			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
-			applet.g = drawGraphics;
-
-			SMTUtilities.invoke(setupMethod, applet, this);
-
-			applet.g = temp;
-			endTouch();
-		}
-		else {
-			SMTUtilities.invoke(setupMethod, applet, this);
-		}
+		setName(name);
 	}
 
 	public void setName(String name) {
@@ -228,12 +207,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass());
 			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass());
 			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass());
-			setupMethod = SMTUtilities.getZoneMethod(applet, "setup", name, this.getClass());
 		}
 
 		this.name = name;
-
-		setup();
 	}
 
 	public void init() {
@@ -480,7 +456,6 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		this.x = x;
 		this.y = y;
 		resetMatrix();
-		setup();
 	}
 
 	/**
@@ -1269,8 +1244,6 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			clone.matrix = this.matrix.get();
 		}
 		clone.inverse = this.inverse.get();
-
-		clone.setup();
 
 		if (cloneMaxChildGenerations > 0) {
 			for (Zone child : this.getChildren()) {
