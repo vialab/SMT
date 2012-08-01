@@ -195,14 +195,15 @@ public class SMTZonePicker {
 			initPickBuffer();
 		}
 
-		//rendering the pickGraphics is now separate from rendering the image to the pickBuffer
-		//so non direct zones are first rendered into their pickGraphics then later draw onto the pickBuffer
+		// rendering the pickGraphics is now separate from rendering the image
+		// to the pickBuffer so non direct zones are first rendered into their
+		// pickGraphics then later draw onto the pickBuffer
 		for (Zone zone : zonesByPickColor.values()) {
-			if(!zone.isDirect()){
+			if (!zone.isDirect()) {
 				zone.drawForPickBuffer(pickBuffer);
 			}
 		}
-		
+
 		pickBuffer.beginDraw();
 		pickBuffer.background(BG_PICK_COLOR);
 		for (Zone zone : zonesByPickColor.values()) {
@@ -210,7 +211,7 @@ public class SMTZonePicker {
 				// the parent should handle the drawing
 				continue;
 			}
-			//zone does the matrix manipulation to place it self properly
+			// zone does the matrix manipulation to place it self properly
 			zone.drawForPickBuffer(pickBuffer);
 		}
 		pickBuffer.endDraw();

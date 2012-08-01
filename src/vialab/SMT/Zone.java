@@ -57,10 +57,10 @@ import TUIO.TuioTime;
 
 public class Zone extends PGraphicsDelegate implements PConstants {
 	/** Processing PApplet */
-	static PApplet applet = TouchClient.parent;
+	static PApplet applet;
 
 	/** TouchClient */
-	static TouchClient client = TouchClient.client;
+	static TouchClient client;
 
 	/** The zone's transformation matrix */
 	protected PMatrix3D matrix = new PMatrix3D();
@@ -112,7 +112,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	protected String renderer = defaultRenderer;
 
 	protected static boolean grayscale = false;
-	
+
 	private boolean pickDraw = true;
 
 	/**
@@ -170,6 +170,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
+
 		// drawGraphics = applet.createGraphics(width, height, JAVA2D);
 		// pickGraphics = applet.createGraphics(width, height,
 		// applet.g.getClass().getName());
@@ -178,12 +179,11 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		//
 		// pg = drawGraphics;
 
-		if (applet == null) {
-			System.err.println("Error: Cannot Instantiate zone before TouchClient");
-		}
+		applet = TouchClient.parent;
+		client = TouchClient.client;
 
-		if (client == null) {
-			client = TouchClient.client;
+		if (applet == null | client == null) {
+			System.err.println("Error: Cannot Instantiate zone before TouchClient");
 		}
 
 		this.renderer = renderer;
@@ -200,6 +200,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		init();
 		resetMatrix();
 		setName(name);
+
 	}
 
 	public void setName(String name) {
@@ -219,6 +220,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		 * height, GLGraphics.GLGRAPHICS); touchGraphics =
 		 * applet.createGraphics(1, 1, P3D);
 		 */
+
 		drawGraphics = new GLGraphicsOffScreen(applet, width, height);
 		pickGraphics = new GLGraphicsOffScreen(applet, width, height);
 		// touchGraphics = new GLGraphicsOffScreen(applet,1,1);
@@ -943,7 +945,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			}
 		}
 		else {
-			if(pickDraw){
+			if (pickDraw) {
 				if (!pickInitialized && pickDrawMethod == null) {
 					beginPickDraw();
 					rect(0, 0, width, height);
@@ -951,16 +953,17 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 				}
 				PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 				applet.g = pickGraphics;
-	
+
 				beginPickDraw();
 				SMTUtilities.invoke(pickDrawMethod, applet, this);
 				endPickDraw();
-	
+
 				applet.g = temp;
-			}else{
+			}
+			else {
 				drawImpl(pickBuffer, pickGraphics, drawChildren);
 			}
-			pickDraw=!pickDraw;
+			pickDraw = !pickDraw;
 		}
 	}
 

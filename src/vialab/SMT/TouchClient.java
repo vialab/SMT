@@ -300,7 +300,7 @@ public class TouchClient {
 	}
 
 	private void addToZoneList(Zone zone) {
-		if(!zoneList.contains(zone)){
+		if (!zoneList.contains(zone)) {
 			zoneList.add(zone);
 		}
 		for (Zone child : zone.children) {
@@ -672,7 +672,7 @@ public class TouchClient {
 
 	public void putZoneOnTop(Zone zone) {
 		if (zoneList.indexOf(zone) < zoneList.size() - 1) {
-			if(zone.getParent()!=null){
+			if (zone.getParent() != null) {
 				zone.getParent().putChildOnTop(zone);
 			}
 			zoneList.remove(zone);
