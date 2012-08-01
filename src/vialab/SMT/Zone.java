@@ -114,6 +114,34 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	protected String renderer = defaultRenderer;
 
 	protected static boolean grayscale = false;
+	
+	private boolean pickDraw = true;
+
+	/**
+	 * The direct flag controls whether rendering directly onto
+	 * screen/pickBuffer (direct), or into an image (not direct) If drawing into
+	 * an image we have assured size(cant draw outside of zone), and
+	 * background() will work for just the zone, but we lose a large amount of
+	 * performance
+	 */
+	private boolean direct = false;
+
+	/**
+	 * @see direct
+	 * @return whether zone is rendering directly onto screen/pickBuffer, or not
+	 */
+	public boolean isDirect() {
+		return direct;
+	}
+
+	/**
+	 * @see direct
+	 * @param direct
+	 *            controls rendering directly onto screen/pickBuffer, or not
+	 */
+	public void setDirect(boolean direct) {
+		this.direct = direct;
+	}
 
 	/**
 	 * Zone constructor
@@ -154,6 +182,10 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 		if (applet == null) {
 			System.err.println("Error: Cannot Instantiate zone before TouchClient");
+		}
+
+		if (client == null) {
+			client = TouchClient.client;
 		}
 
 		this.renderer = renderer;
@@ -301,18 +333,27 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	public void beginDraw() {
 		this.applyMatrixFromGraphics();
 		pg = drawGraphics;
-		super.beginDraw();
+		if (!direct) {
+			super.beginDraw();
+		}
 	}
 
 	@Override
 	public void endDraw() {
-		super.endDraw();
+		if (!direct) {
+			super.endDraw();
+		}
 		this.resetGraphicsMatrix();
 	}
 
 	public void beginPickDraw() {
-		pg = pickGraphics;
-		super.beginDraw();
+		if (!direct) {
+			pg = pickGraphics;
+			super.beginDraw();
+		}
+		else {
+			pg = client.picker.getGraphics();
+		}
 		noSmooth();
 		noLights();
 		noTint();
@@ -327,18 +368,24 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public void endPickDraw() {
-		super.endDraw();
+		if (!direct) {
+			super.endDraw();
+		}
 	}
 
 	public void beginTouch() {
 		pg = drawGraphics;
-		super.beginDraw();
+		if (!direct) {
+			super.beginDraw();
+		}
 		touchMatrix.reset();
 		super.setMatrix(touchMatrix);
 	}
 
 	public void endTouch() {
-		super.endDraw();
+		if (!direct) {
+			super.endDraw();
+		}
 
 		matrix.preApply(drawGraphics.getMatrix(new PMatrix3D()));
 		this.resetGraphicsMatrix();
@@ -854,19 +901,30 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public void draw(boolean drawChildren) {
+		if (direct) {
+			beginDraw();
+			SMTUtilities.invoke(drawMethod, applet, this);
+			endDraw();
+			if (drawChildren) {
+				drawChildren((PGraphicsOpenGL) applet.g, false);
+			}
+		}
+		else {
+			// temporarily make the current graphics context be this Zone's
+			// context
+			// ( that way we don't have to prefix every call with
+			// zone.whatever() )
+			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
+			applet.g = drawGraphics;
 
-		// temporarily make the current graphics context be this Zone's context
-		// ( that way we don't have to prefix every call with zone.whatever() )
-		PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
-		applet.g = drawGraphics;
+			beginDraw();
+			SMTUtilities.invoke(drawMethod, applet, this);
+			endDraw();
 
-		beginDraw();
-		SMTUtilities.invoke(drawMethod, applet, this);
-		endDraw();
+			applet.g = temp;
 
-		applet.g = temp;
-
-		drawImpl((PGraphicsOpenGL) applet.g, drawGraphics, drawChildren);
+			drawImpl((PGraphicsOpenGL) applet.g, drawGraphics, drawChildren);
+		}
 	}
 
 	public void drawForPickBuffer(PGraphicsOpenGL pickBuffer) {
@@ -874,27 +932,66 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 	}
 
 	public void drawForPickBuffer(PGraphicsOpenGL pickBuffer, boolean drawChildren) {
-		if (!pickInitialized && pickDrawMethod == null) {
+		if (direct) {
+			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
+			applet.g = pickBuffer;
 			beginPickDraw();
-			rect(0, 0, width, height);
+			applet.g.pushMatrix();
+			// list ancestors in order from most distant to closest, in
+			// order to apply their matrix's in order
+			LinkedList<Zone> ancestors = new LinkedList<Zone>();
+			Zone zone = this;
+			while (zone.getParent() != null) {
+				zone = zone.getParent();
+				ancestors.addFirst(zone);
+			}
+			// apply ancestors matrix's in proper order to make sure image
+			// is correctly oriented
+			for (Zone i : ancestors) {
+				applyMatrix(i.matrix);
+			}
+			applyMatrix(matrix);
+
+			if (pickDrawMethod == null) {
+				rect(0, 0, width, height);
+			}
+			else {
+				SMTUtilities.invoke(pickDrawMethod, applet, this);
+			}
+
+			applet.g.popMatrix();
 			endPickDraw();
+			applet.g = temp;
+
+			if (drawChildren) {
+				drawChildren(pickBuffer, true);
+			}
 		}
-
-		PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
-		applet.g = pickGraphics;
-
-		beginPickDraw();
-		SMTUtilities.invoke(pickDrawMethod, applet, this);
-		endPickDraw();
-
-		applet.g = temp;
-		drawImpl(pickBuffer, pickGraphics, drawChildren);
+		else {
+			if(pickDraw){
+				if (!pickInitialized && pickDrawMethod == null) {
+					beginPickDraw();
+					rect(0, 0, width, height);
+					endPickDraw();
+				}
+				PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
+				applet.g = pickGraphics;
+	
+				beginPickDraw();
+				SMTUtilities.invoke(pickDrawMethod, applet, this);
+				endPickDraw();
+	
+				applet.g = temp;
+			}else{
+				drawImpl(pickBuffer, pickGraphics, drawChildren);
+			}
+			pickDraw=!pickDraw;
+		}
 	}
 
 	protected void drawImpl(PGraphicsOpenGL g, PGraphicsOpenGL img, boolean drawChildren) {
 		if (img != null) {
 			if (img == pickGraphics) {
-				g.beginDraw();
 				g.pushMatrix();
 				// list ancestors in order from most distant to closest, in
 				// order to apply their matrix's in order
@@ -916,7 +1013,6 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 			if (img == pickGraphics) {
 				g.popMatrix();
-				g.endDraw();
 			}
 		}
 

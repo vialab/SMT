@@ -99,7 +99,7 @@ public class TouchClient {
 	/** Matrix used to test if the zone has gone off the screen */
 	// private PMatrix3D mTest = new PMatrix3D();
 
-	private SMTZonePicker picker;
+	protected SMTZonePicker picker;
 
 	private SMTTuioListener listener;
 

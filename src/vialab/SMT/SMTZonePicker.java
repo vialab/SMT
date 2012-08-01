@@ -74,7 +74,8 @@ public class SMTZonePicker {
 
 	public void add(Zone zone) {
 		if (activePickColors.size() == MAX_COLOR_VALUE) {
-			System.err.println("Warning, added zone is unpickable, maximum is 255 pickable zones");
+			System.err.println("Warning, added zone is unpickable, maximum is " + MAX_COLOR_VALUE
+					+ " pickable zones");
 		}
 		else {
 			// TODO: a uniform distribution would be ideal here
@@ -194,20 +195,25 @@ public class SMTZonePicker {
 			initPickBuffer();
 		}
 
+		//rendering the pickGraphics is now separate from rendering the image to the pickBuffer
+		//so non direct zones are first rendered into their pickGraphics then later draw onto the pickBuffer
+		for (Zone zone : zonesByPickColor.values()) {
+			if(!zone.isDirect()){
+				zone.drawForPickBuffer(pickBuffer);
+			}
+		}
+		
 		pickBuffer.beginDraw();
 		pickBuffer.background(BG_PICK_COLOR);
-		pickBuffer.endDraw();
 		for (Zone zone : zonesByPickColor.values()) {
 			if (zone.getParent() != null) {
 				// the parent should handle the drawing
 				continue;
 			}
-			// pickBuffer.pushMatrix();
-			// pickBuffer.applyMatrix(zone.matrix);
+			//zone does the matrix manipulation to place it self properly
 			zone.drawForPickBuffer(pickBuffer);
-			// pickBuffer.popMatrix();
 		}
-		// pickBuffer.endDraw();
+		pickBuffer.endDraw();
 	}
 
 	private void initPickBuffer() {
