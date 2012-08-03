@@ -12,7 +12,7 @@ public class ButtonZone extends Zone {
 
 	private PFont font;
 
-	private float cornerRadius = 25;
+	private float cornerRadius = 12;
 
 	private int color = applet.color(200);
 
@@ -140,16 +140,11 @@ public class ButtonZone extends Zone {
 
 	private void drawImpl(int buttonColor, int textColor) {
 		super.beginDraw();
-		smooth();
 
-		noFill();
 		stroke(borderColor);
 		strokeWeight(borderWeight);
-		smooth();
-		roundRect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
-				cornerRadius);
-
 		fill(buttonColor);
+		smooth();
 		roundRect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
 				cornerRadius);
 
@@ -168,30 +163,36 @@ public class ButtonZone extends Zone {
 	}
 
 	private void roundRect(float x, float y, float w, float h, float r) {
-		ellipseMode(CORNER);
-
-		float ax, ay, hr;
-
-		ax = x + w - r;
-		ay = y + h - r;
-		hr = r / 2;
+		float[] vx = { x + r, x + w - r, x + w, x + w, x + w - r, x + r, x, x };
+		float[] vy = { y, y, y + r, y + h - r, y + h, y + h, y + h - r, y + r };
+		float roundness = 2 * r;
 
 		beginShape();
-		vertex(x + hr, y);
-		vertex(x + w - hr, y);
-		vertex(x + w, y + hr);
-		vertex(x + w, y + h - hr);
-		vertex(x + w - hr, y + h);
-		vertex(x + hr, y + h);
-		vertex(x, y + h - hr);
-		vertex(x, y + hr);
+		vertex(vx[0], vy[0]);
+		vertex(vx[1], vy[1]);
+		curveVertex(vx[1] - roundness, vy[0]);
+		curveVertex(vx[1], vy[1]);
+		curveVertex(vx[2], vy[2]);
+		curveVertex(vx[3], vy[2] + roundness);
+		vertex(vx[2], vy[2]);
+		vertex(vx[3], vy[3]);
+		curveVertex(vx[2], vy[3] - roundness);
+		curveVertex(vx[3], vy[3]);
+		curveVertex(vx[4], vy[4]);
+		curveVertex(vx[4] - roundness, vy[5]);
+		vertex(vx[4], vy[4]);
+		vertex(vx[5], vy[5]);
+		curveVertex(vx[5] + roundness, vy[4]);
+		curveVertex(vx[5], vy[5]);
+		curveVertex(vx[6], vy[6]);
+		curveVertex(vx[7], vy[6] - roundness);
+		vertex(vx[6], vy[6]);
+		vertex(vx[7], vy[7]);
+		curveVertex(vx[6], vy[7] + roundness);
+		curveVertex(vx[7], vy[7]);
+		curveVertex(vx[0], vy[0]);
+		curveVertex(vx[0] + roundness, vy[1]);
 		endShape(CLOSE);
-
-		arc(x, y, r, r, PI, TWO_PI - HALF_PI);
-		arc(ax, y, r, r, 3 * HALF_PI, TWO_PI);
-		arc(x, ay, r, r, HALF_PI, PI);
-		arc(ax, ay, r, r, 0, HALF_PI);
-
 	}
 
 	@Override
