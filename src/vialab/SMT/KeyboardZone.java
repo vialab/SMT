@@ -30,7 +30,7 @@ public class KeyboardZone extends Zone {
 
 		@Override
 		public void touchDown(Touch touch) {
-			if (isButtonDown()) {
+			if (!isButtonDown()) {
 				// send key press using KeyEvent to listeners
 				for (KeyListener l : keyListeners) {
 					l.keyPressed(new KeyEvent(keyboardComponent, KeyEvent.KEY_PRESSED, System
@@ -123,9 +123,9 @@ public class KeyboardZone extends Zone {
 			this.add(new KeyZone(i * 50, 150, 50, 50, Keys.values()[29 + i]));
 		}
 		
-		/*for(Zone zone : this.children){
+		for(Zone zone : this.children){
 			zone.setDirect(true);
-		}*/
+		}
 		
 		//add the processing applet as a KeyListener by default
 		this.addKeyListener(applet);
