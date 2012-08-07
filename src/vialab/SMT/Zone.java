@@ -315,7 +315,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			super.beginDraw();
 		}
 		else {
-			pg = applet.g;
+			pg = (PGraphicsOpenGL) applet.g;
 		}
 	}
 
@@ -333,7 +333,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			super.beginDraw();
 		}
 		else {
-			pg = client.picker.getGraphics();
+			pg = (PGraphicsOpenGL) client.picker.getGraphics();
 		}
 		noSmooth();
 		noLights();
