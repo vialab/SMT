@@ -144,7 +144,6 @@ public class ButtonZone extends Zone {
 		stroke(borderColor);
 		strokeWeight(borderWeight);
 		fill(buttonColor);
-		smooth();
 		roundRect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
 				cornerRadius);
 

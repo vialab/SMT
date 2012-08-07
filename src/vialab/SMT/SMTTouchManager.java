@@ -86,7 +86,7 @@ public class SMTTouchManager {
 
 	private void activate(Zone zone, Touch touch) {
 		activeObjects.add(zone);
-		zone.assign(touch);
+		//zone.assign(touch);
 		// zone.setActive(true);
 	}
 

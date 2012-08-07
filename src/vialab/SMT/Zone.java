@@ -313,8 +313,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		pg = drawGraphics;
 		if (!direct) {
 			super.beginDraw();
-		}else{
-			pg=applet.g;
+		}
+		else {
+			pg = applet.g;
 		}
 	}
 
