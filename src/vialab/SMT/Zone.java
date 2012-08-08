@@ -221,7 +221,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		 * applet.createGraphics(1, 1, P3D);
 		 */
 
-		drawGraphics = new GLGraphicsOffScreen(applet, width, height);
+		drawGraphics = new GLGraphicsOffScreen(applet, width, height,true);
 		pickGraphics = new GLGraphicsOffScreen(applet, width, height);
 		// touchGraphics = new GLGraphicsOffScreen(applet,1,1);
 
