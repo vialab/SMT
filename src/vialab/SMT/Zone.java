@@ -117,10 +117,10 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	/**
 	 * The direct flag controls whether rendering directly onto
-	 * screen/pickBuffer (direct), or into an image (not direct) If drawing into
-	 * an image we have assured size(cant draw outside of zone), and
-	 * background() will work for just the zone, but we lose a large amount of
-	 * performance
+	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
+	 * drawing into an image we have assured size(cant draw outside of zone),
+	 * and background() will work for just the zone, but we lose a large amount
+	 * of performance
 	 */
 	private boolean direct = false;
 
@@ -315,7 +315,12 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			super.beginDraw();
 		}
 		else {
-			pg = (PGraphicsOpenGL) applet.g;
+			if (getParent() == null) {
+				pg = (PGraphicsOpenGL) applet.g;
+			}
+			else {
+				pg = getParent().pg;
+			}
 		}
 	}
 
@@ -333,7 +338,12 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			super.beginDraw();
 		}
 		else {
-			pg = (PGraphicsOpenGL) client.picker.getGraphics();
+			if (getParent() == null) {
+				pg = (PGraphicsOpenGL) client.picker.getGraphics();
+			}
+			else {
+				pg = getParent().pg;
+			}
 		}
 		noSmooth();
 		noLights();
@@ -884,10 +894,10 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		if (direct) {
 			beginDraw();
 			SMTUtilities.invoke(drawMethod, applet, this);
-			endDraw();
 			if (drawChildren) {
-				drawChildren((PGraphicsOpenGL) applet.g, false);
+				drawChildren(pg, false);
 			}
+			endDraw();
 		}
 		else {
 			// temporarily make the current graphics context be this Zone's
@@ -899,6 +909,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 			beginDraw();
 			SMTUtilities.invoke(drawMethod, applet, this);
+			if (drawChildren) {
+				drawDirectChildren(pg, false);
+			}
 			endDraw();
 
 			applet.g = temp;
@@ -917,6 +930,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			applet.g = pickBuffer;
 			beginPickDraw();
 			applet.g.pushMatrix();
+			/*
 			// list ancestors in order from most distant to closest, in
 			// order to apply their matrix's in order
 			LinkedList<Zone> ancestors = new LinkedList<Zone>();
@@ -930,6 +944,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			for (Zone i : ancestors) {
 				applyMatrix(i.matrix);
 			}
+			*/
 			applyMatrix(matrix);
 
 			if (pickDrawMethod == null) {
@@ -938,14 +953,12 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			else {
 				SMTUtilities.invoke(pickDrawMethod, applet, this);
 			}
-
+			if (drawChildren) {
+				drawChildren(pg, true);
+			}
 			applet.g.popMatrix();
 			endPickDraw();
 			applet.g = temp;
-
-			if (drawChildren) {
-				drawChildren(pickBuffer, true);
-			}
 		}
 		else {
 			if (pickDraw) {
@@ -959,6 +972,9 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 				beginPickDraw();
 				SMTUtilities.invoke(pickDrawMethod, applet, this);
+				if (drawChildren) {
+					drawDirectChildren(pg, true);
+				}
 				endPickDraw();
 
 				applet.g = temp;
@@ -974,6 +990,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		if (img != null) {
 			if (img == pickGraphics) {
 				g.pushMatrix();
+				/*
 				// list ancestors in order from most distant to closest, in
 				// order to apply their matrix's in order
 				LinkedList<Zone> ancestors = new LinkedList<Zone>();
@@ -987,32 +1004,52 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 				for (Zone i : ancestors) {
 					g.applyMatrix(i.matrix);
 				}
+				*/
 				g.applyMatrix(matrix);
 			}
-
 			g.image(((GLGraphicsOffScreen) img).getTexture(), 0, 0, width, height);
+			if (drawChildren) {
+				drawIndirectChildren(g, img == pickGraphics);
+			}
 
 			if (img == pickGraphics) {
 				g.popMatrix();
 			}
 		}
 
-		if (drawChildren) {
-			drawChildren(g, img == pickGraphics);
+	}
+	
+	protected void drawDirectChildren(PGraphicsOpenGL g, boolean picking) {
+		for (Zone child : children) {
+			if(child.direct){
+				drawChild(child, g, picking);
+			}
+		}
+	}
+	
+	protected void drawIndirectChildren(PGraphicsOpenGL g, boolean picking) {
+		for (Zone child : children) {
+			if(!child.direct){
+				drawChild(child, g, picking);
+			}
 		}
 	}
 
 	protected void drawChildren(PGraphicsOpenGL g, boolean picking) {
 		for (Zone child : children) {
-			if (picking) {
-				child.drawForPickBuffer(g);
-			}
-			else {
-				g.pushMatrix();
-				g.applyMatrix(child.matrix);
-				child.draw();
-				g.popMatrix();
-			}
+			drawChild(child, g, picking);
+		}
+	}
+
+	protected void drawChild(Zone child, PGraphicsOpenGL g, boolean picking) {
+		if (picking) {
+			child.drawForPickBuffer(g);
+		}
+		else {
+			g.pushMatrix();
+			g.applyMatrix(child.matrix);
+			child.draw();
+			g.popMatrix();
 		}
 	}
 
