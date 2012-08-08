@@ -93,7 +93,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	private TuioTime lastUpdate = TuioTime.getSessionTime();
 
-	private boolean pickInitialized = false;
+	//private boolean pickInitialized = false;
 
 	private Zone parent = null;
 
@@ -355,7 +355,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		else {
 			fill(red(pickColor), green(pickColor), blue(pickColor));
 		}
-		pickInitialized = true;
+		//pickInitialized = true;
 	}
 
 	public void endPickDraw() {
@@ -388,7 +388,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public void setPickColor(int color) {
 		this.pickColor = color;
-		pickInitialized = false;
+		//pickInitialized = false;
 	}
 
 	public void removePickColor() {
@@ -962,16 +962,16 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 		else {
 			if (pickDraw) {
-				if (!pickInitialized && pickDrawMethod == null) {
-					beginPickDraw();
-					rect(0, 0, width, height);
-					endPickDraw();
-				}
 				PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 				applet.g = pickGraphics;
 
 				beginPickDraw();
-				SMTUtilities.invoke(pickDrawMethod, applet, this);
+				if (pickDrawMethod == null) {
+					rect(0, 0, width, height);
+				}
+				else {
+					SMTUtilities.invoke(pickDrawMethod, applet, this);
+				}
 				if (drawChildren) {
 					drawDirectChildren(pg, true);
 				}
