@@ -42,7 +42,14 @@ public final class SMTUtilities {
 		try {
 			return parent.getClass().getMethod(methodName, parameterTypes);
 		}
-		catch (NoSuchMethodException e) {}
+		catch (NoSuchMethodException e) {
+			//try to call with no parameter too, to allow optional zone parameter
+			try {
+				return parent.getClass().getMethod(methodName);
+			}
+			catch (NoSuchMethodException e2) {}
+			catch (SecurityException e2) {}
+		}
 		catch (SecurityException e) {}
 		return null;
 	}
@@ -73,7 +80,7 @@ public final class SMTUtilities {
 	static Method getZoneMethod(PApplet parent, String methodPrefix, String name, Class<?> parameter) {
 		Method method = getAnyPMethod(parent, methodPrefix, name, parameter);
 		if (method == null) {
-			method = getAnyPMethod(parent, methodPrefix, "", parameter);
+			method = getAnyPMethod(parent, methodPrefix, "Default", parameter);
 		}
 		return method;
 	}
@@ -84,7 +91,15 @@ public final class SMTUtilities {
 				return method.invoke(parent, parameters);
 			}
 			catch (IllegalAccessException e) {}
-			catch (IllegalArgumentException e) {}
+			catch (IllegalArgumentException e) {
+				//try calling the method with no parameters, to allow optional zone parameter
+				try {
+					return method.invoke(parent);
+				}
+				catch (IllegalAccessException e2) {}
+				catch (IllegalArgumentException e2) {}
+				catch (InvocationTargetException e2) {}
+			}
 			catch (InvocationTargetException e) {}
 		}
 		return null;
