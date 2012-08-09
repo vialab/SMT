@@ -20,31 +20,11 @@ public class KeyboardZone extends Zone {
 		private static final long serialVersionUID = -3237916182106172342L;
 	};
 
-	private static String toString(Keys key) {
-		if (!key.isModifier) {
-			if (key.keyCode == KeyEvent.VK_SPACE) {
-				return "Space";
-			}
-			return Character.toString(Character.toUpperCase(key.keyChar));
-		}
-		else {
-			switch (key.keyCode) {
-			case KeyEvent.VK_SHIFT:
-				return "Shift";
-			case KeyEvent.VK_CONTROL:
-				return "Ctrl";
-			case KeyEvent.VK_ALT:
-				return "Alt";
-			}
-		}
-		return null;
-	}
-
 	private class KeyZone extends ButtonZone {
 		private Keys key;
 
 		public KeyZone(int x, int y, int width, int height, Keys key) {
-			super(x, y, width, height, KeyboardZone.toString(key));
+			super(x, y, width, height, key.text);
 			this.key = key;
 		}
 
@@ -191,18 +171,25 @@ public class KeyboardZone extends Zone {
 				KeyEvent.VK_X, false), KEY_C('c', KeyEvent.VK_C, false), KEY_V('v', KeyEvent.VK_V,
 				false), KEY_B('b', KeyEvent.VK_B, false), KEY_N('n', KeyEvent.VK_N, false), KEY_M(
 				'm', KeyEvent.VK_M, false), KEY_SHIFT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT,
-				true), KEY_CTRL(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true), KEY_ALT(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true), KEY_SPACE(' ', KeyEvent.VK_SPACE,
-				false);
+				true, "Shift"), KEY_CTRL(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true,
+				"Control"), KEY_ALT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true, "Alt"), KEY_SPACE(
+				' ', KeyEvent.VK_SPACE, false, "Space"), KEY_TAB('\t', KeyEvent.VK_TAB, false,
+				"Tab");
 
 		private final boolean isModifier;
 		private final char keyChar;
 		private final int keyCode;
+		private final String text;
 
-		Keys(char s, int code, boolean isModifier) {
-			keyChar = s;
-			keyCode = code;
+		Keys(char keyChar, int keyCode, boolean isModifier) {
+			this(keyChar, keyCode, isModifier, Character.toString(Character.toUpperCase(keyChar)));
+		}
+
+		Keys(char keyChar, int keyCode, boolean isModifier, String text) {
+			this.keyChar = keyChar;
+			this.keyCode = keyCode;
 			this.isModifier = isModifier;
+			this.text = text;
 		}
 
 		public String toString() {
@@ -243,7 +230,7 @@ public class KeyboardZone extends Zone {
 		for (int i = 0; i < 7; i++) {
 			this.add(new KeyZone(i * 50, 150, 50, 50, Keys.values()[29 + i]));
 		}
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 5; i++) {
 			this.add(new KeyZone(i * 50, 200, 50, 50, Keys.values()[36 + i]));
 		}
 
