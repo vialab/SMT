@@ -40,6 +40,9 @@ import processing.core.PVector;
 import processing.opengl.PGraphicsOpenGL;
 import TUIO.TuioTime;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 /**
  * This is the main zone class which RectZone and ImageZone extend. It holds the
  * zone's coordinates, size, matrices, friction, etc.. It was done with help
@@ -55,7 +58,7 @@ import TUIO.TuioTime;
  * @version 1.0
  */
 
-public class Zone extends PGraphicsDelegate implements PConstants {
+public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** Processing PApplet */
 	static PApplet applet;
 
@@ -93,7 +96,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	private TuioTime lastUpdate = TuioTime.getSessionTime();
 
-	//private boolean pickInitialized = false;
+	// private boolean pickInitialized = false;
 
 	private Zone parent = null;
 
@@ -221,7 +224,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		 * applet.createGraphics(1, 1, P3D);
 		 */
 
-		drawGraphics = new GLGraphicsOffScreen(applet, width, height,true);
+		drawGraphics = new GLGraphicsOffScreen(applet, width, height, true);
 		pickGraphics = new GLGraphicsOffScreen(applet, width, height);
 		// touchGraphics = new GLGraphicsOffScreen(applet,1,1);
 
@@ -355,7 +358,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		else {
 			fill(red(pickColor), green(pickColor), blue(pickColor));
 		}
-		//pickInitialized = true;
+		// pickInitialized = true;
 	}
 
 	public void endPickDraw() {
@@ -388,7 +391,7 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 
 	public void setPickColor(int color) {
 		this.pickColor = color;
-		//pickInitialized = false;
+		// pickInitialized = false;
 	}
 
 	public void removePickColor() {
@@ -931,20 +934,14 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			beginPickDraw();
 			applet.g.pushMatrix();
 			/*
-			// list ancestors in order from most distant to closest, in
-			// order to apply their matrix's in order
-			LinkedList<Zone> ancestors = new LinkedList<Zone>();
-			Zone zone = this;
-			while (zone.getParent() != null) {
-				zone = zone.getParent();
-				ancestors.addFirst(zone);
-			}
-			// apply ancestors matrix's in proper order to make sure image
-			// is correctly oriented
-			for (Zone i : ancestors) {
-				applyMatrix(i.matrix);
-			}
-			*/
+			 * // list ancestors in order from most distant to closest, in //
+			 * order to apply their matrix's in order LinkedList<Zone> ancestors
+			 * = new LinkedList<Zone>(); Zone zone = this; while
+			 * (zone.getParent() != null) { zone = zone.getParent();
+			 * ancestors.addFirst(zone); } // apply ancestors matrix's in proper
+			 * order to make sure image // is correctly oriented for (Zone i :
+			 * ancestors) { applyMatrix(i.matrix); }
+			 */
 			applyMatrix(matrix);
 
 			if (pickDrawMethod == null) {
@@ -991,20 +988,14 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			if (img == pickGraphics) {
 				g.pushMatrix();
 				/*
-				// list ancestors in order from most distant to closest, in
-				// order to apply their matrix's in order
-				LinkedList<Zone> ancestors = new LinkedList<Zone>();
-				Zone zone = this;
-				while (zone.getParent() != null) {
-					zone = zone.getParent();
-					ancestors.addFirst(zone);
-				}
-				// apply ancestors matrix's in proper order to make sure image
-				// is correctly oriented
-				for (Zone i : ancestors) {
-					g.applyMatrix(i.matrix);
-				}
-				*/
+				 * // list ancestors in order from most distant to closest, in
+				 * // order to apply their matrix's in order LinkedList<Zone>
+				 * ancestors = new LinkedList<Zone>(); Zone zone = this; while
+				 * (zone.getParent() != null) { zone = zone.getParent();
+				 * ancestors.addFirst(zone); } // apply ancestors matrix's in
+				 * proper order to make sure image // is correctly oriented for
+				 * (Zone i : ancestors) { g.applyMatrix(i.matrix); }
+				 */
 				g.applyMatrix(matrix);
 			}
 			g.image(((GLGraphicsOffScreen) img).getTexture(), 0, 0, width, height);
@@ -1018,18 +1009,18 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 		}
 
 	}
-	
+
 	protected void drawDirectChildren(PGraphicsOpenGL g, boolean picking) {
 		for (Zone child : children) {
-			if(child.direct){
+			if (child.direct) {
 				drawChild(child, g, picking);
 			}
 		}
 	}
-	
+
 	protected void drawIndirectChildren(PGraphicsOpenGL g, boolean picking) {
 		for (Zone child : children) {
-			if(!child.direct){
+			if (!child.direct) {
 				drawChild(child, g, picking);
 			}
 		}
@@ -1334,5 +1325,23 @@ public class Zone extends PGraphicsDelegate implements PConstants {
 			this.children.remove(zone);
 			this.children.add(zone);
 		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 }
