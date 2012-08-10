@@ -174,7 +174,9 @@ public class KeyboardZone extends Zone {
 				true, "Shift"), KEY_CTRL(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true,
 				"Control"), KEY_ALT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true, "Alt"), KEY_SPACE(
 				' ', KeyEvent.VK_SPACE, false, "Space"), KEY_TAB('\t', KeyEvent.VK_TAB, false,
-				"Tab");
+				"Tab"), KEY_ENTER('\n', KeyEvent.VK_ENTER, false, "Enter"), KEY_BACKSPACE('\b',
+				KeyEvent.VK_BACK_SPACE, false, "Backspace"), KEY_ESC('\u001B', KeyEvent.VK_ESCAPE,
+				false, "Esc"), KEY_DELETE('\u007F', KeyEvent.VK_DELETE, false, "Delete");
 
 		private final boolean isModifier;
 		private final char keyChar;
@@ -230,7 +232,7 @@ public class KeyboardZone extends Zone {
 		for (int i = 0; i < 7; i++) {
 			this.add(new KeyZone(i * 50, 150, 50, 50, Keys.values()[29 + i]));
 		}
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 9; i++) {
 			this.add(new KeyZone(i * 50, 200, 50, 50, Keys.values()[36 + i]));
 		}
 
@@ -252,5 +254,9 @@ public class KeyboardZone extends Zone {
 
 	public void addKeyListener(KeyListener l) {
 		this.keyListeners.add(l);
+	}
+
+	public void removeKeyListener(KeyListener l) {
+		this.keyListeners.remove(l);
 	}
 }

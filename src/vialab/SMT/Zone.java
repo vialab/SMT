@@ -107,6 +107,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected Method pickDrawMethod = null;
 
 	protected Method touchMethod = null;
+	
+	protected Method keyPressedMethod = null;
+	
+	protected Method keyReleasedMethod = null;
+	
+	protected Method keyTypedMethod = null;
 
 	protected String name = null;
 
@@ -211,6 +217,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass());
 			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass());
 			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass());
+			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name, this.getClass());
+			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name, this.getClass());
+			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass());
 		}
 
 		this.name = name;
@@ -1329,19 +1338,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		SMTUtilities.invoke(keyPressedMethod, applet, this);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		SMTUtilities.invoke(keyReleasedMethod, applet, this);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		SMTUtilities.invoke(keyTypedMethod, applet, this);
 	}
 }
