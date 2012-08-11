@@ -152,36 +152,40 @@ public class KeyboardZone extends Zone {
 	}
 
 	private static final int DEFAULT_HEIGHT = 250;
-	private static final int DEFAULT_WIDTH = 500;
+	private static final int DEFAULT_WIDTH = 750;
+
+	private static final int NUM_KEYBOARD_ROWS = 5;
 
 	private enum Keys {
-		KEY_1('1', KeyEvent.VK_1, false), KEY_2('2', KeyEvent.VK_2, false), KEY_3('3',
-				KeyEvent.VK_3, false), KEY_4('4', KeyEvent.VK_4, false), KEY_5('5', KeyEvent.VK_5,
-				false), KEY_6('6', KeyEvent.VK_6, false), KEY_7('7', KeyEvent.VK_7, false), KEY_8(
-				'8', KeyEvent.VK_8, false), KEY_9('9', KeyEvent.VK_9, false), KEY_0('0',
-				KeyEvent.VK_0, false), KEY_Q('q', KeyEvent.VK_Q, false), KEY_W('w', KeyEvent.VK_W,
-				false), KEY_E('e', KeyEvent.VK_E, false), KEY_R('r', KeyEvent.VK_R, false), KEY_T(
-				't', KeyEvent.VK_T, false), KEY_Y('y', KeyEvent.VK_Y, false), KEY_U('u',
-				KeyEvent.VK_U, false), KEY_I('i', KeyEvent.VK_I, false), KEY_O('o', KeyEvent.VK_O,
-				false), KEY_P('p', KeyEvent.VK_P, false), KEY_A('a', KeyEvent.VK_A, false), KEY_S(
-				's', KeyEvent.VK_S, false), KEY_D('d', KeyEvent.VK_D, false), KEY_F('f',
-				KeyEvent.VK_F, false), KEY_G('g', KeyEvent.VK_G, false), KEY_H('h', KeyEvent.VK_H,
-				false), KEY_J('j', KeyEvent.VK_J, false), KEY_K('k', KeyEvent.VK_K, false), KEY_L(
-				'l', KeyEvent.VK_L, false), KEY_Z('z', KeyEvent.VK_Z, false), KEY_X('x',
-				KeyEvent.VK_X, false), KEY_C('c', KeyEvent.VK_C, false), KEY_V('v', KeyEvent.VK_V,
-				false), KEY_B('b', KeyEvent.VK_B, false), KEY_N('n', KeyEvent.VK_N, false), KEY_M(
-				'm', KeyEvent.VK_M, false), KEY_SHIFT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT,
-				true, "Shift"), KEY_CTRL(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true,
-				"Control"), KEY_ALT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true, "Alt"), KEY_SPACE(
-				' ', KeyEvent.VK_SPACE, false, "Space"), KEY_TAB('\t', KeyEvent.VK_TAB, false,
-				"Tab"), KEY_ENTER('\n', KeyEvent.VK_ENTER, false, "Enter"), KEY_BACKSPACE('\b',
-				KeyEvent.VK_BACK_SPACE, false, "Backspace"), KEY_ESC('\u001B', KeyEvent.VK_ESCAPE,
-				false, "Esc"), KEY_DELETE('\u007F', KeyEvent.VK_DELETE, false, "Delete");
+		KEY_ESC('\u001B', KeyEvent.VK_ESCAPE, false, "Esc"), KEY_1('1', KeyEvent.VK_1, false), KEY_2(
+				'2', KeyEvent.VK_2, false), KEY_3('3', KeyEvent.VK_3, false), KEY_4('4',
+				KeyEvent.VK_4, false), KEY_5('5', KeyEvent.VK_5, false), KEY_6('6', KeyEvent.VK_6,
+				false), KEY_7('7', KeyEvent.VK_7, false), KEY_8('8', KeyEvent.VK_8, false), KEY_9(
+				'9', KeyEvent.VK_9, false), KEY_0('0', KeyEvent.VK_0, false), KEY_BACKSPACE('\b',
+				KeyEvent.VK_BACK_SPACE, false, "Backspace", 2.0f), KEY_Q('q', KeyEvent.VK_Q, false), KEY_W(
+				'w', KeyEvent.VK_W, false), KEY_E('e', KeyEvent.VK_E, false), KEY_R('r',
+				KeyEvent.VK_R, false), KEY_T('t', KeyEvent.VK_T, false), KEY_Y('y', KeyEvent.VK_Y,
+				false), KEY_U('u', KeyEvent.VK_U, false), KEY_I('i', KeyEvent.VK_I, false), KEY_O(
+				'o', KeyEvent.VK_O, false), KEY_P('p', KeyEvent.VK_P, false), KEY_A('a',
+				KeyEvent.VK_A, false), KEY_S('s', KeyEvent.VK_S, false), KEY_D('d', KeyEvent.VK_D,
+				false), KEY_F('f', KeyEvent.VK_F, false), KEY_G('g', KeyEvent.VK_G, false), KEY_H(
+				'h', KeyEvent.VK_H, false), KEY_J('j', KeyEvent.VK_J, false), KEY_K('k',
+				KeyEvent.VK_K, false), KEY_L('l', KeyEvent.VK_L, false), KEY_Z('z', KeyEvent.VK_Z,
+				false), KEY_X('x', KeyEvent.VK_X, false), KEY_C('c', KeyEvent.VK_C, false), KEY_V(
+				'v', KeyEvent.VK_V, false), KEY_B('b', KeyEvent.VK_B, false), KEY_N('n',
+				KeyEvent.VK_N, false), KEY_M('m', KeyEvent.VK_M, false), KEY_SHIFT(
+				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT, true, "Shift"), KEY_CTRL(
+				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true, "Control"), KEY_ALT(
+				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true, "Alt"), KEY_SPACE(' ',
+				KeyEvent.VK_SPACE, false, "Space", 6.0f), KEY_TAB('\t', KeyEvent.VK_TAB, false,
+				"Tab"), KEY_ENTER('\n', KeyEvent.VK_ENTER, false, "Enter"), KEY_DELETE('\u007F',
+				KeyEvent.VK_DELETE, false, "Delete");
 
 		private final boolean isModifier;
 		private final char keyChar;
 		private final int keyCode;
 		private final String text;
+		private final float keyWidthRatio;
 
 		Keys(char keyChar, int keyCode, boolean isModifier) {
 			this(keyChar, keyCode, isModifier, Character.toString(Character.toUpperCase(keyChar)));
@@ -192,6 +196,15 @@ public class KeyboardZone extends Zone {
 			this.keyCode = keyCode;
 			this.isModifier = isModifier;
 			this.text = text;
+			this.keyWidthRatio = 1.0f;
+		}
+
+		Keys(char keyChar, int keyCode, boolean isModifier, String text, float keyWidthRatio) {
+			this.keyChar = keyChar;
+			this.keyCode = keyCode;
+			this.isModifier = isModifier;
+			this.text = text;
+			this.keyWidthRatio = keyWidthRatio;
 		}
 
 		public String toString() {
@@ -220,21 +233,15 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(String name, int x, int y, int width, int height) {
 		super(name, x, y, width, height);
 
-		for (int i = 0; i < 10; i++) {
-			this.add(new KeyZone(i * 50, 0, 50, 50, Keys.values()[i]));
+		int KEYS_PER_ROW = 15;
+		int DEFAULT_KEY_WIDTH = width / KEYS_PER_ROW;
+
+		for (Keys k : Keys.values()) {
+			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH), this.height
+					/ NUM_KEYBOARD_ROWS, k));
 		}
-		for (int i = 0; i < 10; i++) {
-			this.add(new KeyZone(i * 50, 50, 50, 50, Keys.values()[10 + i]));
-		}
-		for (int i = 0; i < 9; i++) {
-			this.add(new KeyZone(i * 50, 100, 50, 50, Keys.values()[20 + i]));
-		}
-		for (int i = 0; i < 7; i++) {
-			this.add(new KeyZone(i * 50, 150, 50, 50, Keys.values()[29 + i]));
-		}
-		for (int i = 0; i < 9; i++) {
-			this.add(new KeyZone(i * 50, 200, 50, 50, Keys.values()[36 + i]));
-		}
+
+		client.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
 
 		for (Zone zone : this.children) {
 			zone.setDirect(true);

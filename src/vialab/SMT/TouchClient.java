@@ -337,7 +337,7 @@ public class TouchClient {
 		int rowHeight = 0;
 
 		for (Zone zone : zones) {
-			if (currentX > x + width) {
+			if (currentX + zone.width > x + width) {
 				currentX = x;
 				currentY += rowHeight + ySpace;
 				rowHeight = 0;
