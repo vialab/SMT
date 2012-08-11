@@ -661,8 +661,12 @@ public class TouchClient {
 						Process tuioServer = Runtime.getRuntime().exec(tuioServerCommand);
 						tuioServer.waitFor();
 					}
+					catch (IOException e) {
+						System.err.println(e.getMessage());
+						break;
+					}
 					catch (Exception e) {
-						System.err.println("TUIO Server stopped!");
+						System.err.println("TUIO Server stopped!, restarting server.");
 					}
 				}
 			}
