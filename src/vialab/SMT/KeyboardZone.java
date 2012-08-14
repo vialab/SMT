@@ -215,22 +215,42 @@ public class KeyboardZone extends Zone {
 	private ArrayList<KeyListener> keyListeners = new ArrayList<KeyListener>();
 
 	public KeyboardZone() {
-		this(null);
+		this(null, true);
 	}
-
+	
+	public KeyboardZone(boolean keysSentToApplet) {
+		this(null, keysSentToApplet);
+	}
+	
 	public KeyboardZone(int x, int y) {
-		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, true);
 	}
 
+	public KeyboardZone(int x, int y, boolean keysSentToApplet) {
+		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, keysSentToApplet);
+	}
+	
 	public KeyboardZone(String name) {
-		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, true);
 	}
 
+	public KeyboardZone(String name, boolean keysSentToApplet) {
+		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, keysSentToApplet);
+	}
+	
 	public KeyboardZone(int x, int y, int width, int height) {
-		this(null, x, y, width, height);
+		this(null, x, y, width, height, true);
 	}
 
+	public KeyboardZone(int x, int y, int width, int height, boolean keysSentToApplet) {
+		this(null, x, y, width, height, keysSentToApplet);
+	}
+	
 	public KeyboardZone(String name, int x, int y, int width, int height) {
+		this(name, x, y, width, height, true);
+	}
+
+	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet) {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
@@ -247,8 +267,10 @@ public class KeyboardZone extends Zone {
 			zone.setDirect(true);
 		}
 
-		// add the processing applet as a KeyListener by default
-		this.addKeyListener(applet);
+		if(keysSentToApplet){
+			// add the processing applet as a KeyListener by default
+			this.addKeyListener(applet);
+		}
 	}
 
 	public void draw() {

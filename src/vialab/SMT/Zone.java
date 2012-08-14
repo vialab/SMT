@@ -1338,16 +1338,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		SMTUtilities.invoke(keyPressedMethod, applet, this);
+		SMTUtilities.invoke(keyPressedMethod, applet, this,e);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		SMTUtilities.invoke(keyReleasedMethod, applet, this);
+		SMTUtilities.invoke(keyReleasedMethod, applet, this,e);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		SMTUtilities.invoke(keyTypedMethod, applet, this);
+		SMTUtilities.invoke(keyTypedMethod, applet, this,e);
 	}
 }
