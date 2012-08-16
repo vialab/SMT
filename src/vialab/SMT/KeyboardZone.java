@@ -272,7 +272,14 @@ public class KeyboardZone extends Zone {
 			this.addKeyListener(applet);
 		}
 	}
+	
+	@Override
+	public void init(){
+		super.init();
+		client.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
+	}
 
+	@Override
 	public void draw() {
 		super.beginDraw();
 		fill(0);

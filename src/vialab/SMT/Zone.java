@@ -472,10 +472,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            int - The zone's new height.
 	 */
 	public void setData(int xIn, int yIn, int wIn, int hIn) {
-		x = xIn;
-		y = yIn;
-		width = wIn;
-		height = hIn;
+		this.x = xIn;
+		this.y = yIn;
+		this.width = wIn;
+		this.height = hIn;
 		init();
 	}
 
@@ -483,6 +483,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		this.x = x;
 		this.y = y;
 		resetMatrix();
+	}
+	
+	@Override
+	public void setSize(int w, int h){
+		this.width = w;
+		this.height = h;
+		init();
 	}
 
 	/**
