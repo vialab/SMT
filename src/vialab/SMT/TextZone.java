@@ -19,11 +19,9 @@ public class TextZone extends Zone {
 		}
 
 		@Override
-		public void touchUp(Touch touch) {
-			if (this.getTouches().isEmpty()) {
-				selected = !selected;
-			}
-			super.touchUp(touch);
+		public void touchDown(Touch touch) {
+			selected = !selected;
+			super.touchDown(touch);
 		}
 
 		@Override

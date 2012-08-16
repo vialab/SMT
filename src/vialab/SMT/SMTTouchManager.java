@@ -86,7 +86,7 @@ public class SMTTouchManager {
 
 	private void activate(Zone zone, Touch touch) {
 		activeObjects.add(zone);
-		//zone.assign(touch);
+		// zone.assign(touch);
 		// zone.setActive(true);
 	}
 
@@ -141,7 +141,15 @@ public class SMTTouchManager {
 				// or an old touch that just crossed an object
 				// or an old touch that was unassigned from an object
 				Zone picked = picker.pick(touchPoint);
-				doTouchDown(graphics, picked, touchPoint);
+
+				// dont fire touchDown when repicking to same zone (both null is
+				// also caught by this), to avoid the auto-unassignAll() which
+				// allows picking to different zones with one touch by default,
+				// from causing touchDown being called every frame when the
+				// touch is down
+				if (picked != idToTouched.get(touchPoint.getSessionID())) {
+					doTouchDown(graphics, picked, touchPoint);
+				}
 			}
 		}
 	}

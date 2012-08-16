@@ -78,6 +78,7 @@ public class Touch extends TuioCursor {
 		super.path = t.getPath();
 		path = t.getPath();
 
+		super.session_id = t.getSessionID();
 		sessionID = t.getSessionID();
 
 		super.state = t.getTuioState();
