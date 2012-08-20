@@ -11,7 +11,7 @@ public class TabZone extends Zone {
 
 	private class Tab extends ButtonZone {
 		public Tab(String tabName, int x, int y, int w, int h) {
-			super(tabName, x, y, w, h);
+			super(tabName, x, y, w, h, tabName);
 		}
 
 		@Override
@@ -62,7 +62,7 @@ public class TabZone extends Zone {
 		if (zone.name == null) {
 			return this.add(zone, zone.toString());
 		}
-		return this.add(zone, zone.name + zone.toString());
+		return this.add(zone, zone.name + "::" + zone.toString());
 	}
 
 	public boolean add(Zone zone, String tabName) {

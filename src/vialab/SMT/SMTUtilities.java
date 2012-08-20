@@ -43,7 +43,8 @@ public final class SMTUtilities {
 			return parent.getClass().getMethod(methodName, parameterTypes);
 		}
 		catch (NoSuchMethodException e) {
-			//try to call with no parameter too, to allow optional zone parameter
+			// try to call with no parameter too, to allow optional zone
+			// parameter
 			try {
 				return parent.getClass().getMethod(methodName);
 			}
@@ -92,7 +93,8 @@ public final class SMTUtilities {
 			}
 			catch (IllegalAccessException e) {}
 			catch (IllegalArgumentException e) {
-				//try calling the method with no parameters, to allow optional zone parameter
+				// try calling the method with no parameters, to allow optional
+				// zone parameter
 				try {
 					return method.invoke(parent);
 				}

@@ -119,7 +119,7 @@ public class ImageZone extends Zone {
 	@Override
 	public void beginDraw() {
 		super.beginDraw();
-		//background(0, 0, 0, 0);
+		// background(0, 0, 0, 0);
 		image(img, 0, 0, this.width, this.height);
 	}
 
