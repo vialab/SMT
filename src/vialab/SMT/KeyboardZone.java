@@ -41,7 +41,6 @@ public class KeyboardZone extends Zone {
 			else {
 				modifierUp();
 			}
-
 		}
 
 		@Override
@@ -217,11 +216,11 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone() {
 		this(null, true);
 	}
-	
+
 	public KeyboardZone(boolean keysSentToApplet) {
 		this(null, keysSentToApplet);
 	}
-	
+
 	public KeyboardZone(int x, int y) {
 		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, true);
 	}
@@ -229,7 +228,7 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(int x, int y, boolean keysSentToApplet) {
 		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, keysSentToApplet);
 	}
-	
+
 	public KeyboardZone(String name) {
 		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, true);
 	}
@@ -237,7 +236,7 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(String name, boolean keysSentToApplet) {
 		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, keysSentToApplet);
 	}
-	
+
 	public KeyboardZone(int x, int y, int width, int height) {
 		this(null, x, y, width, height, true);
 	}
@@ -245,7 +244,7 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(int x, int y, int width, int height, boolean keysSentToApplet) {
 		this(null, x, y, width, height, keysSentToApplet);
 	}
-	
+
 	public KeyboardZone(String name, int x, int y, int width, int height) {
 		this(name, x, y, width, height, true);
 	}
@@ -267,14 +266,14 @@ public class KeyboardZone extends Zone {
 			zone.setDirect(true);
 		}
 
-		if(keysSentToApplet){
+		if (keysSentToApplet) {
 			// add the processing applet as a KeyListener by default
 			this.addKeyListener(applet);
 		}
 	}
-	
+
 	@Override
-	public void init(){
+	public void init() {
 		super.init();
 		client.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
 	}

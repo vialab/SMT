@@ -28,8 +28,8 @@ public class TextZone extends Zone {
 		public void draw() {
 			super.beginDraw();
 			fill(255);
-			if(selected){
-				fill(255,0,0);
+			if (selected) {
+				fill(255, 0, 0);
 			}
 			rect(0, 0, width, height);
 			fill(0);
@@ -81,11 +81,13 @@ public class TextZone extends Zone {
 		textFont(font);
 		if (e.getKeyChar() == ' ') {
 			this.currentWordZone = new WordZone(currentWordZone.x
-					+ (int) textWidth(currentWordZone.word + e.getKeyChar()), currentWordZone.y, 1, 20);
+					+ (int) textWidth(currentWordZone.word + e.getKeyChar()), currentWordZone.y, 1,
+					20);
 		}
 		else if (e.getKeyChar() == '\t') {
 			this.currentWordZone = new WordZone(currentWordZone.x
-					+ (int) textWidth(currentWordZone.word + e.getKeyChar()), currentWordZone.y, 1, 20);
+					+ (int) textWidth(currentWordZone.word + e.getKeyChar()), currentWordZone.y, 1,
+					20);
 		}
 		else if (e.getKeyChar() == '\n') {
 			this.currentWordZone = new WordZone(0, currentWordZone.y + 20, 1, 20);

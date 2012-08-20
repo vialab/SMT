@@ -107,11 +107,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected Method pickDrawMethod = null;
 
 	protected Method touchMethod = null;
-	
+
 	protected Method keyPressedMethod = null;
-	
+
 	protected Method keyReleasedMethod = null;
-	
+
 	protected Method keyTypedMethod = null;
 
 	protected String name = null;
@@ -217,8 +217,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass());
 			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass());
 			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass());
-			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name, this.getClass());
-			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name, this.getClass());
+			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name,
+					this.getClass());
+			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name,
+					this.getClass());
 			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass());
 		}
 
@@ -484,9 +486,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		this.y = y;
 		resetMatrix();
 	}
-	
+
 	@Override
-	public void setSize(int w, int h){
+	public void setSize(int w, int h) {
 		this.width = w;
 		this.height = h;
 		init();
@@ -1049,14 +1051,18 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void drawChild(Zone child, PGraphicsOpenGL g, boolean picking) {
-		if (picking) {
-			child.drawForPickBuffer(g);
-		}
-		else {
-			g.pushMatrix();
-			g.applyMatrix(child.matrix);
-			child.draw();
-			g.popMatrix();
+		// only draw/pickDraw when the child is in zonelist (parent zone's are
+		// responsible for adding/removing child to/from zonelist)
+		if (TouchClient.zoneList.contains(child)) {
+			if (picking) {
+				child.drawForPickBuffer(g);
+			}
+			else {
+				g.pushMatrix();
+				g.applyMatrix(child.matrix);
+				child.draw();
+				g.popMatrix();
+			}
 		}
 	}
 
@@ -1345,16 +1351,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		SMTUtilities.invoke(keyPressedMethod, applet, this,e);
+		SMTUtilities.invoke(keyPressedMethod, applet, this, e);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		SMTUtilities.invoke(keyReleasedMethod, applet, this,e);
+		SMTUtilities.invoke(keyReleasedMethod, applet, this, e);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		SMTUtilities.invoke(keyTypedMethod, applet, this,e);
+		SMTUtilities.invoke(keyTypedMethod, applet, this, e);
 	}
 }
