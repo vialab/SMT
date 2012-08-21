@@ -128,9 +128,12 @@ public class SMTZonePicker {
 		// new pixel read method that only reads the needed pixel for when using
 		GL gl = pickBuffer.beginGL();
 		// bind FBO, read pixel, then unbind FBO
+		gl.glGetIntegerv(GL.GL_FRAMEBUFFER_BINDING_EXT, buffer);
+		int prevFB = buffer.get(0);
+		buffer.rewind();
 		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT, pickBuffer.getFramebufferID());
 		gl.glReadPixels(screenX, screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
-		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT, 0);
+		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT, prevFB);
 
 		int pickColor = buffer.get(0);
 		// System.out.println("gray "+(pickColor & 0xFF)+" raw "+pickColor);
