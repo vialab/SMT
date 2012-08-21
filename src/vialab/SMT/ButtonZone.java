@@ -129,7 +129,8 @@ public class ButtonZone extends Zone {
 
 	public boolean isButtonDown() {
 		for (Touch t : getTouches()) {
-			if (client.picker.pick(t).equals(this)) {
+			Zone picked = client.picker.pick(t);
+			if (picked!=null && picked.equals(this)) {
 				return true;
 			}
 		}
