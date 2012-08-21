@@ -86,7 +86,7 @@ public class TextZone extends Zone {
 		}
 		else if (e.getKeyChar() == '\t') {
 			this.currentWordZone = new WordZone(currentWordZone.x
-					+ (int) textWidth(currentWordZone.word + e.getKeyChar()), currentWordZone.y, 1,
+					+ (int) textWidth(currentWordZone.word + "    "), currentWordZone.y, 1,
 					20);
 		}
 		else if (e.getKeyChar() == '\n') {
