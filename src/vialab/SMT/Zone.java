@@ -425,7 +425,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		if (TouchClient.zoneList.contains(this) && this.children.contains(child)) {
 			client.remove(child);
 		}
-		child.parent = null;
+		if (child != null) {
+			child.parent = null;
+		}
 		return children.remove(child);
 	}
 
@@ -479,6 +481,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		this.width = wIn;
 		this.height = hIn;
 		init();
+		resetMatrix();
 	}
 
 	public void setLocation(int x, int y) {
@@ -492,6 +495,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		this.width = w;
 		this.height = h;
 		init();
+		resetMatrix();
 	}
 
 	/**
