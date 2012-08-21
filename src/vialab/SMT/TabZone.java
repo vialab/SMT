@@ -156,7 +156,6 @@ public class TabZone extends Zone {
 		Tab tab = new Tab(tabName, 0, 0, width / (Tabs.keySet().size() + 1), TAB_HEIGHT);
 		Tabs.put(tab, zone);
 		client.add(tab);
-		zone.setDirect(true);
 		boolean result = super.add(zone);
 		client.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
 		tabActive(tab);
