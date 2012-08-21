@@ -95,7 +95,7 @@ public class TextZone extends Zone {
 		else {
 			this.currentWordZone.word += e.getKeyChar();
 			this.currentWordZone.setData(currentWordZone.x, currentWordZone.y,
-					(int) textWidth(currentWordZone.word), currentWordZone.height);
+					Math.max((int) textWidth(currentWordZone.word),1), currentWordZone.height);
 		}
 		super.keyTyped(e);
 	}
