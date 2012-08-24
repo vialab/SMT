@@ -8,8 +8,8 @@ Steps to use with Processing IDE:
 		-if git is installed, clone the repository:
 			"git clone https://github.com/vialab/SMT.git"
 		-or by clicking the clone button on the github page using: 
-			GitHub for Windows (windows.github.com) or
- 			GitHub for Mac (mac.github.com)
+			GitHub for Windows (http://windows.github.com) or
+ 			GitHub for Mac (http://mac.github.com)
 		-by downloading the zip of the source
 	0b. Download Processing IDE: http://www.processing.org/download/
 	1. Open Processing IDE, File->Preferences->Sketchbook location: set this to the example_sketches_and_libs folder that is located where the SMT repository was cloned to
