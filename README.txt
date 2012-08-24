@@ -4,10 +4,12 @@ It provides an easy to use library for processing sketches to handle touch input
 The example_sketches_and_libs folder provides some test processing sketches that can be copied to or used as the processing sketchbook location, and the libraries needed in the sketchbook location to run the sketches
 
 Steps to use with Processing IDE:
-	0a. Download the source and examples from https://github.com/vialab/SMT :
-		-using a git clone of the repository, if git is installed:
+	0a. Download the source and examples from https://github.com/vialab/SMT
+		-if git is installed, clone the repository:
 			"git clone https://github.com/vialab/SMT.git"
-		-by clicking the clone button on the github page, or
+		-or by clicking the clone button on the github page using: 
+			GitHub for Windows (windows.github.com) or
+ 			GitHub for Mac (mac.github.com)
 		-by downloading the zip of the source
 	0b. Download Processing IDE: http://www.processing.org/download/
 	1. Open Processing IDE, File->Preferences->Sketchbook location: set this to the example_sketches_and_libs folder that is located where the SMT repository was cloned to
