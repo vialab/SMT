@@ -214,22 +214,49 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	public void setName(String name) {
 		if (name != null) {
-			boolean warnDraw=true;
-			boolean warnTouch=true;
-			if(this instanceof ButtonZone||this instanceof ImageZone||this instanceof TabZone||this instanceof TextZone||this instanceof SliderZone||this instanceof KeyboardZone){
-				warnDraw=false;
+			boolean warnDraw = true;
+			boolean warnTouch = true;
+			boolean warnKeys = false;
+			boolean warnPick = false;
+			if (this instanceof ButtonZone || this instanceof ImageZone || this instanceof TabZone
+					|| this instanceof TextZone || this instanceof SliderZone
+					|| this instanceof KeyboardZone) {
+				warnDraw = false;
 			}
-			if(this instanceof ButtonZone||this instanceof TabZone||this instanceof TextZone||this instanceof SliderZone){
-				warnTouch=false;
+			if (this instanceof ButtonZone || this instanceof TabZone || this instanceof TextZone
+					|| this instanceof SliderZone) {
+				warnTouch = false;
 			}
-			drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass(), warnDraw);
-			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass(), false);
-			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass(), warnTouch);
+
+			if (client.warnUnimplemented != null) {
+				if (client.warnUnimplemented.booleanValue()) {
+					warnDraw = true;
+					warnTouch = true;
+					warnKeys = true;
+					warnPick = true;
+				}
+				else {
+					warnDraw = false;
+					warnTouch = false;
+					warnKeys = false;
+					warnPick = false;
+				}
+			}
+
+			drawMethod = SMTUtilities
+					.getZoneMethod(applet, "draw", name, this.getClass(), warnDraw);
+
+			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass(),
+					warnPick);
+			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass(),
+					warnTouch);
+
 			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name,
-					this.getClass(), false);
+					this.getClass(), warnKeys);
 			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name,
-					this.getClass(), false);
-			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass(), false);
+					this.getClass(), warnKeys);
+			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass(),
+					warnKeys);
 		}
 
 		this.name = name;

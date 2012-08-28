@@ -107,6 +107,12 @@ public class TouchClient {
 
 	private Method touch;
 
+	public Boolean warnUnimplemented;
+
+	public void WarnUnimplemented(boolean warn) {
+		this.warnUnimplemented = warn;
+	}
+
 	/**
 	 * Default Constructor. Default port is 3333 for TUIO
 	 * 
