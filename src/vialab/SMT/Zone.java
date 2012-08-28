@@ -214,52 +214,59 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	public void setName(String name) {
 		if (name != null) {
-			boolean warnDraw = true;
-			boolean warnTouch = true;
-			boolean warnKeys = false;
-			boolean warnPick = false;
-			if (this instanceof ButtonZone || this instanceof ImageZone || this instanceof TabZone
-					|| this instanceof TextZone || this instanceof SliderZone
-					|| this instanceof KeyboardZone) {
-				warnDraw = false;
-			}
-			if (this instanceof ButtonZone || this instanceof TabZone || this instanceof TextZone
-					|| this instanceof SliderZone) {
-				warnTouch = false;
-			}
-
-			if (client.warnUnimplemented != null) {
-				if (client.warnUnimplemented.booleanValue()) {
-					warnDraw = true;
-					warnTouch = true;
-					warnKeys = true;
-					warnPick = true;
-				}
-				else {
-					warnDraw = false;
-					warnTouch = false;
-					warnKeys = false;
-					warnPick = false;
-				}
-			}
-
-			drawMethod = SMTUtilities
-					.getZoneMethod(applet, "draw", name, this.getClass(), warnDraw);
-
-			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass(),
-					warnPick);
-			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass(),
-					warnTouch);
-
-			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name,
-					this.getClass(), warnKeys);
-			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name,
-					this.getClass(), warnKeys);
-			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass(),
-					warnKeys);
+			loadMethods(name);
 		}
 
 		this.name = name;
+	}
+
+	protected void loadMethods(String name) {
+		boolean warnDraw = true;
+		boolean warnTouch = true;
+		boolean warnKeys = false;
+		boolean warnPick = false;
+		if (this instanceof ButtonZone || this instanceof ImageZone || this instanceof TabZone
+				|| this instanceof TextZone || this instanceof SliderZone
+				|| this instanceof KeyboardZone) {
+			warnDraw = false;
+		}
+		if (this instanceof ButtonZone || this instanceof TabZone || this instanceof TextZone
+				|| this instanceof SliderZone) {
+			warnTouch = false;
+		}
+
+		if (client.warnUnimplemented != null) {
+			if (client.warnUnimplemented.booleanValue()) {
+				warnDraw = true;
+				warnTouch = true;
+				warnKeys = true;
+				warnPick = true;
+			}
+			else {
+				warnDraw = false;
+				warnTouch = false;
+				warnKeys = false;
+				warnPick = false;
+			}
+		}
+
+		loadMethods(name, warnDraw, warnTouch, warnKeys, warnPick);
+	}
+
+	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
+			boolean warnPick) {
+		drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass(), warnDraw);
+
+		pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass(),
+				warnPick);
+		touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass(), warnTouch);
+
+		keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name, this.getClass(),
+				warnKeys);
+		keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name,
+				this.getClass(), warnKeys);
+		keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass(),
+				warnKeys);
 	}
 
 	public void init() {
