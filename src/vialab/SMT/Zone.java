@@ -214,14 +214,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	public void setName(String name) {
 		if (name != null) {
-			drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass());
-			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass());
-			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass());
+			drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass(), true);
+			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass(), false);
+			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass(), true);
 			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name,
-					this.getClass());
+					this.getClass(), false);
 			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name,
-					this.getClass());
-			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass());
+					this.getClass(), false);
+			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass(), false);
 		}
 
 		this.name = name;

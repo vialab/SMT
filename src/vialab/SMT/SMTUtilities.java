@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import processing.core.PApplet;
@@ -31,6 +33,7 @@ public final class SMTUtilities {
 	}
 
 	public static final TuioTimeComparator tuioTimeComparator = new TuioTimeComparator();
+	private static Set<String> methodSet = new HashSet<String>();
 
 	/**
 	 * Don't let anyone instantiate this class.
@@ -78,12 +81,22 @@ public final class SMTUtilities {
 		return method;
 	}
 
-	static Method getZoneMethod(PApplet parent, String methodPrefix, String name, Class<?> parameter) {
+	static Method getZoneMethod(PApplet parent, String methodPrefix, String name, Class<?> parameter, boolean warnMissing) {
 		Method method = getAnyPMethod(parent, methodPrefix, name, parameter);
 		if (method == null) {
+			if(warnMissing){
+				checkMethod(methodPrefix+name);
+			}
 			method = getAnyPMethod(parent, methodPrefix, "Default", parameter);
 		}
 		return method;
+	}
+
+	private static void checkMethod(String methodName) {
+		if(!methodSet.contains(methodName)){
+			System.out.println("Method: "+methodName+" does not exist");
+		}
+		methodSet.add(methodName);
 	}
 
 	static Object invoke(Method method, PApplet parent, Object... parameters) {

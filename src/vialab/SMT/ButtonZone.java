@@ -208,7 +208,7 @@ public class ButtonZone extends Zone {
 	public void setName(String name) {
 		super.setName(name);
 		if (name != null) {
-			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass());
+			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(), true);
 		}
 	}
 
