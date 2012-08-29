@@ -94,7 +94,7 @@ public final class SMTUtilities {
 
 	private static void checkMethod(String methodName) {
 		if(!methodSet.contains(methodName)){
-			System.out.println("Method: "+methodName+" does not exist");
+			System.err.println("Method: "+methodName+" does not exist");
 		}
 		methodSet.add(methodName);
 	}

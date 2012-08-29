@@ -192,7 +192,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		client = TouchClient.client;
 
 		if (applet == null | client == null) {
-			System.err.println("Error: Cannot Instantiate zone before TouchClient");
+			System.err.println("Error: Cannot Instantiate zone before TouchClient, zones should be declared outside of setup, and initialized during setup after the touchClient has started. Expect serious issues if you see this message.");
 		}
 
 		this.renderer = renderer;

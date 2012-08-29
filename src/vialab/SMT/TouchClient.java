@@ -146,7 +146,7 @@ public class TouchClient {
 	public TouchClient(PApplet parent, int port, boolean emulateTouches, boolean fullscreen) {
 		if (!(parent.g instanceof GLGraphics)) {
 			System.err
-					.println("Error: Cannot display zones unless renderer is GLGraphics, make sure to import the GLGraphics library, and in setup use size(width,height,GLConstants.GLGRAPHICS)");
+					.println("Error: Cannot display zones unless renderer is GLGraphics, make sure to import the GLGraphics library, and in setup function call size(width,height,GLConstants.GLGRAPHICS);");
 		}
 
 		parent.setLayout(new BorderLayout());
