@@ -107,9 +107,20 @@ public class TouchClient {
 
 	private Method touch;
 
-	public Boolean warnUnimplemented;
+	Boolean warnUnimplemented;
 
-	public void WarnUnimplemented(boolean warn) {
+	public void warnUncalled() {
+		SMTUtilities.warnUncalledMethods(parent);
+	}
+
+	/**
+	 * Calling this function overrides the default behavior of showing select
+	 * unimplemented based on defaults for each zone specified in loadMethods()
+	 * 
+	 * @param warn
+	 *            whether to warn when there are unimplemented methods for zones
+	 */
+	public void setWarnUnimplemented(boolean warn) {
 		this.warnUnimplemented = warn;
 	}
 

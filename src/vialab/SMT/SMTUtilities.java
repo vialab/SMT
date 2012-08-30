@@ -34,6 +34,7 @@ public final class SMTUtilities {
 
 	public static final TuioTimeComparator tuioTimeComparator = new TuioTimeComparator();
 	private static Set<String> methodSet = new HashSet<String>();
+	private static Set<String> prefixSet = new HashSet<String>();
 
 	/**
 	 * Don't let anyone instantiate this class.
@@ -81,22 +82,51 @@ public final class SMTUtilities {
 		return method;
 	}
 
-	static Method getZoneMethod(PApplet parent, String methodPrefix, String name, Class<?> parameter, boolean warnMissing) {
+	static Method getZoneMethod(PApplet parent, String methodPrefix, String name,
+			Class<?> parameter, boolean warnMissing) {
 		Method method = getAnyPMethod(parent, methodPrefix, name, parameter);
 		if (method == null) {
-			if(warnMissing){
-				checkMethod(methodPrefix+name);
+			if (warnMissing && !methodSet.contains(methodPrefix + name)) {
+				System.err
+						.println("Method: "
+								+ methodPrefix
+								+ name
+								+ " does not exist, implement this method with the functionality desired, or hide warnings of this type using the TouchClient function setWarnUnimplemented(false), which must occur before the zone is instantiated to prevent the warning");
 			}
 			method = getAnyPMethod(parent, methodPrefix, "Default", parameter);
 		}
+		methodSet.add(methodPrefix + name);
+		prefixSet.add(methodPrefix);
 		return method;
 	}
 
-	private static void checkMethod(String methodName) {
-		if(!methodSet.contains(methodName)){
-			System.err.println("Method: "+methodName+" does not exist");
+	static void warnUncalledMethods(PApplet parent) {
+		Method methods[] = parent.getClass().getMethods();
+		// add inherited methods to the set that should not be checked for being
+		// uncalled
+		Method inherited[] = parent.getClass().getSuperclass().getMethods();
+		for (Method method : inherited) {
+			methodSet.add(method.getName());
 		}
-		methodSet.add(methodName);
+		for (Method method : methods) {
+			// find all methods that do not correspond to one used by a zone
+			if (!methodSet.contains(method.getName())) {
+				for (String prefix : prefixSet) {
+					// check all unaccounted for methods to see if they match
+					// any reserved prefixes
+					if (method.getName().startsWith(prefix)) {
+						System.err
+								.println("The method: "
+										+ method.getName()
+										+ " starts with the reserved method prefix: "
+										+ prefix
+										+ " and so should be renamed, otherwise it was meant for a zone named: "
+										+ method.getName().replaceFirst(prefix, "")
+										+ " which has not been initialized in this run");
+					}
+				}
+			}
+		}
 	}
 
 	static Object invoke(Method method, PApplet parent, Object... parameters) {

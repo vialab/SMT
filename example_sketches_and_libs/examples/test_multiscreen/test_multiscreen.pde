@@ -45,6 +45,10 @@ void setup() {
   frameRate(1000);
   size(screenWidth, screenHeight, GLConstants.GLGRAPHICS);
   client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
+  
+  //call this to not display warnings for unimplemented methods
+  //client.setWarnUnimplemented(false);
+  
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   title = new Zone("Title",0,0,screenWidth,screenHeight);
   board = new Zone("Board",(screenWidth-1000)/2,(screenHeight-1000)/2,1000,1000);
@@ -109,6 +113,12 @@ void setup() {
   k2.addKeyListener(t2);
   k.setSize(200,1000);
   client.runWinTouchTuioServer("C:/Users/Zach/Downloads/Touch2Tuio_0.2/Touch2Tuio/Release/Touch2Tuio.exe");
+  
+  //call this to show warnings for methods that seem to be meant for use by a zone, but a zone matching the name does not exist, useful for debugging
+  //client.warnUncalled();
+}
+
+void drawMyZone(){
 }
 
 void touchKeyboard(Zone zone){
