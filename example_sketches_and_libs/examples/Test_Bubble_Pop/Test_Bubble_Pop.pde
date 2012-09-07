@@ -1,5 +1,3 @@
-import processing.opengl.*;
-
 /**
  *   Created by Zach Cook
  *   University of Ontario Institute of Technology
@@ -7,10 +5,7 @@ import processing.opengl.*;
  *   A test sketch using simpleMultiTouch toolkit
  */
 import vialab.SMT.*;
-import vialab.mouseToTUIO.*;
 import TUIO.*;
-import processing.opengl.PGraphicsOpenGL;
-import codeanticode.glgraphics.*;
 
 //set some configuration constants
 final boolean USE_MOUSE_TO_TUIO=true;
@@ -23,16 +18,16 @@ class BubbleZone extends Zone{
    BubbleZone(String name, int x, int y, int w, int h, color c){
      super(name, x, y, w, h);
      this.c=c; 
-     translate(random(screenWidth-100),random(screenHeight-100));
+     translate(random(displayWidth-100),random(displayHeight-100));
      
      //direct is much faster, as it renders directly to the screen or parent/no image cop
      //but loses the control over the drawing and seperation that non-direct has
-     //this.setDirect(true);
+     this.setDirect(true);
    }
 }
 void setup() {
   frameRate(1000);
-  size(screenWidth, screenHeight, GLConstants.GLGRAPHICS);
+  size(displayWidth, displayHeight, P3D);
   client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
 }

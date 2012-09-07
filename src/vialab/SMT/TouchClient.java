@@ -51,13 +51,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import codeanticode.glgraphics.GLGraphics;
-import codeanticode.glgraphics.GLGraphicsOffScreen;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-//import processing.core.PMatrix3D;
 import processing.opengl.PGraphicsOpenGL;
+
 import vialab.mouseToTUIO.MouseToTUIO;
 import TUIO.TuioClient;
 import TUIO.TuioCursor;
@@ -155,22 +153,11 @@ public class TouchClient {
 	}
 
 	public TouchClient(PApplet parent, int port, boolean emulateTouches, boolean fullscreen) {
-		if (!(parent.g instanceof GLGraphics)) {
-			System.err
-					.println("Error: Cannot display zones unless renderer is GLGraphics, make sure to import the GLGraphics library, and in setup function call size(width,height,GLConstants.GLGRAPHICS);");
-		}
-
 		parent.setLayout(new BorderLayout());
 
 		if (emulateTouches) {
 			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
-			parent.add(mtt);
-			// register the listener if using opengl, as the component wont get
-			// the events otherwise
-			if (parent.g instanceof PGraphicsOpenGL) {
-				parent.registerMouseEvent(mtt);
-				parent.registerKeyEvent(mtt);
-			}
+			parent.registerMethod("mouseEvent",mtt);
 		}
 
 		// As of now, this code is dead, the toolkit only supports OpenGL, and
@@ -206,9 +193,9 @@ public class TouchClient {
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
-		parent.registerDispose(this);
-		parent.registerDraw(this);
-		parent.registerPre(this);
+		parent.registerMethod("dispose",this);
+		parent.registerMethod("draw",this);
+		parent.registerMethod("pre",this);
 		// handler = new GestureHandler();
 
 		picker = new SMTZonePicker();
@@ -488,7 +475,7 @@ public class TouchClient {
 	 *            - the height of the pickBuffer image to draw
 	 */
 	public void drawPickBuffer(int x, int y, int w, int h) {
-		parent.g.image(((GLGraphicsOffScreen) picker.getGraphics()).getTexture(), x, y, w, h);
+		parent.g.image(picker.getGraphics(), x, y, w, h);
 	}
 
 	/**

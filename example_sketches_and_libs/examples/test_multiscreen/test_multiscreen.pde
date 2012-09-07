@@ -5,10 +5,7 @@
  *   A test sketch using simpleMultiTouch toolkit
  */
 import vialab.SMT.*;
-import vialab.mouseToTUIO.*;
 import TUIO.*;
-import processing.opengl.PGraphicsOpenGL;
-import codeanticode.glgraphics.*;
 
 //set some configuration constants
 final boolean USE_MOUSE_TO_TUIO=true;
@@ -43,35 +40,35 @@ class CheckerZone extends Zone{
 
 void setup() {
   frameRate(1000);
-  size(screenWidth, screenHeight, GLConstants.GLGRAPHICS);
+  size(displayWidth, displayHeight, OPENGL);
   client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
   
   //call this to not display warnings for unimplemented methods
   //client.setWarnUnimplemented(false);
   
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
-  title = new Zone("Title",0,0,screenWidth,screenHeight);
-  board = new Zone("Board",(screenWidth-1000)/2,(screenHeight-1000)/2,1000,1000);
-  options = new Zone("Options",0,0,screenWidth,screenHeight);
+  title = new Zone("Title",0,0,displayWidth,displayHeight);
+  board = new Zone("Board",(displayWidth-1000)/2,(displayHeight-1000)/2,1000,1000);
+  options = new Zone("Options",0,0,displayWidth,displayHeight);
   client.add(title);
-  title.add(new ButtonZone("PlayButton",screenWidth/2-100,screenHeight/2-100,200,100,"Play",20));
-  title.add(new ButtonZone("OptionsButton",screenWidth/2-100,screenHeight/2+100,200,100,"Options",20));
-  title.add(new ButtonZone("ExitButton",screenWidth/2-100,screenHeight/2+300,200,100,"Exit",20));
-  board.add(new ButtonZone("ToTitleButton",board.width+100,200,200,100,"Back to Title Screen",20));
-  options.add(new ButtonZone("ToTitleButton",screenWidth/2-100,screenHeight/2+200,200,100,"Back to Title Screen",20));
-  c1 = new CheckerZone("CheckerExample1",screenWidth/2-400, screenHeight/2-100, 100, 100,color(255,0,0));
-  c2 = new CheckerZone("CheckerExample2",screenWidth/2+300, screenHeight/2-100, 100, 100,color(255,255,255));
+  title.add(new ButtonZone("PlayButton",displayWidth/2-100,displayHeight/2-100,200,100,"Play",20));
+  title.add(new ButtonZone("OptionsButton",displayWidth/2-100,displayHeight/2+100,200,100,"Options",20));
+  title.add(new ButtonZone("ExitButton",displayWidth/2-100,displayHeight/2+300,200,100,"Exit",20));
+  board.add(new ButtonZone("ToTitleButton",board.width+100,200,200,100,"Back to Title display",20));
+  options.add(new ButtonZone("ToTitleButton",displayWidth/2-100,displayHeight/2+200,200,100,"Back to Title display",20));
+  c1 = new CheckerZone("CheckerExample1",displayWidth/2-400, displayHeight/2-100, 100, 100,color(255,0,0));
+  c2 = new CheckerZone("CheckerExample2",displayWidth/2+300, displayHeight/2-100, 100, 100,color(255,255,255));
   options.add(c1);
   options.add(c2);
-  options.add(new ButtonZone("ChangeC1",screenWidth/2-450,screenHeight/2,200,50,"Randomize Top\n Player Color",20));
-  options.add(new ButtonZone("ChangeC2",screenWidth/2+250,screenHeight/2,200,50,"Randomize Bottom\n Player Color",20));
+  options.add(new ButtonZone("ChangeC1",displayWidth/2-450,displayHeight/2,200,50,"Randomize Top\n Player Color",20));
+  options.add(new ButtonZone("ChangeC2",displayWidth/2+250,displayHeight/2,200,50,"Randomize Bottom\n Player Color",20));
   
-  s[0]=new SliderZone("Slider",screenWidth/2-450,screenHeight/2+100,200,50,0,255);
-  s[1]=new SliderZone("Slider",screenWidth/2-450,screenHeight/2+200,200,50,0,255);
-  s[2]=new SliderZone("Slider",screenWidth/2-450,screenHeight/2+300,200,50,0,255);
-  s[3]=new SliderZone("Slider",screenWidth/2+250,screenHeight/2+100,200,50,0,255);
-  s[4]=new SliderZone("Slider",screenWidth/2+250,screenHeight/2+200,200,50,0,255);
-  s[5]=new SliderZone("Slider",screenWidth/2+250,screenHeight/2+300,200,50,0,255);
+  s[0]=new SliderZone("Slider",displayWidth/2-450,displayHeight/2+100,200,50,0,255);
+  s[1]=new SliderZone("Slider",displayWidth/2-450,displayHeight/2+200,200,50,0,255);
+  s[2]=new SliderZone("Slider",displayWidth/2-450,displayHeight/2+300,200,50,0,255);
+  s[3]=new SliderZone("Slider",displayWidth/2+250,displayHeight/2+100,200,50,0,255);
+  s[4]=new SliderZone("Slider",displayWidth/2+250,displayHeight/2+200,200,50,0,255);
+  s[5]=new SliderZone("Slider",displayWidth/2+250,displayHeight/2+300,200,50,0,255);
   s[0].setCurrentValue(255);
   s[1].setCurrentValue(0);
   s[2].setCurrentValue(0);
@@ -130,7 +127,7 @@ void draw() {
   fill(255);
   text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,10);
   text("typed text: "+t,width/10,50);
-  client.drawPickBuffer(0,0,screenWidth/5,screenHeight/5);
+  client.drawPickBuffer(0,0,displayWidth/5,displayHeight/5);
 }
 
 void drawBoard(Zone zone){
@@ -150,18 +147,18 @@ void drawTitle(){
   background(100,200,150);
   fill(255);
   textSize(100);
-  text("Checkers",screenWidth/2-250,screenHeight/3);
+  text("Checkers",displayWidth/2-250,displayHeight/3);
   textSize(16);
   text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,20);
   text("typed text: "+t,width/2,50);
-  client.drawPickBuffer(0,600,screenWidth/5,screenHeight/5);
+  client.drawPickBuffer(0,600,displayWidth/5,displayHeight/5);
 }
 
 void drawOptions(Zone zone){
   background(200,100,55);
   fill(255);
   textSize(100);
-  text("Options",screenWidth/2-200,screenHeight/3);
+  text("Options",displayWidth/2-200,displayHeight/3);
 }
 
 void drawChecker(CheckerZone zone){

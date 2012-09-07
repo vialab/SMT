@@ -62,7 +62,7 @@ public class TextZone extends Zone {
 		super(name, x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 1, 20);
 		if (keysRecievedFromApplet) {
-			applet.registerKeyEvent(this);
+			applet.registerMethod("keyEvent",this);
 		}
 
 	}

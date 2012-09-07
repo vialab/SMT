@@ -145,7 +145,7 @@ public class ButtonZone extends Zone {
 		stroke(borderColor);
 		strokeWeight(borderWeight);
 		fill(buttonColor);
-		roundRect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
+		rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
 				cornerRadius);
 
 		if (text != null) {
@@ -160,39 +160,6 @@ public class ButtonZone extends Zone {
 		super.endDraw();
 
 		super.draw();
-	}
-
-	private void roundRect(float x, float y, float w, float h, float r) {
-		float[] vx = { x + r, x + w - r, x + w, x + w, x + w - r, x + r, x, x };
-		float[] vy = { y, y, y + r, y + h - r, y + h, y + h, y + h - r, y + r };
-		float roundness = 2 * r;
-
-		beginShape();
-		vertex(vx[0], vy[0]);
-		vertex(vx[1], vy[1]);
-		curveVertex(vx[1] - roundness, vy[0]);
-		curveVertex(vx[1], vy[1]);
-		curveVertex(vx[2], vy[2]);
-		curveVertex(vx[3], vy[2] + roundness);
-		vertex(vx[2], vy[2]);
-		vertex(vx[3], vy[3]);
-		curveVertex(vx[2], vy[3] - roundness);
-		curveVertex(vx[3], vy[3]);
-		curveVertex(vx[4], vy[4]);
-		curveVertex(vx[4] - roundness, vy[5]);
-		vertex(vx[4], vy[4]);
-		vertex(vx[5], vy[5]);
-		curveVertex(vx[5] + roundness, vy[4]);
-		curveVertex(vx[5], vy[5]);
-		curveVertex(vx[6], vy[6]);
-		curveVertex(vx[7], vy[6] - roundness);
-		vertex(vx[6], vy[6]);
-		vertex(vx[7], vy[7]);
-		curveVertex(vx[6], vy[7] + roundness);
-		curveVertex(vx[7], vy[7]);
-		curveVertex(vx[0], vy[0]);
-		curveVertex(vx[0] + roundness, vy[1]);
-		endShape(CLOSE);
 	}
 
 	@Override

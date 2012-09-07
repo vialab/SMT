@@ -9,28 +9,37 @@ import java.util.TreeSet;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-//import processing.opengl.PGraphicsOpenGL;
+import processing.core.PConstants;
+import processing.opengl.PGL;
+import processing.opengl.PGraphics3D;
+
 import TUIO.TuioCursor;
 
-//use GLGraphics instead now
-//import processing.core.PConstants;
 import javax.media.opengl.GL;
-import codeanticode.glgraphics.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-class CustomGLGraphicsOffScreen extends GLGraphicsOffScreen {
-	CustomGLGraphicsOffScreen(PApplet applet, int width, int height) {
-		super(applet, width, height);
-	}
-
-	int getFramebufferID() {
-		return this.FBO.getFramebufferID();
-	}
-}
 
 public class SMTZonePicker {
+	
+	private class CustomPGraphicsOpenGL extends PGraphics3D{
+		public CustomPGraphicsOpenGL(PApplet applet,int width, int height, String opengl) {
+			super();
+			this.setParent(applet);
+			this.setPrimary(false);
+			this.setSize(width, height);
+		}
+
+		void beginPixelRead(){
+			super.beginPixelsOp(OP_READ);
+		}
+		
+		void endPixelRead(){
+			super.endPixelsOp();
+		}
+	}
+	
 	private static boolean BIG_ENDIAN = ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN;
 
 	static int MAX_COLOR_VALUE = 0x00ffffff;
@@ -47,7 +56,7 @@ public class SMTZonePicker {
 
 	private int currentPickColor = START_PICK_COLOR;
 
-	private CustomGLGraphicsOffScreen pickBuffer;
+	private CustomPGraphicsOpenGL pickBuffer;
 
 	private PApplet applet;
 
@@ -126,19 +135,16 @@ public class SMTZonePicker {
 		int screenY = t.getScreenY(TouchClient.parent.height);
 
 		// new pixel read method that only reads the needed pixel for when using
-		GL gl = pickBuffer.beginGL();
+		PGL pgl = pickBuffer.beginPGL();
 		// bind FBO, read pixel, then unbind FBO
-		gl.glGetIntegerv(GL.GL_FRAMEBUFFER_BINDING_EXT, buffer);
-		int prevFB = buffer.get(0);
-		buffer.rewind();
-		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT, pickBuffer.getFramebufferID());
-		gl.glReadPixels(screenX, screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
-		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT, prevFB);
+		pickBuffer.beginPixelRead();
+		pgl.readPixels(screenX, screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
+		pickBuffer.endPixelRead();
 
 		int pickColor = buffer.get(0);
 		// System.out.println("gray "+(pickColor & 0xFF)+" raw "+pickColor);
-		pickBuffer.endGL();
-
+		pickBuffer.endPGL();
+		
 		pickColor = nativeToJavaARGB(pickColor);
 
 		/*
@@ -224,7 +230,7 @@ public class SMTZonePicker {
 		// pickBuffer = applet.createGraphics(applet.g.width, applet.g.height,
 		// applet.g.getClass()
 		// .getName());
-		pickBuffer = new CustomGLGraphicsOffScreen(applet, applet.g.width, applet.g.height);
+		pickBuffer = new CustomPGraphicsOpenGL(applet, applet.g.width, applet.g.height, PConstants.OPENGL);
 		pickBuffer.noSmooth();
 		pickBuffer.noLights();
 		pickBuffer.noTint();

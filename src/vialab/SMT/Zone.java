@@ -31,8 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import codeanticode.glgraphics.*;
-
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PMatrix3D;
@@ -116,7 +114,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected String name = null;
 
-	private static String defaultRenderer = GLGraphics.GLGRAPHICS;
+	private static String defaultRenderer = OPENGL;
 
 	protected String renderer = defaultRenderer;
 
@@ -182,7 +180,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
 
-		applet = TouchClient.parent;
+			applet = TouchClient.parent;
 		client = TouchClient.client;
 
 		if (applet == null | client == null) {
@@ -264,16 +262,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void init() {
-		/*
-		 * drawGraphics = applet.createGraphics(width, height,
-		 * GLGraphics.GLGRAPHICS); pickGraphics = applet.createGraphics(width,
-		 * height, GLGraphics.GLGRAPHICS); touchGraphics =
-		 * applet.createGraphics(1, 1, P3D);
-		 */
-
-		drawGraphics = new GLGraphicsOffScreen(applet, width, height, true);
-		pickGraphics = new GLGraphicsOffScreen(applet, width, height);
-		// touchGraphics = new GLGraphicsOffScreen(applet,1,1);
+		drawGraphics = (PGraphicsOpenGL) applet.createGraphics(width, height, OPENGL);
+		pickGraphics = (PGraphicsOpenGL) applet.createGraphics(width, height, OPENGL);
 
 		pg = drawGraphics;
 
@@ -965,7 +955,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			}
 			
 			if(this.hasPickDrawed){
-				g.image(((GLGraphicsOffScreen) img).getTexture(), 0, 0, width, height);
+				g.image(img, 0, 0, width, height);
 			}
 			
 			if (drawChildren) {
