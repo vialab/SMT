@@ -121,6 +121,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected String renderer = defaultRenderer;
 
 	protected static boolean grayscale = false;
+	
+	private boolean hasPickDrawed = false;
 
 	private boolean pickDraw = true;
 
@@ -985,6 +987,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 			drawImpl((PGraphicsOpenGL) applet.g, drawGraphics, drawChildren);
 		}
+		
+		this.hasPickDrawed=false;
 	}
 
 	public void drawForPickBuffer(PGraphicsOpenGL pickBuffer) {
@@ -992,6 +996,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void drawForPickBuffer(PGraphicsOpenGL pickBuffer, boolean drawChildren) {
+		this.hasPickDrawed=true;
+		
 		if (direct) {
 			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 			applet.g = pickBuffer;
@@ -1062,7 +1068,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				 */
 				g.applyMatrix(matrix);
 			}
-			g.image(((GLGraphicsOffScreen) img).getTexture(), 0, 0, width, height);
+			
+			if(this.hasPickDrawed){
+				g.image(((GLGraphicsOffScreen) img).getTexture(), 0, 0, width, height);
+			}
+			
 			if (drawChildren) {
 				drawIndirectChildren(g, img == pickGraphics);
 			}
