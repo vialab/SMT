@@ -182,14 +182,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
 
-		// drawGraphics = applet.createGraphics(width, height, JAVA2D);
-		// pickGraphics = applet.createGraphics(width, height,
-		// applet.g.getClass().getName());
-		// touchGraphics = applet.createGraphics(width, height,
-		// applet.g.getClass().getName());
-		//
-		// pg = drawGraphics;
-
 		applet = TouchClient.parent;
 		client = TouchClient.client;
 
@@ -604,53 +596,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		PVector mouse = new PVector(x, y);
 		PVector world = this.toZoneVector(mouse);
 
-		/*
-		 * this.inverse.reset(); this.inverse.apply(this.matrix);
-		 * this.inverse.invert(); PVector world = new PVector(); PVector mouse =
-		 * new PVector(x, y); this.inverse.mult(mouse, world);
-		 */
-		// return (world.x > this.getX()) && (world.x < this.getX() +
-		// this.width)
-		// && (world.y > this.getY()) && (world.y < this.getY() + this.height);
 		return (world.x > 0) && (world.x < this.width) && (world.y > 0) && (world.y < this.height);
 	}
-
-	// /**
-	// * Allows the student to scale the zone in their Processing sketch.
-	// *
-	// * @param sx
-	// * float - Scale X Amount
-	// * @param sy
-	// * float - Scale Y Amount
-	// */
-	// @Override
-	// public void scale(float sx, float sy) {
-	// applet.scale(sx, sy);
-	// }
-	//
-	// /**
-	// * Allows the student to rotate the zone in their Processing sketch.
-	// *
-	// * @param angle
-	// * float - Rotate angle
-	// */
-	// @Override
-	// public void rotate(float angle) {
-	// applet.rotate(angle);
-	// }
-	//
-	// /**
-	// * Allows the student to translate the zone in their Processing sketch.
-	// *
-	// * @param x
-	// * float - the amount of translation in the x-direction
-	// * @param y
-	// * float - the amount of translation in the y-direction
-	// */
-	// @Override
-	// public void translate(float x, float y) {
-	// applet.translate(x, y);
-	// }
 
 	/**
 	 * Translates the zone, its group, and its children if it is set to
@@ -911,50 +858,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		drag(false, true);
 	}
 
-	// /**
-	// * Tap Event's default action is printing the line
-	// * "You (double) tapped a zone".
-	// *
-	// * @param e
-	// * TapEvent - The tap event
-	// */
-	// public void tap() {
-	// }
-	//
-	// /**
-	// * Tap and Hold Event's default action is rotating the zone 90 degrees.
-	// *
-	// * @param e
-	// * TapEvent - The tap event
-	// */
-	// public void tapAndHoldEvent(TapAndHoldEvent e) {
-	// }
-
-	// @Override
-	// public void beginDraw() {
-	// // // super.beginDraw();
-	// // applet.pushMatrix();
-	// // applet.translate(x, y);
-	// // applet.applyMatrix(matrix);
-	//
-	// pg.beginDraw();
-	// applet.pushMatrix();
-	// applet.applyMatrix(matrix);
-	// }
-	//
-	// @Override
-	// public void endDraw() {
-	// // // super.endDraw();
-	// // // applet.translate(-x, -y);
-	// // applet.popMatrix();
-	//
-	// pg.endDraw();
-	//
-	// applet.image(pg, 0, 0);
-	//
-	// applet.popMatrix();
-	// }
-
 	public void draw() {
 		draw(true);
 	}
@@ -1003,15 +906,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			applet.g = pickBuffer;
 			beginPickDraw();
 			applet.g.pushMatrix();
-			/*
-			 * // list ancestors in order from most distant to closest, in //
-			 * order to apply their matrix's in order LinkedList<Zone> ancestors
-			 * = new LinkedList<Zone>(); Zone zone = this; while
-			 * (zone.getParent() != null) { zone = zone.getParent();
-			 * ancestors.addFirst(zone); } // apply ancestors matrix's in proper
-			 * order to make sure image // is correctly oriented for (Zone i :
-			 * ancestors) { applyMatrix(i.matrix); }
-			 */
+			
 			applyMatrix(matrix);
 
 			if (pickDrawMethod == null) {
@@ -1235,36 +1130,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 		translate(-pair.from.x, -pair.from.y);
 		lastUpdate = maxTime(pair);
-
-		// Vector a (oldCentre, t);
-		// Vector b (oldCentre, tPrime);
-		// Vector cross = a.crossProduct(b);
-		// Vector trans(t, tPrime);
-		//
-		// glMatrixMode(GL_MODELVIEW);
-		// glPushMatrix();
-		// glLoadIdentity();
-		//
-		// glTranslatef( trans.x, trans.y, trans.z );
-		// glTranslatef( oldCentre.x + a.x, oldCentre.y + a.y, oldCentre.z +
-		// a.z);
-		// glRotatef( radToDeg( a.angleTo(b) ), cross.x, cross.y, cross.z );
-		// glTranslatef( -oldCentre.x - a.x, -oldCentre.y - a.y, -oldCentre.z -
-		// a.z);
 	}
-
-	// public boolean isPressed() {
-	// if (!activeTouches.isEmpty()) {
-	// List<TouchPair> pairs = getTouchPairs(1);
-	// if (pairs.get(0).isFirst()) {
-	//
-	// }
-	// }
-	// }
-	//
-	// public boolean isReleased() {
-	//
-	// }
 
 	public PVector getCentre() {
 		PVector centre = new PVector(width / 2, height / 2);
