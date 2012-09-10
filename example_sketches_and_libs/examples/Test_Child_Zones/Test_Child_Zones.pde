@@ -5,10 +5,8 @@
  *   A test sketch using simpleMultiTouch toolkit
  */
 import vialab.SMT.*;
-import vialab.mouseToTUIO.*;
 import TUIO.*;
-import processing.opengl.PGraphicsOpenGL;
-import codeanticode.glgraphics.*;
+
 
 //set some configuration constants
 final boolean USE_MOUSE_TO_TUIO=true;
@@ -17,7 +15,7 @@ final boolean DRAW_TOUCH_POINTS=true;
 TouchClient client;
 
 void setup() {
-  size(screenWidth, screenHeight, GLConstants.GLGRAPHICS);
+  size(displayWidth, displayHeight, GLConstants.GLGRAPHICS);
   frameRate(1000);
   client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
