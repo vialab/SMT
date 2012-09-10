@@ -114,7 +114,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected String name = null;
 
-	private static String defaultRenderer = OPENGL;
+	private static String defaultRenderer = P3D;
 
 	protected String renderer = defaultRenderer;
 
@@ -180,7 +180,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
 
-			applet = TouchClient.parent;
+		applet = TouchClient.parent;
 		client = TouchClient.client;
 
 		if (applet == null | client == null) {
@@ -262,8 +262,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void init() {
-		drawGraphics = (PGraphicsOpenGL) applet.createGraphics(width, height, OPENGL);
-		pickGraphics = (PGraphicsOpenGL) applet.createGraphics(width, height, OPENGL);
+		drawGraphics = (PGraphicsOpenGL) applet.createGraphics(width, height, defaultRenderer);
+		pickGraphics = (PGraphicsOpenGL) applet.createGraphics(width, height, defaultRenderer);
 
 		pg = drawGraphics;
 
@@ -862,22 +862,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			endDraw();
 		}
 		else {
+			beginDraw();
 			// temporarily make the current graphics context be this Zone's
 			// context
 			// ( that way we don't have to prefix every call with
 			// zone.whatever() )
 			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 			applet.g = drawGraphics;
-
-			beginDraw();
+			
 			SMTUtilities.invoke(drawMethod, applet, this);
 			if (drawChildren) {
 				drawDirectChildren(pg, false);
 			}
-			endDraw();
-
+			
 			applet.g = temp;
-
+			endDraw();
 			drawImpl((PGraphicsOpenGL) applet.g, drawGraphics, drawChildren);
 		}
 		
@@ -892,9 +891,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		this.hasPickDrawed=true;
 		
 		if (direct) {
+			beginPickDraw();
 			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 			applet.g = pickBuffer;
-			beginPickDraw();
 			applet.g.pushMatrix();
 			
 			applyMatrix(matrix);
@@ -909,15 +908,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				drawChildren(pg, true);
 			}
 			applet.g.popMatrix();
-			endPickDraw();
 			applet.g = temp;
+			endPickDraw();
 		}
 		else {
 			if (pickDraw) {
+				beginPickDraw();
 				PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 				applet.g = pickGraphics;
-
-				beginPickDraw();
+				
 				if (pickDrawMethod == null) {
 					rect(0, 0, width, height);
 				}
@@ -927,9 +926,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				if (drawChildren) {
 					drawDirectChildren(pg, true);
 				}
-				endPickDraw();
-
+				
 				applet.g = temp;
+				endPickDraw();
 			}
 			else {
 				drawImpl(pickBuffer, pickGraphics, drawChildren);
