@@ -951,10 +951,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				 * (Zone i : ancestors) { g.applyMatrix(i.matrix); }
 				 */
 				g.applyMatrix(matrix);
+				g.beginDraw();
 			}
 			
 			if(this.hasPickDrawed){
 				g.image(img, 0, 0, width, height);
+			}
+			
+			if (img == pickGraphics) {
+				g.endDraw();
 			}
 			
 			if (drawChildren) {

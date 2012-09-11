@@ -215,6 +215,7 @@ public class SMTZonePicker {
 
 		pickBuffer.beginDraw();
 		pickBuffer.background(BG_PICK_COLOR);
+		pickBuffer.endDraw();
 		for (Zone zone : zonesByPickColor.values()) {
 			if (zone.getParent() != null) {
 				// the parent should handle the drawing
@@ -223,7 +224,7 @@ public class SMTZonePicker {
 			// zone does the matrix manipulation to place it self properly
 			zone.drawForPickBuffer(pickBuffer);
 		}
-		pickBuffer.endDraw();
+		
 	}
 
 	private void initPickBuffer() {
