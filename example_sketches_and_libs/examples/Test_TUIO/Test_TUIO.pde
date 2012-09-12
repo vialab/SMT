@@ -17,7 +17,7 @@ TouchClient client;
 void setup() {
   size(displayWidth, displayHeight, P3D);
   //frameRate(1000);
-  client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
+  client = new TouchClient(this, TouchClient.TOUCH_SOURCE_MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
 }
 

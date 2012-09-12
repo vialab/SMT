@@ -138,7 +138,7 @@ public class SMTZonePicker {
 		PGL pgl = pickBuffer.beginPGL();
 		// bind FBO, read pixel, then unbind FBO
 		pickBuffer.beginPixelRead();
-		pgl.readPixels(screenX, screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
+		pgl.readPixels(screenX, TouchClient.parent.height-screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
 		pickBuffer.endPixelRead();
 
 		int pickColor = buffer.get(0);
@@ -214,7 +214,8 @@ public class SMTZonePicker {
 		}
 
 		pickBuffer.beginDraw();
-		pickBuffer.background(BG_PICK_COLOR);
+		//pickBuffer.background(BG_PICK_COLOR);
+		pickBuffer.rect(0, 0, pickBuffer.width, pickBuffer.height);
 		pickBuffer.endDraw();
 		for (Zone zone : zonesByPickColor.values()) {
 			if (zone.getParent() != null) {

@@ -25,11 +25,6 @@
 package vialab.SMT;
 
 import java.awt.BorderLayout;
-import java.awt.DisplayMode;
-import java.awt.Frame;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -50,7 +45,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -74,6 +68,17 @@ import TUIO.TuioPoint;
  * @version 1.0
  */
 public class TouchClient {
+
+	public static final int TOUCH_SOURCE_TUIO_DEVICE = 0;
+
+	public static final int TOUCH_SOURCE_MOUSE = 1;
+
+	public static final int TOUCH_SOURCE_WIN7_32_TOUCH = 2;
+
+	public static final int TOUCH_SOURCE_WIN7_64_TOUCH = 3;
+
+	public static final int TOUCH_SOURCE_ANDROID = 4;
+
 	private static int MAX_PATH_LENGTH = 100;
 
 	/** Processing PApplet */
@@ -137,72 +142,58 @@ public class TouchClient {
 	 * 
 	 * @param parent
 	 *            PApplet - The Processing PApplet
-	 * @param port
-	 *            int - The port to connect to.
+	 * @param touchSource
+	 *            int - The source of touch events to listen to. One of: TOUCH_SOURCE_MOUSE, TOUCH_SOURCE_TUIO_DEVICE, TOUCH_SOURCE_ANDROID, TOUCH_SOURCE.
 	 */
-	public TouchClient(PApplet parent, int port) {
-		this(parent, port, true, false);
+	
+	public TouchClient(PApplet parent, int touchSource) {
+		this(parent, 3333, touchSource);
 	}
 
-	public TouchClient(PApplet parent, boolean emulateTouches) {
-		this(parent, emulateTouches, false);
-	}
-
-	public TouchClient(PApplet parent, boolean emulateTouches, boolean fullscreen) {
-		this(parent, 3333, emulateTouches, fullscreen);
-	}
-
-	public TouchClient(PApplet parent, int port, boolean emulateTouches, boolean fullscreen) {
+	public TouchClient(PApplet parent, int port, int touchSource) {
 		parent.setLayout(new BorderLayout());
 
-		if (emulateTouches) {
+		switch (touchSource) {
+		case TouchClient.TOUCH_SOURCE_ANDROID:
+			//for now just use mouse emulation until implemented by going to next case
+		case TouchClient.TOUCH_SOURCE_MOUSE:
+			//this still uses the old method, should be reimplemented without the port
 			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
-			parent.registerMethod("mouseEvent",mtt);
+			parent.registerMethod("mouseEvent", mtt);
+			tuioClient = new TuioClient(port);
+			break;
+		case TouchClient.TOUCH_SOURCE_TUIO_DEVICE:
+			tuioClient = new TuioClient(port);
+			break;
+		case TouchClient.TOUCH_SOURCE_WIN7_32_TOUCH:
+			//this likely wont work, as we likely wont have correct relative path, need to fix
+			this.runWinTouchTuioServer("Win7Touch/Release/Touch2Tuio.exe");
+			tuioClient = new TuioClient(port);
+			break;
+		case TouchClient.TOUCH_SOURCE_WIN7_64_TOUCH:
+			//this likely wont work, as we likely wont have correct relative path, need to fix
+			this.runWinTouchTuioServer("Win7Touch/x64/Release/Touch2Tuio.exe");
+			tuioClient = new TuioClient(port);
+			break;
 		}
 
 		// As of now, this code is dead, the toolkit only supports OpenGL, and
 		// specifically needs GLGraphics to work properly
 		if (!(parent.g instanceof PGraphicsOpenGL)) {
-			parent.frame.removeNotify();
-			if (fullscreen) {
-				parent.frame.setUndecorated(true);
-				parent.frame.setIgnoreRepaint(true);
-				parent.frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-
-				GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-				GraphicsDevice displayDevice = environment.getDefaultScreenDevice();
-
-				DisplayMode mode = displayDevice.getDisplayMode();
-				Rectangle fullScreenRect = new Rectangle(0, 0, mode.getWidth(), mode.getHeight());
-				parent.frame.setBounds(fullScreenRect);
-				parent.frame.setVisible(true);
-
-				// the following is exclusive mode
-				// displayDevice.setFullScreenWindow(parent.frame);
-				//
-				// Rectangle fullScreenRect = parent.frame.getBounds();
-
-				parent.frame.setBounds(fullScreenRect);
-				parent.setBounds((fullScreenRect.width - parent.width) / 2,
-						(fullScreenRect.height - parent.height) / 2, parent.width, parent.height);
-			}
-			parent.frame.addNotify();
-			parent.frame.toFront();
+			System.out.println("SMT only supports using OpenGL renderers, please use either OPENGL, P2D, or P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
 		}
 
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
-		parent.registerMethod("dispose",this);
-		parent.registerMethod("draw",this);
-		parent.registerMethod("pre",this);
+		parent.registerMethod("dispose", this);
+		parent.registerMethod("draw", this);
+		parent.registerMethod("pre", this);
 		// handler = new GestureHandler();
 
 		picker = new SMTZonePicker();
 
 		TouchClient.client = this;
-
-		tuioClient = new TuioClient(port);
 
 		listener = new SMTTuioListener();
 
