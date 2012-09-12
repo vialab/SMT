@@ -23,7 +23,10 @@
  */
 package vialab.mouseToTUIO;
 
-import java.util.Hashtable;
+import java.awt.Point;
+import java.util.Enumeration;
+
+import javax.swing.SwingUtilities;
 
 import processing.event.MouseEvent;
 
@@ -43,18 +46,7 @@ import processing.event.MouseEvent;
  * @date July, 2011
  * @version 1.0
  */
-public class MouseToTUIO {
-		/** The simulator */
-	private static Simulation sim;
-
-	/** Width of the PApplet, overlay and simulator table/rectangle/window */
-	protected static int width;
-
-	/** Height of the PApplet, overlay and simulator table/rectangle/window */
-	protected static int height;
-
-	/** Hash table of touch cursors with their session IDs as the key */
-	protected static Hashtable<Integer, Finger> cursorList = new Hashtable<Integer, Finger>();
+public class MouseToTUIO extends Simulation {
 
 	/** Default host. (Implements TUIO: host "127.0.0.1") */
 	public static String host = "127.0.0.1";
@@ -71,93 +63,167 @@ public class MouseToTUIO {
 	 *            PApplet - Processing PApplet
 	 */
 	public MouseToTUIO(int width, int height) {
-		super();
-		MouseToTUIO.width = width;
-		MouseToTUIO.height = height;
-
-		sim = new Simulation(host, port);
+		super(host, port, width, height);
 	}
-
+	
 	/**
-	 * Adds a touch cursor to the hash table
-	 * 
-	 * @param sID
-	 *            int - Session ID
-	 * @param x
-	 *            int - The x-coordinate of the touch cursor
-	 * @param y
-	 *            int - The y-coordinate of the touch cursor
-	 * @return cursor Touch - The created touch cursor
-	 */
-	public final static Finger addCursor(int sID, int x, int y) {
-		Finger cursor = new Finger(sID, x, y);
-		cursorList.put(sID, cursor);
-		return cursor;
-	}
-
-	/**
-	 * Updates a touch cursor
-	 * 
-	 * @param cursor
-	 *            Touch - The touch cursor to update
-	 * @param x
-	 *            int - The x-coordinate of the touch cursor
-	 * @param y
-	 *            int - The y-coordinate of the touch cursor
-	 */
-	public final static void updateCursor(Finger cursor, int x, int y) {
-		cursor.update(x, y);
-	}
-
-	/**
-	 * Returns the touch cursor with the given Session ID
-	 * 
-	 * @param sID
-	 *            int - Session ID
-	 * @return cursorList.get(sID) Touch
-	 */
-	public final static Finger getCursor(int sID) {
-		return cursorList.get(sID);
-	}
-
-	/**
-	 * Removes the touch cursor
-	 * 
-	 * @param cursor
-	 *            Touch - The touch cursor
-	 */
-	public final static void removeCursor(Finger cursor) {
-		cursorList.remove(cursor.sessionID);
-	}
-
-	/**
-	 * Triggers the simulator's mouse_pressed function
+	 * Updates the selected cursor
 	 * 
 	 * @param me
-	 *            MouseEvent
-	 */
-	public void mousePressed(MouseEvent me) {
-		sim.mouse_pressed(me);
-	}
-
-	/**
-	 * Triggers the simulator's mouse_released function
-	 * 
-	 * @param me
-	 *            MouseEvent
-	 */
-	public void mouseReleased(MouseEvent me) {
-		sim.mouse_released(me);
-	}
-
-	/**
-	 * Triggers the simulator's mouse_dragged function
-	 * 
-	 * @param me
-	 *            MouseEvent
+	 *            MouseEvent - The mouse dragged event
 	 */
 	public void mouseDragged(MouseEvent me) {
-		sim.mouse_dragged(me);
+		long currentFrameTime = System.currentTimeMillis();
+		long dt = currentFrameTime - lastFrameTime;
+		if (dt < 16)
+			return;
+
+		Point pt = new Point(me.getX(), me.getY());
+		int x = me.getX();
+		int y = me.getX();
+
+		if (selectedCursor != null) {
+			if (table.contains(pt)) {
+				if (selectedCursor != null) {
+					if (jointCursors.contains(selectedCursor.sessionID)) {
+						Point selPoint = selectedCursor.getPosition();
+						int dx = pt.x - selPoint.x;
+						int dy = pt.y - selPoint.y;
+
+						Enumeration<Integer> joints = jointCursors.elements();
+						while (joints.hasMoreElements()) {
+							int jointId = joints.nextElement();
+							if (jointId == selectedCursor.sessionID)
+								continue;
+							Finger joint_cursor = getCursor(jointId);
+							Point joint_point = joint_cursor.getPosition();
+							updateCursor(joint_cursor, joint_point.x + dx,
+									joint_point.y + dy);
+						}
+						updateCursor(selectedCursor, pt.x, pt.y);
+						completeCursorMessage();
+					}
+					else {
+						updateCursor(selectedCursor, pt.x, pt.y);
+						cursorMessage();
+					}
+				}
+			}
+			else {
+				selectedCursor.stop();
+				cursorMessage();
+				if (stickyCursors.contains(selectedCursor.sessionID))
+					stickyCursors.removeElement(selectedCursor.sessionID);
+				if (jointCursors.contains(selectedCursor.sessionID))
+					jointCursors.removeElement(selectedCursor.sessionID);
+				removeCursor(selectedCursor);
+				cursorDelete();
+				selectedCursor = null;
+			}
+		}
+		else {
+			if (table.contains(pt)) {
+				sessionID++;
+				selectedCursor = addCursor(sessionID, x, y);
+				cursorMessage();
+				if (me.isShiftDown()
+						|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
+								.getNative())))
+					stickyCursors.addElement(selectedCursor.sessionID);
+			}
+		}
+
+		lastFrameTime = currentFrameTime;
+	}
+
+	/**
+	 * Adds a cursor to the table state
+	 * 
+	 * @param me
+	 *            MouseEvent - The mouse pressed event
+	 */
+	public void mousePressed(MouseEvent me) {
+		int x = me.getX();
+		int y = me.getY();
+
+		Enumeration<Finger> cursorList = Simulation.cursorList.elements();
+		while (cursorList.hasMoreElements()) {
+			Finger cursor = cursorList.nextElement();
+			Point point = cursor.getPosition();
+
+			if (point.distance(x, y) < 7) {
+				int selCur = -1;
+				if (selectedCursor != null)
+					selCur = selectedCursor.sessionID;
+
+				if ((me.isShiftDown() || SwingUtilities
+						.isRightMouseButton((java.awt.event.MouseEvent) (me.getNative())))
+						&& selCur != cursor.sessionID) {
+					stickyCursors.removeElement(cursor.sessionID);
+					if (jointCursors.contains(cursor.sessionID))
+						jointCursors.removeElement(cursor.sessionID);
+					removeCursor(cursor);
+					cursorDelete();
+					selectedCursor = null;
+					return;
+				}
+				else if (me.isControlDown()
+						|| SwingUtilities.isMiddleMouseButton((java.awt.event.MouseEvent) (me
+								.getNative()))) {
+					if (jointCursors.contains(cursor.sessionID))
+						jointCursors.removeElement(cursor.sessionID);
+					else
+						jointCursors.addElement(cursor.sessionID);
+					return;
+				}
+				else {
+					selectedCursor = cursor;
+					return;
+				}
+			}
+		}
+
+		if (me.isControlDown()
+				|| SwingUtilities.isMiddleMouseButton((java.awt.event.MouseEvent) (me.getNative())))
+			return;
+
+		if (table.contains(new Point(x, y))) {
+			sessionID++;
+			selectedCursor = addCursor(sessionID, x, y);
+			cursorMessage();
+			if (me.isShiftDown()
+					|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
+							.getNative())))
+				stickyCursors.addElement(selectedCursor.sessionID);
+			return;
+		}
+
+		selectedCursor = null;
+	}
+
+	/**
+	 * Removes the cursor or makes it stationary if it is a sticky cursor
+	 * 
+	 * @param me
+	 *            MouseEvent - The mouse released event
+	 */
+	public void mouseReleased(MouseEvent me) {
+		if ((selectedCursor != null)) {
+			if (!stickyCursors.contains(selectedCursor.sessionID)) {
+				selectedCursor.stop();
+				cursorMessage();
+				if (jointCursors.contains(selectedCursor.sessionID))
+					jointCursors.removeElement(selectedCursor.sessionID);
+				removeCursor(selectedCursor);
+				cursorDelete();
+			}
+			else {
+				selectedCursor.stop();
+				cursorMessage();
+			}
+
+			selectedCursor = null;
+		}
 	}
 
 	/**
