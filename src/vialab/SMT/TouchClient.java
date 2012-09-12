@@ -179,8 +179,8 @@ public class TouchClient {
 			// for now just use mouse emulation until implemented by going to
 			// next case
 		case TouchClient.TOUCH_SOURCE_MOUSE:
-			// this still uses the old method, should be reimplemented without
-			// the port
+			// this still uses the old method, should be re-implemented without
+			// the socket
 			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
 			parent.registerMethod("mouseEvent", mtt);
 			tuioClient = new TuioClient(port);
