@@ -143,9 +143,11 @@ public class TouchClient {
 	 * @param parent
 	 *            PApplet - The Processing PApplet
 	 * @param touchSource
-	 *            int - The source of touch events to listen to. One of: TOUCH_SOURCE_MOUSE, TOUCH_SOURCE_TUIO_DEVICE, TOUCH_SOURCE_ANDROID, TOUCH_SOURCE.
+	 *            int - The source of touch events to listen to. One of:
+	 *            TOUCH_SOURCE_MOUSE, TOUCH_SOURCE_TUIO_DEVICE,
+	 *            TOUCH_SOURCE_ANDROID, TOUCH_SOURCE.
 	 */
-	
+
 	public TouchClient(PApplet parent, int touchSource) {
 		this(parent, 3333, touchSource);
 	}
@@ -153,34 +155,11 @@ public class TouchClient {
 	public TouchClient(PApplet parent, int port, int touchSource) {
 		parent.setLayout(new BorderLayout());
 
-		switch (touchSource) {
-		case TouchClient.TOUCH_SOURCE_ANDROID:
-			//for now just use mouse emulation until implemented by going to next case
-		case TouchClient.TOUCH_SOURCE_MOUSE:
-			//this still uses the old method, should be reimplemented without the port
-			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
-			parent.registerMethod("mouseEvent", mtt);
-			tuioClient = new TuioClient(port);
-			break;
-		case TouchClient.TOUCH_SOURCE_TUIO_DEVICE:
-			tuioClient = new TuioClient(port);
-			break;
-		case TouchClient.TOUCH_SOURCE_WIN7_32_TOUCH:
-			//this likely wont work, as we likely wont have correct relative path, need to fix
-			this.runWinTouchTuioServer("Win7Touch/Release/Touch2Tuio.exe");
-			tuioClient = new TuioClient(port);
-			break;
-		case TouchClient.TOUCH_SOURCE_WIN7_64_TOUCH:
-			//this likely wont work, as we likely wont have correct relative path, need to fix
-			this.runWinTouchTuioServer("Win7Touch/x64/Release/Touch2Tuio.exe");
-			tuioClient = new TuioClient(port);
-			break;
-		}
-
 		// As of now, this code is dead, the toolkit only supports OpenGL, and
 		// specifically needs GLGraphics to work properly
 		if (!(parent.g instanceof PGraphicsOpenGL)) {
-			System.out.println("SMT only supports using OpenGL renderers, please use either OPENGL, P2D, or P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
+			System.out
+					.println("SMT only supports using OpenGL renderers, please use either OPENGL, P2D, or P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
 		}
 
 		touch = SMTUtilities.getPMethod(parent, "touch");
@@ -194,6 +173,34 @@ public class TouchClient {
 		picker = new SMTZonePicker();
 
 		TouchClient.client = this;
+
+		switch (touchSource) {
+		case TouchClient.TOUCH_SOURCE_ANDROID:
+			// for now just use mouse emulation until implemented by going to
+			// next case
+		case TouchClient.TOUCH_SOURCE_MOUSE:
+			// this still uses the old method, should be reimplemented without
+			// the port
+			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
+			parent.registerMethod("mouseEvent", mtt);
+			tuioClient = new TuioClient(port);
+			break;
+		case TouchClient.TOUCH_SOURCE_TUIO_DEVICE:
+			tuioClient = new TuioClient(port);
+			break;
+		case TouchClient.TOUCH_SOURCE_WIN7_32_TOUCH:
+			// this likely wont work, as we likely wont have correct relative
+			// path, need to fix
+			this.runWinTouchTuioServer("Win7Touch/Release/Touch2Tuio.exe");
+			tuioClient = new TuioClient(port);
+			break;
+		case TouchClient.TOUCH_SOURCE_WIN7_64_TOUCH:
+			// this likely wont work, as we likely wont have correct relative
+			// path, need to fix
+			this.runWinTouchTuioServer("Win7Touch/x64/Release/Touch2Tuio.exe");
+			tuioClient = new TuioClient(port);
+			break;
+		}
 
 		listener = new SMTTuioListener();
 
