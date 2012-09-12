@@ -893,7 +893,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		if (direct) {
 			beginPickDraw();
 			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
-			applet.g = pickBuffer;
+			applet.g = pg;
 			applet.g.pushMatrix();
 			
 			applyMatrix(matrix);

@@ -7,8 +7,6 @@
 import vialab.SMT.*;
 import TUIO.*;
 
-//set some configuration constants
-final boolean USE_MOUSE_TO_TUIO=true;
 final boolean DRAW_TOUCH_POINTS=true;
 
 TouchClient client;
@@ -28,14 +26,14 @@ class BubbleZone extends Zone{
 void setup() {
   frameRate(1000);
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
+  client = new TouchClient(this, TouchClient.TOUCH_SOURCE_MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   client.add(new BubbleZone("Bubble",0, 0, 100, 100, color(random(255),random(255),random(255))));
 }
 
 void draw() { 
-  if(client.getZones().length<100){
-      //client.add(new BubbleZone("Bubble",0, 0, 100, 100, color(random(255),random(255),random(255))));
+  if(client.getZones().length<10){
+      client.add(new BubbleZone("Bubble",0, 0, 100, 100, color(random(255),random(255),random(255))));
   }
   background(79, 129, 189);
   fill(255);
