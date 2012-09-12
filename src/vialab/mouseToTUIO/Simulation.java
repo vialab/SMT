@@ -40,8 +40,8 @@ import com.illposed.osc.OSCPacket;
 import com.illposed.osc.OSCPortOut;
 
 /**
- * This class creates TUIO messages depending on mouse events and then sends
- * them out to port 3333.
+ * This class is the parent class of MouseToTUIO etc to allow easy formation
+ * of TUIO messages in response to events.
  * <P>
  * 
  * University of Ontario Institute of Technology. Summer Research Assistant with
@@ -49,8 +49,9 @@ import com.illposed.osc.OSCPortOut;
  * <P>
  * 
  * @author Erik Paluka
- * @date July, 2011
- * @version 1.0
+ * @author Zach Cook
+ * @date September, 2012
+ * @version 2.0
  */
 public abstract class Simulation implements Runnable {
 	/** OSC Port */
