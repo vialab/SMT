@@ -78,7 +78,7 @@ public class Finger {
 	 * @param xpos int - New x-coordinate
 	 * @param ypos int - New y-coordinate
 	 */
-	public final void update(int xpos, int ypos) {
+	public final void update(int xpos, int ypos, int windowWidth, int windowHeight) {
 		Point lastPoint = getPosition();
 		path.addElement(new Point(xpos,ypos));
 
@@ -88,8 +88,8 @@ public class Finger {
 		
 		if (dt>0) {
 			
-			float dx = (xpos - lastPoint.x)/(float)MouseToTUIO.width;
-			float dy = (ypos - lastPoint.y)/(float)MouseToTUIO.height;
+			float dx = (xpos - lastPoint.x)/(float)windowWidth;
+			float dy = (ypos - lastPoint.y)/(float)windowHeight;
 			float dist = (float)Math.sqrt(dx*dx + dy*dy);
 			float newSpeed  = dist/dt;
 			this.xSpeed = dx/dt;
