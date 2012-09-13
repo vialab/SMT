@@ -73,7 +73,7 @@ public class TouchClient {
 		TUIO_DEVICE, MOUSE, WM_TOUCH_32, WM_TOUCH_64, ANDROID
 	}
 
-	private static int MAX_PATH_LENGTH = 100;
+	private static int MAX_PATH_LENGTH = 50;
 
 	/** Processing PApplet */
 	static PApplet parent;
