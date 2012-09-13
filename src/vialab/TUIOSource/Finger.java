@@ -22,50 +22,57 @@
   Public License along with this library; if not, write to the
   Free Software Foundation, Inc., 59 Temple Place, Suite 330,
   Boston, MA  02111-1307  USA
-*/
+ */
 package vialab.TUIOSource;
 
 import java.awt.Point;
 import java.util.Vector;
-/** 
- * This class holds touch event information associated with the same session ID (e.g.all the information associated 
- * with someone placing their finger on the screen, dragging it, then removing it.)<P>
- *
- * University of Ontario Institute of Technology.
- * Summer Research Assistant with Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.<P>
+
+/**
+ * This class holds touch event information associated with the same session ID
+ * (e.g.all the information associated with someone placing their finger on the
+ * screen, dragging it, then removing it.)
+ * <P>
  * 
- * @author  Erik Paluka 
- * @date  July, 2011
+ * University of Ontario Institute of Technology. Summer Research Assistant with
+ * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
+ * <P>
+ * 
+ * @author Erik Paluka
+ * @date July, 2011
  * @version 1.0
  */
 public class Finger {
-	/**Touch Cursor's Session ID*/
+	/** Touch Cursor's Session ID */
 	protected int sessionID;
-	/**Touch Cursor's speed in the x-direction*/
+	/** Touch Cursor's speed in the x-direction */
 	protected float xSpeed;
-	/**Touch Cursor's speed in the y-direction*/
+	/** Touch Cursor's speed in the y-direction */
 	protected float ySpeed;
-	/**Touch Cursor's speed*/
+	/** Touch Cursor's speed */
 	protected float mSpeed;
-	/**Touch Cursor's acceleration*/
+	/** Touch Cursor's acceleration */
 	protected float mAccel;
-	/**Last update time*/
+	/** Last update time */
 	protected long lastTime;
-	/**Path of the touch cursor*/
+	/** Path of the touch cursor */
 	private Vector<Point> path;
 
 	/**
-	 * Touch Constructor, creates a touch cursor with the given
-	 * session ID, and coordinates.
+	 * Touch Constructor, creates a touch cursor with the given session ID, and
+	 * coordinates.
 	 * 
-	 * @param sID int - Session ID
-	 * @param xPos int - x-coordinate
-	 * @param yPos int - y-coordinate
+	 * @param sID
+	 *            int - Session ID
+	 * @param xPos
+	 *            int - x-coordinate
+	 * @param yPos
+	 *            int - y-coordinate
 	 */
 	public Finger(int sID, int xPos, int yPos) {
 		this.sessionID = sID;
 		path = new Vector<Point>();
-		path.addElement(new Point(xPos,yPos));
+		path.addElement(new Point(xPos, yPos));
 		this.xSpeed = 0.0f;
 		this.ySpeed = 0.0f;
 		this.mAccel = 0.0f;
@@ -75,28 +82,30 @@ public class Finger {
 	/**
 	 * Updates the touch cursor with the new coordinates
 	 * 
-	 * @param xpos int - New x-coordinate
-	 * @param ypos int - New y-coordinate
+	 * @param xpos
+	 *            int - New x-coordinate
+	 * @param ypos
+	 *            int - New y-coordinate
 	 */
 	public final void update(int xpos, int ypos, int windowWidth, int windowHeight) {
 		Point lastPoint = getPosition();
-		path.addElement(new Point(xpos,ypos));
+		path.addElement(new Point(xpos, ypos));
 
 		// time difference in seconds
 		long currentTime = System.currentTimeMillis();
-		float dt = (currentTime - lastTime)/1000.0f;
-		
-		if (dt>0) {
-			
-			float dx = (xpos - lastPoint.x)/(float)windowWidth;
-			float dy = (ypos - lastPoint.y)/(float)windowHeight;
-			float dist = (float)Math.sqrt(dx*dx + dy*dy);
-			float newSpeed  = dist/dt;
-			this.xSpeed = dx/dt;
-			this.ySpeed = dy/dt;
-			this.mAccel = (newSpeed - mSpeed)/dt;
-			this.mSpeed = newSpeed; 
-		} 
+		float dt = (currentTime - lastTime) / 1000.0f;
+
+		if (dt > 0) {
+
+			float dx = (xpos - lastPoint.x) / (float) windowWidth;
+			float dy = (ypos - lastPoint.y) / (float) windowHeight;
+			float dist = (float) Math.sqrt(dx * dx + dy * dy);
+			float newSpeed = dist / dt;
+			this.xSpeed = dx / dt;
+			this.ySpeed = dy / dt;
+			this.mAccel = (newSpeed - mSpeed) / dt;
+			this.mSpeed = newSpeed;
+		}
 		lastTime = currentTime;
 	}
 
@@ -110,23 +119,23 @@ public class Finger {
 		this.mAccel = 0.0f;
 		this.mSpeed = 0.0f;
 	}
- 
+
 	/**
 	 * Returns the current position of the touch cursor
 	 * 
 	 * @return path.lastElement() Point
 	 */
 	public final Point getPosition() {
-		return path.lastElement();	
+		return path.lastElement();
 	}
-	
+
 	/**
 	 * Returns the path of the touch cursor
 	 * 
 	 * @return path Vector<Point>
 	 */
 	public final Vector<Point> getPath() {
-		return path;	
+		return path;
 	}
 
 }

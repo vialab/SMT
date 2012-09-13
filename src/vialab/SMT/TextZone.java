@@ -62,7 +62,7 @@ public class TextZone extends Zone {
 		super(name, x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 1, 20);
 		if (keysRecievedFromApplet) {
-			applet.registerMethod("keyEvent",this);
+			applet.registerMethod("keyEvent", this);
 		}
 
 	}
@@ -86,8 +86,7 @@ public class TextZone extends Zone {
 		}
 		else if (e.getKeyChar() == '\t') {
 			this.currentWordZone = new WordZone(currentWordZone.x
-					+ (int) textWidth(currentWordZone.word + "    "), currentWordZone.y, 1,
-					20);
+					+ (int) textWidth(currentWordZone.word + "    "), currentWordZone.y, 1, 20);
 		}
 		else if (e.getKeyChar() == '\n') {
 			this.currentWordZone = new WordZone(0, currentWordZone.y + 20, 1, 20);
@@ -95,7 +94,7 @@ public class TextZone extends Zone {
 		else {
 			this.currentWordZone.word += e.getKeyChar();
 			this.currentWordZone.setData(currentWordZone.x, currentWordZone.y,
-					Math.max((int) textWidth(currentWordZone.word),1), currentWordZone.height);
+					Math.max((int) textWidth(currentWordZone.word), 1), currentWordZone.height);
 		}
 		super.keyTyped(e);
 	}

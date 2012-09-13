@@ -40,8 +40,8 @@ import com.illposed.osc.OSCPacket;
 import com.illposed.osc.OSCPortOut;
 
 /**
- * This class is the parent class of MouseToTUIO etc to allow easy formation
- * of TUIO messages in response to events.
+ * This class is the parent class of MouseToTUIO etc to allow easy formation of
+ * TUIO messages in response to events.
  * <P>
  * 
  * University of Ontario Institute of Technology. Summer Research Assistant with
@@ -54,13 +54,13 @@ import com.illposed.osc.OSCPortOut;
  * @version 2.0
  */
 public class Simulation implements Runnable {
-	
+
 	/** Default host. (Implements TUIO: host "127.0.0.1") */
 	static String host = "127.0.0.1";
 
 	/** Default port. (Implements TUIO: port "3333") */
 	static int port = 3333;
-	
+
 	/** OSC Port */
 	private OSCPortOut oscPort;
 
@@ -303,8 +303,8 @@ public class Simulation implements Runnable {
 	}
 
 	/**
-	 * Sends the table state every second
-	 * I dont think there is any reason to use this
+	 * Sends the table state every second I dont think there is any reason to
+	 * use this
 	 */
 	public void run() {
 		running = true;

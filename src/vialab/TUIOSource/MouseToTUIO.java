@@ -44,7 +44,7 @@ import processing.event.MouseEvent;
  * @version 2.0
  */
 public class MouseToTUIO {
-	
+
 	private static Simulation sim;
 
 	/**
@@ -57,9 +57,9 @@ public class MouseToTUIO {
 	 */
 	public MouseToTUIO(int width, int height) {
 		super();
-		sim= new Simulation(width, height);
+		sim = new Simulation(width, height);
 	}
-	
+
 	/**
 	 * Updates the selected cursor
 	 * 
@@ -91,8 +91,7 @@ public class MouseToTUIO {
 								continue;
 							Finger joint_cursor = sim.getCursor(jointId);
 							Point joint_point = joint_cursor.getPosition();
-							sim.updateCursor(joint_cursor, joint_point.x + dx,
-									joint_point.y + dy);
+							sim.updateCursor(joint_cursor, joint_point.x + dx, joint_point.y + dy);
 						}
 						sim.updateCursor(sim.selectedCursor, pt.x, pt.y);
 						sim.completeCursorMessage();
