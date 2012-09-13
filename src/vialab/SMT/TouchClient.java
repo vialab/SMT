@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.opengl.PGraphicsOpenGL;
-import vialab.mouseToTUIO.MouseToTUIO;
+import vialab.TUIOSource.*;
 
 import TUIO.*;
 

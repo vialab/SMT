@@ -23,7 +23,7 @@
   Free Software Foundation, Inc., 59 Temple Place, Suite 330,
   Boston, MA  02111-1307  USA
  */
-package vialab.mouseToTUIO;
+package vialab.TUIOSource;
 
 import java.awt.Point;
 import java.awt.Shape;
