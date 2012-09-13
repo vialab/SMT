@@ -53,10 +53,9 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.opengl.PGraphicsOpenGL;
 import vialab.mouseToTUIO.MouseToTUIO;
-import TUIO.TuioClient;
-import TUIO.TuioCursor;
-import TUIO.TuioObject;
-import TUIO.TuioPoint;
+
+import TUIO.*;
+
 
 /**
  * The TUIO Processing client.
