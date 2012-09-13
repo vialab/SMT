@@ -26,8 +26,6 @@
 package vialab.TUIOSource;
 
 import java.awt.Point;
-import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
@@ -73,16 +71,8 @@ public class Simulation {
 	/** Height of the PApplet */
 	int windowHeight;
 
-	/** Shape of a rectangle (PApplet screen size) */
-	Shape table;
-
 	/** Currently selected cursor */
 	Finger selectedCursor = null;
-
-	/** Vector of the sticky cursors */
-	Vector<Integer> stickyCursors = new Vector<Integer>();
-	/** Vector of the joint cursors */
-	Vector<Integer> jointCursors = new Vector<Integer>();
 
 	/** Hash table of touch cursors with their session IDs as the key */
 	protected static Hashtable<Integer, Finger> cursorList = new Hashtable<Integer, Finger>();
@@ -115,7 +105,6 @@ public class Simulation {
 		}
 
 		reset();
-		table = new Rectangle2D.Float(0, 0, windowWidth, windowHeight);
 	}
 
 	/**
@@ -265,9 +254,9 @@ public class Simulation {
 	 */
 	protected void reset() {
 		sessionID = -1;
-		stickyCursors.clear();
-		jointCursors.clear();
-
+		
+		cursorList.clear();
+		
 		OSCBundle objBundle = new OSCBundle();
 		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dobj");
 		aliveMessage.addArgument("alive");
@@ -344,5 +333,12 @@ public class Simulation {
 	protected final void removeCursor(Finger cursor) {
 		cursorList.remove(cursor.sessionID);
 		cursorDelete();
+	}
+
+	public boolean contains(Point p) {
+		if(p.x>=0&&p.x<=windowWidth&&p.y>=0&&p.y<=windowHeight){
+			return true;
+		}
+		return false;
 	}
 }
