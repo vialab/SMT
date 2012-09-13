@@ -16,7 +16,7 @@ TouchClient client;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchClient.TOUCH_SOURCE_MOUSE);
+  client = new TouchClient(this, TouchClient.TOUCH_SOURCE_WM_TOUCH_64);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS,10);
   Zone z = new Zone("Pick1",400, 400, 200, 200);
   Zone z2 = new Zone("Pick2",1200,400, 200, 200);
