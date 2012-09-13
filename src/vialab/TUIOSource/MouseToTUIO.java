@@ -47,12 +47,6 @@ public class MouseToTUIO {
 	
 	private static Simulation sim;
 
-	/** Default host. (Implements TUIO: host "127.0.0.1") */
-	public static String host = "127.0.0.1";
-
-	/** Default port. (Implements TUIO: port "3333") */
-	public static int port = 3333;
-
 	/**
 	 * Sets up everything to get ready to begin converting mouse events to TUIO
 	 * messages. Sets the screen to be full-screen if the boolean/flag is set to
@@ -63,7 +57,7 @@ public class MouseToTUIO {
 	 */
 	public MouseToTUIO(int width, int height) {
 		super();
-		sim= new Simulation(host, port, width, height);
+		sim= new Simulation(width, height);
 	}
 	
 	/**

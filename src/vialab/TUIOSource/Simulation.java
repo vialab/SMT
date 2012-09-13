@@ -54,6 +54,13 @@ import com.illposed.osc.OSCPortOut;
  * @version 2.0
  */
 public class Simulation implements Runnable {
+	
+	/** Default host. (Implements TUIO: host "127.0.0.1") */
+	static String host = "127.0.0.1";
+
+	/** Default port. (Implements TUIO: port "3333") */
+	static int port = 3333;
+	
 	/** OSC Port */
 	private OSCPortOut oscPort;
 
@@ -95,7 +102,7 @@ public class Simulation implements Runnable {
 	 * @param port
 	 *            int Port
 	 */
-	public Simulation(String host, int port, int width, int height) {
+	public Simulation(int width, int height) {
 		super();
 
 		this.windowWidth = width;
