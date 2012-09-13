@@ -53,7 +53,7 @@ import com.illposed.osc.OSCPortOut;
  * @date September, 2012
  * @version 2.0
  */
-public abstract class Simulation implements Runnable {
+public class Simulation implements Runnable {
 	/** OSC Port */
 	private OSCPortOut oscPort;
 
