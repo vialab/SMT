@@ -53,7 +53,7 @@ import com.illposed.osc.OSCPortOut;
  * @date September, 2012
  * @version 2.0
  */
-public class Simulation implements Runnable {
+public class Simulation {
 
 	/** Default host. (Implements TUIO: host "127.0.0.1") */
 	static String host = "127.0.0.1";
@@ -63,9 +63,6 @@ public class Simulation implements Runnable {
 
 	/** OSC Port */
 	private OSCPortOut oscPort;
-
-	/** Last frame time */
-	long lastFrameTime = -1;
 
 	/** Current fame */
 	int currentFrame = 0;
@@ -89,9 +86,6 @@ public class Simulation implements Runnable {
 
 	/** Hash table of touch cursors with their session IDs as the key */
 	protected static Hashtable<Integer, Finger> cursorList = new Hashtable<Integer, Finger>();
-
-	/** Flag set true if the simulator's thread is running */
-	private boolean running = false;
 
 	/**
 	 * Constructor, resets the simulator and create a table the size of the
@@ -142,7 +136,7 @@ public class Simulation implements Runnable {
 	/**
 	 * Deletes a cursor
 	 */
-	protected void cursorDelete() {
+	private void cursorDelete() {
 
 		OSCBundle cursorBundle = new OSCBundle();
 		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dcur");
@@ -176,7 +170,6 @@ public class Simulation implements Runnable {
 		while (cursorList.hasMoreElements()) {
 			Integer s_id = cursorList.nextElement();
 			aliveMessage.addArgument(s_id);
-
 		}
 
 		Finger cursor = selectedCursor;
@@ -275,8 +268,6 @@ public class Simulation implements Runnable {
 		stickyCursors.clear();
 		jointCursors.clear();
 
-		lastFrameTime = -1;
-
 		OSCBundle objBundle = new OSCBundle();
 		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dobj");
 		aliveMessage.addArgument("alive");
@@ -300,26 +291,6 @@ public class Simulation implements Runnable {
 		curBundle.addPacket(aliveMessage);
 		curBundle.addPacket(frameMessage);
 		sendOSC(curBundle);
-	}
-
-	/**
-	 * Sends the table state every second I dont think there is any reason to
-	 * use this
-	 */
-	public void run() {
-		running = true;
-		while (running) {
-			try {
-				Thread.sleep(1000);
-			}
-			catch (Exception e) {}
-
-			long currentFrameTime = System.currentTimeMillis();
-			long dt = currentFrameTime - lastFrameTime;
-			if (dt > 1000) {
-				completeCursorMessage();
-			}
-		}
 	}
 
 	/**
@@ -372,5 +343,6 @@ public class Simulation implements Runnable {
 	 */
 	protected final void removeCursor(Finger cursor) {
 		cursorList.remove(cursor.sessionID);
+		cursorDelete();
 	}
 }

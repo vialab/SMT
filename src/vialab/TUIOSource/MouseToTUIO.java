@@ -67,11 +67,6 @@ public class MouseToTUIO {
 	 *            MouseEvent - The mouse dragged event
 	 */
 	public void mouseDragged(MouseEvent me) {
-		long currentFrameTime = System.currentTimeMillis();
-		long dt = currentFrameTime - sim.lastFrameTime;
-		if (dt < 16)
-			return;
-
 		Point pt = new Point(me.getX(), me.getY());
 		int x = me.getX();
 		int y = me.getX();
@@ -110,7 +105,6 @@ public class MouseToTUIO {
 				if (sim.jointCursors.contains(sim.selectedCursor.sessionID))
 					sim.jointCursors.removeElement(sim.selectedCursor.sessionID);
 				sim.removeCursor(sim.selectedCursor);
-				sim.cursorDelete();
 				sim.selectedCursor = null;
 			}
 		}
@@ -125,8 +119,6 @@ public class MouseToTUIO {
 					sim.stickyCursors.addElement(sim.selectedCursor.sessionID);
 			}
 		}
-
-		sim.lastFrameTime = currentFrameTime;
 	}
 
 	/**
@@ -156,7 +148,6 @@ public class MouseToTUIO {
 					if (sim.jointCursors.contains(cursor.sessionID))
 						sim.jointCursors.removeElement(cursor.sessionID);
 					sim.removeCursor(cursor);
-					sim.cursorDelete();
 					sim.selectedCursor = null;
 					return;
 				}
@@ -208,7 +199,6 @@ public class MouseToTUIO {
 				if (sim.jointCursors.contains(sim.selectedCursor.sessionID))
 					sim.jointCursors.removeElement(sim.selectedCursor.sessionID);
 				sim.removeCursor(sim.selectedCursor);
-				sim.cursorDelete();
 			}
 			else {
 				sim.selectedCursor.stop();
