@@ -20,26 +20,25 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-
 public class SMTZonePicker {
-	
-	private class CustomPGraphicsOpenGL extends PGraphics3D{
-		public CustomPGraphicsOpenGL(PApplet applet,int width, int height, String opengl) {
+
+	private class CustomPGraphicsOpenGL extends PGraphics3D {
+		public CustomPGraphicsOpenGL(PApplet applet, int width, int height, String opengl) {
 			super();
 			this.setParent(applet);
 			this.setPrimary(false);
 			this.setSize(width, height);
 		}
 
-		void beginPixelRead(){
+		void beginPixelRead() {
 			super.beginPixelsOp(OP_READ);
 		}
-		
-		void endPixelRead(){
+
+		void endPixelRead() {
 			super.endPixelsOp();
 		}
 	}
-	
+
 	private static boolean BIG_ENDIAN = ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN;
 
 	static int MAX_COLOR_VALUE = 0x00ffffff;
@@ -138,13 +137,14 @@ public class SMTZonePicker {
 		PGL pgl = pickBuffer.beginPGL();
 		// bind FBO, read pixel, then unbind FBO
 		pickBuffer.beginPixelRead();
-		pgl.readPixels(screenX, TouchClient.parent.height-screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
+		pgl.readPixels(screenX, TouchClient.parent.height - screenY, 1, 1, GL.GL_RGBA,
+				GL.GL_UNSIGNED_BYTE, buffer);
 		pickBuffer.endPixelRead();
 
 		int pickColor = buffer.get(0);
 		// System.out.println("gray "+(pickColor & 0xFF)+" raw "+pickColor);
 		pickBuffer.endPGL();
-		
+
 		pickColor = nativeToJavaARGB(pickColor);
 
 		/*
@@ -214,7 +214,7 @@ public class SMTZonePicker {
 		}
 
 		pickBuffer.beginDraw();
-		//pickBuffer.background(BG_PICK_COLOR);
+		// pickBuffer.background(BG_PICK_COLOR);
 		pickBuffer.rect(0, 0, pickBuffer.width, pickBuffer.height);
 		pickBuffer.endDraw();
 		for (Zone zone : zonesByPickColor.values()) {
@@ -225,14 +225,15 @@ public class SMTZonePicker {
 			// zone does the matrix manipulation to place it self properly
 			zone.drawForPickBuffer(pickBuffer);
 		}
-		
+
 	}
 
 	private void initPickBuffer() {
 		// pickBuffer = applet.createGraphics(applet.g.width, applet.g.height,
 		// applet.g.getClass()
 		// .getName());
-		pickBuffer = new CustomPGraphicsOpenGL(applet, applet.g.width, applet.g.height, PConstants.OPENGL);
+		pickBuffer = new CustomPGraphicsOpenGL(applet, applet.g.width, applet.g.height,
+				PConstants.OPENGL);
 		pickBuffer.noSmooth();
 		pickBuffer.noLights();
 		pickBuffer.noTint();

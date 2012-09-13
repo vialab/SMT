@@ -9,11 +9,14 @@ import TUIO.*;
 TouchClient client;
 
 void setup() {
+  frameRate(1000);
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchClient.TOUCH_SOURCE_MOUSE);
+  client = new TouchClient(this, TouchClient.TouchSource.MOUSE);
+  client.setDrawTouchPoints(true,100);
 }
 
 void draw() {
   background(79, 129, 189);
-  text(round(frameRate)+"fps",width/2,10);
+  text(round(frameRate)+"fps", width/2, 10);
 }
+

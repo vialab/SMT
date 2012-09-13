@@ -56,7 +56,6 @@ import vialab.TUIOSource.*;
 
 import TUIO.*;
 
-
 /**
  * The TUIO Processing client.
  * 
@@ -70,17 +69,11 @@ import TUIO.*;
  */
 public class TouchClient {
 
-	public static final int TOUCH_SOURCE_TUIO_DEVICE = 0;
+	public enum TouchSource {
+		TUIO_DEVICE, MOUSE, WM_TOUCH_32, WM_TOUCH_64, ANDROID
+	}
 
-	public static final int TOUCH_SOURCE_MOUSE = 1;
-
-	public static final int TOUCH_SOURCE_WM_TOUCH_32 = 2;
-
-	public static final int TOUCH_SOURCE_WM_TOUCH_64 = 3;
-
-	public static final int TOUCH_SOURCE_ANDROID = 4;
-
-	private static int MAX_PATH_LENGTH = 100;
+	private static int MAX_PATH_LENGTH = 50;
 
 	/** Processing PApplet */
 	static PApplet parent;
@@ -149,11 +142,15 @@ public class TouchClient {
 	 *            TOUCH_SOURCE_ANDROID, TOUCH_SOURCE.
 	 */
 
-	public TouchClient(PApplet parent, int touchSource) {
-		this(parent, 3333, touchSource);
+	public TouchClient(PApplet parent, int port) {
+		this(parent, port, TouchSource.TUIO_DEVICE);
 	}
 
-	public TouchClient(PApplet parent, int port, int touchSource) {
+	public TouchClient(PApplet parent, TouchSource source) {
+		this(parent, 3333, source);
+	}
+
+	private TouchClient(PApplet parent, int port, TouchSource source) {
 		parent.setLayout(new BorderLayout());
 
 		// As of now, this code is dead, the toolkit only supports OpenGL, and
@@ -175,27 +172,27 @@ public class TouchClient {
 
 		TouchClient.client = this;
 
-		switch (touchSource) {
-		case TouchClient.TOUCH_SOURCE_ANDROID:
+		switch (source) {
+		case ANDROID:
 			// for now just use mouse emulation until implemented by going to
 			// next case
-		case TouchClient.TOUCH_SOURCE_MOUSE:
+		case MOUSE:
 			// this still uses the old method, should be re-implemented without
 			// the socket
 			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
 			parent.registerMethod("mouseEvent", mtt);
 			tuioClient = new TuioClient(port);
 			break;
-		case TouchClient.TOUCH_SOURCE_TUIO_DEVICE:
+		case TUIO_DEVICE:
 			tuioClient = new TuioClient(port);
 			break;
-		case TouchClient.TOUCH_SOURCE_WM_TOUCH_32:
+		case WM_TOUCH_32:
 			// this likely wont work, as we likely wont have correct relative
 			// path, need to fix
 			this.runWinTouchTuioServer(false);
 			tuioClient = new TuioClient(port);
 			break;
-		case TouchClient.TOUCH_SOURCE_WM_TOUCH_64:
+		case WM_TOUCH_64:
 			// this likely wont work, as we likely wont have correct relative
 			// path, need to fix
 			this.runWinTouchTuioServer(true);
@@ -655,8 +652,10 @@ public class TouchClient {
 	private void runWinTouchTuioServer(boolean is64Bit) {
 		try {
 			BufferedInputStream src = new BufferedInputStream(
-					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/Touch2Tuio_x64.exe" : "/resources/Touch2Tuio.exe"));
-			final File exeTempFile = File.createTempFile(is64Bit ? "Touch2Tuio_x64" : "Touch2Tuio", ".exe");
+					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/Touch2Tuio_x64.exe"
+							: "/resources/Touch2Tuio.exe"));
+			final File exeTempFile = File.createTempFile(is64Bit ? "Touch2Tuio_x64" : "Touch2Tuio",
+					".exe");
 			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
 			byte[] temp = new byte[1024 * 1024];
 			int rc;
@@ -665,11 +664,14 @@ public class TouchClient {
 			src.close();
 			out.close();
 			exeTempFile.deleteOnExit();
-			
+
 			BufferedInputStream dllsrc = new BufferedInputStream(
-					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/TouchHook_x64.dll" : "/resources/TouchHook.dll"));
-			final File dllTempFile = File.createTempFile(is64Bit ? "TouchHook_x64" : "TouchHook", ".dll");
-			BufferedOutputStream outdll = new BufferedOutputStream(new FileOutputStream(dllTempFile));
+					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/TouchHook_x64.dll"
+							: "/resources/TouchHook.dll"));
+			final File dllTempFile = File.createTempFile(is64Bit ? "TouchHook_x64" : "TouchHook",
+					".dll");
+			BufferedOutputStream outdll = new BufferedOutputStream(
+					new FileOutputStream(dllTempFile));
 			byte[] tempdll = new byte[1024 * 1024];
 			int rcdll;
 			while ((rcdll = dllsrc.read(tempdll)) > 0)

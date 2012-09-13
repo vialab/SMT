@@ -26,8 +26,6 @@
 package vialab.TUIOSource;
 
 import java.awt.Point;
-import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
@@ -40,8 +38,8 @@ import com.illposed.osc.OSCPacket;
 import com.illposed.osc.OSCPortOut;
 
 /**
- * This class is the parent class of MouseToTUIO etc to allow easy formation
- * of TUIO messages in response to events.
+ * This class is the parent class of MouseToTUIO etc to allow easy formation of
+ * TUIO messages in response to events.
  * <P>
  * 
  * University of Ontario Institute of Technology. Summer Research Assistant with
@@ -53,12 +51,16 @@ import com.illposed.osc.OSCPortOut;
  * @date September, 2012
  * @version 2.0
  */
-public class Simulation implements Runnable {
+public class Simulation {
+
+	/** Default host. (Implements TUIO: host "127.0.0.1") */
+	static String host = "127.0.0.1";
+
+	/** Default port. (Implements TUIO: port "3333") */
+	static int port = 3333;
+
 	/** OSC Port */
 	private OSCPortOut oscPort;
-
-	/** Last frame time */
-	long lastFrameTime = -1;
 
 	/** Current fame */
 	int currentFrame = 0;
@@ -69,22 +71,11 @@ public class Simulation implements Runnable {
 	/** Height of the PApplet */
 	int windowHeight;
 
-	/** Shape of a rectangle (PApplet screen size) */
-	Shape table;
-
 	/** Currently selected cursor */
 	Finger selectedCursor = null;
 
-	/** Vector of the sticky cursors */
-	Vector<Integer> stickyCursors = new Vector<Integer>();
-	/** Vector of the joint cursors */
-	Vector<Integer> jointCursors = new Vector<Integer>();
-
 	/** Hash table of touch cursors with their session IDs as the key */
 	protected static Hashtable<Integer, Finger> cursorList = new Hashtable<Integer, Finger>();
-
-	/** Flag set true if the simulator's thread is running */
-	private boolean running = false;
 
 	/**
 	 * Constructor, resets the simulator and create a table the size of the
@@ -95,7 +86,7 @@ public class Simulation implements Runnable {
 	 * @param port
 	 *            int Port
 	 */
-	public Simulation(String host, int port, int width, int height) {
+	public Simulation(int width, int height) {
 		super();
 
 		this.windowWidth = width;
@@ -114,7 +105,6 @@ public class Simulation implements Runnable {
 		}
 
 		reset();
-		table = new Rectangle2D.Float(0, 0, windowWidth, windowHeight);
 	}
 
 	/**
@@ -135,7 +125,7 @@ public class Simulation implements Runnable {
 	/**
 	 * Deletes a cursor
 	 */
-	protected void cursorDelete() {
+	private void cursorDelete() {
 
 		OSCBundle cursorBundle = new OSCBundle();
 		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dcur");
@@ -169,7 +159,6 @@ public class Simulation implements Runnable {
 		while (cursorList.hasMoreElements()) {
 			Integer s_id = cursorList.nextElement();
 			aliveMessage.addArgument(s_id);
-
 		}
 
 		Finger cursor = selectedCursor;
@@ -265,11 +254,9 @@ public class Simulation implements Runnable {
 	 */
 	protected void reset() {
 		sessionID = -1;
-		stickyCursors.clear();
-		jointCursors.clear();
-
-		lastFrameTime = -1;
-
+		
+		cursorList.clear();
+		
 		OSCBundle objBundle = new OSCBundle();
 		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dobj");
 		aliveMessage.addArgument("alive");
@@ -293,26 +280,6 @@ public class Simulation implements Runnable {
 		curBundle.addPacket(aliveMessage);
 		curBundle.addPacket(frameMessage);
 		sendOSC(curBundle);
-	}
-
-	/**
-	 * Sends the table state every second
-	 * I dont think there is any reason to use this
-	 */
-	public void run() {
-		running = true;
-		while (running) {
-			try {
-				Thread.sleep(1000);
-			}
-			catch (Exception e) {}
-
-			long currentFrameTime = System.currentTimeMillis();
-			long dt = currentFrameTime - lastFrameTime;
-			if (dt > 1000) {
-				completeCursorMessage();
-			}
-		}
 	}
 
 	/**
@@ -365,5 +332,13 @@ public class Simulation implements Runnable {
 	 */
 	protected final void removeCursor(Finger cursor) {
 		cursorList.remove(cursor.sessionID);
+		cursorDelete();
+	}
+
+	public boolean contains(Point p) {
+		if(p.x>=0&&p.x<=windowWidth&&p.y>=0&&p.y<=windowHeight){
+			return true;
+		}
+		return false;
 	}
 }
