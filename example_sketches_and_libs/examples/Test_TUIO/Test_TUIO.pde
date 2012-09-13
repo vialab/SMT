@@ -10,7 +10,7 @@ TouchClient client;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchClient.TOUCH_SOURCE_MOUSE);
+  client = new TouchClient(this, TouchClient.TouchSource.MOUSE);
 }
 
 void draw() {

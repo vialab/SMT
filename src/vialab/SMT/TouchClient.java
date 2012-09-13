@@ -69,16 +69,16 @@ import TUIO.*;
  * @version 1.0
  */
 public class TouchClient {
+	
+	public enum TouchSource{
+		TUIO_DEVICE,
+		MOUSE,
+		WM_TOUCH_32,
+		WM_TOUCH_64,
+		ANDROID
+	}
 
-	public static final int TOUCH_SOURCE_TUIO_DEVICE = 0;
-
-	public static final int TOUCH_SOURCE_MOUSE = 1;
-
-	public static final int TOUCH_SOURCE_WM_TOUCH_32 = 2;
-
-	public static final int TOUCH_SOURCE_WM_TOUCH_64 = 3;
-
-	public static final int TOUCH_SOURCE_ANDROID = 4;
+	
 
 	private static int MAX_PATH_LENGTH = 100;
 
@@ -149,11 +149,15 @@ public class TouchClient {
 	 *            TOUCH_SOURCE_ANDROID, TOUCH_SOURCE.
 	 */
 
-	public TouchClient(PApplet parent, int touchSource) {
-		this(parent, 3333, touchSource);
+	public TouchClient(PApplet parent, int port){
+		this(parent, port, TouchSource.TUIO_DEVICE);
+	}
+	
+	public TouchClient(PApplet parent, TouchSource source) {
+		this(parent, 3333, source);
 	}
 
-	public TouchClient(PApplet parent, int port, int touchSource) {
+	private TouchClient(PApplet parent, int port, TouchSource source) {
 		parent.setLayout(new BorderLayout());
 
 		// As of now, this code is dead, the toolkit only supports OpenGL, and
@@ -175,27 +179,27 @@ public class TouchClient {
 
 		TouchClient.client = this;
 
-		switch (touchSource) {
-		case TouchClient.TOUCH_SOURCE_ANDROID:
+		switch (source) {
+		case ANDROID:
 			// for now just use mouse emulation until implemented by going to
 			// next case
-		case TouchClient.TOUCH_SOURCE_MOUSE:
+		case MOUSE:
 			// this still uses the old method, should be re-implemented without
 			// the socket
 			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
 			parent.registerMethod("mouseEvent", mtt);
 			tuioClient = new TuioClient(port);
 			break;
-		case TouchClient.TOUCH_SOURCE_TUIO_DEVICE:
+		case TUIO_DEVICE:
 			tuioClient = new TuioClient(port);
 			break;
-		case TouchClient.TOUCH_SOURCE_WM_TOUCH_32:
+		case WM_TOUCH_32:
 			// this likely wont work, as we likely wont have correct relative
 			// path, need to fix
 			this.runWinTouchTuioServer(false);
 			tuioClient = new TuioClient(port);
 			break;
-		case TouchClient.TOUCH_SOURCE_WM_TOUCH_64:
+		case WM_TOUCH_64:
 			// this likely wont work, as we likely wont have correct relative
 			// path, need to fix
 			this.runWinTouchTuioServer(true);
