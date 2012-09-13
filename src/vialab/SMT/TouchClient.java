@@ -25,6 +25,10 @@
 package vialab.SMT;
 
 import java.awt.BorderLayout;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -35,7 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -49,12 +52,10 @@ import org.xml.sax.SAXException;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.opengl.PGraphicsOpenGL;
-
 import vialab.mouseToTUIO.MouseToTUIO;
-import TUIO.TuioClient;
-import TUIO.TuioCursor;
-import TUIO.TuioObject;
-import TUIO.TuioPoint;
+
+import TUIO.*;
+
 
 /**
  * The TUIO Processing client.
@@ -73,9 +74,9 @@ public class TouchClient {
 
 	public static final int TOUCH_SOURCE_MOUSE = 1;
 
-	public static final int TOUCH_SOURCE_WIN7_32_TOUCH = 2;
+	public static final int TOUCH_SOURCE_WM_TOUCH_32 = 2;
 
-	public static final int TOUCH_SOURCE_WIN7_64_TOUCH = 3;
+	public static final int TOUCH_SOURCE_WM_TOUCH_64 = 3;
 
 	public static final int TOUCH_SOURCE_ANDROID = 4;
 
@@ -179,8 +180,8 @@ public class TouchClient {
 			// for now just use mouse emulation until implemented by going to
 			// next case
 		case TouchClient.TOUCH_SOURCE_MOUSE:
-			// this still uses the old method, should be reimplemented without
-			// the port
+			// this still uses the old method, should be re-implemented without
+			// the socket
 			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
 			parent.registerMethod("mouseEvent", mtt);
 			tuioClient = new TuioClient(port);
@@ -188,16 +189,16 @@ public class TouchClient {
 		case TouchClient.TOUCH_SOURCE_TUIO_DEVICE:
 			tuioClient = new TuioClient(port);
 			break;
-		case TouchClient.TOUCH_SOURCE_WIN7_32_TOUCH:
+		case TouchClient.TOUCH_SOURCE_WM_TOUCH_32:
 			// this likely wont work, as we likely wont have correct relative
 			// path, need to fix
-			this.runWinTouchTuioServer("Win7Touch/Release/Touch2Tuio.exe");
+			this.runWinTouchTuioServer(false);
 			tuioClient = new TuioClient(port);
 			break;
-		case TouchClient.TOUCH_SOURCE_WIN7_64_TOUCH:
+		case TouchClient.TOUCH_SOURCE_WM_TOUCH_64:
 			// this likely wont work, as we likely wont have correct relative
 			// path, need to fix
-			this.runWinTouchTuioServer("Win7Touch/x64/Release/Touch2Tuio.exe");
+			this.runWinTouchTuioServer(true);
 			tuioClient = new TuioClient(port);
 			break;
 		}
@@ -651,29 +652,58 @@ public class TouchClient {
 	 *            Touch2Tuio
 	 * @see <a href='http://dm.tzi.de/touch2tuio/'>Touch2Tuio</a>
 	 */
-	public void runWinTouchTuioServer(String touch2TuioExePath) {
-		final String tuioServerCommand = touch2TuioExePath + " " + parent.frame.getTitle();
+	private void runWinTouchTuioServer(boolean is64Bit) {
+		try {
+			BufferedInputStream src = new BufferedInputStream(
+					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/Touch2Tuio_x64.exe" : "/resources/Touch2Tuio.exe"));
+			final File exeTempFile = File.createTempFile(is64Bit ? "Touch2Tuio_x64" : "Touch2Tuio", ".exe");
+			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
+			byte[] temp = new byte[1024 * 1024];
+			int rc;
+			while ((rc = src.read(temp)) > 0)
+				out.write(temp, 0, rc);
+			src.close();
+			out.close();
+			exeTempFile.deleteOnExit();
+			
+			BufferedInputStream dllsrc = new BufferedInputStream(
+					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/TouchHook_x64.dll" : "/resources/TouchHook.dll"));
+			final File dllTempFile = File.createTempFile(is64Bit ? "TouchHook_x64" : "TouchHook", ".dll");
+			BufferedOutputStream outdll = new BufferedOutputStream(new FileOutputStream(dllTempFile));
+			byte[] tempdll = new byte[1024 * 1024];
+			int rcdll;
+			while ((rcdll = dllsrc.read(tempdll)) > 0)
+				outdll.write(tempdll, 0, rcdll);
+			dllsrc.close();
+			outdll.close();
+			dllTempFile.deleteOnExit();
 
-		Thread serverThread = new Thread() {
-
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						Process tuioServer = Runtime.getRuntime().exec(tuioServerCommand);
-						tuioServer.waitFor();
-					}
-					catch (IOException e) {
-						System.err.println(e.getMessage());
-						break;
-					}
-					catch (Exception e) {
-						System.err.println("TUIO Server stopped!, restarting server.");
+			Thread serverThread = new Thread() {
+				@Override
+				public void run() {
+					while (true) {
+						try {
+							System.out.println(exeTempFile.getName());
+							Process tuioServer = Runtime.getRuntime().exec(
+									exeTempFile.toString() + " " + parent.frame.getTitle());
+							tuioServer.waitFor();
+						}
+						catch (IOException e) {
+							System.err.println(e.getMessage());
+							break;
+						}
+						catch (Exception e) {
+							System.err.println("TUIO Server stopped!, restarting server.");
+						}
 					}
 				}
-			}
-		};
-		serverThread.start();
+			};
+			serverThread.start();
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	public void putZoneOnTop(Zone zone) {

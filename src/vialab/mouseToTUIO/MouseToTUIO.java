@@ -31,11 +31,7 @@ import javax.swing.SwingUtilities;
 import processing.event.MouseEvent;
 
 /**
- * This class creates a transparent Container that overlays a PApplet and
- * respond to mouse and key events with corresponding TUIO message. TUIO objects
- * functionality has been removed. It will go into full-screen mode depending on
- * the boolean passed in the constructor. Full screen mode does not work with
- * OpenGL at the moment.
+ * This class responds to mouse events by sending a corresponding TUIO message.
  * <P>
  * 
  * University of Ontario Institute of Technology. Summer Research Assistant with
@@ -43,8 +39,9 @@ import processing.event.MouseEvent;
  * <P>
  * 
  * @author Erik Paluka
- * @date July, 2011
- * @version 1.0
+ * @author Zach Cook
+ * @date September, 2012
+ * @version 2.0
  */
 public class MouseToTUIO extends Simulation {
 

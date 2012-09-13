@@ -1,4 +1,3 @@
 #ignore all class files
 *.class
-#ignore jardesc for jar export which is useful only locally 
-*.jardesc
+bin/

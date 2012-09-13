@@ -7,20 +7,15 @@
 import vialab.SMT.*;
 import TUIO.*;
 
-
-//set some configuration constants
-final boolean USE_MOUSE_TO_TUIO=true;
-final boolean DRAW_TOUCH_POINTS=true;
-
 TouchClient client;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
   client = new TouchClient(this, TouchClient.TOUCH_SOURCE_MOUSE);
-  client.setDrawTouchPoints(DRAW_TOUCH_POINTS,10);
+  client.setDrawTouchPoints(true,10);
   Zone z = new Zone("Pick1",400, 400, 200, 200);
   Zone z2 = new Zone("Pick2",1200,400, 200, 200);
-  z2.setDirect(true);
+  //z2.setDirect(true);
   client.add(z2);
   client.add(z);
   frameRate(1000);
@@ -42,7 +37,7 @@ void touchPick2(Zone zone){
 
 void drawPick1(Zone zone){
   rect(100,100,100,100);
-  ellipse(100,100,100,100); 
+  ellipse(100,100,100,100);
 }
 
 void drawPick2(Zone zone){
