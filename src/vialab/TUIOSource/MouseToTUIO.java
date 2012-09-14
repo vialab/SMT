@@ -48,6 +48,9 @@ public class MouseToTUIO {
 
 	private static Simulation sim;
 	
+	/** Currently selected cursor */
+	Finger selectedCursor = null;
+	
 	/** Vector of the sticky cursors */
 	Vector<Integer> stickyCursors = new Vector<Integer>();
 	/** Vector of the joint cursors */
@@ -77,52 +80,52 @@ public class MouseToTUIO {
 		int x = me.getX();
 		int y = me.getX();
 
-		if (sim.selectedCursor != null) {
+		if (selectedCursor != null) {
 			if (sim.contains(pt)) {
-				if (sim.selectedCursor != null) {
-					if (jointCursors.contains(sim.selectedCursor.sessionID)) {
-						Point selPoint = sim.selectedCursor.getPosition();
+				if (selectedCursor != null) {
+					if (jointCursors.contains(selectedCursor.sessionID)) {
+						Point selPoint = selectedCursor.getPosition();
 						int dx = pt.x - selPoint.x;
 						int dy = pt.y - selPoint.y;
 
 						Enumeration<Integer> joints = jointCursors.elements();
 						while (joints.hasMoreElements()) {
 							int jointId = joints.nextElement();
-							if (jointId == sim.selectedCursor.sessionID)
+							if (jointId == selectedCursor.sessionID)
 								continue;
 							Finger joint_cursor = sim.getCursor(jointId);
 							Point joint_point = joint_cursor.getPosition();
 							sim.updateCursor(joint_cursor, joint_point.x + dx, joint_point.y + dy);
 						}
-						sim.updateCursor(sim.selectedCursor, pt.x, pt.y);
+						sim.updateCursor(selectedCursor, pt.x, pt.y);
 						sim.completeCursorMessage();
 					}
 					else {
-						sim.updateCursor(sim.selectedCursor, pt.x, pt.y);
-						sim.cursorMessage();
+						sim.updateCursor(selectedCursor, pt.x, pt.y);
+						sim.cursorMessage(selectedCursor);
 					}
 				}
 			}
 			else {
-				sim.selectedCursor.stop();
-				sim.cursorMessage();
-				if (stickyCursors.contains(sim.selectedCursor.sessionID))
-					stickyCursors.removeElement(sim.selectedCursor.sessionID);
-				if (jointCursors.contains(sim.selectedCursor.sessionID))
-					jointCursors.removeElement(sim.selectedCursor.sessionID);
-				sim.removeCursor(sim.selectedCursor);
-				sim.selectedCursor = null;
+				selectedCursor.stop();
+				sim.cursorMessage(selectedCursor);
+				if (stickyCursors.contains(selectedCursor.sessionID))
+					stickyCursors.removeElement(selectedCursor.sessionID);
+				if (jointCursors.contains(selectedCursor.sessionID))
+					jointCursors.removeElement(selectedCursor.sessionID);
+				sim.removeCursor(selectedCursor);
+				selectedCursor = null;
 			}
 		}
 		else {
 			if (sim.contains(pt)) {
 				sim.sessionID++;
-				sim.selectedCursor = sim.addCursor(sim.sessionID, x, y);
-				sim.cursorMessage();
+				selectedCursor = sim.addCursor(sim.sessionID, x, y);
+				sim.cursorMessage(selectedCursor);
 				if (me.isShiftDown()
 						|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
 								.getNative())))
-					stickyCursors.addElement(sim.selectedCursor.sessionID);
+					stickyCursors.addElement(selectedCursor.sessionID);
 			}
 		}
 	}
@@ -144,8 +147,8 @@ public class MouseToTUIO {
 
 			if (point.distance(x, y) < 7) {
 				int selCur = -1;
-				if (sim.selectedCursor != null)
-					selCur = sim.selectedCursor.sessionID;
+				if (selectedCursor != null)
+					selCur = selectedCursor.sessionID;
 
 				if ((me.isShiftDown() || SwingUtilities
 						.isRightMouseButton((java.awt.event.MouseEvent) (me.getNative())))
@@ -154,7 +157,7 @@ public class MouseToTUIO {
 					if (jointCursors.contains(cursor.sessionID))
 						jointCursors.removeElement(cursor.sessionID);
 					sim.removeCursor(cursor);
-					sim.selectedCursor = null;
+					selectedCursor = null;
 					return;
 				}
 				else if (me.isControlDown()
@@ -167,7 +170,7 @@ public class MouseToTUIO {
 					return;
 				}
 				else {
-					sim.selectedCursor = cursor;
+					selectedCursor = cursor;
 					return;
 				}
 			}
@@ -179,16 +182,16 @@ public class MouseToTUIO {
 
 		if (sim.contains(new Point(x, y))) {
 			sim.sessionID++;
-			sim.selectedCursor = sim.addCursor(sim.sessionID, x, y);
-			sim.cursorMessage();
+			selectedCursor = sim.addCursor(sim.sessionID, x, y);
+			sim.cursorMessage(selectedCursor);
 			if (me.isShiftDown()
 					|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
 							.getNative())))
-				stickyCursors.addElement(sim.selectedCursor.sessionID);
+				stickyCursors.addElement(selectedCursor.sessionID);
 			return;
 		}
 
-		sim.selectedCursor = null;
+		selectedCursor = null;
 	}
 
 	/**
@@ -198,20 +201,20 @@ public class MouseToTUIO {
 	 *            MouseEvent - The mouse released event
 	 */
 	public void mouseReleased(MouseEvent me) {
-		if ((sim.selectedCursor != null)) {
-			if (!stickyCursors.contains(sim.selectedCursor.sessionID)) {
-				sim.selectedCursor.stop();
-				sim.cursorMessage();
-				if (jointCursors.contains(sim.selectedCursor.sessionID))
-					jointCursors.removeElement(sim.selectedCursor.sessionID);
-				sim.removeCursor(sim.selectedCursor);
+		if ((selectedCursor != null)) {
+			if (!stickyCursors.contains(selectedCursor.sessionID)) {
+				selectedCursor.stop();
+				sim.cursorMessage(selectedCursor);
+				if (jointCursors.contains(selectedCursor.sessionID))
+					jointCursors.removeElement(selectedCursor.sessionID);
+				sim.removeCursor(selectedCursor);
 			}
 			else {
-				sim.selectedCursor.stop();
-				sim.cursorMessage();
+				selectedCursor.stop();
+				sim.cursorMessage(selectedCursor);
 			}
 
-			sim.selectedCursor = null;
+			selectedCursor = null;
 		}
 	}
 

@@ -30,7 +30,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
 
 import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
@@ -70,9 +69,6 @@ public class Simulation {
 	int windowWidth;
 	/** Height of the PApplet */
 	int windowHeight;
-
-	/** Currently selected cursor */
-	Finger selectedCursor = null;
 
 	/** Hash table of touch cursors with their session IDs as the key */
 	protected static Hashtable<Integer, Finger> cursorList = new Hashtable<Integer, Finger>();
@@ -121,50 +117,18 @@ public class Simulation {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * Deletes a cursor
-	 */
-	private void cursorDelete() {
-
-		OSCBundle cursorBundle = new OSCBundle();
+	
+	private OSCMessage aliveMessage(){
 		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dcur");
 		aliveMessage.addArgument("alive");
-		Enumeration<Integer> cursorList = Simulation.cursorList.keys();
+		Enumeration<Finger> cursorList = Simulation.cursorList.elements();
 		while (cursorList.hasMoreElements()) {
-			Integer s_id = cursorList.nextElement();
-			aliveMessage.addArgument(s_id);
+			aliveMessage.addArgument(cursorList.nextElement().sessionID);
 		}
-
-		currentFrame++;
-		OSCMessage frameMessage = new OSCMessage("/tuio/2Dcur");
-		frameMessage.addArgument("fseq");
-		frameMessage.addArgument(currentFrame);
-
-		cursorBundle.addPacket(aliveMessage);
-		cursorBundle.addPacket(frameMessage);
-
-		sendOSC(cursorBundle);
+		return aliveMessage;
 	}
-
-	/**
-	 * Sends a single cursor message
-	 */
-	protected void cursorMessage() {
-
-		OSCBundle cursorBundle = new OSCBundle();
-		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dcur");
-		aliveMessage.addArgument("alive");
-		Enumeration<Integer> cursorList = Simulation.cursorList.keys();
-		while (cursorList.hasMoreElements()) {
-			Integer s_id = cursorList.nextElement();
-			aliveMessage.addArgument(s_id);
-		}
-
-		Finger cursor = selectedCursor;
-		if (cursor == null)
-			return;
-
+	
+	private OSCMessage setMessage(Finger cursor) {
 		Point point = cursor.getPosition();
 		float xpos = (point.x) / (float) windowWidth;
 		float ypos = (point.y) / (float) windowHeight;
@@ -176,75 +140,63 @@ public class Simulation {
 		setMessage.addArgument(cursor.xSpeed);
 		setMessage.addArgument(cursor.ySpeed);
 		setMessage.addArgument(cursor.mAccel);
-
-		currentFrame++;
+		return setMessage;
+	}
+	
+	private OSCMessage frameMessage(int currentFrame){
 		OSCMessage frameMessage = new OSCMessage("/tuio/2Dcur");
 		frameMessage.addArgument("fseq");
 		frameMessage.addArgument(currentFrame);
-
-		cursorBundle.addPacket(aliveMessage);
-		cursorBundle.addPacket(setMessage);
-		cursorBundle.addPacket(frameMessage);
+		return frameMessage;
+	}
+	
+	/**
+	 * Deletes a cursor by sending a list of alive cursors without it
+	 */
+	private void cursorDelete() {
+		OSCBundle cursorBundle = new OSCBundle();
+		cursorBundle.addPacket(aliveMessage());
+		cursorBundle.addPacket(frameMessage(++currentFrame));
 
 		sendOSC(cursorBundle);
 	}
 
 	/**
+	 * Sends a single cursor message
+	 */
+	protected void cursorMessage(Finger cursor) {
+		if (cursor == null)
+			return;
+		
+		OSCBundle cursorBundle = new OSCBundle();
+		cursorBundle.addPacket(aliveMessage()); 
+		cursorBundle.addPacket(setMessage(cursor));
+		cursorBundle.addPacket(frameMessage(++currentFrame));
+
+		sendOSC(cursorBundle);
+	}
+
+	
+
+	/**
 	 * Sends a complete cursor message
 	 */
 	protected void completeCursorMessage() {
-		Vector<OSCMessage> messageList = new Vector<OSCMessage>();
-
-		OSCMessage frameMessage = new OSCMessage("/tuio/2Dcur");
-		frameMessage.addArgument("fseq");
-		frameMessage.addArgument(-1);
-
-		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dcur");
-		aliveMessage.addArgument("alive");
-
-		Enumeration<Integer> cursorList = Simulation.cursorList.keys();
-
-		while (cursorList.hasMoreElements()) {
-			Integer s_id = cursorList.nextElement();
-			aliveMessage.addArgument(s_id);
-
-			Finger cursor = Simulation.cursorList.get(s_id);
-			Point point = cursor.getPosition();
-
-			float xpos = (point.x) / (float) windowWidth;
-			float ypos = (point.y) / (float) windowHeight;
-
-			OSCMessage setMessage = new OSCMessage("/tuio/2Dcur");
-			setMessage.addArgument("set");
-			setMessage.addArgument(s_id);
-			setMessage.addArgument(xpos);
-			setMessage.addArgument(ypos);
-			setMessage.addArgument(cursor.xSpeed);
-			setMessage.addArgument(cursor.ySpeed);
-			setMessage.addArgument(cursor.mAccel);
-			messageList.addElement(setMessage);
-		}
-
-		int i;
-		for (i = 0; i < (messageList.size() / 10); i++) {
+		Enumeration<Finger> cursors = cursorList.elements();
+		
+		while(cursors.hasMoreElements()) {
 			OSCBundle oscBundle = new OSCBundle();
-			oscBundle.addPacket(aliveMessage);
-
-			for (int j = 0; j < 10; j++)
-				oscBundle.addPacket((OSCPacket) messageList.elementAt(i * 10 + j));
-
-			oscBundle.addPacket(frameMessage);
-			sendOSC(oscBundle);
-		}
-
-		if ((messageList.size() % 10 != 0) || (messageList.size() == 0)) {
-			OSCBundle oscBundle = new OSCBundle();
-			oscBundle.addPacket(aliveMessage);
-
-			for (int j = 0; j < messageList.size() % 10; j++)
-				oscBundle.addPacket((OSCPacket) messageList.elementAt(i * 10 + j));
-
-			oscBundle.addPacket(frameMessage);
+			oscBundle.addPacket(aliveMessage());
+			
+			//send cursors info 10 at a time
+			for (int j = 0; j < 10; j++){
+				if(!cursors.hasMoreElements()){
+					break;
+				}
+				oscBundle.addPacket(setMessage(cursors.nextElement()));
+			}
+			
+			oscBundle.addPacket(frameMessage(-1));
 			sendOSC(oscBundle);
 		}
 	}
@@ -270,15 +222,8 @@ public class Simulation {
 		sendOSC(objBundle);
 
 		OSCBundle curBundle = new OSCBundle();
-		aliveMessage = new OSCMessage("/tuio/2Dcur");
-		aliveMessage.addArgument("alive");
-
-		frameMessage = new OSCMessage("/tuio/2Dcur");
-		frameMessage.addArgument("fseq");
-		frameMessage.addArgument(-1);
-
-		curBundle.addPacket(aliveMessage);
-		curBundle.addPacket(frameMessage);
+		curBundle.addPacket(aliveMessage());
+		curBundle.addPacket(frameMessage(-1));
 		sendOSC(curBundle);
 	}
 
