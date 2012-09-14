@@ -41,9 +41,9 @@ public class SMTZonePicker {
 
 	private static boolean BIG_ENDIAN = ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN;
 
-	static int MAX_COLOR_VALUE = 0x00ffffff;
+	private static int MAX_COLOR_VALUE = 0x00ffffff;
 
-	private final int BG_PICK_COLOR = MAX_COLOR_VALUE;
+	private final int BG_PICK_COLOR = 0xffffffff;
 	private final int START_PICK_COLOR = 0;
 	// PICK_COLOR_INC needs a a value that is fairly large to tell the
 	// difference between few zones by eye, and need to have a lcm(I,N)=IxN
@@ -162,7 +162,7 @@ public class SMTZonePicker {
 		// int pickColor = pickBuffer.color(pickBuffer.get(screenX, screenY));
 		// System.out.print(screenX+" "+screenY+" "+pickColor+" "+pickBuffer.color((float)BG_PICK_COLOR)+" ");
 
-		if (pickColor == pickBuffer.color((float) BG_PICK_COLOR)) {
+		if (pickColor == BG_PICK_COLOR) {
 			return null;
 		}
 		else {
@@ -214,8 +214,7 @@ public class SMTZonePicker {
 		}
 
 		pickBuffer.beginDraw();
-		// pickBuffer.background(BG_PICK_COLOR);
-		pickBuffer.rect(0, 0, pickBuffer.width, pickBuffer.height);
+		pickBuffer.background(BG_PICK_COLOR);
 		pickBuffer.endDraw();
 		for (Zone zone : zonesByPickColor.values()) {
 			if (zone.getParent() != null) {
