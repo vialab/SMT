@@ -1,7 +1,6 @@
 /**
  *   Created by Zach Cook
  *   University of Ontario Institute of Technology
- *   May 2012
  *   A test sketch using simpleMultiTouch toolkit
  */
 import vialab.SMT.*;
@@ -20,19 +19,19 @@ class BubbleZone extends Zone{
      
      //direct is much faster, as it renders directly to the screen or parent/no image cop
      //but loses the control over the drawing and seperation that non-direct has
-     //this.setDirect(true);
+     this.setDirect(true);
    }
 }
 void setup() {
   frameRate(1000);
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchClient.TOUCH_SOURCE_MOUSE);
+  client = new TouchClient(this, TouchClient.TouchSource.MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   client.add(new BubbleZone("Bubble",0, 0, 100, 100, color(random(255),random(255),random(255))));
 }
 
 void draw() { 
-  if(client.getZones().length<10){
+  if(client.getZones().length<100){
       client.add(new BubbleZone("Bubble",0, 0, 100, 100, color(random(255),random(255),random(255))));
   }
   background(79, 129, 189);
