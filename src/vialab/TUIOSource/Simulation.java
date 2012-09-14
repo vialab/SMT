@@ -62,9 +62,9 @@ public class Simulation {
 	private OSCPortOut oscPort;
 
 	/** Current fame */
-	int currentFrame = 0;
+	private int currentFrame = 0;
 	/** Last used session ID */
-	int sessionID = -1;
+	private int sessionID = -1;
 	/** Width of the PApplet */
 	int windowWidth;
 	/** Height of the PApplet */
@@ -117,8 +117,8 @@ public class Simulation {
 			e.printStackTrace();
 		}
 	}
-	
-	private OSCMessage aliveMessage(){
+
+	private OSCMessage aliveMessage() {
 		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dcur");
 		aliveMessage.addArgument("alive");
 		Enumeration<Finger> cursorList = Simulation.cursorList.elements();
@@ -127,7 +127,7 @@ public class Simulation {
 		}
 		return aliveMessage;
 	}
-	
+
 	private OSCMessage setMessage(Finger cursor) {
 		Point point = cursor.getPosition();
 		float xpos = (point.x) / (float) windowWidth;
@@ -142,14 +142,14 @@ public class Simulation {
 		setMessage.addArgument(cursor.mAccel);
 		return setMessage;
 	}
-	
-	private OSCMessage frameMessage(int currentFrame){
+
+	private OSCMessage frameMessage(int currentFrame) {
 		OSCMessage frameMessage = new OSCMessage("/tuio/2Dcur");
 		frameMessage.addArgument("fseq");
 		frameMessage.addArgument(currentFrame);
 		return frameMessage;
 	}
-	
+
 	/**
 	 * Deletes a cursor by sending a list of alive cursors without it
 	 */
@@ -167,35 +167,33 @@ public class Simulation {
 	protected void cursorMessage(Finger cursor) {
 		if (cursor == null)
 			return;
-		
+
 		OSCBundle cursorBundle = new OSCBundle();
-		cursorBundle.addPacket(aliveMessage()); 
+		cursorBundle.addPacket(aliveMessage());
 		cursorBundle.addPacket(setMessage(cursor));
 		cursorBundle.addPacket(frameMessage(++currentFrame));
 
 		sendOSC(cursorBundle);
 	}
 
-	
-
 	/**
 	 * Sends a complete cursor message
 	 */
-	protected void completeCursorMessage() {
+	protected void allCursorMessage() {
 		Enumeration<Finger> cursors = cursorList.elements();
-		
-		while(cursors.hasMoreElements()) {
+
+		while (cursors.hasMoreElements()) {
 			OSCBundle oscBundle = new OSCBundle();
 			oscBundle.addPacket(aliveMessage());
-			
-			//send cursors info 10 at a time
-			for (int j = 0; j < 10; j++){
-				if(!cursors.hasMoreElements()){
+
+			// send cursors info 10 at a time
+			for (int j = 0; j < 10; j++) {
+				if (!cursors.hasMoreElements()) {
 					break;
 				}
 				oscBundle.addPacket(setMessage(cursors.nextElement()));
 			}
-			
+
 			oscBundle.addPacket(frameMessage(-1));
 			sendOSC(oscBundle);
 		}
@@ -206,9 +204,9 @@ public class Simulation {
 	 */
 	protected void reset() {
 		sessionID = -1;
-		
+
 		cursorList.clear();
-		
+
 		OSCBundle objBundle = new OSCBundle();
 		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dobj");
 		aliveMessage.addArgument("alive");
@@ -238,9 +236,10 @@ public class Simulation {
 	 *            int - The y-coordinate of the touch cursor
 	 * @return cursor Touch - The created touch cursor
 	 */
-	protected Finger addCursor(int sID, int x, int y) {
-		Finger cursor = new Finger(sID, x, y);
-		cursorList.put(sID, cursor);
+	protected Finger addCursor(int x, int y) {
+		this.sessionID++;
+		Finger cursor = new Finger(this.sessionID, x, y);
+		cursorList.put(this.sessionID, cursor);
 		return cursor;
 	}
 
@@ -281,7 +280,7 @@ public class Simulation {
 	}
 
 	public boolean contains(Point p) {
-		if(p.x>=0&&p.x<=windowWidth&&p.y>=0&&p.y<=windowHeight){
+		if (p.x >= 0 && p.x <= windowWidth && p.y >= 0 && p.y <= windowHeight) {
 			return true;
 		}
 		return false;

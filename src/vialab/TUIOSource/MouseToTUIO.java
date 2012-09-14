@@ -47,10 +47,10 @@ import processing.event.MouseEvent;
 public class MouseToTUIO {
 
 	private static Simulation sim;
-	
+
 	/** Currently selected cursor */
 	Finger selectedCursor = null;
-	
+
 	/** Vector of the sticky cursors */
 	Vector<Integer> stickyCursors = new Vector<Integer>();
 	/** Vector of the joint cursors */
@@ -98,7 +98,7 @@ public class MouseToTUIO {
 							sim.updateCursor(joint_cursor, joint_point.x + dx, joint_point.y + dy);
 						}
 						sim.updateCursor(selectedCursor, pt.x, pt.y);
-						sim.completeCursorMessage();
+						sim.allCursorMessage();
 					}
 					else {
 						sim.updateCursor(selectedCursor, pt.x, pt.y);
@@ -119,8 +119,7 @@ public class MouseToTUIO {
 		}
 		else {
 			if (sim.contains(pt)) {
-				sim.sessionID++;
-				selectedCursor = sim.addCursor(sim.sessionID, x, y);
+				selectedCursor = sim.addCursor(x, y);
 				sim.cursorMessage(selectedCursor);
 				if (me.isShiftDown()
 						|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
@@ -181,8 +180,7 @@ public class MouseToTUIO {
 			return;
 
 		if (sim.contains(new Point(x, y))) {
-			sim.sessionID++;
-			selectedCursor = sim.addCursor(sim.sessionID, x, y);
+			selectedCursor = sim.addCursor(x, y);
 			sim.cursorMessage(selectedCursor);
 			if (me.isShiftDown()
 					|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
@@ -279,11 +277,12 @@ public class MouseToTUIO {
 			break;
 		}
 	}
-	
+
 	/**
-	 * Resets MouseToTUIO state, just making the already available functionality visible
+	 * Resets MouseToTUIO state, just making the already available functionality
+	 * visible
 	 */
-	public void reset(){
+	public void reset() {
 		sim.reset();
 		stickyCursors.clear();
 		jointCursors.clear();
