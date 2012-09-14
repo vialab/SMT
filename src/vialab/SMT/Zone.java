@@ -387,8 +387,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		else {
 			pg = pickGraphics;
+			super.beginDraw();
 		}
-		super.beginDraw();
+	
 		
 		if (grayscale) {
 			fill(pickColor);
@@ -400,7 +401,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void endPickDraw() {
-		super.endDraw();
+		if(!direct){
+			super.endDraw();
+		}
 	}
 
 	public void beginTouch() {
