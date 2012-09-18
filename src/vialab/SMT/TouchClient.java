@@ -666,10 +666,9 @@ public class TouchClient {
 							: "/resources/Touch2Tuio.exe"));
 			final File exeTempFile = new File(is64Bit ? temp.getAbsolutePath()+"\\Touch2Tuio_x64.exe" : temp.getAbsolutePath()+"\\Touch2Tuio.exe");
 			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
-			byte[] tempexe = new byte[1024 * 1024];
+			byte[] tempexe = new byte[4 * 1024];
 			int rc;
 			while ((rc = src.read(tempexe)) > 0){
-				System.out.println("writing exe");
 				out.write(tempexe, 0, rc);
 			}
 			src.close();
@@ -682,10 +681,9 @@ public class TouchClient {
 			final File dllTempFile = new File(is64Bit ? temp.getAbsolutePath()+"\\TouchHook_x64.dll" : temp.getAbsolutePath()+"\\TouchHook.dll");
 			BufferedOutputStream outdll = new BufferedOutputStream(
 					new FileOutputStream(dllTempFile));
-			byte[] tempdll = new byte[1024 * 1024];
+			byte[] tempdll = new byte[4 * 1024];
 			int rcdll;
 			while ((rcdll = dllsrc.read(tempdll)) > 0){
-				System.out.println("writing dll");
 				outdll.write(tempdll, 0, rcdll);
 			}
 			dllsrc.close();
@@ -695,10 +693,9 @@ public class TouchClient {
 			Thread serverThread = new Thread() {
 				@Override
 				public void run() {
-					while (true) {
+					int max_failures=10;
+					for(int i=0; i<max_failures; i++) {
 						try {
-							System.out.println(exeTempFile.getAbsolutePath());
-							System.out.println(dllTempFile.getAbsolutePath());
 							Process tuioServer = Runtime.getRuntime().exec(
 									exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
 							BufferedInputStream err = new BufferedInputStream(tuioServer.getInputStream());

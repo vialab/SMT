@@ -119,7 +119,7 @@ public class SMTZonePicker {
 
 		pickColor = nativeToJavaARGB(pickColor);
 		
-		System.out.println(pickColor);
+		//System.out.println(pickColor);
 
 		/*
 		 * //pixel color method that works when using GLGraphicsOffScreen, but
