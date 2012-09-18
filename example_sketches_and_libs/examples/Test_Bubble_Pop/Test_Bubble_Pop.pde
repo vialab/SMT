@@ -19,7 +19,7 @@ class BubbleZone extends Zone{
      
      //direct is much faster, as it renders directly to the screen or parent/no image cop
      //but loses the control over the drawing and seperation that non-direct has
-     this.setDirect(true);
+     //this.setDirect(true);
    }
 }
 void setup() {

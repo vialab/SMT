@@ -444,7 +444,7 @@ public class TouchClient {
 			if (zone.isChildActive()) {
 				zone.touch();
 			}
-			zone.draw((PGraphicsOpenGL) parent.g);
+			zone.draw();
 			// zone.drawForPickBuffer(parent.g);
 			parent.popMatrix();
 		}

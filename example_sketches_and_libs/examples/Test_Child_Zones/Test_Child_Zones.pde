@@ -27,7 +27,8 @@ void setup() {
 }
 
 void draw() {
-  background(79, 129, 189);
+  //background(79, 129, 189);
+  fill(0);
   text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,10);
 }
   
