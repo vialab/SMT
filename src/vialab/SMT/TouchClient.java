@@ -52,6 +52,7 @@ import org.xml.sax.SAXException;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.opengl.PGraphicsOpenGL;
+
 import vialab.TUIOSource.*;
 
 import TUIO.*;
@@ -70,7 +71,7 @@ import TUIO.*;
 public class TouchClient {
 
 	public enum TouchSource {
-		TUIO_DEVICE, MOUSE, WM_TOUCH_32, WM_TOUCH_64, ANDROID
+		TUIO_DEVICE, MOUSE, WM_TOUCH, ANDROID
 	}
 
 	private static int MAX_PATH_LENGTH = 50;
@@ -186,16 +187,14 @@ public class TouchClient {
 		case TUIO_DEVICE:
 			tuioClient = new TuioClient(port);
 			break;
-		case WM_TOUCH_32:
+		case WM_TOUCH:
 			// this likely wont work, as we likely wont have correct relative
 			// path, need to fix
-			this.runWinTouchTuioServer(false);
-			tuioClient = new TuioClient(port);
-			break;
-		case WM_TOUCH_64:
-			// this likely wont work, as we likely wont have correct relative
-			// path, need to fix
-			this.runWinTouchTuioServer(true);
+			if(System.getProperty("os.arch").equals("x86")){
+				this.runWinTouchTuioServer(false);
+			}else{
+				this.runWinTouchTuioServer(true);
+			}
 			tuioClient = new TuioClient(port);
 			break;
 		}
@@ -445,7 +444,7 @@ public class TouchClient {
 			if (zone.isChildActive()) {
 				zone.touch();
 			}
-			zone.draw();
+			zone.draw((PGraphicsOpenGL) parent.g);
 			// zone.drawForPickBuffer(parent.g);
 			parent.popMatrix();
 		}
@@ -471,7 +470,7 @@ public class TouchClient {
 	 *            - the height of the pickBuffer image to draw
 	 */
 	public void drawPickBuffer(int x, int y, int w, int h) {
-		parent.g.image(picker.getGraphics(), x, y, w, h);
+		//parent.g.image(picker.image, x, y, w, h);
 	}
 
 	/**
@@ -651,16 +650,28 @@ public class TouchClient {
 	 */
 	private void runWinTouchTuioServer(boolean is64Bit) {
 		try {
+			File temp= File.createTempFile("temp", Long.toString(System.nanoTime()));
+
+		    if(!(temp.delete()))
+		    {
+		        throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
+		    }
+
+		    if(!(temp.mkdir()))
+		    {
+		        throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
+		    }
 			BufferedInputStream src = new BufferedInputStream(
 					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/Touch2Tuio_x64.exe"
 							: "/resources/Touch2Tuio.exe"));
-			final File exeTempFile = File.createTempFile(is64Bit ? "Touch2Tuio_x64" : "Touch2Tuio",
-					".exe");
+			final File exeTempFile = new File(is64Bit ? temp.getAbsolutePath()+"\\Touch2Tuio_x64.exe" : temp.getAbsolutePath()+"\\Touch2Tuio.exe");
 			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
-			byte[] temp = new byte[1024 * 1024];
+			byte[] tempexe = new byte[1024 * 1024];
 			int rc;
-			while ((rc = src.read(temp)) > 0)
-				out.write(temp, 0, rc);
+			while ((rc = src.read(tempexe)) > 0){
+				System.out.println("writing exe");
+				out.write(tempexe, 0, rc);
+			}
 			src.close();
 			out.close();
 			exeTempFile.deleteOnExit();
@@ -668,14 +679,15 @@ public class TouchClient {
 			BufferedInputStream dllsrc = new BufferedInputStream(
 					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/TouchHook_x64.dll"
 							: "/resources/TouchHook.dll"));
-			final File dllTempFile = File.createTempFile(is64Bit ? "TouchHook_x64" : "TouchHook",
-					".dll");
+			final File dllTempFile = new File(is64Bit ? temp.getAbsolutePath()+"\\TouchHook_x64.dll" : temp.getAbsolutePath()+"\\TouchHook.dll");
 			BufferedOutputStream outdll = new BufferedOutputStream(
 					new FileOutputStream(dllTempFile));
 			byte[] tempdll = new byte[1024 * 1024];
 			int rcdll;
-			while ((rcdll = dllsrc.read(tempdll)) > 0)
+			while ((rcdll = dllsrc.read(tempdll)) > 0){
+				System.out.println("writing dll");
 				outdll.write(tempdll, 0, rcdll);
+			}
 			dllsrc.close();
 			outdll.close();
 			dllTempFile.deleteOnExit();
@@ -685,9 +697,16 @@ public class TouchClient {
 				public void run() {
 					while (true) {
 						try {
-							System.out.println(exeTempFile.getName());
+							System.out.println(exeTempFile.getAbsolutePath());
+							System.out.println(dllTempFile.getAbsolutePath());
 							Process tuioServer = Runtime.getRuntime().exec(
-									exeTempFile.toString() + " " + parent.frame.getTitle());
+									exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
+							BufferedInputStream err = new BufferedInputStream(tuioServer.getInputStream());
+							String s="";
+							while(err.available()>0){
+								s+=err.read();
+							}
+							System.out.println(s);
 							tuioServer.waitFor();
 						}
 						catch (IOException e) {
