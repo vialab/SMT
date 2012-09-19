@@ -171,8 +171,12 @@ public class TouchClient {
 
 		switch (source) {
 		case ANDROID:
-			// for now just use mouse emulation until implemented by going to
-			// next case
+			// this still uses the old method, should be re-implemented without
+			// the socket
+			AndroidToTUIO att = new AndroidToTUIO(parent.width, parent.height);
+			parent.registerMethod("mouseEvent", att);
+			tuioClient = new TuioClient(port);
+			break;
 		case MOUSE:
 			// this still uses the old method, should be re-implemented without
 			// the socket
