@@ -5,13 +5,9 @@
  *   A test sketch using simpleMultiTouch toolkit
  */
 import vialab.SMT.*;
-import vialab.mouseToTUIO.*;
 import TUIO.*;
-import processing.opengl.PGraphicsOpenGL;
-import codeanticode.glgraphics.*;
 
 //set some configuration constants
-final boolean USE_MOUSE_TO_TUIO=true;
 final boolean DRAW_TOUCH_POINTS=true;
 final int PIECES_PER_PLAYER=12;
 
@@ -29,8 +25,8 @@ class CheckerZone extends Zone{
 }
 void setup() {
   frameRate(1000);
-  size(screenWidth, screenHeight, GLConstants.GLGRAPHICS);
-  client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
+  size(displayWidth, displayHeight, P3D);
+  client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   for(int i=0; i<PIECES_PER_PLAYER; i++){
     p1[i]=new CheckerZone("Checker",0, 0, 100, 100,color(255,0,0));
@@ -47,11 +43,11 @@ void setup() {
     for(int j=0; j<8; j++){
       if((i+j)%2==1){
         if(j<3){
-          p1[c1].translate(((screenWidth-1000)/2)+i*125+12,((screenHeight-1000)/2)+j*125+12);
+          p1[c1].translate(((displayWidth-1000)/2)+i*125+12,((displayHeight-1000)/2)+j*125+12);
           c1+=1;
         }
         if(j>4){
-          p2[c2].translate(((screenWidth-1000)/2)+i*125+12,((screenHeight-1000)/2)+j*125+12);
+          p2[c2].translate(((displayWidth-1000)/2)+i*125+12,((displayHeight-1000)/2)+j*125+12);
           c2+=1;
         }
       }  
@@ -62,12 +58,12 @@ void setup() {
 void draw() {
   background(79, 129, 189);
   fill(245,245,220);
-  rect((screenWidth-1000)/2,(screenHeight-1000)/2,1000,1000);
+  rect((displayWidth-1000)/2,(displayHeight-1000)/2,1000,1000);
   fill(150,75,0);
   for(int i=0; i<8; i++){
     for(int j=0; j<8; j++){
       if((i+j)%2==1){
-        rect(((screenWidth-1000)/2)+i*125,((screenHeight-1000)/2)+j*125,125,125);
+        rect(((displayWidth-1000)/2)+i*125,((displayHeight-1000)/2)+j*125,125,125);
       }  
     }
   }

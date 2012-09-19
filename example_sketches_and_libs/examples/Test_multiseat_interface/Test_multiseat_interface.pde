@@ -15,7 +15,7 @@ TouchClient client;
 
 void setup() {
   size(displayWidth, displayHeight, OPENGL);
-  client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
+  client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   
   Zone z1=new Zone("UserArea",0, 0, 800, 200);

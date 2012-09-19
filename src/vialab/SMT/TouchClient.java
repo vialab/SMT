@@ -70,10 +70,6 @@ import TUIO.*;
  */
 public class TouchClient {
 
-	public enum TouchSource {
-		TUIO_DEVICE, MOUSE, WM_TOUCH, ANDROID
-	}
-
 	private static int MAX_PATH_LENGTH = 50;
 
 	/** Processing PApplet */

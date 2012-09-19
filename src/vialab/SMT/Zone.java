@@ -951,10 +951,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// only draw/pickDraw when the child is in zonelist (parent zone's are
 		// responsible for adding/removing child to/from zonelist)
 		if (TouchClient.zoneList.contains(child)) {
-			g.pushMatrix();
-			g.applyMatrix(child.matrix);
+			if(!direct){
+				g.pushMatrix();
+				g.applyMatrix(matrix);
+			}
 			child.draw(true, picking);
-			g.popMatrix();
+			if(!direct){
+				g.popMatrix();
+			}
 		}
 	}
 

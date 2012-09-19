@@ -11,7 +11,7 @@ TouchClient client;
 void setup() {
   frameRate(1000);
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchClient.TouchSource.MOUSE);
+  client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(true,100);
 }
 

@@ -6,10 +6,8 @@
  *   Ported to simpler multitouch by Zach Cook
  */
 import vialab.SMT.*;
-import vialab.mouseToTUIO.*;
 import TUIO.*;
-import processing.opengl.PGraphicsOpenGL;
-import codeanticode.glgraphics.*;
+
 
 TouchClient client;
 final static int IMAGE_COPIES=3;
@@ -18,21 +16,19 @@ PImage[] img = new PImage[11];
 Zone[] zone = new Zone[NUM_IMAGES];
 
 void setup() {frameRate(1000);
-  size(screenWidth, screenHeight, GLGraphics.GLGRAPHICS);
+  size(displayWidth, displayHeight, P3D);
   
-  client = new TouchClient(this,true,true);
+  client = new TouchClient(this, TouchSource.MOUSE);
   for(int i=0; i<11; i++){  
     img[i] = loadImage(i + ".jpg");
   }
   for(int i=0; i<NUM_IMAGES; i++){  
     zone[i] = new ImageZone("ImageZone",img[i%11], 
-    (int)random(0, screenWidth-400), (int)random(0, screenHeight-400), 
+    (int)random(0, displayWidth-400), (int)random(0, displayHeight-400), 
     (int)random(200, 400), (int)random(200, 400));
     client.add(zone[i]);
     //zone[i].setDirect(true);
   }
-  
-  client.runWinTouchTuioServer("C:/Users/Zach/Downloads/Touch2Tuio_0.2/Touch2Tuio/Release/Touch2Tuio.exe");
 }
 
 void touchImageZone(Zone z){

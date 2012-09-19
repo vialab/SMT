@@ -15,15 +15,15 @@ void setup() {
   Zone z = new Zone("Pick1", 400, 400, 200, 200);
   Zone z2 = new Zone("Pick2", 1200, 400, 600, 600);
   z2.setDirect(true);
-  z.setDirect(true);
+  //z.setDirect(true);
   client.add(z2);
   client.add(z);
   frameRate(60);
 }
 
 void draw() {
- // background(79, 129, 189);
- fill(0);
+  background(79, 129, 189);
+  fill(0);
   text(round(frameRate)+"fps, # of zones: "+client.getZones().length, width/2, 10);
   client.drawPickBuffer(0, 0, 200, 200);
 }
@@ -48,8 +48,8 @@ void drawPick2(Zone zone) {
 }
 
 void pickDrawPick1(Zone zone) {
-  
-  //rect(100, 100, 100, 100);
-  ellipse(0, 0, 100, 100);
+
+  rect(150, 100, 100, 100);
+  ellipse(100, 100, 100, 100);
 }
 
