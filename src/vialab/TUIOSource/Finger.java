@@ -57,6 +57,8 @@ public class Finger {
 	protected long lastTime;
 	/** Path of the touch cursor */
 	private Vector<Point> path;
+	/** ID used by a touch for track keeping in Android */
+	protected int touchID  = -1;
 
 	/**
 	 * Touch Constructor, creates a touch cursor with the given session ID, and
@@ -136,6 +138,25 @@ public class Finger {
 	 */
 	public final Vector<Point> getPath() {
 		return path;
+	}
+	
+	/**
+	 *  Sets the touch ID for Android touches
+	 *  
+	 *  @param tID
+	 *            int - ID of the Android touch
+	 */
+	public final void setTouchId(int tID) {
+		touchID = tID;
+	}
+	
+	/**
+	 * Returns the touch ID of the associated Android touch
+	 * 
+	 * @return touchID int
+	 */
+	public final int getTouchId() {
+		return touchID;
 	}
 
 }

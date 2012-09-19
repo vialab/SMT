@@ -46,16 +46,20 @@ import android.view.*;
  */
 public class AndroidToTUIO {
 
+	private static final int MAX_TOUCHPOINTS = 10;
+	private static final int FRAME_RATE = 40;
+	
 	private static Simulation sim;
+	
+	private long startTime;
+	private long lastTime = 0;
+	
+	/** Vector of active touch points */
+	Vector<Finger> touchPoints;
 	
 	/** Currently selected cursor */
 	Finger selectedCursor = null;
 	
-	/** Vector of the sticky cursors */
-	Vector<Integer> stickyCursors = new Vector<Integer>();
-	/** Vector of the joint cursors */
-	Vector<Integer> jointCursors = new Vector<Integer>();
-
 	/**
 	 * Sets up everything to get ready to begin converting Android touch events to TUIO
 	 * messages. Sets the screen to be full-screen if the boolean/flag is set to
@@ -77,226 +81,85 @@ public class AndroidToTUIO {
 	 */
 	public boolean onTouchEvent(MotionEvent me) {
 		
-		return true;
-	}
-
-	/**
-	 * Updates the selected cursor
-	 * 
-	 * @param me
-	 *            MouseEvent - The mouse dragged event
-	 */
-	public void mouseDragged(MouseEvent me) {
-		Point pt = new Point(me.getX(), me.getY());
-		int x = me.getX();
-		int y = me.getX();
-
-		if (selectedCursor != null) {
-			if (sim.contains(pt)) {
-				if (selectedCursor != null) {
-					if (jointCursors.contains(selectedCursor.sessionID)) {
-						Point selPoint = selectedCursor.getPosition();
-						int dx = pt.x - selPoint.x;
-						int dy = pt.y - selPoint.y;
-
-						Enumeration<Integer> joints = jointCursors.elements();
-						while (joints.hasMoreElements()) {
-							int jointId = joints.nextElement();
-							if (jointId == selectedCursor.sessionID)
-								continue;
-							Finger joint_cursor = sim.getCursor(jointId);
-							Point joint_point = joint_cursor.getPosition();
-							sim.updateCursor(joint_cursor, joint_point.x + dx, joint_point.y + dy);
-						}
-						sim.updateCursor(selectedCursor, pt.x, pt.y);
-						sim.completeCursorMessage();
-					}
-					else {
-						sim.updateCursor(selectedCursor, pt.x, pt.y);
-						sim.cursorMessage(selectedCursor);
-					}
+		//set up the last update time for the touch cursor
+		long timeStamp = System.currentTimeMillis() - startTime;
+		long dt = timeStamp - lastTime;
+		lastTime = timeStamp;
+		
+		//always send on ACTION_DOWN & ACTION_UP -- these are the events when a gesture begins or ends, 
+		// additional touches or removal of touches during these events are different events 
+		if ((me.getAction() == MotionEvent.ACTION_DOWN) || (me.getAction() == MotionEvent.ACTION_UP)) dt = 1000;
+		
+		int pointerCount = me.getPointerCount();
+		
+		//limit pointerCount, but it usually would not go over that for current Android devices
+		if (pointerCount > MAX_TOUCHPOINTS) {
+			pointerCount = MAX_TOUCHPOINTS;
+		}
+		
+		if (me.getAction() == MotionEvent.ACTION_UP) {
+			//this is tricky because even when there is no touch left (a total lift), 
+			// this event is reported with the last touch, so pointerCount is never 0
+			if(me.getPointerCount() == 1) {
+				//means there is no touch left
+				touchPoints.clear();
+			} 
+		} else {
+			//any action other than all touches are gone. e.g., more or less touches, moved touches
+			//procedure is all the same: refresh the active touch points
+			//remove touches that are gone
+			for (int i=0; i<touchPoints.size(); i++) {
+				
+				boolean pointStillAlive = false;		
+				for(int j=0; j<me.getPointerCount(); j++){					
+					if(me.getPointerId(j) == touchPoints.get(i).getTouchId()){
+						pointStillAlive = true;
+						break;
+					}	
+				}
+				
+				if (pointStillAlive == false){
+					sim.removeCursor(touchPoints.get(i));
+					touchPoints.remove(i);
+					i=0;
 				}
 			}
-			else {
-				selectedCursor.stop();
-				sim.cursorMessage(selectedCursor);
-				if (stickyCursors.contains(selectedCursor.sessionID))
-					stickyCursors.removeElement(selectedCursor.sessionID);
-				if (jointCursors.contains(selectedCursor.sessionID))
-					jointCursors.removeElement(selectedCursor.sessionID);
-				sim.removeCursor(selectedCursor);
-				selectedCursor = null;
-			}
-		}
-		else {
-			if (sim.contains(pt)) {
-				sim.sessionID++;
-				selectedCursor = sim.addCursor(sim.sessionID, x, y);
-				sim.cursorMessage(selectedCursor);
-				if (me.isShiftDown()
-						|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
-								.getNative())))
-					stickyCursors.addElement(selectedCursor.sessionID);
-			}
-		}
-	}
-
-	/**
-	 * Adds a cursor to the table state
-	 * 
-	 * @param me
-	 *            MouseEvent - The mouse pressed event
-	 */
-	public void mousePressed(MouseEvent me) {
-		int x = me.getX();
-		int y = me.getY();
-
-		Enumeration<Finger> cursorList = Simulation.cursorList.elements();
-		while (cursorList.hasMoreElements()) {
-			Finger cursor = cursorList.nextElement();
-			Point point = cursor.getPosition();
-
-			if (point.distance(x, y) < 7) {
-				int selCur = -1;
-				if (selectedCursor != null)
-					selCur = selectedCursor.sessionID;
-
-				if ((me.isShiftDown() || SwingUtilities
-						.isRightMouseButton((java.awt.event.MouseEvent) (me.getNative())))
-						&& selCur != cursor.sessionID) {
-					stickyCursors.removeElement(cursor.sessionID);
-					if (jointCursors.contains(cursor.sessionID))
-						jointCursors.removeElement(cursor.sessionID);
-					sim.removeCursor(cursor);
+			
+			// update existing touches or add new touches
+			for (int i = 0; i < pointerCount; i++) {
+				int id = me.getPointerId(i);
+				
+				//update if this touch already exists
+				boolean pointExists = false;
+				for(int j=0; j<touchPoints.size(); j++){
+					if(touchPoints.get(j).getTouchId() == id) {
+						sim.updateCursor(touchPoints.get(j), (int)me.getX(i), (int)me.getY(i));
+						pointExists = true;
+						break;	
+					}
+				}
+				
+				//add if this touch is new
+				if(pointExists == false){
+					selectedCursor = sim.addCursor((int)me.getX(i), (int)me.getY(i));
+					selectedCursor.setTouchId(id);
+					touchPoints.add(selectedCursor);
 					selectedCursor = null;
-					return;
-				}
-				else if (me.isControlDown()
-						|| SwingUtilities.isMiddleMouseButton((java.awt.event.MouseEvent) (me
-								.getNative()))) {
-					if (jointCursors.contains(cursor.sessionID))
-						jointCursors.removeElement(cursor.sessionID);
-					else
-						jointCursors.addElement(cursor.sessionID);
-					return;
-				}
-				else {
-					selectedCursor = cursor;
-					return;
-				}
+				} 
+				
 			}
 		}
-
-		if (me.isControlDown()
-				|| SwingUtilities.isMiddleMouseButton((java.awt.event.MouseEvent) (me.getNative())))
-			return;
-
-		if (sim.contains(new Point(x, y))) {
-			sim.sessionID++;
-			selectedCursor = sim.addCursor(sim.sessionID, x, y);
-			sim.cursorMessage(selectedCursor);
-			if (me.isShiftDown()
-					|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
-							.getNative())))
-				stickyCursors.addElement(selectedCursor.sessionID);
-			return;
-		}
-
-		selectedCursor = null;
-	}
-
-	/**
-	 * Removes the cursor or makes it stationary if it is a sticky cursor
-	 * 
-	 * @param me
-	 *            MouseEvent - The mouse released event
-	 */
-	public void mouseReleased(MouseEvent me) {
-		if ((selectedCursor != null)) {
-			if (!stickyCursors.contains(selectedCursor.sessionID)) {
-				selectedCursor.stop();
-				sim.cursorMessage(selectedCursor);
-				if (jointCursors.contains(selectedCursor.sessionID))
-					jointCursors.removeElement(selectedCursor.sessionID);
-				sim.removeCursor(selectedCursor);
-			}
-			else {
-				selectedCursor.stop();
-				sim.cursorMessage(selectedCursor);
-			}
-
-			selectedCursor = null;
-		}
-	}
-
-	/**
-	 * Currently not used
-	 * 
-	 * @param me
-	 *            MouseEvent
-	 */
-	public void mouseMoved(MouseEvent me) {
-	}
-
-	/**
-	 * Currently not used
-	 * 
-	 * @param me
-	 *            MouseEvent
-	 */
-	public void mouseClicked(MouseEvent me) {
-	}
-
-	/**
-	 * Currently not used
-	 * 
-	 * @param me
-	 *            MouseEvent
-	 */
-	public void mouseEntered(MouseEvent me) {
-	}
-
-	/**
-	 * Currently not used
-	 * 
-	 * @param me
-	 *            MouseEvent
-	 */
-	public void mouseExited(MouseEvent me) {
-	}
-
-	public void mouseEvent(MouseEvent event) {
-		switch (event.getAction()) {
-		case MouseEvent.PRESSED:
-			mousePressed(event);
-			break;
-		case MouseEvent.RELEASED:
-			mouseReleased(event);
-			break;
-		case MouseEvent.CLICKED:
-			mouseClicked(event);
-			break;
-		case MouseEvent.DRAGGED:
-			mouseDragged(event);
-			break;
-		case MouseEvent.MOVED:
-			mouseMoved(event);
-			break;
-		case MouseEvent.ENTERED:
-			mouseEntered(event);
-			break;
-		case MouseEvent.EXITED:
-			mouseExited(event);
-			break;
-		}
+		
+		if(dt>(1000/FRAME_RATE)) sim.allCursorMessage();
+		
+		return true;
 	}
 	
 	/**
-	 * Resets MouseToTUIO state, just making the already available functionality visible
+	 * Resets AndroidToTUIO state, just making the already available functionality visible
 	 */
 	public void reset(){
 		sim.reset();
-		stickyCursors.clear();
-		jointCursors.clear();
+		touchPoints.clear();
 	}
 }
