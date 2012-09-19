@@ -439,14 +439,11 @@ public class TouchClient {
 				// the parent should handle the drawing
 				continue;
 			}
-			parent.pushMatrix();
-			parent.applyMatrix(zone.matrix);
 			if (zone.isChildActive()) {
 				zone.touch();
 			}
 			zone.draw();
 			// zone.drawForPickBuffer(parent.g);
-			parent.popMatrix();
 		}
 		if (drawTouchPoints) {
 			drawTouchPoints();
