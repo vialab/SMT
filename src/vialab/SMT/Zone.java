@@ -430,21 +430,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void beginTouch() {
-		if (direct) {
-			pg.pushMatrix();
-			pg.setMatrix(new PMatrix3D());
-		}else{
-			
-		}
+		pg.pushMatrix();
+		pg.setMatrix(new PMatrix3D());
 	}
 
 	public void endTouch() {
-		if (direct) {
-			matrix.preApply((PMatrix3D) pg.getMatrix());
-			pg.popMatrix();
-		}else{
-			
-		}
+		matrix.preApply((PMatrix3D) pg.getMatrix());
+		pg.popMatrix();
 	}
 
 	public int getPickColor() {
