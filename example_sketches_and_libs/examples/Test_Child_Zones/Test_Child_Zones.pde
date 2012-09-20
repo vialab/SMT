@@ -11,14 +11,14 @@ TouchClient client;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  frameRate(1000);
-  client = new TouchClient(this, TouchClient.TouchSource.MOUSE);
+  frameRate(600);
+  client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(true);
-  Zone z = new Zone("Parent1",400, 400, 200, 200);
+  Zone z = new Zone("Parent1", 400, 400, 200, 200);
   Zone zc = new Zone("Child1", 0, 0, 100, 100);
   zc.add(new Zone("Child1", 100, 0, 100, 100));
-  Zone zr = new Zone("Remove",200,0,100,100);
-  Zone clone = new Zone("Clone",200,200,50,50);
+  Zone zr = new Zone("Remove", 200, 0, 100, 100);
+  Zone clone = new Zone("Clone", 200, 200, 50, 50);
   z.add(zc);
   z.add(zr);
   z.add(clone);
@@ -27,49 +27,57 @@ void setup() {
 }
 
 void draw() {
-  //background(79, 129, 189);
+  background(79, 129, 189);
   fill(0);
-  text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,10);
+  text(round(frameRate)+"fps, # of zones: "+client.getZones().length, width/2, 10);
 }
-  
-void touchParent1(Zone z){
+
+void touchParent1(Zone z) {
   z.rst();
 }
 
-void drawParent1(Zone z){
-  background(0,255,0);
+void drawParent1(Zone z) {
+  fill(0, 255, 0);
+  rect(0, 0, z.width, z.height);
   fill(0);
-  text("w:"+z.width+" h:"+z.height,10,10);
+  text("w:"+z.width+" h:"+z.height, 10, 10);
 }
 
-void touchChild1(Zone z){
+void touchChild1(Zone z) {
   z.rst();
 }
 
-void drawChild1(Zone z){
-  background(255,0,0);
+void drawChild1(Zone z) {
+  fill(255, 0, 0);
+  rect(0, 0, z.width, z.height);
   fill(0);
-  text("w:"+z.width+" h:"+z.height,10,10);
+  text("w:"+z.width+" h:"+z.height, 10, 10);
 }
 
-void touchRemove(Zone z){
+void touchRemove(Zone z) {
   client.remove(z.getParent());
 }
 
-void drawRemove(Zone z){
-  background(255,0,0);
+void drawRemove(Zone z) {
+  fill(255, 0, 0);
+  rect(0, 0, z.width, z.height);
   fill(0);
-  text("w:"+z.width+" h:"+z.height,10,10);
-  line(0,0,z.width,z.height);
-  line(0,z.height,z.width,0);
+  stroke(0);
+  line(0, 0, z.width, z.height);
+  line(0, z.height, z.width, 0);
+  text("w:"+z.width+" h:"+z.height, 10, 10);
 }
 
-void touchClone(Zone z){
-   client.add(z.getParent().clone());
-   //client.add(new Zone("Child1",10,600,100,100));
+void touchClone(Zone z) {
+  //Zone clone=z.getParent().clone();
+  //client.add(clone);
+  client.add(new Zone("Child1", 10, 600, 100, 100));
 }
 
-void drawClone(Zone z){
-  background(123,0,234);
-  text("clone",10,10);
+void drawClone(Zone z) {
+  fill(123, 0, 234);
+  rect(0, 0, z.width, z.height);
+  fill(0);
+  text("clone", 10, 10);
 }
+

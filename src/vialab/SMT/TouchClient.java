@@ -70,10 +70,6 @@ import TUIO.*;
  */
 public class TouchClient {
 
-	public enum TouchSource {
-		TUIO_DEVICE, MOUSE, WM_TOUCH, ANDROID
-	}
-
 	private static int MAX_PATH_LENGTH = 50;
 
 	/** Processing PApplet */
@@ -175,8 +171,12 @@ public class TouchClient {
 
 		switch (source) {
 		case ANDROID:
-			// for now just use mouse emulation until implemented by going to
-			// next case
+			// this still uses the old method, should be re-implemented without
+			// the socket
+			AndroidToTUIO att = new AndroidToTUIO(parent.width, parent.height);
+			parent.registerMethod("mouseEvent", att);
+			tuioClient = new TuioClient(port);
+			break;
 		case MOUSE:
 			// this still uses the old method, should be re-implemented without
 			// the socket
@@ -439,14 +439,11 @@ public class TouchClient {
 				// the parent should handle the drawing
 				continue;
 			}
-			parent.pushMatrix();
-			parent.applyMatrix(zone.matrix);
 			if (zone.isChildActive()) {
 				zone.touch();
 			}
 			zone.draw();
 			// zone.drawForPickBuffer(parent.g);
-			parent.popMatrix();
 		}
 		if (drawTouchPoints) {
 			drawTouchPoints();

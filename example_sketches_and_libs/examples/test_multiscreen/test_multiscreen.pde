@@ -41,7 +41,7 @@ class CheckerZone extends Zone{
 void setup() {
   frameRate(1000);
   size(displayWidth, displayHeight, OPENGL);
-  client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
+  client = new TouchClient(this, TouchSource.MOUSE);
   
   //call this to not display warnings for unimplemented methods
   //client.setWarnUnimplemented(false);
@@ -109,7 +109,6 @@ void setup() {
   k.addKeyListener(t);
   k2.addKeyListener(t2);
   k.setSize(200,1000);
-  client.runWinTouchTuioServer("C:/Users/Zach/Downloads/Touch2Tuio_0.2/Touch2Tuio/Release/Touch2Tuio.exe");
   
   //call this to show warnings for methods that seem to be meant for use by a zone, but a zone matching the name does not exist, useful for debugging
   //client.warnUncalled();

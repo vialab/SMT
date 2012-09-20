@@ -351,6 +351,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			else {
 				pg = getParent().pg;
 			}
+			pg.pushMatrix();
+			pg.applyMatrix(matrix);
 		}
 		else {
 			super.beginDraw();
@@ -380,6 +382,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void endDraw() {
 		if (!direct) {
 			super.endDraw();
+		}else{
+			pg.popMatrix();
 		}
 	}
 
@@ -391,7 +395,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			else {
 				pg = getParent().pg;
 			}
-			//pg.setMatrix(matrix);
+			pg.pushMatrix();
+			pg.applyMatrix(matrix);
 		}
 		else {
 			super.beginDraw();
@@ -419,23 +424,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void endPickDraw() {
 		if (!direct) {
 			super.endDraw();
+		}else{
+			pg.popMatrix();
 		}
 	}
 
 	public void beginTouch() {
-		if (direct) {
-			
-		}else{
-			
-		}
+		pg.pushMatrix();
+		pg.setMatrix(new PMatrix3D());
 	}
 
 	public void endTouch() {
-		if (direct) {
-			pg.getMatrix(matrix);
-		}else{
-			
-		}
+		matrix.preApply((PMatrix3D) pg.getMatrix());
+		pg.popMatrix();
 	}
 
 	public int getPickColor() {
@@ -912,7 +913,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void drawImpl(PGraphicsOpenGL img, boolean drawChildren,
 			boolean picking) {
 		if (img != null) {
+			applet.g.pushMatrix();
+			applet.g.applyMatrix(matrix);
 			applet.g.image(img, 0, 0, width, height);
+			applet.g.popMatrix();
 
 			if (drawChildren) {
 				drawIndirectChildren((PGraphicsOpenGL) applet.g, picking);
@@ -947,10 +951,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// only draw/pickDraw when the child is in zonelist (parent zone's are
 		// responsible for adding/removing child to/from zonelist)
 		if (TouchClient.zoneList.contains(child)) {
-			g.pushMatrix();
-			g.applyMatrix(child.matrix);
+			if(!direct){
+				g.pushMatrix();
+				g.applyMatrix(matrix);
+			}
 			child.draw(true, picking);
-			g.popMatrix();
+			if(!direct){
+				g.popMatrix();
+			}
 		}
 	}
 
@@ -979,7 +987,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
 			applet.g = pg;
 
+			beginTouch();
 			SMTUtilities.invoke(touchMethod, applet, this);
+			endTouch();
 
 			if (touchMethod == null && !(this instanceof ButtonZone)
 					&& !(this instanceof SliderZone)) {

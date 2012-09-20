@@ -5,10 +5,7 @@
  *   A test sketch using SMTv3 toolkit
  */
 import vialab.SMT.*;
-import vialab.mouseToTUIO.*;
 import TUIO.*;
-import processing.opengl.PGraphicsOpenGL;
-import codeanticode.glgraphics.*;
 
 //set some configuration constants
 final boolean USE_MOUSE_TO_TUIO=true;
@@ -17,14 +14,14 @@ final boolean DRAW_TOUCH_POINTS=true;
 TouchClient client;
 
 void setup() {
-  size(screenWidth, screenHeight, GLConstants.GLGRAPHICS);
-  client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
+  size(displayWidth, displayHeight, P3D);
+  client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS,10);
   Zone z = new Zone("Grid",400, 400, 100, 100);
   Zone z2 = new Zone("Zone",1200,400, 50, 50);
   Zone pick = new Zone("Pick",100,100,100,100);
   client.add(z2);
-  for(int i=0; i<252; i++){
+  for(int i=0; i<25; i++){
     client.add(z2.clone());
   }
   client.add(z);

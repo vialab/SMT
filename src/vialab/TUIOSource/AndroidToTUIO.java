@@ -23,11 +23,7 @@
  */
 package vialab.TUIOSource;
 
-import java.awt.Point;
-import java.util.Enumeration;
 import java.util.Vector;
-
-import javax.swing.SwingUtilities;
 
 import android.view.*;
 
