@@ -98,6 +98,7 @@ public class AndroidToTUIO {
 			// this event is reported with the last touch, so pointerCount is never 0
 			if(me.getPointerCount() == 1) {
 				//means there is no touch left
+				sim.removeCursor(touchPoints.firstElement()); // touchPoints should only has 1 touch item
 				touchPoints.clear();
 			} 
 		} else {
@@ -130,6 +131,7 @@ public class AndroidToTUIO {
 				for(int j=0; j<touchPoints.size(); j++){
 					if(touchPoints.get(j).getTouchId() == id) {
 						sim.updateCursor(touchPoints.get(j), (int)me.getX(i), (int)me.getY(i));
+						sim.cursorMessage(touchPoints.get(j));
 						pointExists = true;
 						break;	
 					}
@@ -140,13 +142,14 @@ public class AndroidToTUIO {
 					selectedCursor = sim.addCursor((int)me.getX(i), (int)me.getY(i));
 					selectedCursor.setTouchId(id);
 					touchPoints.add(selectedCursor);
+					sim.cursorMessage(selectedCursor);
 					selectedCursor = null;
 				} 
 				
 			}
 		}
 		
-		if(dt>(1000/FRAME_RATE)) sim.allCursorMessage();
+		//if(dt>(1000/FRAME_RATE)) sim.allCursorMessage();
 		
 		return true;
 	}
