@@ -174,7 +174,7 @@ public class TouchClient {
 			// this still uses the old method, should be re-implemented without
 			// the socket
 			AndroidToTUIO att = new AndroidToTUIO(parent.width, parent.height);
-			parent.registerMethod("mouseEvent", att);
+			//parent.registerMethod("touchEvent", att);
 			tuioClient = new TuioClient(port);
 			break;
 		case MOUSE:
