@@ -98,7 +98,7 @@ public class AndroidToTUIO {
 			// this event is reported with the last touch, so pointerCount is never 0
 			if(me.getPointerCount() == 1) {
 				//means there is no touch left
-				sim.removeCursor(touchPoints.firstElement()); // touchPoints should only has 1 touch item
+				sim.removeCursor(touchPoints.firstElement()); // touchPoints should only have 1 touch item
 				touchPoints.clear();
 			} 
 		} else {
@@ -123,7 +123,7 @@ public class AndroidToTUIO {
 			}
 			
 			// update existing touches or add new touches
-			for (int i = 0; i < pointerCount; i++) {
+			for (int i = 0; i<pointerCount; i++) {
 				int id = me.getPointerId(i);
 				
 				//update if this touch already exists
