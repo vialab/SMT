@@ -279,12 +279,10 @@ public class KeyboardZone extends Zone {
 	}
 
 	@Override
-	public void draw() {
+	public void beginDraw() {
 		super.beginDraw();
 		fill(0);
 		rect(0, 0, width, height);
-		super.endDraw();
-		super.draw();
 	}
 
 	public void addKeyListener(KeyListener l) {
