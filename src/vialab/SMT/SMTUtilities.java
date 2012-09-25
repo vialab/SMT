@@ -16,6 +16,9 @@ import TUIO.TuioPoint;
 import TUIO.TuioTime;
 
 public final class SMTUtilities {
+	
+	private static boolean warned = false;
+	
 	private static class TuioTimeComparator implements Comparator<TuioTime> {
 		@Override
 		public int compare(TuioTime timeA, TuioTime timeB) {
@@ -87,11 +90,14 @@ public final class SMTUtilities {
 		Method method = getAnyPMethod(parent, methodPrefix, name, parameter);
 		if (method == null) {
 			if (warnMissing && !methodSet.contains(methodPrefix + name)) {
+				if(!warned){
+					System.err.println("\nCall TouchClient.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
+					warned=true;
+				}
 				System.err
-						.println("Method: "
-								+ methodPrefix
-								+ name
-								+ " does not exist, implement this method with the functionality desired, or hide warnings of this type using the TouchClient function setWarnUnimplemented(false), which must occur before the zone is instantiated to prevent the warning");
+				.println("No such method: "
+						+ methodPrefix
+						+ name);
 			}
 			method = getAnyPMethod(parent, methodPrefix, "Default", parameter);
 		}

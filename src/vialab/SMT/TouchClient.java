@@ -51,7 +51,6 @@ import org.xml.sax.SAXException;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.opengl.PGraphicsOpenGL;
 
 import android.view.*;
 
@@ -103,7 +102,7 @@ public class TouchClient {
 
 	private Method touch;
 
-	Boolean warnUnimplemented;
+	static Boolean warnUnimplemented;
 	
 	/** TUIO adapter depending on which TouchSource is used */
 	AndroidToTUIO att = null;
@@ -121,7 +120,7 @@ public class TouchClient {
 	 *            whether to warn when there are unimplemented methods for zones
 	 */
 	public void setWarnUnimplemented(boolean warn) {
-		this.warnUnimplemented = warn;
+		TouchClient.warnUnimplemented = warn;
 	}
 
 	/**
