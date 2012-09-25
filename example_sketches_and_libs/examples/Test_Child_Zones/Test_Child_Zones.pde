@@ -6,6 +6,7 @@
  */
 import vialab.SMT.*;
 import TUIO.*;
+import android.*;
 
 TouchClient client;
 

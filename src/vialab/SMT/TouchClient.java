@@ -156,9 +156,8 @@ public class TouchClient {
 	private TouchClient(PApplet parent, int port, TouchSource source) {
 		parent.setLayout(new BorderLayout());
 
-		// As of now, this code is dead, the toolkit only supports OpenGL, and
-		// specifically needs GLGraphics to work properly
-		if (!(parent.g instanceof PGraphicsOpenGL)) {
+		// As of now the toolkit only supports OpenGL
+		if (!parent.g.isGL()) {
 			System.out
 					.println("SMT only supports using OpenGL renderers, please use either OPENGL, P2D, or P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
 		}
@@ -457,9 +456,6 @@ public class TouchClient {
 				// the parent should handle the drawing
 				continue;
 			}
-			if (zone.isChildActive()) {
-				zone.touch();
-			}
 			zone.draw();
 			// zone.drawForPickBuffer(parent.g);
 		}
@@ -641,8 +637,18 @@ public class TouchClient {
 	 */
 	public void pre() {
 		// TODO: provide some default assignment of touches
-		manager.handleTouches(parent.g);
+		manager.handleTouches();
+		parent.g.flush();
 		SMTUtilities.invoke(touch, parent);
+		for (Zone zone : zoneList) {
+			if (zone.getParent() != null) {
+				// the parent should handle the touch calling
+				continue;
+			}
+			if (zone.isChildActive()) {
+				zone.touch();
+			}
+		}
 	}
 
 	/**

@@ -29,6 +29,8 @@ public class ButtonZone extends Zone {
 	private float angle = 0;
 
 	private Method pressMethod;
+	
+	private boolean buttonDown = false;
 
 	public ButtonZone() {
 		this(null);
@@ -116,15 +118,23 @@ public class ButtonZone extends Zone {
 		rotateAbout(angle, CENTER);
 		endTouch();
 	}
+	
+	@Override
+	public void beginTouch(){
+		buttonDown= isButtonDown();
+		super.beginTouch();
+	}
 
 	@Override
-	public void draw() {
-		if (isButtonDown()) {
+	public void beginDraw() {
+		super.beginDraw();
+		if (buttonDown) {
 			drawImpl(pressedColor, pressedTextColor);
 		}
 		else {
 			drawImpl(color, textColor);
 		}
+		buttonDown=false;
 	}
 
 	public boolean isButtonDown() {
@@ -140,8 +150,6 @@ public class ButtonZone extends Zone {
 	}
 
 	private void drawImpl(int buttonColor, int textColor) {
-		super.beginDraw();
-
 		stroke(borderColor);
 		strokeWeight(borderWeight);
 		fill(buttonColor);
@@ -157,9 +165,6 @@ public class ButtonZone extends Zone {
 			fill(textColor);
 			text(text, width / 2 - borderWeight, height / 2 - borderWeight);
 		}
-		super.endDraw();
-
-		super.draw();
 	}
 
 	@Override

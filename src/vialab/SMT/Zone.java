@@ -913,9 +913,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void drawImpl(PGraphicsOpenGL img, boolean drawChildren,
 			boolean picking) {
 		if (img != null) {
+			img.flush();
 			applet.g.pushMatrix();
+			// apply parent matrices from farthest ancestor to parent
+			LinkedList<Zone> ancestors = new LinkedList<Zone>();
+			Zone parent = this.getParent();
+			while (parent != null) {
+				ancestors.addFirst(parent);
+				parent = parent.getParent();
+			}
+			for (Zone zone : ancestors) {
+				applet.g.applyMatrix(zone.matrix);
+			}
 			applet.g.applyMatrix(matrix);
 			applet.g.image(img, 0, 0, width, height);
+			applet.g.image(img.get(), 0, 0);
 			applet.g.popMatrix();
 
 			if (drawChildren) {
@@ -951,14 +963,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// only draw/pickDraw when the child is in zonelist (parent zone's are
 		// responsible for adding/removing child to/from zonelist)
 		if (TouchClient.zoneList.contains(child)) {
-			if(!direct){
-				g.pushMatrix();
-				g.applyMatrix(matrix);
-			}
 			child.draw(true, picking);
-			if(!direct){
-				g.popMatrix();
-			}
 		}
 	}
 
@@ -1004,16 +1009,20 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				if (child.isChildActive()) {
 					child.backupMatrix = child.matrix.get();
 
+					child.beginTouch();
 					child.applyMatrix(matrix);
+					child.endTouch();
 
 					child.touchImpl(touchChildren, true);
 
 					child.backupMatrix = null;
 
+					child.beginTouch();
 					PMatrix3D inverse = new PMatrix3D();
 					inverse.apply(matrix);
 					inverse.invert();
 					child.applyMatrix(inverse);
+					child.endTouch();
 				}
 			}
 		}

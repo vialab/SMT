@@ -10,10 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import processing.core.PApplet;
-import processing.core.PGraphics;
 import TUIO.TuioCursor;
-//import TUIO.TuioObject;
-//import TUIO.TuioTime;
 
 public class SMTTouchManager {
 	private PApplet applet;
@@ -60,7 +57,7 @@ public class SMTTouchManager {
 	 * Determines to which objects touch events should be sent, and then sends
 	 * them.
 	 */
-	public void handleTouches(PGraphics graphics) {
+	public void handleTouches() {
 		// while (touchListener.hasMoreTouchStates()) {
 		picker.renderPickBuffer();
 
@@ -72,9 +69,9 @@ public class SMTTouchManager {
 		TouchState currentTouchState = touchListener.getCurrentTouchState();
 
 		// forward events
-		handleTouchesDown(graphics, currentTouchState);
-		handleTouchesUp(graphics, currentTouchState);
-		handleTouchesMoved(graphics, currentTouchState);
+		handleTouchesDown(currentTouchState);
+		handleTouchesUp(currentTouchState);
+		handleTouchesMoved(currentTouchState);
 		// }
 	}
 
@@ -128,7 +125,7 @@ public class SMTTouchManager {
 	/**
 	 * Handles every touch in the current but not the previous state.
 	 */
-	protected void handleTouchesDown(PGraphics graphics, TouchState currentTouchState) {
+	protected void handleTouchesDown(TouchState currentTouchState) {
 		SMTUtilities.invoke(touchDown, applet);
 		for (TuioCursor touchPoint : currentTouchState) {
 			// now either their is no zone it is mapped to or the zone mapped to
@@ -148,7 +145,7 @@ public class SMTTouchManager {
 				// from causing touchDown being called every frame when the
 				// touch is down
 				if (picked != idToTouched.get(touchPoint.getSessionID())) {
-					doTouchDown(graphics, picked, touchPoint);
+					doTouchDown(picked, touchPoint);
 				}
 			}
 		}
@@ -157,7 +154,7 @@ public class SMTTouchManager {
 	/**
 	 * Handles every touch in the previous but not in the current state.
 	 */
-	protected void handleTouchesUp(PGraphics graphics, TouchState currentTouchState) {
+	protected void handleTouchesUp(TouchState currentTouchState) {
 		SMTUtilities.invoke(touchUp, applet);
 		ArrayList<Long> idsToRemove = new ArrayList<Long>();
 		for (Long id : idToTouched.keySet()) {
@@ -165,7 +162,7 @@ public class SMTTouchManager {
 				// the touch existed, but no longer exists, so it went up
 				Zone zone = idToTouched.get(id);
 				idsToRemove.add(id);
-				doTouchUp(graphics, zone, id);
+				doTouchUp(zone, id);
 			}
 		}
 
@@ -177,7 +174,7 @@ public class SMTTouchManager {
 	/**
 	 * Handles the movement of touches.
 	 */
-	protected void handleTouchesMoved(PGraphics graphics, TouchState currentTouchState) {
+	protected void handleTouchesMoved(TouchState currentTouchState) {
 		SMTUtilities.invoke(touchMoved, applet);
 
 		// get the set of all objects currently touched
@@ -186,7 +183,7 @@ public class SMTTouchManager {
 		// send each of these objects a touch moved event
 		for (Zone zone : touchables) {
 			if (zone != null) {
-				doTouchesMoved(graphics, zone, currentTouchState);
+				doTouchesMoved(zone, currentTouchState);
 			}
 		}
 	}
@@ -197,7 +194,7 @@ public class SMTTouchManager {
 	 * @param zone
 	 *            may be null
 	 */
-	private void doTouchDown(PGraphics graphics, Zone zone, TuioCursor touchPoint) {
+	private void doTouchDown(Zone zone, TuioCursor touchPoint) {
 		idToTouched.put(touchPoint.getSessionID(), zone);
 
 		if (zone != null) {
@@ -227,7 +224,7 @@ public class SMTTouchManager {
 	 * @param zone
 	 *            may be null
 	 */
-	private void doTouchUp(PGraphics graphics, Zone zone, Long id) {
+	private void doTouchUp(Zone zone, Long id) {
 		if (zone != null) {
 			zone.touchUp(new Touch(touchListener.getRemovedCursor(id)));
 			deactivate(zone, id);
@@ -239,7 +236,7 @@ public class SMTTouchManager {
 		}
 	}
 
-	private void doTouchesMoved(PGraphics graphics, Zone zone, TouchState currentTouchState) {
+	private void doTouchesMoved(Zone zone, TouchState currentTouchState) {
 		List<Touch> currentLocalState = localTouchState(currentTouchState, zone);
 		zone.touchesMoved(currentLocalState);
 	}
