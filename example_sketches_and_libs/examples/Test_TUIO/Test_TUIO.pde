@@ -5,11 +5,11 @@
  */
 import vialab.SMT.*;
 import TUIO.*;
+import android.*;
 
 TouchClient client;
 
 void setup() {
-  frameRate(1000);
   size(displayWidth, displayHeight, P3D);
   client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(true,100);

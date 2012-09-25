@@ -6,6 +6,7 @@
  */
 import vialab.SMT.*;
 import TUIO.*;
+import android.*;
 
 //set some configuration constants
 final boolean DRAW_TOUCH_POINTS=true;
@@ -51,7 +52,6 @@ class Ball {
 }
 
 void setup() {
-  frameRate(1000);
   size(displayWidth, displayHeight, P3D);
   for (int i=0; i<NUM_BALLS; i++) {
     balls.add(new Ball());
@@ -130,7 +130,8 @@ void checkBallOffdisplay(Ball b) {
 }
 
 void drawPaddle(reflectZone z){
-  background(0,255,0);
+  fill(0,255,0);
+  rect(0,0,z.width,z.height);
   stroke(0);
   strokeWeight(5);
   if (z.normalDir.x>0) {

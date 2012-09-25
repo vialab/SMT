@@ -5,12 +5,13 @@
  */
 import vialab.SMT.*;
 import TUIO.*;
+import android.*;
 
 TouchClient client;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchClient.TouchSource.MOUSE);
+  client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(true, 10);
   Zone z = new Zone("Pick1", 400, 400, 200, 200);
   Zone z2 = new Zone("Pick2", 1200, 400, 600, 600);

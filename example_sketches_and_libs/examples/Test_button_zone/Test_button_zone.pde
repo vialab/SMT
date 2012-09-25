@@ -19,7 +19,6 @@ void setup() {
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS,10);
   Zone z = new ButtonZone("Button",400, 400, 100, 100);
   client.add(z);
-  frameRate(1000);
 }
 
 void draw() {

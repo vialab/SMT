@@ -7,7 +7,7 @@
  */
 import vialab.SMT.*;
 import TUIO.*;
-
+import android.*;
 
 TouchClient client;
 final static int IMAGE_COPIES=3;
@@ -15,7 +15,7 @@ final static int NUM_IMAGES=11*IMAGE_COPIES;
 PImage[] img = new PImage[11];
 Zone[] zone = new Zone[NUM_IMAGES];
 
-void setup() {frameRate(1000);
+void setup() {
   size(displayWidth, displayHeight, P3D);
   
   client = new TouchClient(this, TouchSource.MOUSE);

@@ -131,7 +131,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * and background() will work for just the zone, but we lose a large amount
 	 * of performance
 	 */
-	private boolean direct = false;
+	private boolean direct = !false;
 
 	/**
 	 * @see direct
@@ -202,7 +202,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		init();
 		resetMatrix();
 		setName(name);
-
 	}
 
 	public void setName(String name) {
@@ -228,8 +227,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			warnTouch = false;
 		}
 
-		if (client.warnUnimplemented != null) {
-			if (client.warnUnimplemented.booleanValue()) {
+		if (TouchClient.warnUnimplemented != null) {
+			if (TouchClient.warnUnimplemented.booleanValue()) {
 				warnDraw = true;
 				warnTouch = true;
 				warnKeys = true;
@@ -926,7 +925,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				applet.g.applyMatrix(zone.matrix);
 			}
 			applet.g.applyMatrix(matrix);
-			applet.g.image(img, 0, 0, width, height);
 			applet.g.image(img.get(), 0, 0);
 			applet.g.popMatrix();
 

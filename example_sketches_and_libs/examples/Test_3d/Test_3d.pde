@@ -6,7 +6,7 @@
  */
 import vialab.SMT.*;
 import TUIO.*;
-
+import android.*;
 
 //set some configuration constants
 final boolean DRAW_TOUCH_POINTS=true;
@@ -23,7 +23,6 @@ void setup() {
   Zone z = new Zone("Z3D",400, 400, 400, 400);
   client.add(z);
   client.add(new Zone("Test",800,400,400,400));
-  frameRate(1000);  
 }
 
 void draw() {

@@ -6,6 +6,7 @@
  */
 import vialab.SMT.*;
 import TUIO.*;
+import android.*;
 
 //set some configuration constants
 final boolean USE_MOUSE_TO_TUIO=true;
@@ -22,14 +23,21 @@ void setup() {
   Zone z2=new Zone("UserArea",0, 0, 800, 200);
   Zone z3=new Zone("UserArea",0, 0, 800, 200);
   Zone z4=new Zone("UserArea",0, 0, 800, 200);
-  
+  z1.beginTouch();
   z1.translate(displayWidth/2-z1.width/2,0);
   z1.rotateAbout(PI,CENTER);
+  z1.endTouch();
+  z2.beginTouch();
   z2.translate(displayWidth/2-z2.width/2,displayHeight-z2.height);
+  z2.endTouch();
+  z3.beginTouch();
   z3.translate(z3.height,displayHeight/2-z3.width/2);
   z3.rotateAbout(PI/2,CORNER);
+  z3.endTouch();
+  z4.beginTouch();
   z4.translate(displayWidth-z4.height,displayHeight/2+z4.width/2);
   z4.rotateAbout(3*PI/2,CORNER);
+  z4.endTouch();
   
   z1.add(new Zone("Item",0,0,200,100));
   z2.add(new Zone("Item",0,0,200,100));

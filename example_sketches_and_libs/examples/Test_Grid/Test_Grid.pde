@@ -6,6 +6,7 @@
  */
 import vialab.SMT.*;
 import TUIO.*;
+import android.*;
 
 //set some configuration constants
 final boolean USE_MOUSE_TO_TUIO=true;
@@ -26,7 +27,6 @@ void setup() {
   }
   client.add(z);
   client.add(pick);
-  frameRate(1000);
 }
 
 void draw() {

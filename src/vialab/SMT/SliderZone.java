@@ -111,7 +111,8 @@ public class SliderZone extends Zone {
 	}
 
 	@Override
-	public void draw() {
+	public void beginDraw() {
+		super.beginDraw();
 		moveKnob();
 		drawImpl();
 	}
@@ -130,8 +131,7 @@ public class SliderZone extends Zone {
 	}
 
 	private void drawImpl() {
-		super.beginDraw();
-
+		fill(255);
 		rect(0, 0, width, height);
 
 		// draw something for the slider knob
@@ -139,7 +139,7 @@ public class SliderZone extends Zone {
 		ellipse((((currentValue - minValue) / (float) maxValue) * width * (float) 8 / 10)
 				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
 		fill(0);
-		text(currentValue, 10, 10);
+		text(currentValue, width/2, 10);
 		text(minValue, 5, height - 5);
 		text(maxValue, width - 30, height - 5);
 		fill(255);
@@ -158,9 +158,5 @@ public class SliderZone extends Zone {
 						height * 5 / 8);
 			}
 		}
-
-		super.endDraw();
-
-		super.draw();
 	}
 }

@@ -6,6 +6,7 @@
  */
 import vialab.SMT.*;
 import TUIO.*;
+import android.*;
 
 //set some configuration constants
 final boolean DRAW_TOUCH_POINTS=true;
@@ -24,7 +25,6 @@ class CheckerZone extends Zone{
    }
 }
 void setup() {
-  frameRate(1000);
   size(displayWidth, displayHeight, P3D);
   client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
@@ -43,11 +43,15 @@ void setup() {
     for(int j=0; j<8; j++){
       if((i+j)%2==1){
         if(j<3){
+          p1[c1].beginTouch();
           p1[c1].translate(((displayWidth-1000)/2)+i*125+12,((displayHeight-1000)/2)+j*125+12);
+          p1[c1].endTouch();
           c1+=1;
         }
         if(j>4){
+          p2[c2].beginTouch();
           p2[c2].translate(((displayWidth-1000)/2)+i*125+12,((displayHeight-1000)/2)+j*125+12);
+          p2[c2].endTouch();
           c2+=1;
         }
       }  
