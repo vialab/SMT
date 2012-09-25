@@ -25,7 +25,7 @@ public class TextZone extends Zone {
 		}
 
 		@Override
-		public void draw() {
+		public void beginDraw() {
 			super.beginDraw();
 			fill(255);
 			if (selected) {
@@ -34,8 +34,6 @@ public class TextZone extends Zone {
 			rect(0, 0, width, height);
 			fill(0);
 			text(this.word, 0, 5, width, height);
-			super.endDraw();
-			super.draw();
 		}
 
 	}
@@ -68,12 +66,10 @@ public class TextZone extends Zone {
 	}
 
 	@Override
-	public void draw() {
+	public void beginDraw() {
 		super.beginDraw();
 		fill(255);
 		rect(0, 0, width, height);
-		super.endDraw();
-		super.draw();
 	}
 
 	@Override
