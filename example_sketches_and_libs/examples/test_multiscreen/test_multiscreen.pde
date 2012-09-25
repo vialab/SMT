@@ -100,8 +100,8 @@ void setup() {
   title.add(k);
   title.add(k2);
   title.add(t);
-  title.add(t2);/*
-  TabZone tabs = new TabZone(true);
+  title.add(t2);
+  /*TabZone tabs = new TabZone(true);
   title.add(tabs);
   tabs.add(k);
   tabs.add(k2);

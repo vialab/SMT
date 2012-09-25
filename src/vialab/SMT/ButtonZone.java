@@ -177,10 +177,13 @@ public class ButtonZone extends Zone {
 	}
 
 	@Override
-	public void setName(String name) {
+	public void setName(String name){
+		this.setName(name, true);
+	}
+	public void setName(String name, boolean warnPress) {
 		super.setName(name);
 		if (name != null) {
-			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(), true);
+			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(), warnPress);
 		}
 	}
 
