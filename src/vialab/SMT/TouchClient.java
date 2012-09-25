@@ -53,6 +53,8 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.opengl.PGraphicsOpenGL;
 
+import android.view.*;
+
 import vialab.TUIOSource.*;
 
 import TUIO.*;
@@ -102,6 +104,10 @@ public class TouchClient {
 	private Method touch;
 
 	Boolean warnUnimplemented;
+	
+	/** TUIO adapter depending on which TouchSource is used */
+	AndroidToTUIO att = null;
+	MouseToTUIO mtt = null;
 
 	public void warnUncalled() {
 		SMTUtilities.warnUncalledMethods(parent);
@@ -173,14 +179,14 @@ public class TouchClient {
 		case ANDROID:
 			// this still uses the old method, should be re-implemented without
 			// the socket
-			AndroidToTUIO att = new AndroidToTUIO(parent.width, parent.height);
-			parent.registerMethod("mouseEvent", att);
+			att = new AndroidToTUIO(parent.width, parent.height);
+			//parent.registerMethod("touchEvent", att); //when Processing supports this
 			tuioClient = new TuioClient(port);
 			break;
 		case MOUSE:
 			// this still uses the old method, should be re-implemented without
 			// the socket
-			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
+			mtt = new MouseToTUIO(parent.width, parent.height);
 			parent.registerMethod("mouseEvent", mtt);
 			tuioClient = new TuioClient(port);
 			break;
@@ -205,6 +211,18 @@ public class TouchClient {
 
 		tuioClient.addTuioListener(listener);
 		tuioClient.connect();
+	}
+
+	/**
+	 * Redirects the MotionEvent object to AndroidToTUIO, used because current 
+	 * version of Processing (2.x) does not support registerMethod("touchEvent", target). 
+	 * 
+	 * @param me
+	 * 			MotionEvent - the motion event triggered in Android
+	 * @return Should the event get consumed elsewhere or not
+	 */
+	public boolean passAndroidTouchEvent(MotionEvent me) {
+		return att.onTouchEvent(me);
 	}
 
 	/**
@@ -615,7 +633,7 @@ public class TouchClient {
 	public int getTouchCount() {
 		return tuioClient.getTuioCursors().size();
 	}
-
+	
 	/**
 	 * Manipulates the zone's position if it is throw-able after it has been
 	 * released by a finger (cursor) Done before each call to draw. Uses the
