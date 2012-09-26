@@ -38,19 +38,18 @@ void touchPick2(Zone zone) {
 }
 
 void drawPick1(Zone zone) {
-  fill(155);
-  rect(150, 100, 100, 100);
+  fill(255);
+  rect(100, 100, 100, 100);
   ellipse(100, 100, 100, 100);
 }
 
 void drawPick2(Zone zone) {
-  fill(125);
-  rect(150, 100, 100, 100);
+  fill(255);
+  rect(100, 100, 100, 100);
 }
 
 void pickDrawPick1(Zone zone) {
-
-  rect(150, 100, 100, 100);
+  rect(100, 100, 100, 100);
   ellipse(100, 100, 100, 100);
 }
 
