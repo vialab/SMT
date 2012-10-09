@@ -12,7 +12,7 @@ import processing.core.PStyle;
 import processing.opengl.PGraphicsOpenGL;
 
 class PGraphicsDelegate {
-	protected PGraphicsOpenGL pg;
+	protected PGraphics pg;
 
 	// PGraphicsDelegate(PGraphics g) {
 	// this.pg = g;

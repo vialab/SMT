@@ -33,9 +33,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PGraphics;
 import processing.core.PMatrix3D;
 import processing.core.PVector;
-import processing.opengl.PGraphicsOpenGL;
 import TUIO.TuioTime;
 
 import java.awt.event.KeyEvent;
@@ -189,6 +189,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 
 		this.renderer = renderer;
+		Zone.defaultRenderer=applet.g.getClass().getName();
 
 		this.x = x;
 		this.y = y;
@@ -262,7 +263,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void init() {
-		pg = (PGraphicsOpenGL) applet.createGraphics(width, height, defaultRenderer);
+		pg = applet.createGraphics(width, height, defaultRenderer);
 	}
 
 	public String getName() {
@@ -345,7 +346,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void beginDraw() {
 		if (direct) {
 			if (getParent() == null) {
-				pg = (PGraphicsOpenGL) applet.g;
+				pg = applet.g;
 			}
 			else {
 				pg = getParent().pg;
@@ -389,7 +390,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void beginPickDraw() {
 		if (direct) {
 			if (getParent() == null) {
-				pg = (PGraphicsOpenGL) applet.g;
+				pg = applet.g;
 			}
 			else {
 				pg = getParent().pg;
@@ -878,7 +879,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			beginDraw();
 		}
-		PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
+		PGraphics temp =  applet.g;
 		applet.g = pg;
 
 		if (picking) {
@@ -909,7 +910,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	protected void drawImpl(PGraphicsOpenGL img, boolean drawChildren,
+	protected void drawImpl(PGraphics img, boolean drawChildren,
 			boolean picking) {
 		if (img != null) {
 			img.flush();
@@ -929,21 +930,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			applet.g.popMatrix();
 
 			if (drawChildren) {
-				drawIndirectChildren((PGraphicsOpenGL) applet.g, picking);
+				drawIndirectChildren(applet.g, picking);
 			}
 		}
 
 	}
 
-	protected void drawDirectChildren(PGraphicsOpenGL g, boolean picking) {
+	protected void drawDirectChildren(PGraphics pg, boolean picking) {
 		for (Zone child : children) {
 			if (child.direct) {
-				drawChild(child, g, picking);
+				drawChild(child, pg, picking);
 			}
 		}
 	}
 
-	protected void drawIndirectChildren(PGraphicsOpenGL g, boolean picking) {
+	protected void drawIndirectChildren(PGraphics g, boolean picking) {
 		for (Zone child : children) {
 			if (!child.direct) {
 				drawChild(child, g, picking);
@@ -951,13 +952,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	protected void drawChildren(PGraphicsOpenGL g, boolean picking) {
+	protected void drawChildren(PGraphics g, boolean picking) {
 		for (Zone child : children) {
 			drawChild(child, g, picking);
 		}
 	}
 
-	protected void drawChild(Zone child, PGraphicsOpenGL g, boolean picking) {
+	protected void drawChild(Zone child, PGraphics pg, boolean picking) {
 		// only draw/pickDraw when the child is in zonelist (parent zone's are
 		// responsible for adding/removing child to/from zonelist)
 		if (TouchClient.zoneList.contains(child)) {
@@ -987,7 +988,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected void touchImpl(boolean touchChildren, boolean isChild) {
 		if (isActive()) {
-			PGraphicsOpenGL temp = (PGraphicsOpenGL) applet.g;
+			PGraphics temp = applet.g;
 			applet.g = pg;
 
 			beginTouch();
