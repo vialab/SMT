@@ -6,11 +6,9 @@
  *   Ported to simpler multitouch by Zach Cook
  */
 import vialab.SMT.*;
-import TUIO.*;
-import android.*;
 
 TouchClient client;
-final static int IMAGE_COPIES=3;
+final static int IMAGE_COPIES=1;
 final static int NUM_IMAGES=11*IMAGE_COPIES;
 PImage[] img = new PImage[11];
 Zone[] zone = new Zone[NUM_IMAGES];
@@ -39,9 +37,4 @@ void touchImageZone(Zone z){
 void draw() {
   background(79, 129, 189);
   text(round(frameRate)+" fps",width/2,10);
-  client.drawPickBuffer(800,800,200,200);
-}
-
-void pickDraw(Zone zone){
-   background(zone.getPickColor()); 
 }

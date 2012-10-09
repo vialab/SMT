@@ -4,8 +4,6 @@
  *   A test sketch using SMTv3 toolkit
  */
 import vialab.SMT.*;
-import TUIO.*;
-import android.*;
 
 TouchClient client;
 

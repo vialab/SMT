@@ -5,8 +5,6 @@
  *   A test sketch using SMTv3 toolkit
  */
 import vialab.SMT.*;
-import TUIO.*;
-import android.*;
 
 //set some configuration constants
 final boolean USE_MOUSE_TO_TUIO=true;

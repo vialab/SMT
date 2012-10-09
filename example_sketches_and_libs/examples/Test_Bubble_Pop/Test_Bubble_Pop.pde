@@ -4,8 +4,6 @@
  *   A test sketch using simpleMultiTouch toolkit
  */
 import vialab.SMT.*;
-import TUIO.*;
-import android.*;
 
 final boolean DRAW_TOUCH_POINTS=true;
 

@@ -5,8 +5,6 @@
  *   A test sketch using simpleMultiTouch toolkit
  */
 import vialab.SMT.*;
-import TUIO.*;
-import android.*;
 
 TouchClient client;
 
