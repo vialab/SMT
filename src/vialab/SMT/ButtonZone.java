@@ -29,6 +29,8 @@ public class ButtonZone extends Zone {
 	private float angle = 0;
 
 	private Method pressMethod;
+	
+	private boolean buttonDown = false;
 
 	public ButtonZone() {
 		this(null);
@@ -116,21 +118,29 @@ public class ButtonZone extends Zone {
 		rotateAbout(angle, CENTER);
 		endTouch();
 	}
+	
+	@Override
+	public void beginTouch(){
+		buttonDown= isButtonDown();
+		super.beginTouch();
+	}
 
 	@Override
-	public void draw() {
-		if (isButtonDown()) {
+	public void beginDraw() {
+		super.beginDraw();
+		if (buttonDown) {
 			drawImpl(pressedColor, pressedTextColor);
 		}
 		else {
 			drawImpl(color, textColor);
 		}
+		buttonDown=false;
 	}
 
 	public boolean isButtonDown() {
 		for (Touch t : getTouches()) {
 			Zone picked = client.picker.pick(t);
-			if (picked!=null && picked.equals(this)) {
+			if (picked != null && picked.equals(this)) {
 				return true;
 			}
 		}
@@ -140,12 +150,10 @@ public class ButtonZone extends Zone {
 	}
 
 	private void drawImpl(int buttonColor, int textColor) {
-		super.beginDraw();
-
 		stroke(borderColor);
 		strokeWeight(borderWeight);
 		fill(buttonColor);
-		roundRect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
+		rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
 				cornerRadius);
 
 		if (text != null) {
@@ -157,42 +165,6 @@ public class ButtonZone extends Zone {
 			fill(textColor);
 			text(text, width / 2 - borderWeight, height / 2 - borderWeight);
 		}
-		super.endDraw();
-
-		super.draw();
-	}
-
-	private void roundRect(float x, float y, float w, float h, float r) {
-		float[] vx = { x + r, x + w - r, x + w, x + w, x + w - r, x + r, x, x };
-		float[] vy = { y, y, y + r, y + h - r, y + h, y + h, y + h - r, y + r };
-		float roundness = 2 * r;
-
-		beginShape();
-		vertex(vx[0], vy[0]);
-		vertex(vx[1], vy[1]);
-		curveVertex(vx[1] - roundness, vy[0]);
-		curveVertex(vx[1], vy[1]);
-		curveVertex(vx[2], vy[2]);
-		curveVertex(vx[3], vy[2] + roundness);
-		vertex(vx[2], vy[2]);
-		vertex(vx[3], vy[3]);
-		curveVertex(vx[2], vy[3] - roundness);
-		curveVertex(vx[3], vy[3]);
-		curveVertex(vx[4], vy[4]);
-		curveVertex(vx[4] - roundness, vy[5]);
-		vertex(vx[4], vy[4]);
-		vertex(vx[5], vy[5]);
-		curveVertex(vx[5] + roundness, vy[4]);
-		curveVertex(vx[5], vy[5]);
-		curveVertex(vx[6], vy[6]);
-		curveVertex(vx[7], vy[6] - roundness);
-		vertex(vx[6], vy[6]);
-		vertex(vx[7], vy[7]);
-		curveVertex(vx[6], vy[7] + roundness);
-		curveVertex(vx[7], vy[7]);
-		curveVertex(vx[0], vy[0]);
-		curveVertex(vx[0] + roundness, vy[1]);
-		endShape(CLOSE);
 	}
 
 	@Override
@@ -205,10 +177,13 @@ public class ButtonZone extends Zone {
 	}
 
 	@Override
-	public void setName(String name) {
+	public void setName(String name){
+		this.setName(name, true);
+	}
+	public void setName(String name, boolean warnPress) {
 		super.setName(name);
 		if (name != null) {
-			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(), true);
+			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(), warnPress);
 		}
 	}
 

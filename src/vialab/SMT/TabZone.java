@@ -31,7 +31,7 @@ public class TabZone extends Zone {
 		}
 
 		@Override
-		public void draw() {
+		public void beginDraw() {
 			super.beginDraw();
 			if (!isButtonDown()) {
 				fill(255, 0, 0);
@@ -41,22 +41,20 @@ public class TabZone extends Zone {
 				line(width, 0, 0, height);
 			}
 			else {
-				fill(0);
+				fill(100);
 				rect(0, 0, width, height);
 				stroke(255);
 				line(0, 0, width, height);
 				line(width, 0, 0, height);
 			}
-			super.endDraw();
-			// super.draw();
 		}
 	}
 
 	private class Tab extends ButtonZone {
 		CloseButton close;
 
-		public Tab(String tabName, int x, int y, int w, int h) {
-			super(tabName, x, y, w, h, tabName);
+		public Tab(String tabName, int x, int y, int w, int h, String tabText) {
+			super(tabName, x, y, w, h, tabText);
 			if (closeButtons) {
 				close = new CloseButton((int) (w - h * 0.9), (int) (h * 0.1), (int) (h * 0.8),
 						(int) (h * 0.8));
@@ -79,6 +77,11 @@ public class TabZone extends Zone {
 				this.close.setData((int) (w - h * 0.9), (int) (h * 0.1), (int) (h * 0.8),
 						(int) (h * 0.8));
 			}
+		}
+		
+		@Override
+		public void setName(String name){
+			super.setName(name, false);
 		}
 	}
 
@@ -143,17 +146,17 @@ public class TabZone extends Zone {
 	@Override
 	public boolean add(Zone zone) {
 		if (zone.name == null) {
-			return this.add(zone, zone.toString());
+			return this.add(zone, "Tab"+(Tabs.size()+1), "Tab"+(Tabs.size()+1)+ ": " +zone.toString());
 		}
-		return this.add(zone, zone.name + "::" + zone.toString());
+		return this.add(zone, "Tab"+(Tabs.size()+1), "Tab"+(Tabs.size()+1)+ ": " +zone.name + "::" + zone.toString());
 	}
 
-	public boolean add(Zone zone, String tabName) {
+	public boolean add(Zone zone, String tabName, String tabText) {
 		// resize all tabs to equal size with constant all tabs size
 		for (Tab tab : Tabs.keySet()) {
 			tab.setSize(width / (Tabs.keySet().size() + 1), TAB_HEIGHT);
 		}
-		Tab tab = new Tab(tabName, 0, 0, width / (Tabs.keySet().size() + 1), TAB_HEIGHT);
+		Tab tab = new Tab(tabName, 0, 0, width / (Tabs.keySet().size() + 1), TAB_HEIGHT, tabText);
 		Tabs.put(tab, zone);
 		client.add(tab);
 		boolean result = super.add(zone);
@@ -197,11 +200,9 @@ public class TabZone extends Zone {
 	}
 
 	@Override
-	public void draw() {
+	public void beginDraw() {
 		super.beginDraw();
 		fill(125);
 		rect(0, 0, width, height);
-		super.endDraw();
-		super.draw();
 	}
 }

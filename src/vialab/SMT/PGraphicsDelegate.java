@@ -1,7 +1,5 @@
 package vialab.SMT;
 
-import java.awt.Image;
-
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PGraphics;
@@ -14,7 +12,7 @@ import processing.core.PStyle;
 import processing.opengl.PGraphicsOpenGL;
 
 class PGraphicsDelegate {
-	protected PGraphicsOpenGL pg;
+	protected PGraphics pg;
 
 	// PGraphicsDelegate(PGraphics g) {
 	// this.pg = g;
@@ -170,10 +168,6 @@ class PGraphicsDelegate {
 
 	public void box(float arg0) {
 		pg.box(arg0);
-	}
-
-	public void breakShape() {
-		pg.breakShape();
 	}
 
 	public final float brightness(int arg0) {
@@ -401,10 +395,6 @@ class PGraphicsDelegate {
 		return pg.getCache(arg0);
 	}
 
-	public Image getImage() {
-		return pg.getImage();
-	}
-
 	public PMatrix getMatrix() {
 		return pg.getMatrix();
 	}
@@ -605,6 +595,15 @@ class PGraphicsDelegate {
 
 	public void rect(float arg0, float arg1, float arg2, float arg3) {
 		pg.rect(arg0, arg1, arg2, arg3);
+	}
+
+	public void rect(float arg0, float arg1, float arg2, float arg3, float arg4) {
+		pg.rect(arg0, arg1, arg2, arg3, arg4);
+	}
+
+	public void rect(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
+			float arg6, float arg7) {
+		pg.rect(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 	}
 
 	public void rectMode(int arg0) {
@@ -836,10 +835,6 @@ class PGraphicsDelegate {
 		pg.text(arg0, arg1, arg2);
 	}
 
-	public void text(char arg0) {
-		pg.text(arg0);
-	}
-
 	public void text(char[] arg0, int arg1, int arg2, float arg3, float arg4, float arg5) {
 		pg.text(arg0, arg1, arg2, arg3, arg4, arg5);
 	}
@@ -864,10 +859,6 @@ class PGraphicsDelegate {
 		pg.text(arg0, arg1, arg2);
 	}
 
-	public void text(String arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		pg.text(arg0, arg1, arg2, arg3, arg4, arg5);
-	}
-
 	public void text(String arg0, float arg1, float arg2, float arg3, float arg4) {
 		pg.text(arg0, arg1, arg2, arg3, arg4);
 	}
@@ -878,10 +869,6 @@ class PGraphicsDelegate {
 
 	public void text(String arg0, float arg1, float arg2) {
 		pg.text(arg0, arg1, arg2);
-	}
-
-	public void text(String arg0) {
-		pg.text(arg0);
 	}
 
 	public void textAlign(int arg0, int arg1) {

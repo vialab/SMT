@@ -25,11 +25,10 @@
 package vialab.SMT;
 
 import java.awt.BorderLayout;
-import java.awt.DisplayMode;
-import java.awt.Frame;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,18 +49,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import codeanticode.glgraphics.GLGraphics;
-import codeanticode.glgraphics.GLGraphicsOffScreen;
-
 import processing.core.PApplet;
 import processing.core.PImage;
-//import processing.core.PMatrix3D;
-import processing.opengl.PGraphicsOpenGL;
-import vialab.mouseToTUIO.MouseToTUIO;
-import TUIO.TuioClient;
-import TUIO.TuioCursor;
-import TUIO.TuioObject;
-import TUIO.TuioPoint;
+
+import android.view.*;
+
+import vialab.TUIOSource.*;
+
+import TUIO.*;
 
 /**
  * The TUIO Processing client.
@@ -76,7 +70,8 @@ import TUIO.TuioPoint;
  * @version 1.0
  */
 public class TouchClient {
-	private static int MAX_PATH_LENGTH = 100;
+
+	private static int MAX_PATH_LENGTH = 50;
 
 	/** Processing PApplet */
 	static PApplet parent;
@@ -107,7 +102,11 @@ public class TouchClient {
 
 	private Method touch;
 
-	Boolean warnUnimplemented;
+	static Boolean warnUnimplemented;
+
+	/** TUIO adapter depending on which TouchSource is used */
+	AndroidToTUIO att = null;
+	MouseToTUIO mtt = null;
 
 	public void warnUncalled() {
 		SMTUtilities.warnUncalledMethods(parent);
@@ -121,7 +120,7 @@ public class TouchClient {
 	 *            whether to warn when there are unimplemented methods for zones
 	 */
 	public void setWarnUnimplemented(boolean warn) {
-		this.warnUnimplemented = warn;
+		TouchClient.warnUnimplemented = warn;
 	}
 
 	/**
@@ -139,83 +138,76 @@ public class TouchClient {
 	 * 
 	 * @param parent
 	 *            PApplet - The Processing PApplet
-	 * @param port
-	 *            int - The port to connect to.
+	 * @param touchSource
+	 *            int - The source of touch events to listen to. One of:
+	 *            TOUCH_SOURCE_MOUSE, TOUCH_SOURCE_TUIO_DEVICE,
+	 *            TOUCH_SOURCE_ANDROID, TOUCH_SOURCE.
 	 */
+
 	public TouchClient(PApplet parent, int port) {
-		this(parent, port, true, false);
+		this(parent, port, TouchSource.TUIO_DEVICE);
 	}
 
-	public TouchClient(PApplet parent, boolean emulateTouches) {
-		this(parent, emulateTouches, false);
+	public TouchClient(PApplet parent, TouchSource source) {
+		this(parent, 3333, source);
 	}
 
-	public TouchClient(PApplet parent, boolean emulateTouches, boolean fullscreen) {
-		this(parent, 3333, emulateTouches, fullscreen);
-	}
-
-	public TouchClient(PApplet parent, int port, boolean emulateTouches, boolean fullscreen) {
-		if (!(parent.g instanceof GLGraphics)) {
-			System.err
-					.println("Error: Cannot display zones unless renderer is GLGraphics, make sure to import the GLGraphics library, and in setup function call size(width,height,GLConstants.GLGRAPHICS);");
-		}
-
+	private TouchClient(PApplet parent, int port, TouchSource source) {
 		parent.setLayout(new BorderLayout());
 
-		if (emulateTouches) {
-			MouseToTUIO mtt = new MouseToTUIO(parent.width, parent.height);
-			parent.add(mtt);
-			// register the listener if using opengl, as the component wont get
-			// the events otherwise
-			if (parent.g instanceof PGraphicsOpenGL) {
-				parent.registerMouseEvent(mtt);
-				parent.registerKeyEvent(mtt);
-			}
-		}
-
-		// As of now, this code is dead, the toolkit only supports OpenGL, and
-		// specifically needs GLGraphics to work properly
-		if (!(parent.g instanceof PGraphicsOpenGL)) {
-			parent.frame.removeNotify();
-			if (fullscreen) {
-				parent.frame.setUndecorated(true);
-				parent.frame.setIgnoreRepaint(true);
-				parent.frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-
-				GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-				GraphicsDevice displayDevice = environment.getDefaultScreenDevice();
-
-				DisplayMode mode = displayDevice.getDisplayMode();
-				Rectangle fullScreenRect = new Rectangle(0, 0, mode.getWidth(), mode.getHeight());
-				parent.frame.setBounds(fullScreenRect);
-				parent.frame.setVisible(true);
-
-				// the following is exclusive mode
-				// displayDevice.setFullScreenWindow(parent.frame);
-				//
-				// Rectangle fullScreenRect = parent.frame.getBounds();
-
-				parent.frame.setBounds(fullScreenRect);
-				parent.setBounds((fullScreenRect.width - parent.width) / 2,
-						(fullScreenRect.height - parent.height) / 2, parent.width, parent.height);
-			}
-			parent.frame.addNotify();
-			parent.frame.toFront();
+		// As of now the toolkit only supports OpenGL
+		if (!parent.g.isGL()) {
+			System.out
+					.println("SMT only supports using OpenGL renderers, please use either OPENGL, P2D, or P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
 		}
 
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
-		parent.registerDispose(this);
-		parent.registerDraw(this);
-		parent.registerPre(this);
+		parent.registerMethod("dispose", this);
+		parent.registerMethod("draw", this);
+		parent.registerMethod("pre", this);
 		// handler = new GestureHandler();
 
 		picker = new SMTZonePicker();
 
 		TouchClient.client = this;
 
-		tuioClient = new TuioClient(port);
+		switch (source) {
+		case ANDROID:
+			// this still uses the old method, should be re-implemented without
+			// the socket
+			att = new AndroidToTUIO(parent.width, parent.height);
+			// parent.registerMethod("touchEvent", att); //when Processing
+			// supports this
+			tuioClient = new TuioClient(port);
+			break;
+		case MOUSE:
+			// this still uses the old method, should be re-implemented without
+			// the socket
+			mtt = new MouseToTUIO(parent.width, parent.height);
+			parent.registerMethod("mouseEvent", mtt);
+			tuioClient = new TuioClient(port);
+			break;
+		case TUIO_DEVICE:
+			tuioClient = new TuioClient(port);
+			break;
+		case WM_TOUCH:
+			if (System.getProperty("os.arch").equals("x86")) {
+				this.runWinTouchTuioServer(false);
+			}
+			else {
+				this.runWinTouchTuioServer(true);
+			}
+			tuioClient = new TuioClient(port);
+			break;
+		case SMART:
+			this.runSmart2TuioServer();
+			tuioClient = new TuioClient(port);
+			break;
+		default:
+			break;
+		}
 
 		listener = new SMTTuioListener();
 
@@ -223,6 +215,19 @@ public class TouchClient {
 
 		tuioClient.addTuioListener(listener);
 		tuioClient.connect();
+	}
+
+	/**
+	 * Redirects the MotionEvent object to AndroidToTUIO, used because current
+	 * version of Processing (2.x) does not support registerMethod("touchEvent",
+	 * target).
+	 * 
+	 * @param me
+	 *            MotionEvent - the motion event triggered in Android
+	 * @return Should the event get consumed elsewhere or not
+	 */
+	public boolean passAndroidTouchEvent(MotionEvent me) {
+		return att.onTouchEvent(me);
 	}
 
 	/**
@@ -457,14 +462,8 @@ public class TouchClient {
 				// the parent should handle the drawing
 				continue;
 			}
-			parent.pushMatrix();
-			parent.applyMatrix(zone.matrix);
-			if (zone.isChildActive()) {
-				zone.touch();
-			}
 			zone.draw();
 			// zone.drawForPickBuffer(parent.g);
-			parent.popMatrix();
 		}
 		if (drawTouchPoints) {
 			drawTouchPoints();
@@ -488,7 +487,7 @@ public class TouchClient {
 	 *            - the height of the pickBuffer image to draw
 	 */
 	public void drawPickBuffer(int x, int y, int w, int h) {
-		parent.g.image(((GLGraphicsOffScreen) picker.getGraphics()).getTexture(), x, y, w, h);
+		// parent.g.image(picker.image, x, y, w, h);
 	}
 
 	/**
@@ -644,8 +643,18 @@ public class TouchClient {
 	 */
 	public void pre() {
 		// TODO: provide some default assignment of touches
-		manager.handleTouches(parent.g);
+		manager.handleTouches();
+		parent.g.flush();
 		SMTUtilities.invoke(touch, parent);
+		for (Zone zone : zoneList) {
+			if (zone.getParent() != null) {
+				// the parent should handle the touch calling
+				continue;
+			}
+			if (zone.isChildActive()) {
+				zone.touch();
+			}
+		}
 	}
 
 	/**
@@ -666,16 +675,182 @@ public class TouchClient {
 	 *            Touch2Tuio
 	 * @see <a href='http://dm.tzi.de/touch2tuio/'>Touch2Tuio</a>
 	 */
-	public void runWinTouchTuioServer(String touch2TuioExePath) {
-		final String tuioServerCommand = touch2TuioExePath + " " + parent.frame.getTitle();
+	private void runWinTouchTuioServer(boolean is64Bit) {
+		try {
+			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
+			if (!(temp.delete())) {
+				throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
+			}
+
+			if (!(temp.mkdir())) {
+				throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
+			}
+			BufferedInputStream src = new BufferedInputStream(
+					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/Touch2Tuio_x64.exe"
+							: "/resources/Touch2Tuio.exe"));
+			final File exeTempFile = new File(is64Bit ? temp.getAbsolutePath()
+					+ "\\Touch2Tuio_x64.exe" : temp.getAbsolutePath() + "\\Touch2Tuio.exe");
+			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
+			byte[] tempexe = new byte[4 * 1024];
+			int rc;
+			while ((rc = src.read(tempexe)) > 0) {
+				out.write(tempexe, 0, rc);
+			}
+			src.close();
+			out.close();
+			exeTempFile.deleteOnExit();
+
+			BufferedInputStream dllsrc = new BufferedInputStream(
+					TouchClient.class.getResourceAsStream(is64Bit ? "/resources/TouchHook_x64.dll"
+							: "/resources/TouchHook.dll"));
+			final File dllTempFile = new File(is64Bit ? temp.getAbsolutePath()
+					+ "\\TouchHook_x64.dll" : temp.getAbsolutePath() + "\\TouchHook.dll");
+			BufferedOutputStream outdll = new BufferedOutputStream(
+					new FileOutputStream(dllTempFile));
+			byte[] tempdll = new byte[4 * 1024];
+			int rcdll;
+			while ((rcdll = dllsrc.read(tempdll)) > 0) {
+				outdll.write(tempdll, 0, rcdll);
+			}
+			dllsrc.close();
+			outdll.close();
+			dllTempFile.deleteOnExit();
+
+			Thread serverThread = new Thread() {
+				@Override
+				public void run() {
+					int max_failures = 10;
+					for (int i = 0; i < max_failures; i++) {
+						try {
+							Process tuioServer = Runtime.getRuntime().exec(
+									exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
+							BufferedInputStream err = new BufferedInputStream(
+									tuioServer.getInputStream());
+							String s = "";
+							while (err.available() > 0) {
+								s += err.read();
+							}
+							System.out.println(s);
+							tuioServer.waitFor();
+						}
+						catch (IOException e) {
+							System.err.println(e.getMessage());
+							break;
+						}
+						catch (Exception e) {
+							System.err.println("TUIO Server stopped!, restarting server.");
+						}
+					}
+				}
+			};
+			serverThread.start();
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	private void runSmart2TuioServer() {
+		try {
+			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
+
+			if (!(temp.delete())) {
+				throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
+			}
+
+			if (!(temp.mkdir())) {
+				throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
+			}
+			BufferedInputStream src = new BufferedInputStream(
+					TouchClient.class.getResourceAsStream("/resources/SMARTtoTUIO2.exe"));
+			final File exeTempFile = new File(temp.getAbsolutePath() + "\\SMARTtoTUIO2.exe");
+			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
+			byte[] tempexe = new byte[4 * 1024];
+			int rc;
+			while ((rc = src.read(tempexe)) > 0) {
+				out.write(tempexe, 0, rc);
+			}
+			src.close();
+			out.close();
+			exeTempFile.deleteOnExit();
+
+			BufferedInputStream sdksrc = new BufferedInputStream(
+					TouchClient.class.getResourceAsStream("/resources/SMARTTableSDK.Core.dll"));
+			final File sdkTempFile = new File(temp.getAbsolutePath() + "\\SMARTTableSDK.Core.dll");
+			BufferedOutputStream outsdk = new BufferedOutputStream(
+					new FileOutputStream(sdkTempFile));
+			byte[] tempsdk = new byte[4 * 1024];
+			int rcsdk;
+			while ((rcsdk = sdksrc.read(tempsdk)) > 0) {
+				outsdk.write(tempsdk, 0, rcsdk);
+			}
+			sdksrc.close();
+			outsdk.close();
+			sdkTempFile.deleteOnExit();
+
+			BufferedInputStream tuiosrc = new BufferedInputStream(
+					TouchClient.class.getResourceAsStream("/resources/libTUIO.dll"));
+			final File tuioTempFile = new File(temp.getAbsolutePath() + "\\libTUIO.dll");
+			BufferedOutputStream outtuio = new BufferedOutputStream(new FileOutputStream(
+					tuioTempFile));
+			byte[] tempdll = new byte[4 * 1024];
+			int rctuio;
+			while ((rctuio = tuiosrc.read(tempdll)) > 0) {
+				outtuio.write(tempdll, 0, rctuio);
+			}
+			tuiosrc.close();
+			outtuio.close();
+			tuioTempFile.deleteOnExit();
+
+			Thread serverThread = new Thread() {
+				@Override
+				public void run() {
+					int max_failures = 10;
+					for (int i = 0; i < max_failures; i++) {
+						try {
+							Process tuioServer = Runtime.getRuntime().exec(
+									exeTempFile.getAbsolutePath());
+							BufferedInputStream err = new BufferedInputStream(
+									tuioServer.getInputStream());
+							String s = "";
+							while (err.available() > 0) {
+								s += err.read();
+							}
+							System.out.println(s);
+							tuioServer.waitFor();
+						}
+						catch (IOException e) {
+							System.err.println(e.getMessage());
+							break;
+						}
+						catch (Exception e) {
+							System.err.println("TUIO Server stopped!, restarting server.");
+						}
+					}
+					System.out.println("Stopped trying to run exe.");
+				}
+			};
+			serverThread.start();
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	/**
+	 * Runs an exe from a path, presumably for translating native events to tuio events
+	 */
+	public void runExe(final String path) {
 		Thread serverThread = new Thread() {
-
 			@Override
 			public void run() {
-				while (true) {
+				int max_failures = 3;
+				for (int i = 0; i < max_failures; i++) {
 					try {
-						Process tuioServer = Runtime.getRuntime().exec(tuioServerCommand);
+						Process tuioServer = Runtime.getRuntime().exec(path);
 						tuioServer.waitFor();
 					}
 					catch (IOException e) {
@@ -683,9 +858,10 @@ public class TouchClient {
 						break;
 					}
 					catch (Exception e) {
-						System.err.println("TUIO Server stopped!, restarting server.");
+						System.err.println("Exe stopped!, restarting.");
 					}
 				}
+				System.out.println("Stopped trying to run exe.");
 			}
 		};
 		serverThread.start();

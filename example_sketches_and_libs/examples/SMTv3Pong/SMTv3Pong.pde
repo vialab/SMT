@@ -5,13 +5,8 @@
  *   A pong game using simpleMultiTouch toolkit
  */
 import vialab.SMT.*;
-import vialab.mouseToTUIO.*;
-import TUIO.*;
-import processing.opengl.PGraphicsOpenGL;
-import codeanticode.glgraphics.*;
 
 //set some configuration constants
-final boolean USE_MOUSE_TO_TUIO=true;
 final boolean DRAW_TOUCH_POINTS=true;
 final int NUM_ZONES=2;
 final float ADD_BALL_PER_SECOND_CHANCE=0.1;
@@ -34,8 +29,8 @@ class Ball {
     setDefaults();
   }
   void setDefaults() {
-    x=screenWidth/2+random(-100, 100);
-    y=screenHeight/2+random(-100, 100);
+    x=displayWidth/2+random(-100, 100);
+    y=displayHeight/2+random(-100, 100);
     r=5.0;
     Dir=new PVector(random(-1, 1), 0.3*random(-1, 1));
     Dir.normalize();
@@ -55,18 +50,17 @@ class Ball {
 }
 
 void setup() {
-  frameRate(1000);
-  size(screenWidth, screenHeight, GLConstants.GLGRAPHICS);
+  size(displayWidth, displayHeight, P3D);
   for (int i=0; i<NUM_BALLS; i++) {
     balls.add(new Ball());
   }
-  client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
+  client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   for (int i = 0; i < NUM_ZONES; i++) {
-    zone[i] = new reflectZone("Paddle",(i%2)*(screenWidth-450)+200, 400, 50, 300, (i%2==0)? new PVector(1.0, 0):new PVector(-1.0, 0.0));
+    zone[i] = new reflectZone("Paddle",(i%2)*(displayWidth-450)+200, 400, 50, 300, (i%2==0)? new PVector(1.0, 0):new PVector(-1.0, 0.0));
     client.add(zone[i]);
   }
-  score= new ButtonZone("Score",screenWidth/2-50, 100, 100, 50,""+p1score+"|"+p2score,createFont("Arial-Black", 16));
+  score= new ButtonZone("Score",displayWidth/2-50, 100, 100, 50,""+p1score+"|"+p2score,createFont("Arial-Black", 16));
   client.add(score);
 }
 
@@ -78,7 +72,7 @@ void draw() {
   background(79, 129, 189);
   for (int i=0; i<NUM_BALLS; i++) {
     Ball b=balls.get(i);
-    checkBallOffScreen(b);
+    checkBallOffdisplay(b);
     //check for zone intesection
     for (int j=0; j<NUM_ZONES; j++) {
       if (zone[j].contains(b.x, b.y)) {
@@ -106,8 +100,8 @@ void draw() {
   text(frameRate+" fps",width/2,10);
 }
 
-void checkBallOffScreen(Ball b) {
-  if (b.y<0||b.y>screenHeight) {
+void checkBallOffdisplay(Ball b) {
+  if (b.y<0||b.y>displayHeight) {
     if (b.y<0) {
       b.y=0;
       if (b.Dir.y<0) {
@@ -115,13 +109,13 @@ void checkBallOffScreen(Ball b) {
       }
     }
     else {
-      b.y=screenHeight-1;
+      b.y=displayHeight-1;
       if (b.Dir.y>0) {
         b.Dir.y*=-1.0;
       }
     }
   }
-  if (b.x<0||b.x>screenWidth) {
+  if (b.x<0||b.x>displayWidth) {
     if (b.x<0) {
       p2score++;
     }
@@ -134,7 +128,8 @@ void checkBallOffScreen(Ball b) {
 }
 
 void drawPaddle(reflectZone z){
-  background(0,255,0);
+  fill(0,255,0);
+  rect(0,0,z.width,z.height);
   stroke(0);
   strokeWeight(5);
   if (z.normalDir.x>0) {

@@ -25,7 +25,7 @@ public class TextZone extends Zone {
 		}
 
 		@Override
-		public void draw() {
+		public void beginDraw() {
 			super.beginDraw();
 			fill(255);
 			if (selected) {
@@ -34,8 +34,6 @@ public class TextZone extends Zone {
 			rect(0, 0, width, height);
 			fill(0);
 			text(this.word, 0, 5, width, height);
-			super.endDraw();
-			super.draw();
 		}
 
 	}
@@ -62,18 +60,16 @@ public class TextZone extends Zone {
 		super(name, x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 1, 20);
 		if (keysRecievedFromApplet) {
-			applet.registerKeyEvent(this);
+			applet.registerMethod("keyEvent", this);
 		}
 
 	}
 
 	@Override
-	public void draw() {
+	public void beginDraw() {
 		super.beginDraw();
 		fill(255);
 		rect(0, 0, width, height);
-		super.endDraw();
-		super.draw();
 	}
 
 	@Override
@@ -86,8 +82,7 @@ public class TextZone extends Zone {
 		}
 		else if (e.getKeyChar() == '\t') {
 			this.currentWordZone = new WordZone(currentWordZone.x
-					+ (int) textWidth(currentWordZone.word + "    "), currentWordZone.y, 1,
-					20);
+					+ (int) textWidth(currentWordZone.word + "    "), currentWordZone.y, 1, 20);
 		}
 		else if (e.getKeyChar() == '\n') {
 			this.currentWordZone = new WordZone(0, currentWordZone.y + 20, 1, 20);
@@ -95,7 +90,7 @@ public class TextZone extends Zone {
 		else {
 			this.currentWordZone.word += e.getKeyChar();
 			this.currentWordZone.setData(currentWordZone.x, currentWordZone.y,
-					Math.max((int) textWidth(currentWordZone.word),1), currentWordZone.height);
+					Math.max((int) textWidth(currentWordZone.word), 1), currentWordZone.height);
 		}
 		super.keyTyped(e);
 	}

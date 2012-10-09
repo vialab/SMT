@@ -5,10 +5,6 @@
  *   A test sketch using simpleMultiTouch toolkit
  */
 import vialab.SMT.*;
-import vialab.mouseToTUIO.*;
-import TUIO.*;
-import processing.opengl.PGraphicsOpenGL;
-import codeanticode.glgraphics.*;
 
 //set some configuration constants
 final boolean USE_MOUSE_TO_TUIO=true;
@@ -17,22 +13,29 @@ final boolean DRAW_TOUCH_POINTS=true;
 TouchClient client;
 
 void setup() {
-  size(screenWidth, screenHeight, GLConstants.GLGRAPHICS);
-  client = new TouchClient(this, USE_MOUSE_TO_TUIO, true);
+  size(displayWidth, displayHeight, OPENGL);
+  client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   
   Zone z1=new Zone("UserArea",0, 0, 800, 200);
   Zone z2=new Zone("UserArea",0, 0, 800, 200);
   Zone z3=new Zone("UserArea",0, 0, 800, 200);
   Zone z4=new Zone("UserArea",0, 0, 800, 200);
-  
-  z1.translate(screenWidth/2-z1.width/2,0);
+  z1.beginTouch();
+  z1.translate(displayWidth/2-z1.width/2,0);
   z1.rotateAbout(PI,CENTER);
-  z2.translate(screenWidth/2-z2.width/2,screenHeight-z2.height);
-  z3.translate(z3.height,screenHeight/2-z3.width/2);
+  z1.endTouch();
+  z2.beginTouch();
+  z2.translate(displayWidth/2-z2.width/2,displayHeight-z2.height);
+  z2.endTouch();
+  z3.beginTouch();
+  z3.translate(z3.height,displayHeight/2-z3.width/2);
   z3.rotateAbout(PI/2,CORNER);
-  z4.translate(screenWidth-z4.height,screenHeight/2+z4.width/2);
+  z3.endTouch();
+  z4.beginTouch();
+  z4.translate(displayWidth-z4.height,displayHeight/2+z4.width/2);
   z4.rotateAbout(3*PI/2,CORNER);
+  z4.endTouch();
   
   z1.add(new Zone("Item",0,0,200,100));
   z2.add(new Zone("Item",0,0,200,100));
