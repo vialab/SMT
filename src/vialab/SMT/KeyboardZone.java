@@ -156,29 +156,44 @@ public class KeyboardZone extends Zone {
 	private static final int NUM_KEYBOARD_ROWS = 5;
 
 	private enum Keys {
-		KEY_ESC('\u001B', KeyEvent.VK_ESCAPE, false, "Esc"), KEY_1('1', KeyEvent.VK_1, false), KEY_2(
+		KEY_BACK_QUOTE('`', KeyEvent.VK_BACK_QUOTE, false, "`"), KEY_1('1', KeyEvent.VK_1, false), KEY_2(
 				'2', KeyEvent.VK_2, false), KEY_3('3', KeyEvent.VK_3, false), KEY_4('4',
 				KeyEvent.VK_4, false), KEY_5('5', KeyEvent.VK_5, false), KEY_6('6', KeyEvent.VK_6,
 				false), KEY_7('7', KeyEvent.VK_7, false), KEY_8('8', KeyEvent.VK_8, false), KEY_9(
-				'9', KeyEvent.VK_9, false), KEY_0('0', KeyEvent.VK_0, false), KEY_BACKSPACE('\b',
-				KeyEvent.VK_BACK_SPACE, false, "Backspace", 2.0f), KEY_Q('q', KeyEvent.VK_Q, false), KEY_W(
-				'w', KeyEvent.VK_W, false), KEY_E('e', KeyEvent.VK_E, false), KEY_R('r',
-				KeyEvent.VK_R, false), KEY_T('t', KeyEvent.VK_T, false), KEY_Y('y', KeyEvent.VK_Y,
-				false), KEY_U('u', KeyEvent.VK_U, false), KEY_I('i', KeyEvent.VK_I, false), KEY_O(
-				'o', KeyEvent.VK_O, false), KEY_P('p', KeyEvent.VK_P, false), KEY_A('a',
+				'9', KeyEvent.VK_9, false), KEY_0('0', KeyEvent.VK_0, false), KEY_MINUS('-',
+				KeyEvent.VK_MINUS, false, "-"), KEY_EQUALS('=', KeyEvent.VK_EQUALS, false, "="), KEY_BACKSPACE(
+				'\b', KeyEvent.VK_BACK_SPACE, false, "Backspace", 2.0f), KEY_TAB('\t',
+				KeyEvent.VK_TAB, false, "Tab", 1.5f), KEY_Q('q', KeyEvent.VK_Q, false), KEY_W('w',
+				KeyEvent.VK_W, false), KEY_E('e', KeyEvent.VK_E, false), KEY_R('r', KeyEvent.VK_R,
+				false), KEY_T('t', KeyEvent.VK_T, false), KEY_Y('y', KeyEvent.VK_Y, false), KEY_U(
+				'u', KeyEvent.VK_U, false), KEY_I('i', KeyEvent.VK_I, false), KEY_O('o',
+				KeyEvent.VK_O, false), KEY_P('p', KeyEvent.VK_P, false), KEY_BRACELEFT('[',
+				KeyEvent.VK_BRACELEFT, false, "["), KEY_BRACERIGHT(']', KeyEvent.VK_BRACERIGHT,
+				false, "]"), KEY_BACK_SLASH('\\', KeyEvent.VK_BACK_SLASH, false, "\\", 1.5f), KEY_CAPS_LOCK(
+				'\u21EA', KeyEvent.VK_CAPS_LOCK, false, "Caps Lock", 1.75f), KEY_A('a',
 				KeyEvent.VK_A, false), KEY_S('s', KeyEvent.VK_S, false), KEY_D('d', KeyEvent.VK_D,
 				false), KEY_F('f', KeyEvent.VK_F, false), KEY_G('g', KeyEvent.VK_G, false), KEY_H(
 				'h', KeyEvent.VK_H, false), KEY_J('j', KeyEvent.VK_J, false), KEY_K('k',
-				KeyEvent.VK_K, false), KEY_L('l', KeyEvent.VK_L, false), KEY_Z('z', KeyEvent.VK_Z,
-				false), KEY_X('x', KeyEvent.VK_X, false), KEY_C('c', KeyEvent.VK_C, false), KEY_V(
-				'v', KeyEvent.VK_V, false), KEY_B('b', KeyEvent.VK_B, false), KEY_N('n',
-				KeyEvent.VK_N, false), KEY_M('m', KeyEvent.VK_M, false), KEY_SHIFT(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT, true, "Shift"), KEY_CTRL(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true, "Control"), KEY_ALT(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true, "Alt"), KEY_SPACE(' ',
-				KeyEvent.VK_SPACE, false, "Space", 6.0f), KEY_TAB('\t', KeyEvent.VK_TAB, false,
-				"Tab"), KEY_ENTER('\n', KeyEvent.VK_ENTER, false, "Enter"), KEY_DELETE('\u007F',
-				KeyEvent.VK_DELETE, false, "Delete");
+				KeyEvent.VK_K, false), KEY_L('l', KeyEvent.VK_L, false), KEY_SEMICOLON(';',
+				KeyEvent.VK_SEMICOLON, false, ";"), KEY_QUOTE('\'', KeyEvent.VK_QUOTE, false, "'"), KEY_ENTER(
+				'\n', KeyEvent.VK_ENTER, false, "Enter", 2.25f), KEY_SHIFT_LEFT(
+				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT, true, "Shift", 2.3f), KEY_Z('z',
+				KeyEvent.VK_Z, false), KEY_X('x', KeyEvent.VK_X, false), KEY_C('c', KeyEvent.VK_C,
+				false), KEY_V('v', KeyEvent.VK_V, false), KEY_B('b', KeyEvent.VK_B, false), KEY_N(
+				'n', KeyEvent.VK_N, false), KEY_M('m', KeyEvent.VK_M, false), KEY_COMMA(',',
+				KeyEvent.VK_COMMA, false, ","), KEY_PERIOD('.', KeyEvent.VK_PERIOD, false, "."), KEY_SLASH(
+				'/', KeyEvent.VK_SLASH, false, "/"), KEY_SHIFT_RIGHT(KeyEvent.CHAR_UNDEFINED,
+				KeyEvent.VK_SHIFT, true, "Shift", 2.7f), KEY_CTRL_LEFT(KeyEvent.CHAR_UNDEFINED,
+				KeyEvent.VK_CONTROL, true, "Control", 1.5f), KEY_META_LEFT(KeyEvent.CHAR_UNDEFINED,
+				KeyEvent.VK_META, true, "Meta", 1.2f), KEY_ALT_LEFT(KeyEvent.CHAR_UNDEFINED,
+				KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_SPACE(' ', KeyEvent.VK_SPACE, false,
+				"Space", 6.0f), KEY_ALT_RIGHT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true,
+				"Alt", 1.2f), KEY_META_RIGHT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_META, true,
+				"Meta", 1.2f), KEY_CONTEXT_MENU(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTEXT_MENU,
+				true, "Menu", 1.2f), KEY_CTRL_RIGHT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL,
+				true, "Control", 1.5f);
+
+		// KEY_DELETE('\u007F', KeyEvent.VK_DELETE, false, "Delete");
 
 		private final boolean isModifier;
 		private final char keyChar;
