@@ -92,8 +92,8 @@ void setup() {
   
   KeyboardZone k = new KeyboardZone("Keyboard");
   KeyboardZone k2 = new KeyboardZone(1150,0);
-  TextZone t= new TextZone(200,200,200,200);
-  TextZone t2= new TextZone(1150,200,200,200);
+  TextZone t= new TextZone(300,300,200,200);
+  TextZone t2= new TextZone(1150,300,200,200);
   title.add(k);
   title.add(k2);
   title.add(t);
@@ -106,7 +106,7 @@ void setup() {
   tabs.add(t2);*/
   k.addKeyListener(t);
   k2.addKeyListener(t2);
-  k.setSize(200,800);
+  k.setSize(800,300);
   
   //call this to show warnings for methods that seem to be meant for use by a zone, but a zone matching the name does not exist, useful for debugging
   //client.warnUncalled();
@@ -117,6 +117,7 @@ void drawMyZone(){
 
 void touchKeyboard(Zone zone){
   zone.rst();
+  print("touchUp");
 }
 
 void draw() {
