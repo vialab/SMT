@@ -9,7 +9,6 @@ import processing.core.PMatrix2D;
 import processing.core.PMatrix3D;
 import processing.core.PShape;
 import processing.core.PStyle;
-import processing.opengl.PGraphicsOpenGL;
 
 class PGraphicsDelegate {
 	protected PGraphics pg;

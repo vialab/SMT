@@ -3,9 +3,7 @@ package vialab.SMT;
 import java.util.Vector;
 
 import processing.core.PApplet;
-import TUIO.TuioCursor;
-import TUIO.TuioPoint;
-import TUIO.TuioTime;
+import TUIO.*;
 
 /**
  * Extending TuioCursor to rename it Touch
@@ -16,33 +14,33 @@ public class Touch extends TuioCursor {
 	/** Processing PApplet */
 	static PApplet applet = TouchClient.parent;
 	/** The individual cursor ID number that is assigned to each TuioCursor. */
-	public final int cursorId;
+	public int cursorId;
 	/** Reflects the current state of the TuioComponent. */
-	public final int state;
+	public int state;
 	/**
 	 * The unique session ID number that is assigned to each TUIO object or
 	 * cursor.
 	 */
-	public final long sessionID;
+	public long sessionID;
 	/** The X coordinate in pixels relative to the PApplet screen width. */
-	public final int x;
+	public int x;
 	/** The Y coordinate in pixels relative to the PApplet screen height. */
-	public final int y;
+	public int y;
 	/** The X-axis velocity value. */
-	public final float xSpeed;
+	public float xSpeed;
 	/** The Y-axis velocity value. */
-	public final float ySpeed;
+	public float ySpeed;
 	/** The motion speed value. */
-	public final float motionSpeed;
+	public float motionSpeed;
 	/** The motion acceleration value. */
-	public final float motionAcceleration;
+	public float motionAcceleration;
 
-	public final TuioTime startTime, currentTime;
+	public TuioTime startTime, currentTime;
 	/**
 	 * A Vector of TuioPoints containing all the previous positions of the TUIO
 	 * component.
 	 */
-	public final Vector<TuioPoint> path;
+	public Vector<TuioPoint> path;
 
 	/**
 	 * This constructor takes the attributes of the provided TuioCursor and
@@ -53,36 +51,7 @@ public class Touch extends TuioCursor {
 	 */
 	public Touch(TuioCursor t) {
 		super(t);
-		cursorId = t.getCursorID();
-		x = t.getScreenX(applet.width);
-		y = t.getScreenY(applet.height);
-
-		super.startTime = t.getStartTime();
-		startTime = t.getStartTime();
-
-		super.currentTime = t.getTuioTime();
-		currentTime = t.getTuioTime();
-
-		super.x_speed = t.getXSpeed();
-		xSpeed = t.getXSpeed();
-
-		super.y_speed = t.getYSpeed();
-		ySpeed = t.getYSpeed();
-
-		super.motion_speed = t.getMotionSpeed();
-		motionSpeed = t.getMotionSpeed();
-
-		super.motion_accel = t.getMotionAccel();
-		motionAcceleration = t.getMotionAccel();
-
-		super.path = t.getPath();
-		path = t.getPath();
-
-		super.session_id = t.getSessionID();
-		sessionID = t.getSessionID();
-
-		super.state = t.getTuioState();
-		state = t.getTuioState();
+		this.updateTouch(t);
 	}
 
 	/**
@@ -177,5 +146,38 @@ public class Touch extends TuioCursor {
 		}
 
 		return path.get(path.size() - 2);
+	}
+	
+	public void updateTouch(TuioCursor t){
+		cursorId = t.getCursorID();
+		x = t.getScreenX(applet.width);
+		y = t.getScreenY(applet.height);
+
+		super.startTime = t.getStartTime();
+		startTime = t.getStartTime();
+
+		super.currentTime = t.getTuioTime();
+		currentTime = t.getTuioTime();
+
+		super.x_speed = t.getXSpeed();
+		xSpeed = t.getXSpeed();
+
+		super.y_speed = t.getYSpeed();
+		ySpeed = t.getYSpeed();
+
+		super.motion_speed = t.getMotionSpeed();
+		motionSpeed = t.getMotionSpeed();
+
+		super.motion_accel = t.getMotionAccel();
+		motionAcceleration = t.getMotionAccel();
+
+		super.path = t.getPath();
+		path = t.getPath();
+
+		super.session_id = t.getSessionID();
+		sessionID = t.getSessionID();
+
+		super.state = t.getTuioState();
+		state = t.getTuioState();
 	}
 }

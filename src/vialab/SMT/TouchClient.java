@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -526,22 +525,16 @@ public class TouchClient {
 	}
 
 	/**
-	 * Returns a vector containing all the current Touches(TuioCursors).
+	 * Returns a collection containing all the current Touches(TuioCursors).
 	 * 
-	 * @return Vector<TuioCursor>
+	 * @return Collection<Touch>
 	 */
-	public Touch[] getTouches() {
-		Collection<Touch> touchList = getTouchMap().values();
-		return touchList.toArray(new Touch[touchList.size()]);
+	public Collection<Touch> getTouches() {
+		return getTouchMap().values();
 	}
 
 	public Map<Long, Touch> getTouchMap() {
-		Vector<TuioCursor> cursors = tuioClient.getTuioCursors();
-		HashMap<Long, Touch> touches = new HashMap<Long, Touch>();
-		for (TuioCursor c : cursors) {
-			touches.put(c.getSessionID(), new Touch(c));
-		}
-		return touches;
+		return SMTTouchManager.currentTouchState.idToTouches;
 	}
 
 	// /**
@@ -605,7 +598,7 @@ public class TouchClient {
 	 * @return TuioCursor
 	 */
 	public static Touch getTouch(long s_id) {
-		return new Touch(tuioClient.getTuioCursor(s_id));
+		return SMTTouchManager.currentTouchState.getById(s_id);
 	}
 
 	public static Touch getPathStartTouch(long s_id) {

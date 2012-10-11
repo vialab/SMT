@@ -23,7 +23,7 @@ public class SMTTouchManager {
 	 * For each touch ID, gives the object that that touch belongs to. This
 	 * object may be null.
 	 */
-	private Map<Long, Zone> idToTouched = Collections.synchronizedMap(new HashMap<Long, Zone>());
+	public Map<Long, Zone> idToTouched = Collections.synchronizedMap(new HashMap<Long, Zone>());
 
 	/**
 	 * The number of touches for each object. The numbers in this map are at
@@ -44,6 +44,8 @@ public class SMTTouchManager {
 	// private Method addObject, removeObject, updateObject;
 
 	// private Method refresh;
+	
+	static TouchState currentTouchState= new TouchState();
 
 	public SMTTouchManager(SMTTuioListener touchListener, SMTZonePicker picker) {
 		this.touchListener = touchListener;
@@ -66,7 +68,7 @@ public class SMTTouchManager {
 		// TouchState previousTouchState = touchListener.getCurrentTouchState();
 		// TouchState currentTouchState = touchListener.dequeueTouchState();
 
-		TouchState currentTouchState = touchListener.getCurrentTouchState();
+		currentTouchState.update(touchListener.getCurrentTuioState());
 
 		// forward events
 		handleTouchesDown(currentTouchState);

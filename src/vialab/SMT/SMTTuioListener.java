@@ -85,8 +85,8 @@ class SMTTuioListener implements TuioListener {
 	 * Returns the touch state that was most recently removed from the queue. If
 	 * no state has been removed yet, returns the empty touch state.
 	 */
-	public synchronized TouchState getCurrentTouchState() {
-		return new TouchState(currentTouchState);
+	public synchronized List<TuioCursor> getCurrentTuioState() {
+		return currentTouchState;
 	}
 
 	/**
