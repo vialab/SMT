@@ -149,9 +149,9 @@ public final class SMTUtilities {
 				}
 				catch (IllegalAccessException e2) {}
 				catch (IllegalArgumentException e2) {}
-				catch (InvocationTargetException e2) {}
+				catch (InvocationTargetException e2) {e2.printStackTrace();}
 			}
-			catch (InvocationTargetException e) {}
+			catch (InvocationTargetException e) {e.printStackTrace();}
 		}
 		return null;
 	}
