@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import processing.core.PApplet;
-import TUIO.TuioCursor;
 
 public class SMTTouchManager {
 	private PApplet applet;
@@ -129,7 +128,7 @@ public class SMTTouchManager {
 	 */
 	protected void handleTouchesDown(TouchState currentTouchState) {
 		SMTUtilities.invoke(touchDown, applet);
-		for (TuioCursor touchPoint : currentTouchState) {
+		for (Touch touchPoint : currentTouchState) {
 			// now either their is no zone it is mapped to or the zone mapped to
 			// doesn't have it active, so new touchDown to find where to assign
 			// it
@@ -164,7 +163,7 @@ public class SMTTouchManager {
 				// the touch existed, but no longer exists, so it went up
 				Zone zone = idToTouched.get(id);
 				idsToRemove.add(id);
-				doTouchUp(zone, id);
+				doTouchUp(zone, zone.getTouchMap().get(id));
 			}
 		}
 
@@ -196,12 +195,11 @@ public class SMTTouchManager {
 	 * @param zone
 	 *            may be null
 	 */
-	private void doTouchDown(Zone zone, TuioCursor touchPoint) {
+	private void doTouchDown(Zone zone, Touch touchPoint) {
 		idToTouched.put(touchPoint.getSessionID(), zone);
 
 		if (zone != null) {
-			Touch touch = new Touch(touchPoint);
-			assignTouch(zone, touch);
+			assignTouch(zone, touchPoint);
 			zone.touchDownInvoker();
 		}
 
@@ -227,10 +225,10 @@ public class SMTTouchManager {
 	 * @param zone
 	 *            may be null
 	 */
-	private void doTouchUp(Zone zone, Long id) {
+	private void doTouchUp(Zone zone, Touch touch) {
 		if (zone != null) {
-			zone.touchUp(new Touch(touchListener.getRemovedCursor(id)));
-			deactivate(zone, id);
+			zone.touchUp(touch);
+			deactivate(zone, touch.sessionID);
 
 			touchesPerObject.put(zone, touchesPerObject.get(zone) - 1);
 			if (touchesPerObject.get(zone) == 0) {
@@ -256,9 +254,9 @@ public class SMTTouchManager {
 	 */
 	private List<Touch> localTouchState(TouchState touchState, Zone zone) {
 		List<Touch> localState = new ArrayList<Touch>(touchState.size());
-		for (TuioCursor touchPoint : touchState) {
+		for (Touch touchPoint : touchState) {
 			if (idToTouched.get(touchPoint.getSessionID()) == zone) {
-				localState.add(new Touch(touchPoint));
+				localState.add(touchPoint);
 			}
 		}
 		return localState;

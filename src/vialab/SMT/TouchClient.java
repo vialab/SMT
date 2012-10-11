@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.parsers.DocumentBuilder;
@@ -564,19 +563,9 @@ public class TouchClient {
 		}
 		return zones.toArray(new Zone[zones.size()]);
 	}
-
-	public Touch[] getTouchesFromZone(Zone zone) {
-		Set<Long> ids = zone.getIds();
-
-		Vector<TuioCursor> cursors = tuioClient.getTuioCursors();
-		ArrayList<Touch> touches = new ArrayList<Touch>();
-		for (Long id : ids) {
-			TuioCursor tuioCursor = tuioClient.getTuioCursor(id);
-			if (cursors.contains(tuioCursor)) {
-				touches.add(new Touch(tuioCursor));
-			}
-		}
-		return touches.toArray(new Touch[touches.size()]);
+	
+	public Collection<Touch> getTouchesFromZone(Zone zone) {
+		return zone.getTouches();
 	}
 
 	/**
