@@ -41,6 +41,7 @@ public class Touch extends TuioCursor {
 	 * component.
 	 */
 	public Vector<TuioPoint> path;
+	public boolean isDown;
 
 	/**
 	 * This constructor takes the attributes of the provided TuioCursor and

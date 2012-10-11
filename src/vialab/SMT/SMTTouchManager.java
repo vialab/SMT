@@ -135,6 +135,7 @@ public class SMTTouchManager {
 			if (idToTouched.get(touchPoint.getSessionID()) == null
 					|| !idToTouched.get(touchPoint.getSessionID()).activeTouches
 							.containsKey(touchPoint.getSessionID())) {
+				touchPoint.isDown=true;
 				// it's a new touch that just went down,
 				// or an old touch that just crossed an object
 				// or an old touch that was unassigned from an object
@@ -163,6 +164,7 @@ public class SMTTouchManager {
 				// the touch existed, but no longer exists, so it went up
 				Zone zone = idToTouched.get(id);
 				idsToRemove.add(id);
+				zone.getTouchMap().get(id).isDown=false;
 				doTouchUp(zone, zone.getTouchMap().get(id));
 			}
 		}
