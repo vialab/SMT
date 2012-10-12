@@ -22,7 +22,7 @@ void draw(){
   }
   background(123);
   if(first!=null){
-    text("x:"+first.x+"\ty:"+first.y,100,100);
+    text("x:"+first.x+"\ty:"+first.y+"down:"+(first.isDown?"yes":"no"),100,100);
   }
 }
 
