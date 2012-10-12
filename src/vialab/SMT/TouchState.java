@@ -73,6 +73,7 @@ public class TouchState implements Iterable<Touch> {
 				//if no touch maps to it, create touch from it, add to map
 				c = new Touch(t);
 				this.add(c);
+				c.isDown=true;
 			}else{
 				//otherwise find corresponding touch and update the touch
 				c = this.getById(t.getSessionID());
@@ -86,6 +87,7 @@ public class TouchState implements Iterable<Touch> {
 			if(!currentCursors.contains(t)){
 				//the cursor was not updated, assume up and remove
 				idToTouches.remove(t.sessionID);
+				t.isDown=false;
 			}
 		}
 	}
