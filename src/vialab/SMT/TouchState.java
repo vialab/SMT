@@ -83,10 +83,12 @@ public class TouchState implements Iterable<Touch> {
 		}
 		
 		//remove touches that correspond to removed cursors
-		for(Touch t : idToTouches.values()){
+		Iterator<Touch> rmv = iterator();
+		while(rmv.hasNext()){
+			Touch t = rmv.next();
 			if(!currentCursors.contains(t)){
 				//the cursor was not updated, assume up and remove
-				idToTouches.remove(t.sessionID);
+				rmv.remove();
 				t.isDown=false;
 			}
 		}
