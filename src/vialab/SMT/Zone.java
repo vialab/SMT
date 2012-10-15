@@ -371,24 +371,24 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			super.beginDraw();
 			background(0, 0, 0, 0);
-			if (tempFill) {
-				pg.fill(tempFillColor);
-			}
-			else {
-				pg.noFill();
-			}
-			if (tempStroke) {
-				pg.stroke(tempStrokeColor);
-			}
-			else {
-				pg.noStroke();
-			}
-			if (tempTint) {
-				pg.tint(tempTintColor);
-			}
-			else {
-				pg.noTint();
-			}
+		}
+		if (tempFill) {
+			pg.fill(tempFillColor);
+		}
+		else {
+			pg.noFill();
+		}
+		if (tempStroke) {
+			pg.stroke(tempStrokeColor);
+		}
+		else {
+			pg.noStroke();
+		}
+		if (tempTint) {
+			pg.tint(tempTintColor);
+		}
+		else {
+			pg.noTint();
 		}
 	}
 
