@@ -44,9 +44,7 @@ public class SMTZonePicker {
 	private SortedSet<Integer> activePickColors = new TreeSet<Integer>();
 
 	int SIZEOF_INT = Integer.SIZE / 8;
-	IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT).order(ByteOrder.nativeOrder())
-			.asIntBuffer();
-
+	
 	public SMTZonePicker() {
 		this.applet = TouchClient.parent;
 		//image=new PImage(applet.width,applet.height);
@@ -104,12 +102,18 @@ public class SMTZonePicker {
 		// return zone;
 		// }
 		// }
+		
+		System.out.println("picking");
 
 		int screenX = t.getScreenX(TouchClient.parent.width);
 		int screenY = t.getScreenY(TouchClient.parent.height);
 
 		
 		PGL pgl = applet.g.beginPGL();
+		
+		IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT).order(ByteOrder.nativeOrder())
+				.asIntBuffer();
+
 		
 		pgl.readPixels(screenX, TouchClient.parent.height - screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
 

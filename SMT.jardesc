@@ -13,6 +13,5 @@
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <file path="/SMT/README.txt"/>
         <javaElement handleIdentifier="=SMT/src"/>
-        <folder path="/SMT/lib"/>
     </selectedElements>
 </jardesc>
