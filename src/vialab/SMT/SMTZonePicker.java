@@ -92,30 +92,13 @@ public class SMTZonePicker {
 		return removed;
 	}
 
-	public Zone pick(TuioCursor t) {
-		// if (idToZoneMap.containsKey(t.sessionID)) {
-		// return idToZoneMap.get(t.sessionID);
-		// }
-
-		// for (Zone zone : zones) {
-		// if (zone.isAssigned(t)) {
-		// return zone;
-		// }
-		// }
-		
-		System.out.println("picking");
-
-		int screenX = t.getScreenX(TouchClient.parent.width);
-		int screenY = t.getScreenY(TouchClient.parent.height);
-
-		
+	public Zone pick(Touch t) {
 		PGL pgl = applet.g.beginPGL();
 		
 		IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT).order(ByteOrder.nativeOrder())
 				.asIntBuffer();
 
-		
-		pgl.readPixels(screenX, TouchClient.parent.height - screenY, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
+		pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
 
 		int pickColor = buffer.get(0);
 		
@@ -188,6 +171,7 @@ public class SMTZonePicker {
 			zone.drawForPickBuffer();
 		}
 		//image=applet.g.get();
+		applet.g.flush();
 	}
 
 	public void putZoneOnTop(Zone zone) {

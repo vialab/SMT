@@ -70,9 +70,9 @@ public class SMTTouchManager {
 		currentTouchState.update(touchListener.getCurrentTuioState());
 
 		// forward events
-		handleTouchesDown(currentTouchState);
-		handleTouchesUp(currentTouchState);
-		handleTouchesMoved(currentTouchState);
+		handleTouchesDown();
+		handleTouchesUp();
+		handleTouchesMoved();
 		// }
 	}
 
@@ -126,7 +126,7 @@ public class SMTTouchManager {
 	/**
 	 * Handles every touch in the current but not the previous state.
 	 */
-	protected void handleTouchesDown(TouchState currentTouchState) {
+	protected void handleTouchesDown() {
 		SMTUtilities.invoke(touchDown, applet);
 		for (Touch touchPoint : currentTouchState) {
 			// now either their is no zone it is mapped to or the zone mapped to
@@ -139,7 +139,6 @@ public class SMTTouchManager {
 				// or an old touch that just crossed an object
 				// or an old touch that was unassigned from an object
 				Zone picked = picker.pick(touchPoint);
-
 				// dont fire touchDown when repicking to same zone (both null is
 				// also caught by this), to avoid the auto-unassignAll() which
 				// allows picking to different zones with one touch by default,
@@ -155,7 +154,7 @@ public class SMTTouchManager {
 	/**
 	 * Handles every touch in the previous but not in the current state.
 	 */
-	protected void handleTouchesUp(TouchState currentTouchState) {
+	protected void handleTouchesUp() {
 		SMTUtilities.invoke(touchUp, applet);
 		ArrayList<Long> idsToRemove = new ArrayList<Long>();
 		for (Long id : idToTouched.keySet()) {
@@ -175,7 +174,7 @@ public class SMTTouchManager {
 	/**
 	 * Handles the movement of touches.
 	 */
-	protected void handleTouchesMoved(TouchState currentTouchState) {
+	protected void handleTouchesMoved() {
 		SMTUtilities.invoke(touchMoved, applet);
 
 		// get the set of all objects currently touched
