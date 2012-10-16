@@ -24,7 +24,6 @@
 
 package vialab.SMT;
 
-import java.awt.BorderLayout;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;

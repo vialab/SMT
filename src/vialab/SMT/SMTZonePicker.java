@@ -10,8 +10,6 @@ import java.util.TreeSet;
 import processing.core.PApplet;
 import processing.opengl.PGL;
 
-import TUIO.TuioCursor;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
