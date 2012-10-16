@@ -702,27 +702,23 @@ public class TouchClient {
 			Thread serverThread = new Thread() {
 				@Override
 				public void run() {
-					int max_failures = 10;
-					for (int i = 0; i < max_failures; i++) {
-						try {
-							Process tuioServer = Runtime.getRuntime().exec(
-									exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
-							BufferedInputStream err = new BufferedInputStream(
-									tuioServer.getInputStream());
-							String s = "";
-							while (err.available() > 0) {
-								s += err.read();
-							}
-							System.out.println(s);
-							tuioServer.waitFor();
+					try {
+						Process tuioServer = Runtime.getRuntime().exec(
+								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
+						BufferedInputStream err = new BufferedInputStream(
+								tuioServer.getInputStream());
+						String s = "";
+						while (err.available() > 0) {
+							s += err.read();
 						}
-						catch (IOException e) {
-							System.err.println(e.getMessage());
-							break;
-						}
-						catch (Exception e) {
-							System.err.println("TUIO Server stopped!, restarting server.");
-						}
+						System.out.println(s);
+						tuioServer.waitFor();
+					}
+					catch (IOException e) {
+						System.err.println(e.getMessage());
+					}
+					catch (Exception e) {
+						System.err.println("TUIO Server stopped!");
 					}
 				}
 			};
@@ -789,29 +785,24 @@ public class TouchClient {
 			Thread serverThread = new Thread() {
 				@Override
 				public void run() {
-					int max_failures = 10;
-					for (int i = 0; i < max_failures; i++) {
-						try {
-							Process tuioServer = Runtime.getRuntime().exec(
-									exeTempFile.getAbsolutePath());
-							BufferedInputStream err = new BufferedInputStream(
-									tuioServer.getInputStream());
-							String s = "";
-							while (err.available() > 0) {
-								s += err.read();
-							}
-							System.out.println(s);
-							tuioServer.waitFor();
+					try {
+						Process tuioServer = Runtime.getRuntime().exec(
+								exeTempFile.getAbsolutePath());
+						BufferedInputStream err = new BufferedInputStream(
+								tuioServer.getInputStream());
+						String s = "";
+						while (err.available() > 0) {
+							s += err.read();
 						}
-						catch (IOException e) {
-							System.err.println(e.getMessage());
-							break;
-						}
-						catch (Exception e) {
-							System.err.println("TUIO Server stopped!, restarting server.");
-						}
+						System.out.println(s);
+						tuioServer.waitFor();
 					}
-					System.out.println("Stopped trying to run exe.");
+					catch (IOException e) {
+						System.err.println(e.getMessage());
+					}
+					catch (Exception e) {
+						System.err.println("SMARTtoTUIO2.exe Server stopped!");
+					}
 				}
 			};
 			serverThread.start();
@@ -825,7 +816,7 @@ public class TouchClient {
 	/**
 	 * Runs an exe from a path, presumably for translating native events to tuio events
 	 */
-	public void runExe(final String path) {
+	public static void runExe(final String path) {
 		Thread serverThread = new Thread() {
 			@Override
 			public void run() {
