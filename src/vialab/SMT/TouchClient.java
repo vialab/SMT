@@ -151,8 +151,6 @@ public class TouchClient {
 	}
 
 	private TouchClient(PApplet parent, int port, TouchSource source) {
-		parent.setLayout(new BorderLayout());
-
 		// As of now the toolkit only supports OpenGL
 		if (!parent.g.isGL()) {
 			System.out
