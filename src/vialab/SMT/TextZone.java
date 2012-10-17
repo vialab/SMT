@@ -35,7 +35,7 @@ public class TextZone extends Zone {
 				rect(0, 0, width, height);
 			}
 			fill(0);
-			text(this.word, 0, 5, width, height);
+			text(this.word, 0, 0, width, height);
 		}
 
 	}
