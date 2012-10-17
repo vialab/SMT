@@ -25,13 +25,15 @@ public class TextZone extends Zone {
 		}
 
 		@Override
-		public void beginDraw() {
-			super.beginDraw();
+		public void drawImpl() {
 			fill(255);
 			if (selected) {
-				fill(255, 0, 0);
+				fill(0, 0, 255, 127);
 			}
-			rect(0, 0, width, height);
+			if(width>0){
+				noStroke();
+				rect(0, 0, width, height);
+			}
 			fill(0);
 			text(this.word, 0, 5, width, height);
 		}
@@ -42,7 +44,7 @@ public class TextZone extends Zone {
 
 	private WordZone currentWordZone;
 
-	private PFont font = applet.createFont("Arial", 16);
+	//private PFont font = applet.createFont("Arial", 16);
 
 	public TextZone(int x, int y, int width, int height) {
 		this(null, x, y, width, height, false);
@@ -66,18 +68,17 @@ public class TextZone extends Zone {
 	}
 
 	@Override
-	public void beginDraw() {
-		super.beginDraw();
+	public void drawImpl() {
 		fill(255);
 		rect(0, 0, width, height);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		textFont(font);
+		//textFont(font);
 		if (e.getKeyChar() == ' ') {
 			this.currentWordZone = new WordZone(currentWordZone.x
-					+ (int) textWidth(currentWordZone.word + e.getKeyChar()), currentWordZone.y, 1,
+					+ (int) textWidth(currentWordZone.word + e.getKeyChar()), currentWordZone.y, 0,
 					20);
 		}
 		else if (e.getKeyChar() == '\t') {

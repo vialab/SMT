@@ -16,7 +16,7 @@ public class ButtonZone extends Zone {
 
 	private int color = applet.color(200);
 
-	private int pressedColor = applet.color(255, 100, 100);
+	private int pressedColor = applet.color(150);
 
 	private int borderWeight = 1;
 
@@ -126,8 +126,7 @@ public class ButtonZone extends Zone {
 	}
 
 	@Override
-	public void beginDraw() {
-		super.beginDraw();
+	public void drawImpl() {
 		if (buttonDown) {
 			drawImpl(pressedColor, pressedTextColor);
 		}
@@ -170,6 +169,7 @@ public class ButtonZone extends Zone {
 	@Override
 	public void touchUp(Touch touch) {
 		if (isButtonDown()) {
+			pressImpl();
 			SMTUtilities.invoke(pressMethod, applet, this);
 		}
 
@@ -194,5 +194,6 @@ public class ButtonZone extends Zone {
 	public void setFontSize(int fontSize) {
 		this.fontSize = fontSize;
 	}
-
+	
+	protected void pressImpl(){}
 }

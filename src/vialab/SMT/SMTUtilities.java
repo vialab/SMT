@@ -89,7 +89,10 @@ public final class SMTUtilities {
 			Class<?> parameter, boolean warnMissing) {
 		Method method = getAnyPMethod(parent, methodPrefix, name, parameter);
 		if (method == null) {
-			if (warnMissing && !methodSet.contains(methodPrefix + name)) {
+			
+			//warn only if the flag is set, the methodSet doesn't contain it(to only warn once per method)
+			//and the methodPrefix+Impl method is not provided by the class itself
+			if (warnMissing && !methodSet.contains(methodPrefix + name) && !checkImpl(methodPrefix, parameter)) {
 				if(!warned){
 					System.err.println("\nCall TouchClient.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
 					warned=true;
@@ -104,6 +107,23 @@ public final class SMTUtilities {
 		methodSet.add(methodPrefix + name);
 		prefixSet.add(methodPrefix);
 		return method;
+	}
+
+	public static boolean checkImpl(String methodPrefix, Class<?> parameter) {
+		Method impl = null;
+		//only if class is not Zone
+		if(!parameter.equals(Zone.class)){
+			try{
+				//get the method if the class declared the prefix+Impl method, otherwise null
+				impl = parameter.getDeclaredMethod(methodPrefix+"Impl");
+			}catch(Exception e){}
+		}
+		if(impl==null){
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 
 	static void warnUncalledMethods(PApplet parent) {

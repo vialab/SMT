@@ -20,7 +20,7 @@ public class KeyboardZone extends Zone {
 		private static final long serialVersionUID = -3237916182106172342L;
 	};
 
-	private class KeyZone extends ButtonZone {
+	class KeyZone extends ButtonZone {
 		private Keys key;
 
 		public KeyZone(int x, int y, int width, int height, Keys key) {
@@ -29,8 +29,8 @@ public class KeyboardZone extends Zone {
 		}
 
 		@Override
-		public void draw() {
-			super.draw();
+		public void drawImpl() {
+			super.drawImpl();
 			// make sure modifiers have the correct setting as they act
 			// differently than normal keys and should be unset even without a
 			// touchUp event, although really just a hack, as touchUp should be
@@ -101,7 +101,7 @@ public class KeyboardZone extends Zone {
 
 		@Override
 		public void touchUp(Touch touch) {
-			if (isButtonDown()) {
+			if (!isButtonDown()) {
 				keyUp();
 			}
 			super.touchUp(touch);
@@ -315,8 +315,7 @@ public class KeyboardZone extends Zone {
 	}
 
 	@Override
-	public void beginDraw() {
-		super.beginDraw();
+	public void drawImpl() {
 		fill(0);
 		rect(0, 0, width, height);
 	}

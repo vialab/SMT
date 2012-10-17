@@ -31,8 +31,7 @@ public class TabZone extends Zone {
 		}
 
 		@Override
-		public void beginDraw() {
-			super.beginDraw();
+		public void drawImpl() {
 			if (!isButtonDown()) {
 				fill(255, 0, 0);
 				rect(0, 0, width, height);
@@ -200,8 +199,7 @@ public class TabZone extends Zone {
 	}
 
 	@Override
-	public void beginDraw() {
-		super.beginDraw();
+	public void drawImpl() {
 		fill(125);
 		rect(0, 0, width, height);
 	}

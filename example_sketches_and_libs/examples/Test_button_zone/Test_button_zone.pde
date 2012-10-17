@@ -15,7 +15,7 @@ void setup() {
   size(displayWidth, displayHeight, P3D);
   client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS,10);
-  Zone z = new ButtonZone("Button",400, 400, 100, 100);
+  Zone z = new CustomButtonZone();
   client.add(z);
 }
 
@@ -24,6 +24,11 @@ void draw() {
   text(frameRate+"fps, # of zones: "+client.getZones().length,width/2,10);
 }
 
-void pressButton(Zone zone){
-  print("ButtonPressed\n");
+class CustomButtonZone extends ButtonZone{
+  CustomButtonZone(){
+    super("CustomButton",400, 400, 100, 100); 
+  }
+  void pressImpl(){
+    print("ButtonPressed\n");
+  }
 }

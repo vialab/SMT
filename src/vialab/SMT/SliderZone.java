@@ -110,13 +110,6 @@ public class SliderZone extends Zone {
 		this.minorTickSpacing = minorTickSpacing;
 	}
 
-	@Override
-	public void beginDraw() {
-		super.beginDraw();
-		moveKnob();
-		drawImpl();
-	}
-
 	private void moveKnob() {
 		for (Touch t : getTouches()) {
 			// if(this.contains(t.x, t.y)){
@@ -130,7 +123,9 @@ public class SliderZone extends Zone {
 
 	}
 
-	private void drawImpl() {
+	@Override
+	protected void drawImpl() {
+		moveKnob();
 		fill(255);
 		rect(0, 0, width, height);
 
@@ -140,8 +135,8 @@ public class SliderZone extends Zone {
 				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
 		fill(0);
 		text(currentValue, width/2, 10);
-		text(minValue, 5, height - 5);
-		text(maxValue, width - 30, height - 5);
+		text(minValue, 10, height - 10);
+		text(maxValue, width - 20, height - 10);
 		fill(255);
 		// draw the ticks
 		for (int i = minValue; i <= maxValue; i++) {

@@ -28,12 +28,17 @@ class CheckerZone extends Zone{
      super(name, x, y, w, h); 
      this.c=c; 
    }
-   public void draw(){
-     super.beginDraw();
+   protected void drawImpl(){
      fill(c);
-     rect(0,0,width,height);
-     super.endDraw();
-     super.draw();
+     ellipse(50,50,100,100);
+   }
+   protected void touchImpl(){
+     if(name=="Checker"){
+       client.putZoneOnTop(this);
+       rst();
+     }else{
+       unassignAll(); 
+     }
    }
 }
 
@@ -54,8 +59,8 @@ void setup() {
   title.add(new ButtonZone("ExitButton",displayWidth/2-100,displayHeight/2+300,200,100,"Exit",20));
   board.add(new ButtonZone("ToTitleButton",board.width+100,200,200,100,"Back to Title display",20));
   options.add(new ButtonZone("ToTitleButton",displayWidth/2-100,displayHeight/2+200,200,100,"Back to Title display",20));
-  c1 = new CheckerZone("CheckerExample1",displayWidth/2-400, displayHeight/2-100, 100, 100,color(255,0,0));
-  c2 = new CheckerZone("CheckerExample2",displayWidth/2+300, displayHeight/2-100, 100, 100,color(255,255,255));
+  c1 = new CheckerZone("CheckerExample1",displayWidth/2-450, displayHeight/2-150, 100, 100,color(255,0,0));
+  c2 = new CheckerZone("CheckerExample2",displayWidth/2+250, displayHeight/2-150, 100, 100,color(255,255,255));
   options.add(c1);
   options.add(c2);
   options.add(new ButtonZone("ChangeC1",displayWidth/2-450,displayHeight/2,200,50,"Randomize Top\n Player Color",20));
@@ -81,7 +86,7 @@ void setup() {
   for(int i=0; i<PIECES_PER_PLAYER; i++){
     p1[i]=new CheckerZone("Checker",0, 0, 100, 100,color(255,0,0));
     board.add(p1[i]);
-    //p1[i].setDirect(true);
+    p1[i].setDirect(true);
   }
   for(int i=0; i<PIECES_PER_PLAYER; i++){
     p2[i]=new CheckerZone("Checker",0, 0, 100, 100,color(255,255,255));
@@ -112,12 +117,8 @@ void setup() {
   //client.warnUncalled();
 }
 
-void drawMyZone(){
-}
-
 void touchKeyboard(Zone zone){
   zone.rst();
-  print("touchUp");
 }
 
 void draw() {
@@ -149,7 +150,6 @@ void drawTitle(){
   textSize(16);
   text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,20);
   text("typed text: "+t,width/2,50);
-  client.drawPickBuffer(0,600,displayWidth/5,displayHeight/5);
 }
 
 void drawOptions(Zone zone){
@@ -157,20 +157,6 @@ void drawOptions(Zone zone){
   fill(255);
   textSize(100);
   text("Options",displayWidth/2-200,displayHeight/3);
-}
-
-void drawChecker(CheckerZone zone){
-  fill(zone.c);
-  ellipse(50,50,100,100);
-}
-
-void pickDrawChecker(CheckerZone zone){
-  ellipse(50,50,100,100);
-}
-
-void touchChecker(CheckerZone zone){
-  client.putZoneOnTop(zone);
-  zone.rst();
 }
 
 void drawCheckerExample1(CheckerZone zone){

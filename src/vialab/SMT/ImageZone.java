@@ -100,8 +100,7 @@ public class ImageZone extends Zone {
 	}
 
 	@Override
-	public void beginDraw() {
-		super.beginDraw();
+	public void drawImpl() {
 		image(img, 0, 0, this.width, this.height);
 	}
 

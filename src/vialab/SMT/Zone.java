@@ -36,6 +36,7 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PMatrix3D;
 import processing.core.PVector;
+import vialab.SMT.KeyboardZone.KeyZone;
 import TUIO.TuioTime;
 
 import java.awt.event.KeyEvent;
@@ -372,24 +373,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			super.beginDraw();
 			background(0, 0, 0, 0);
 		}
-		if (tempFill) {
-			pg.fill(tempFillColor);
-		}
-		else {
-			pg.noFill();
-		}
-		if (tempStroke) {
-			pg.stroke(tempStrokeColor);
-		}
-		else {
-			pg.noStroke();
-		}
-		if (tempTint) {
-			pg.tint(tempTintColor);
-		}
-		else {
-			pg.noTint();
-		}
 	}
 
 	@Override
@@ -440,6 +423,24 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			super.endDraw();
 		}else{
 			pg.popMatrix();
+		}
+		if (tempFill) {
+			pg.fill(tempFillColor);
+		}
+		else {
+			pg.noFill();
+		}
+		if (tempStroke) {
+			pg.stroke(tempStrokeColor);
+		}
+		else {
+			pg.noStroke();
+		}
+		if (tempTint) {
+			pg.tint(tempTintColor);
+		}
+		else {
+			pg.noTint();
 		}
 	}
 
@@ -901,10 +902,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				rect(0, 0, width, height);
 			}
 			else {
+				pickDrawImpl();
 				SMTUtilities.invoke(pickDrawMethod, applet, this);
 			}
 		}
 		else {
+			drawImpl();
 			SMTUtilities.invoke(drawMethod, applet, this);
 		}
 		if (drawChildren) {
@@ -920,11 +923,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			endDraw();
 		}
 		if (!direct) {
-			drawImpl(pg, drawChildren, picking);
+			drawIndirectImage(pg, drawChildren, picking);
 		}
 	}
 
-	protected void drawImpl(PGraphics img, boolean drawChildren,
+	protected void drawIndirectImage(PGraphics img, boolean drawChildren,
 			boolean picking) {
 		if (img != null) {
 			img.flush();
@@ -997,20 +1000,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void touch(boolean touchChildren) {
-		touchImpl(touchChildren, false);
+		touch(touchChildren, false);
 	}
 
-	protected void touchImpl(boolean touchChildren, boolean isChild) {
+	protected void touch(boolean touchChildren, boolean isChild) {
 		if (isActive()) {
 			PGraphics temp = applet.g;
 			applet.g = pg;
 
 			beginTouch();
+			touchImpl();
 			SMTUtilities.invoke(touchMethod, applet, this);
 			endTouch();
 
-			if (touchMethod == null && !(this instanceof ButtonZone)
-					&& !(this instanceof SliderZone)) {
+			if (touchMethod == null && !(this instanceof ButtonZone) && !(this instanceof KeyZone)
+					&& !(this instanceof SliderZone) && !SMTUtilities.checkImpl("touch", this.getClass())) {
 				unassignAll();
 			}
 
@@ -1026,7 +1030,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 					child.applyMatrix(matrix);
 					child.endTouch();
 
-					child.touchImpl(touchChildren, true);
+					child.touch(touchChildren, true);
 
 					child.backupMatrix = null;
 
@@ -1252,4 +1256,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	void touchMovedInvoker() {
 		SMTUtilities.invoke(touchMovedMethod, applet, this);
 	}
+	
+	protected void drawImpl(){}
+	
+	protected void touchImpl(){}
+	
+	protected void pickDrawImpl(){}
+	
 }

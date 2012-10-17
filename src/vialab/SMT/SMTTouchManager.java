@@ -22,7 +22,7 @@ public class SMTTouchManager {
 	 * For each touch ID, gives the object that that touch belongs to. This
 	 * object may be null.
 	 */
-	public Map<Long, Zone> idToTouched = Collections.synchronizedMap(new HashMap<Long, Zone>());
+	public Map<Touch, Zone> TouchToZone = Collections.synchronizedMap(new HashMap<Touch, Zone>());
 
 	/**
 	 * The number of touches for each object. The numbers in this map are at
@@ -78,7 +78,7 @@ public class SMTTouchManager {
 
 	public void reset() {
 		this.activeObjects.clear();
-		this.idToTouched.clear();
+		this.TouchToZone.clear();
 		this.touchesPerObject.clear();
 	}
 
@@ -132,9 +132,8 @@ public class SMTTouchManager {
 			// now either their is no zone it is mapped to or the zone mapped to
 			// doesn't have it active, so new touchDown to find where to assign
 			// it
-			if (idToTouched.get(touchPoint.getSessionID()) == null
-					|| !idToTouched.get(touchPoint.getSessionID()).activeTouches
-							.containsKey(touchPoint.getSessionID())) {
+			if (TouchToZone.get(touchPoint) == null
+					|| !TouchToZone.get(touchPoint).isAssigned(touchPoint.getSessionID())) {
 				// it's a new touch that just went down,
 				// or an old touch that just crossed an object
 				// or an old touch that was unassigned from an object
@@ -144,7 +143,7 @@ public class SMTTouchManager {
 				// allows picking to different zones with one touch by default,
 				// from causing touchDown being called every frame when the
 				// touch is down
-				if (picked != idToTouched.get(touchPoint.getSessionID())) {
+				if (picked != TouchToZone.get(touchPoint)) {
 					doTouchDown(picked, touchPoint);
 				}
 			}
@@ -156,18 +155,18 @@ public class SMTTouchManager {
 	 */
 	protected void handleTouchesUp() {
 		SMTUtilities.invoke(touchUp, applet);
-		ArrayList<Long> idsToRemove = new ArrayList<Long>();
-		for (Long id : idToTouched.keySet()) {
-			if (!currentTouchState.contains(id)) {
+		ArrayList<Touch> TouchToRemove = new ArrayList<Touch>();
+		for (Touch t: TouchToZone.keySet()) {
+			if (!currentTouchState.contains(t.sessionID)) {
 				// the touch existed, but no longer exists, so it went up
-				Zone zone = idToTouched.get(id);
-				idsToRemove.add(id);
-				doTouchUp(zone, zone.getTouchMap().get(id));
+				Zone zone = TouchToZone.get(t);
+				TouchToRemove.add(t);
+				doTouchUp(zone, t);
 			}
 		}
 
-		for (Long id : idsToRemove) {
-			idToTouched.remove(id);
+		for (Touch t : TouchToRemove) {
+			TouchToZone.remove(t);
 		}
 	}
 
@@ -178,7 +177,7 @@ public class SMTTouchManager {
 		SMTUtilities.invoke(touchMoved, applet);
 
 		// get the set of all objects currently touched
-		Set<Zone> touchables = new HashSet<Zone>(idToTouched.values());
+		Set<Zone> touchables = new HashSet<Zone>(TouchToZone.values());
 
 		// send each of these objects a touch moved event
 		for (Zone zone : touchables) {
@@ -195,7 +194,7 @@ public class SMTTouchManager {
 	 *            may be null
 	 */
 	private void doTouchDown(Zone zone, Touch touchPoint) {
-		idToTouched.put(touchPoint.getSessionID(), zone);
+		TouchToZone.put(touchPoint, zone);
 
 		if (zone != null) {
 			assignTouch(zone, touchPoint);
@@ -208,7 +207,7 @@ public class SMTTouchManager {
 	}
 
 	public void assignTouch(Zone zone, Touch touch) {
-		idToTouched.put(touch.getSessionID(), zone);
+		TouchToZone.put(touch, zone);
 		if (!touchesPerObject.containsKey(zone)) {
 			touchesPerObject.put(zone, 0);
 		}
@@ -254,7 +253,7 @@ public class SMTTouchManager {
 	private List<Touch> localTouchState(TouchState touchState, Zone zone) {
 		List<Touch> localState = new ArrayList<Touch>(touchState.size());
 		for (Touch touchPoint : touchState) {
-			if (idToTouched.get(touchPoint.getSessionID()) == zone) {
+			if (TouchToZone.get(touchPoint) == zone) {
 				localState.add(touchPoint);
 			}
 		}
