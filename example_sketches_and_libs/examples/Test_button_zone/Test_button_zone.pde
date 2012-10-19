@@ -10,18 +10,20 @@ import vialab.SMT.*;
 final boolean DRAW_TOUCH_POINTS=true;
 
 TouchClient client;
+ButtonZone z;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
   client = new TouchClient(this, TouchSource.MOUSE);
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS,10);
-  Zone z = new CustomButtonZone();
+  z = new CustomButtonZone();
   client.add(z);
 }
 
 void draw() {
   background(79, 129, 189);
   text(frameRate+"fps, # of zones: "+client.getZones().length,width/2,10);
+  text(""+z.isButtonDown(),200,200);
 }
 
 class CustomButtonZone extends ButtonZone{
