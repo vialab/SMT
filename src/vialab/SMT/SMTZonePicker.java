@@ -18,7 +18,7 @@ import javax.media.opengl.GL;
 
 public class SMTZonePicker {
 
-	private static boolean BIG_ENDIAN = ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN;
+	private static boolean BIG_ENDIAN = (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN);
 
 	private static int MAX_COLOR_VALUE = 0x00ffffff;
 
@@ -100,7 +100,7 @@ public class SMTZonePicker {
 
 		int pickColor = buffer.get(0);
 		
-		pgl.gl.getGL4bc().glDeleteBuffers(1,buffer);
+		pgl.gl.glDeleteBuffers(1,buffer);
 		
 		applet.g.endPGL();
 
