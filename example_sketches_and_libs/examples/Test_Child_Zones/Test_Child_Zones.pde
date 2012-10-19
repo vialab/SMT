@@ -70,7 +70,10 @@ void drawRemove(Zone z) {
 void touchClone(Zone z) {
   //Zone clone=z.getParent().clone();
   //client.add(clone);
-  client.add(new Zone("Child1", 10, 600, 100, 100));
+  Zone clone =new Zone("Child1", 10, 600, 100, 100);
+  //adding new indirect zones seems to cause massive slowdowns
+  clone.setDirect(true);
+  client.add(clone);
 }
 
 void drawClone(Zone z) {
