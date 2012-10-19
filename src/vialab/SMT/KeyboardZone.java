@@ -22,6 +22,7 @@ public class KeyboardZone extends Zone {
 
 	class KeyZone extends ButtonZone {
 		private Keys key;
+		private boolean keyDown;
 
 		public KeyZone(int x, int y, int width, int height, Keys key) {
 			super(x, y, width, height, key.text);
@@ -29,29 +30,15 @@ public class KeyboardZone extends Zone {
 		}
 
 		@Override
-		public void drawImpl() {
-			super.drawImpl();
-			// make sure modifiers have the correct setting as they act
-			// differently than normal keys and should be unset even without a
-			// touchUp event, although really just a hack, as touchUp should be
-			// generated whenever a touch is unassigned from a zone
-			if (isButtonDown()) {
-				modifierDown();
-			}
-			else {
-				modifierUp();
-			}
-		}
-
-		@Override
 		public void touchDown(Touch touch) {
-			if (!isButtonDown()) {
+			super.touchDown(touch);
+			if (!keyDown) {
 				keyDown();
 			}
-			super.touchDown(touch);
 		}
 
 		private void keyDown() {
+			keyDown=true;
 			char k = key.keyChar;
 			// if not undefined char and shift is on, set to upper case
 			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && (MODIFIERS >> 6) % 2 == 1) {
@@ -67,47 +54,20 @@ public class KeyboardZone extends Zone {
 				l.keyPressed(new KeyEvent(keyboardComponent, KeyEvent.KEY_PRESSED, System
 						.currentTimeMillis(), MODIFIERS, key.keyCode, k));
 			}
-
-			modifierDown();
 		}
 
-		private void modifierDown() {
-			switch (key.keyCode) {
-			case KeyEvent.VK_SHIFT:
-				if ((MODIFIERS >> 6) % 2 == 0) {
-					// add modifier only if not down already
-					MODIFIERS += KeyEvent.SHIFT_DOWN_MASK;
-
-				}
-				break;
-			case KeyEvent.VK_CONTROL:
-				if ((MODIFIERS >> 7) % 2 == 0) {
-					// add modifier only if not down already
-					MODIFIERS += KeyEvent.CTRL_DOWN_MASK;
-
-				}
-				break;
-			case KeyEvent.VK_ALT:
-				if ((MODIFIERS >> 8) % 2 == 0) {
-					// add modifier only if not down already
-					MODIFIERS += KeyEvent.ALT_DOWN_MASK;
-
-				}
-				break;
-			default:
-				break;
-			}
-		}
+		
 
 		@Override
 		public void touchUp(Touch touch) {
-			if (!isButtonDown()) {
+			super.touchUp(touch);
+			if (!isButtonDown()&&keyDown) {
 				keyUp();
 			}
-			super.touchUp(touch);
 		}
 
 		private void keyUp() {
+			keyDown=false;
 			char k = key.keyChar;
 			// if not undefined char and shift is on, set to upper case
 			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && (MODIFIERS >> 6) % 2 == 1) {
@@ -126,36 +86,6 @@ public class KeyboardZone extends Zone {
 					l.keyTyped(new KeyEvent(keyboardComponent, KeyEvent.KEY_TYPED, System
 							.currentTimeMillis(), MODIFIERS, KeyEvent.VK_UNDEFINED, k));
 				}
-			}
-
-			modifierUp();
-		}
-
-		private void modifierUp() {
-			switch (key.keyCode) {
-			case KeyEvent.VK_SHIFT:
-				if ((MODIFIERS >> 6) % 2 == 1) {
-					// remove modifier only if down already
-					MODIFIERS -= KeyEvent.SHIFT_DOWN_MASK;
-
-				}
-				break;
-			case KeyEvent.VK_CONTROL:
-				if ((MODIFIERS >> 7) % 2 == 1) {
-					// remove modifier only if down already
-					MODIFIERS -= KeyEvent.CTRL_DOWN_MASK;
-
-				}
-				break;
-			case KeyEvent.VK_ALT:
-				if ((MODIFIERS >> 8) % 2 == 1) {
-					// remove modifier only if down already
-					MODIFIERS -= KeyEvent.ALT_DOWN_MASK;
-
-				}
-				break;
-			default:
-				break;
 			}
 		}
 	}
@@ -227,9 +157,10 @@ public class KeyboardZone extends Zone {
 		Keys(char shiftKeyChar, char keyChar, int keyCode, boolean isModifier) {
 			this(shiftKeyChar, keyChar, keyCode, isModifier, 1.0f);
 		}
-		
+
 		Keys(char shiftKeyChar, char keyChar, int keyCode, boolean isModifier, float keyWidthRatio) {
-			this(shiftKeyChar, keyChar, keyCode, isModifier, shiftKeyChar + "\n" + keyChar, keyWidthRatio);
+			this(shiftKeyChar, keyChar, keyCode, isModifier, shiftKeyChar + "\n" + keyChar,
+					keyWidthRatio);
 		}
 
 		Keys(char shiftKeyChar, char keyChar, int keyCode, boolean isModifier, String text,
@@ -318,6 +249,55 @@ public class KeyboardZone extends Zone {
 	public void drawImpl() {
 		fill(0);
 		rect(0, 0, width, height);
+		
+		// make sure modifiers have the correct setting as they act
+		// differently than normal keys and should be unset even without a
+		// touchUp event, although really just a hack, as touchUp should be
+		// generated whenever a touch is unassigned from a zone
+		boolean shiftDown=false;
+		boolean altDown=false;
+		boolean ctrlDown=false;
+		boolean metaDown=false;
+		for(Zone k : this.children){
+			if(k instanceof KeyZone){
+				KeyZone key = (KeyZone) k;
+				if (key.isButtonDown()){
+					if(key.key.keyCode==KeyEvent.VK_SHIFT) {
+						shiftDown=true;
+					}else if(key.key.keyCode==KeyEvent.VK_CONTROL) {
+						ctrlDown=true;
+					}else if(key.key.keyCode==KeyEvent.VK_ALT) {
+						altDown=true;
+					}else if(key.key.keyCode==KeyEvent.VK_META) {
+						metaDown=true;
+					}
+				}
+			}
+		}
+		if(shiftDown){
+			modifierDown(KeyEvent.VK_SHIFT);
+		}
+		else {
+			modifierUp(KeyEvent.VK_SHIFT);
+		}
+		if(ctrlDown){
+			modifierDown(KeyEvent.VK_CONTROL);
+		}
+		else {
+			modifierUp(KeyEvent.VK_CONTROL);
+		}
+		if(altDown){
+			modifierDown(KeyEvent.VK_ALT);
+		}
+		else {
+			modifierUp(KeyEvent.VK_ALT);
+		}
+		if(metaDown){
+			modifierDown(KeyEvent.VK_META);
+		}
+		else {
+			modifierUp(KeyEvent.VK_META);
+		}
 	}
 
 	public void addKeyListener(KeyListener l) {
@@ -326,5 +306,57 @@ public class KeyboardZone extends Zone {
 
 	public void removeKeyListener(KeyListener l) {
 		this.keyListeners.remove(l);
+	}
+	
+	private void modifierDown(int keyCode) {
+		switch (keyCode) {
+		case KeyEvent.VK_SHIFT:
+			if ((MODIFIERS >> 6) % 2 == 0) {
+				// add modifier only if not down already
+				MODIFIERS += KeyEvent.SHIFT_DOWN_MASK;
+			}
+			break;
+		case KeyEvent.VK_CONTROL:
+			if ((MODIFIERS >> 7) % 2 == 0) {
+				// add modifier only if not down already
+				MODIFIERS += KeyEvent.CTRL_DOWN_MASK;
+			}
+			break;
+		case KeyEvent.VK_ALT:
+			if ((MODIFIERS >> 8) % 2 == 0) {
+				// add modifier only if not down already
+				MODIFIERS += KeyEvent.ALT_DOWN_MASK;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private void modifierUp(int keyCode) {
+		switch (keyCode) {
+		case KeyEvent.VK_SHIFT:
+			if ((MODIFIERS >> 6) % 2 == 1) {
+				// remove modifier only if down already
+				MODIFIERS -= KeyEvent.SHIFT_DOWN_MASK;
+			}
+			break;
+		case KeyEvent.VK_CONTROL:
+			if ((MODIFIERS >> 7) % 2 == 1) {
+				// remove modifier only if down already
+				MODIFIERS -= KeyEvent.CTRL_DOWN_MASK;
+
+			}
+			break;
+		case KeyEvent.VK_ALT:
+			if ((MODIFIERS >> 8) % 2 == 1) {
+				// remove modifier only if down already
+				MODIFIERS -= KeyEvent.ALT_DOWN_MASK;
+
+			}
+			break;
+		default:
+			break;
+		}
 	}
 }

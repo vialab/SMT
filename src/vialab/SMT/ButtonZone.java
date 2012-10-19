@@ -120,9 +120,8 @@ public class ButtonZone extends Zone {
 	}
 	
 	@Override
-	public void beginTouch(){
-		buttonDown= isButtonDown();
-		super.beginTouch();
+	public void touchImpl(){
+		setButtonDown();
 	}
 
 	@Override
@@ -133,19 +132,23 @@ public class ButtonZone extends Zone {
 		else {
 			drawImpl(color, textColor);
 		}
-		buttonDown=false;
+	}
+	
+	public boolean isButtonDown(){
+		return buttonDown;
 	}
 
-	public boolean isButtonDown() {
+	private boolean setButtonDown() {
+		buttonDown=false;
 		for (Touch t : getTouches()) {
 			Zone picked = client.picker.pick(t);
 			if (picked != null && picked.equals(this)) {
-				return true;
+				buttonDown=true;
+			}else{
+				unassign(t);
 			}
 		}
-		// if none of the touches assigned are on the button, remove all of them
-		unassignAll();
-		return false;
+		return buttonDown;
 	}
 
 	private void drawImpl(int buttonColor, int textColor) {
@@ -168,12 +171,19 @@ public class ButtonZone extends Zone {
 
 	@Override
 	public void touchUp(Touch touch) {
-		if (isButtonDown()) {
+		super.touchUp(touch);
+		setButtonDown();
+		
+		if (!isButtonDown()) {
 			pressImpl();
 			SMTUtilities.invoke(pressMethod, applet, this);
 		}
-
-		super.touchUp(touch);
+	}
+	
+	@Override
+	public void touchDown(Touch touch) {
+		super.touchDown(touch);
+		buttonDown=true;
 	}
 
 	@Override
