@@ -2,7 +2,7 @@ package vialab.SMT;
 
 import java.awt.event.KeyEvent;
 
-import processing.core.PFont;
+//import processing.core.PFont;
 
 public class TextZone extends Zone {
 
@@ -35,7 +35,7 @@ public class TextZone extends Zone {
 				rect(0, 0, width, height);
 			}
 			fill(0);
-			text(this.word, 0, 0, width, height);
+			text(this.word, 0, this.getParent().isDirect()?0:5, width+1, height);
 		}
 
 	}
@@ -70,6 +70,7 @@ public class TextZone extends Zone {
 	@Override
 	public void drawImpl() {
 		fill(255);
+		noStroke();
 		rect(0, 0, width, height);
 	}
 
@@ -96,16 +97,17 @@ public class TextZone extends Zone {
 		super.keyTyped(e);
 	}
 
-	public void keyEvent(KeyEvent event) {
-		switch (event.getID()) {
+	public void keyEvent(processing.event.KeyEvent event) {
+		KeyEvent nevent = (KeyEvent) event.getNative();
+		switch (nevent.getID()) {
 		case KeyEvent.KEY_RELEASED:
-			keyReleased(event);
+			keyReleased(nevent);
 			break;
 		case KeyEvent.KEY_TYPED:
-			keyTyped(event);
+			keyTyped(nevent);
 			break;
 		case KeyEvent.KEY_PRESSED:
-			keyPressed(event);
+			keyPressed(nevent);
 			break;
 		}
 	}
