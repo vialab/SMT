@@ -100,6 +100,8 @@ public class SMTZonePicker {
 
 		int pickColor = buffer.get(0);
 		
+		pgl.gl.getGL4bc().glDeleteBuffers(1,buffer);
+		
 		applet.g.endPGL();
 
 		pickColor = nativeToJavaARGB(pickColor);
