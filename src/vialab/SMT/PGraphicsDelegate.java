@@ -100,7 +100,7 @@ class PGraphicsDelegate {
 		pg.beginCamera();
 	}
 
-	public void beginDraw() {
+	protected void beginDraw() {
 		pg.beginDraw();
 	}
 
@@ -322,7 +322,7 @@ class PGraphicsDelegate {
 		pg.endCamera();
 	}
 
-	public void endDraw() {
+	protected void endDraw() {
 		pg.endDraw();
 	}
 

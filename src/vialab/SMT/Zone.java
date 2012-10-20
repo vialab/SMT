@@ -56,7 +56,6 @@ import java.awt.event.KeyListener;
  * @date Summer, 2011
  * @version 1.0
  */
-
 public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** Processing PApplet */
 	static PApplet applet;
@@ -137,6 +136,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * drawing into an image we have assured size(cant draw outside of zone),
 	 * and background() will work for just the zone, but we lose a large amount
 	 * of performance
+	 * @see setDirect
 	 */
 	private boolean direct = false;
 
@@ -158,7 +158,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Zone constructor
+	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are 1
 	 */
 	public Zone() {
 		this(null);
@@ -184,6 +184,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		this(name, x, y, width, height, defaultRenderer);
 	}
 
+	/**
+	 * @param name The name of the zone, used for the reflection methods (drawname(),touchname(),etc)
+	 * @param x The x position of the zone
+	 * @param y The y position of the zone
+	 * @param width of the zone
+	 * @param height of the zone
+	 * @param renderer The renderer that draws the zone
+	 */
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
 
@@ -212,6 +220,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		setName(name);
 	}
 
+	/**
+	 * @param name The new name of the zone
+	 */
 	public void setName(String name) {
 		if (name != null) {
 			loadMethods(name);
@@ -220,6 +231,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		this.name = name;
 	}
 
+	/**
+	 * @param name The name of the zone to load the methods from
+	 */
 	protected void loadMethods(String name) {
 		boolean warnDraw = true;
 		boolean warnTouch = true;
@@ -255,6 +269,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		loadMethods(name, warnDraw, warnTouch, warnKeys, warnPick, warnTouchUDM);
 	}
 
+	/**
+	 * @param name The name of the zone to load methods from, used as a suffix
+	 * @param warnDraw Display a warning when the draw method doesn't exist
+	 * @param warnTouch Display a warning when the touch method doesn't exist
+	 * @param warnKeys Display a warning when the keyTyped/keyPressed/keyReleased methods don't exist
+	 * @param warnPick Display a warning when the pickDraw method doesn't exist
+	 * @param warnTouchUDM Display a warning when the touchUp/touchDown/touchMoved methods don't exist
+	 */
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM) {
 		drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass(), warnDraw);
@@ -277,34 +299,58 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	}
 
+	/**
+	 * 
+	 */
 	public void init() {
 		pg = applet.createGraphics(width, height, defaultRenderer);
 	}
 
+	/**
+	 * @return The name of the zone
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @return A Collection<Touch> containing all touches that are active on the zone
+	 */
 	public Collection<Touch> getTouches() {
 		return Collections.unmodifiableCollection(activeTouches.values());
 	}
 
+	/**
+	 * @return A Set<Long> containing the long id's of the zone's touches
+	 */
 	public Set<Long> getIds() {
 		return Collections.unmodifiableSet(activeTouches.keySet());
 	}
 
+	/**
+	 * @return A Map<Long, Touch> which maps each touch id to the touch for the zones active touches
+	 */
 	public Map<Long, Touch> getTouchMap() {
 		return Collections.unmodifiableMap(activeTouches);
 	}
 
+	/**
+	 * @return The number of touches currently on the zone
+	 */
 	public int getNumTouches() {
 		return activeTouches.size();
 	}
 
+	/**
+	 * @return Whether the zone has touches currently on it
+	 */
 	public boolean isActive() {
 		return !activeTouches.isEmpty();
 	}
 
+	/**
+	 * @return Whether the zone or one of its children has touches currently on it
+	 */
 	public boolean isChildActive() {
 		if (isActive()) {
 			return true;
@@ -358,7 +404,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	@Override
-	public void beginDraw() {
+	protected void beginDraw() {
 		if (direct) {
 			if (getParent() == null) {
 				pg = applet.g;
@@ -376,7 +422,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	@Override
-	public void endDraw() {
+	protected void endDraw() {
 		if (!direct) {
 			super.endDraw();
 		}else{
@@ -384,7 +430,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	public void beginPickDraw() {
+	protected void beginPickDraw() {
 		if (direct) {
 			if (getParent() == null) {
 				pg = applet.g;
@@ -418,7 +464,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// pickInitialized = true;
 	}
 
-	public void endPickDraw() {
+	protected void endPickDraw() {
 		if (!direct) {
 			super.endDraw();
 		}else{
@@ -458,15 +504,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return pickColor;
 	}
 
-	public void setPickColor(int color) {
+	void setPickColor(int color) {
 		this.pickColor = color;
 		// pickInitialized = false;
 	}
 
-	public void removePickColor() {
+	void removePickColor() {
 		pickColor = -1;
 	}
 
+	/**
+	 * @param zone The zone to add to this zone
+	 * @return Whether the zone was successfully added or not
+	 */
 	public boolean add(Zone zone) {
 		// if the parent already is in the client zoneList, then add the child
 		if (TouchClient.zoneList.contains(this)) {
@@ -476,6 +526,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return children.add(zone);
 	}
 
+	/**
+	 * @param child The child of this zone to remove
+	 * @return Whether the zone was successfully removed or not
+	 */
 	public boolean remove(Zone child) {
 		// if the parent is in the client zoneList, then remove the child from
 		// the zoneList, but only if it is in children
@@ -488,6 +542,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return children.remove(child);
 	}
 
+	/**
+	 * This disconnects this zone from its children and vice versa
+	 */
 	public void clearZones() {
 		for (Zone zone : children) {
 			zone.parent = null;
@@ -687,6 +744,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public void rst() {
 		rst(true, true, true, true);
 	}
@@ -1045,6 +1105,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public void rnt() {
 		rnt(rntRadius);
 	}
