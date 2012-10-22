@@ -138,7 +138,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * of performance
 	 * @see setDirect
 	 */
-	private boolean direct = false;
+	private boolean direct = !false; //don't use indirect rendering yet by default, still has sampling issues
 
 	/**
 	 * @see direct
