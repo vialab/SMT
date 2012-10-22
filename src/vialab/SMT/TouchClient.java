@@ -101,6 +101,8 @@ public class TouchClient {
 
 	static Boolean warnUnimplemented;
 
+	public static String defaultRenderer;
+
 	/** TUIO adapter depending on which TouchSource is used */
 	AndroidToTUIO att = null;
 	MouseToTUIO mtt = null;
@@ -167,6 +169,8 @@ public class TouchClient {
 		picker = new SMTZonePicker();
 
 		TouchClient.client = this;
+		
+		defaultRenderer=parent.g.getClass().getName();
 
 		switch (source) {
 		case ANDROID:

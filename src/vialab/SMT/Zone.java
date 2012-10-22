@@ -124,9 +124,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	
 	protected String name = null;
 
-	private static String defaultRenderer = P3D;
-
-	protected String renderer = defaultRenderer;
+	protected String renderer = null;
 
 	protected static boolean grayscale = false;
 
@@ -165,7 +163,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public Zone(String name) {
-		this(name, defaultRenderer);
+		this(name, TouchClient.defaultRenderer);
 	}
 
 	public Zone(String name, String renderer) {
@@ -173,7 +171,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public Zone(int x, int y, int width, int height) {
-		this(x, y, width, height, defaultRenderer);
+		this(x, y, width, height, TouchClient.defaultRenderer);
 	}
 
 	public Zone(int x, int y, int width, int height, String renderer) {
@@ -181,7 +179,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public Zone(String name, int x, int y, int width, int height) {
-		this(name, x, y, width, height, defaultRenderer);
+		this(name, x, y, width, height, TouchClient.defaultRenderer);
 	}
 
 	/**
@@ -204,7 +202,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 
 		this.renderer = renderer;
-		Zone.defaultRenderer=applet.g.getClass().getName();
 
 		this.x = x;
 		this.y = y;
@@ -303,7 +300,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * 
 	 */
 	public void init() {
-		pg = applet.createGraphics(width, height, defaultRenderer);
+		pg = applet.createGraphics(width, height, renderer);
 	}
 
 	/**
