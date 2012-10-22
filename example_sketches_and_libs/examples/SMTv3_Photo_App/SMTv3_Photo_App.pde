@@ -16,7 +16,7 @@ Zone[] zone = new Zone[NUM_IMAGES];
 void setup() {
   size(displayWidth, displayHeight, P3D);
   
-  client = new TouchClient(this, TouchSource.SMART);
+  client = new TouchClient(this, TouchSource.MOUSE);
   
   for(int i=0; i<11; i++){  
     img[i] = loadImage(i + ".jpg");
