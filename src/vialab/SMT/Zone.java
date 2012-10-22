@@ -115,13 +115,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected Method keyReleasedMethod = null;
 
 	protected Method keyTypedMethod = null;
-	
+
 	protected Method touchUpMethod = null;
-	
+
 	protected Method touchDownMethod = null;
 
 	protected Method touchMovedMethod = null;
-	
+
 	protected String name = null;
 
 	protected String renderer = null;
@@ -133,13 +133,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
 	 * drawing into an image we have assured size(cant draw outside of zone),
 	 * and background() will work for just the zone, but we lose a large amount
-	 * of performance
-	 * @see setDirect
+	 * of performance.
 	 */
-	private boolean direct = !false; //don't use indirect rendering yet by default, still has sampling issues
+	private boolean direct = !false; // don't use indirect rendering yet by
+										// default, still has sampling issues
 
 	/**
-	 * @see direct
+	 * @see {@link Zone#direct}
 	 * @return whether zone is rendering directly onto screen/pickBuffer, or not
 	 */
 	public boolean isDirect() {
@@ -147,7 +147,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @see direct
+	 * @see {@link Zone#direct}
 	 * @param direct
 	 *            controls rendering directly onto screen/pickBuffer, or not
 	 */
@@ -156,7 +156,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are 1
+	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are
+	 * 1
 	 */
 	public Zone() {
 		this(null);
@@ -183,12 +184,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @param name The name of the zone, used for the reflection methods (drawname(),touchname(),etc)
-	 * @param x The x position of the zone
-	 * @param y The y position of the zone
-	 * @param width of the zone
-	 * @param height of the zone
-	 * @param renderer The renderer that draws the zone
+	 * @param name
+	 *            The name of the zone, used for the reflection methods
+	 *            (drawname(),touchname(),etc)
+	 * @param x
+	 *            The x position of the zone
+	 * @param y
+	 *            The y position of the zone
+	 * @param width
+	 *            of the zone
+	 * @param height
+	 *            of the zone
+	 * @param renderer
+	 *            The renderer that draws the zone
 	 */
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
@@ -218,7 +226,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @param name The new name of the zone
+	 * @param name
+	 *            The new name of the zone
 	 */
 	public void setName(String name) {
 		if (name != null) {
@@ -229,7 +238,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @param name The name of the zone to load the methods from
+	 * @param name
+	 *            The name of the zone to load the methods from
 	 */
 	protected void loadMethods(String name) {
 		boolean warnDraw = true;
@@ -267,12 +277,20 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @param name The name of the zone to load methods from, used as a suffix
-	 * @param warnDraw Display a warning when the draw method doesn't exist
-	 * @param warnTouch Display a warning when the touch method doesn't exist
-	 * @param warnKeys Display a warning when the keyTyped/keyPressed/keyReleased methods don't exist
-	 * @param warnPick Display a warning when the pickDraw method doesn't exist
-	 * @param warnTouchUDM Display a warning when the touchUp/touchDown/touchMoved methods don't exist
+	 * @param name
+	 *            The name of the zone to load methods from, used as a suffix
+	 * @param warnDraw
+	 *            Display a warning when the draw method doesn't exist
+	 * @param warnTouch
+	 *            Display a warning when the touch method doesn't exist
+	 * @param warnKeys
+	 *            Display a warning when the keyTyped/keyPressed/keyReleased
+	 *            methods don't exist
+	 * @param warnPick
+	 *            Display a warning when the pickDraw method doesn't exist
+	 * @param warnTouchUDM
+	 *            Display a warning when the touchUp/touchDown/touchMoved
+	 *            methods don't exist
 	 */
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM) {
@@ -288,11 +306,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				this.getClass(), warnKeys);
 		keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass(),
 				warnKeys);
-		touchUpMethod = SMTUtilities.getZoneMethod(applet, "touchUp", name, this.getClass(), warnTouchUDM);
+		touchUpMethod = SMTUtilities.getZoneMethod(applet, "touchUp", name, this.getClass(),
+				warnTouchUDM);
 
-		touchDownMethod = SMTUtilities.getZoneMethod(applet, "touchDown", name, this.getClass(), warnTouchUDM);
+		touchDownMethod = SMTUtilities.getZoneMethod(applet, "touchDown", name, this.getClass(),
+				warnTouchUDM);
 
-		touchMovedMethod = SMTUtilities.getZoneMethod(applet, "touchMoved", name, this.getClass(), warnTouchUDM);
+		touchMovedMethod = SMTUtilities.getZoneMethod(applet, "touchMoved", name, this.getClass(),
+				warnTouchUDM);
 
 	}
 
@@ -311,7 +332,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @return A Collection<Touch> containing all touches that are active on the zone
+	 * @return A Collection<Touch> containing all touches that are active on the
+	 *         zone
 	 */
 	public Collection<Touch> getTouches() {
 		return Collections.unmodifiableCollection(activeTouches.values());
@@ -325,7 +347,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @return A Map<Long, Touch> which maps each touch id to the touch for the zones active touches
+	 * @return A Map<Long, Touch> which maps each touch id to the touch for the
+	 *         zones active touches
 	 */
 	public Map<Long, Touch> getTouchMap() {
 		return Collections.unmodifiableMap(activeTouches);
@@ -346,7 +369,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @return Whether the zone or one of its children has touches currently on it
+	 * @return Whether the zone or one of its children has touches currently on
+	 *         it
 	 */
 	public boolean isChildActive() {
 		if (isActive()) {
@@ -422,7 +446,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void endDraw() {
 		if (!direct) {
 			super.endDraw();
-		}else{
+		}
+		else {
 			pg.popMatrix();
 		}
 	}
@@ -464,7 +489,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void endPickDraw() {
 		if (!direct) {
 			super.endDraw();
-		}else{
+		}
+		else {
 			pg.popMatrix();
 		}
 		if (tempFill) {
@@ -511,7 +537,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @param zone The zone to add to this zone
+	 * @param zone
+	 *            The zone to add to this zone
 	 * @return Whether the zone was successfully added or not
 	 */
 	public boolean add(Zone zone) {
@@ -524,7 +551,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @param child The child of this zone to remove
+	 * @param child
+	 *            The child of this zone to remove
 	 * @return Whether the zone was successfully removed or not
 	 */
 	public boolean remove(Zone child) {
@@ -675,12 +703,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Translates the zone, its group, and its children if it is set to
-	 * draggable, xDraggable or yDraggable
-	 * 
-	 * @param e
-	 *            DragEvent - The DragEvent which encapsulates the event's
-	 *            information
+	 * Translates the zone, its group, and its children 
 	 */
 	public void drag() {
 		drag(true, true);
@@ -742,12 +765,27 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
+	 * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
 	 * 
 	 */
 	public void rst() {
 		rst(true, true, true, true);
 	}
 
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param rotate
+	 *            true if rotation should happen
+	 * @param scale
+	 *            true if scale should happen
+	 * @param translate
+	 *            true if translation should happen
+	 */
 	public void rst(boolean rotate, boolean scale, boolean translate) {
 		rst(rotate, scale, translate, translate);
 	}
@@ -760,7 +798,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param rotate
 	 *            true if rotation should happen
 	 * @param scale
+	 *            true if scale should happen
 	 * @param translate
+	 *            true if translation should happen
 	 */
 	public void rst(boolean rotate, boolean scale, boolean translateX, boolean translateY) {
 		if (!activeTouches.isEmpty()) {
@@ -769,21 +809,72 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param from1
+	 * @param from2
+	 * @param to1
+	 * @param to2
+	 */
 	public void rst(Touch from1, Touch from2, Touch to1, Touch to2) {
 		rst(from1, from2, to1, to2, true, true, true);
 	}
 
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param from1
+	 * @param from2
+	 * @param to1
+	 * @param to2
+	 * @param rotate
+	 * @param scale
+	 * @param translate
+	 */
 	public void rst(Touch from1, Touch from2, Touch to1, Touch to2, boolean rotate, boolean scale,
 			boolean translate) {
 		rst(from1, from2, to1, to2, rotate, scale, translate, translate);
 	}
 
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param from1
+	 * @param from2
+	 * @param to1
+	 * @param to2
+	 * @param rotate
+	 * @param scale
+	 * @param translateX
+	 * @param translateY
+	 */
 	public void rst(Touch from1, Touch from2, Touch to1, Touch to2, boolean rotate, boolean scale,
 			boolean translateX, boolean translateY) {
 		rst(new TouchPair(from1, to1), new TouchPair(from2, to2), rotate, scale, translateX,
 				translateY);
 	}
 
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param first
+	 *            The first TouchPair
+	 * @param second
+	 *            The second TouchPair
+	 * @param rotate
+	 * @param scale
+	 * @param translateX
+	 * @param translateY
+	 */
 	public void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale,
 			boolean translateX, boolean translateY) {
 
@@ -851,36 +942,52 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		lastUpdate = maxTime(first, second);
 	}
 
+	/**
+	 * Rotates and scales the zone. Uses two touches. Only works inside the
+	 * zone's touch method, or between calls to beginTouch() and endTouch()
+	 */
 	public void rs() {
 		rst(true, true, false);
 	}
 
 	/**
-	 * Scales the zone if it is set to pinchable, xPinchable or yPinchable
-	 * 
-	 * @param e
-	 *            PinchEvent - The PinchEvent which encapsulates the event's
-	 *            information
+	 * Scales the zone. Uses two touches Only works inside the zone's touch
+	 * method, or between calls to beginTouch() and endTouch()
 	 */
 	public void pinch() {
 		rst(false, true, true);
 	}
 
+	/**
+	 * Scales the zone. Uses 4 Touch objects, specifiying the from and to for
+	 * two moving touchpoints
+	 * 
+	 * @param from1
+	 * @param from2
+	 * @param to1
+	 * @param to2
+	 */
 	public void pinch(Touch from1, Touch from2, Touch to1, Touch to2) {
 		rst(from1, from2, to1, to2, false, true, true);
 	}
 
 	/**
-	 * Rotates the zone if it is set to rotatable
-	 * 
-	 * @param e
-	 *            RotateEvent - The RotateEvent which encapsulates the event's
-	 *            information
+	 * Rotates the zone, using two touches, about the centre Only works inside
+	 * the zone's touch method, or between calls to beginTouch() and endTouch()
 	 */
 	public void rotate() {
 		rst(true, false, false);
 	}
 
+	/**
+	 * Rotates the zone. Uses 4 Touch objects, specifiying the from and to for
+	 * two moving touchpoints
+	 * 
+	 * @param from1
+	 * @param from2
+	 * @param to1
+	 * @param to2
+	 */
 	public void rotate(Touch from1, Touch from2, Touch to1, Touch to2) {
 		rst(from1, from2, to1, to2, true, false, false);
 	}
@@ -889,6 +996,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Rotates the zone around the specified x- & y-coordinates
 	 * 
 	 * @param angle
+	 *            The angle to rotate specified in radians
 	 * @param x
 	 * @param y
 	 */
@@ -902,6 +1010,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Rotates the zone around either the centre or corner
 	 * 
 	 * @param angle
+	 *            The angle to rotate specified in radians
 	 * @param mode
 	 *            CENTER or CORNER
 	 */
@@ -915,43 +1024,37 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Horizontal Swipe Event's default action is translating the zone in the
-	 * x-direction by half of the horizontal swipe's distance.
-	 * 
-	 * @param e
-	 *            HSwipeEvent - The Horizontal swipe event
+	 * Horizontal Swipe. Uses a single touch. Only works inside the zone's touch
+	 * method, or between calls to beginTouch() and endTouch()
 	 */
 	public void hSwipe() {
 		drag(true, false);
 	}
 
 	/**
-	 * Vertical Swipe Event's default action is translating the zone in the
-	 * y-direction by half of the vertical swipe's distance.
-	 * 
-	 * @param e
-	 *            VSwipeEvent - The Vertical swipe event
+	 * Vertical Swipe. Uses a single touch. Only works inside the zone's touch
+	 * method, or between calls to beginTouch() and endTouch()
 	 */
 	public void vSwipe() {
 		drag(false, true);
 	}
 
-	public void draw() {
+	void draw() {
 		draw(true, false);
 	}
 
-	public void drawForPickBuffer() {
+	void drawForPickBuffer() {
 		draw(true, true);
 	}
 
-	public void draw(boolean drawChildren, boolean picking) {
+	void draw(boolean drawChildren, boolean picking) {
 		if (picking) {
 			beginPickDraw();
 		}
 		else {
 			beginDraw();
 		}
-		PGraphics temp =  applet.g;
+		PGraphics temp = applet.g;
 		applet.g = pg;
 
 		if (picking) {
@@ -968,7 +1071,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			SMTUtilities.invoke(drawMethod, applet, this);
 		}
 		if (drawChildren) {
-			drawDirectChildren(pg,picking);
+			drawDirectChildren(pg, picking);
 		}
 
 		applet.g = temp;
@@ -984,8 +1087,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	protected void drawIndirectImage(PGraphics img, boolean drawChildren,
-			boolean picking) {
+	void drawIndirectImage(PGraphics img, boolean drawChildren, boolean picking) {
 		if (img != null) {
 			img.flush();
 			applet.g.pushMatrix();
@@ -1010,7 +1112,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	}
 
-	protected void drawDirectChildren(PGraphics pg, boolean picking) {
+	void drawDirectChildren(PGraphics pg, boolean picking) {
 		for (Zone child : children) {
 			if (child.direct) {
 				drawChild(child, pg, picking);
@@ -1018,7 +1120,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	protected void drawIndirectChildren(PGraphics g, boolean picking) {
+	void drawIndirectChildren(PGraphics g, boolean picking) {
 		for (Zone child : children) {
 			if (!child.direct) {
 				drawChild(child, g, picking);
@@ -1026,13 +1128,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	protected void drawChildren(PGraphics g, boolean picking) {
+	void drawChildren(PGraphics g, boolean picking) {
 		for (Zone child : children) {
 			drawChild(child, g, picking);
 		}
 	}
 
-	protected void drawChild(Zone child, PGraphics pg, boolean picking) {
+	void drawChild(Zone child, PGraphics pg, boolean picking) {
 		// only draw/pickDraw when the child is in zonelist (parent zone's are
 		// responsible for adding/removing child to/from zonelist)
 		if (TouchClient.zoneList.contains(child)) {
@@ -1040,6 +1142,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * Draws the rotation radius of the zone
+	 */
 	public void drawRntCircle() {
 		pushStyle();
 		pushMatrix();
@@ -1052,15 +1157,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		popStyle();
 	}
 
-	public void touch() {
+	void touch() {
 		touch(true);
 	}
 
-	public void touch(boolean touchChildren) {
+	void touch(boolean touchChildren) {
 		touch(touchChildren, false);
 	}
 
-	protected void touch(boolean touchChildren, boolean isChild) {
+	void touch(boolean touchChildren, boolean isChild) {
 		if (isActive()) {
 			PGraphics temp = applet.g;
 			applet.g = pg;
@@ -1071,7 +1176,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			endTouch();
 
 			if (touchMethod == null && !(this instanceof ButtonZone) && !(this instanceof KeyZone)
-					&& !(this instanceof SliderZone) && !SMTUtilities.checkImpl("touch", this.getClass())) {
+					&& !(this instanceof SliderZone)
+					&& !SMTUtilities.checkImpl("touch", this.getClass())) {
 				unassignAll();
 			}
 
@@ -1103,12 +1209,26 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * 
+	 * Rotate and translate.\n Single finger gesture, Which only translates
+	 * inside of the rotation radius, and rotates and translates outside of this
+	 * radius.\n Using a default radius of min(width, height)/4, A quarter of
+	 * the smallest side of the zone. Only works inside the zone's touch method,
+	 * or between calls to beginTouch() and endTouch().
 	 */
 	public void rnt() {
 		rnt(rntRadius);
 	}
 
+	/**
+	 * Rotate and translate. Single finger gesture, Which only translates inside
+	 * of the rotation radius, and rotates and translates outside of this
+	 * radius. Only works inside the zone's touch method, or between calls to
+	 * beginTouch() and endTouch()
+	 * 
+	 * @param centreRadius
+	 *            The rotation radius (how far out from centre before rotation
+	 *            is applied)
+	 */
 	public void rnt(float centreRadius) {
 		if (!activeTouches.isEmpty()) {
 			List<TouchPair> pairs = getTouchPairs(1);
@@ -1116,14 +1236,52 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * Rotate and translate. Single finger gesture, Which only translates inside
+	 * of the rotation radius, and rotates and translates outside of this
+	 * radius. Using a default radius of min(width, height)/4, A quarter of the
+	 * smallest side of the zone. Only works inside the zone's touch method, or
+	 * between calls to beginTouch() and endTouch()
+	 * 
+	 * @param from
+	 *            The Touch to translate from
+	 * @param to
+	 *            The Touch to translate to
+	 */
 	public void rnt(Touch from, Touch to) {
 		rnt(new TouchPair(from, to), rntRadius);
 	}
 
+	/**
+	 * Rotate and translate. Single finger gesture, Which only translates inside
+	 * of the rotation radius, and rotates and translates outside of this
+	 * radius. Only works inside the zone's touch method, or between calls to
+	 * beginTouch() and endTouch()
+	 * 
+	 * @param from
+	 *            The Touch to translate from
+	 * @param to
+	 *            The Touch to translate to
+	 * @param centreRadius
+	 *            The rotation radius (how far out from centre before rotation
+	 *            is applied)
+	 */
 	public void rnt(Touch from, Touch to, float centreRadius) {
 		rnt(new TouchPair(from, to), centreRadius);
 	}
 
+	/**
+	 * Rotate and translate. Single finger gesture, Which only translates inside
+	 * of the rotation radius, and rotates and translates outside of this
+	 * radius. Only works inside the zone's touch method, or between calls to
+	 * beginTouch() and endTouch()
+	 * 
+	 * @param pair
+	 *            A TouchPair to use for the from/to points
+	 * @param centreRadius
+	 *            The rotation radius (how far out from centre before rotation
+	 *            is applied)
+	 */
 	public void rnt(TouchPair pair, float centreRadius) {
 
 		if (pair.matches()) {
@@ -1159,6 +1317,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		lastUpdate = maxTime(pair);
 	}
 
+	/**
+	 * @return A PVector containing the centre point of the Zone
+	 */
 	public PVector getCentre() {
 		PVector centre = new PVector(width / 2, height / 2);
 		return matrix.mult(centre, new PVector());
@@ -1183,6 +1344,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return maxTime(touches);
 	}
 
+	/**
+	 * Gets a touch on the zone by index, 0 is first touch, 1 is second, etc
+	 * 
+	 * @param n
+	 *            Which touch to get
+	 * @return The Nth touch on the zone, or null if there is no such touch
+	 */
 	public Touch getActiveTouch(int n) {
 		int i = 0;
 		for (Touch t : activeTouches.values()) {
@@ -1210,15 +1378,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return pairs;
 	}
 
-	public void touchDown(Touch touch) {
+	void touchDown(Touch touch) {
 		assign(touch);
 	}
 
-	public void touchUp(Touch touch) {
+	void touchUp(Touch touch) {
 		unassign(touch);
 	}
 
-	public void touchesMoved(List<Touch> currentLocalState) {
+	void touchesMoved(List<Touch> currentLocalState) {
 		assign(currentLocalState);
 	}
 
@@ -1231,7 +1399,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Clones the zone and optionally any child zones
+	 * Clones the zone and optionally any child zones up to the specified
+	 * generation of children
 	 * 
 	 * @param cloneMaxChildGenereations
 	 *            - Max limit on how many generations of children to clone (0 -
@@ -1258,6 +1427,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return clone;
 	}
 
+	/**
+	 * This makes a PVector into one relative to the zone's matrix (not the
+	 * zone's parents, etc that modify what is drawn)
+	 * 
+	 * @param in
+	 *            The PVector to put into relative coordinate space
+	 * @return A PVector relative to the zone's coordinate space
+	 */
 	public PVector toZoneVector(PVector in) {
 		PMatrix3D temp = new PMatrix3D();
 		// list ancestors in order from most distant to closest, in order to
@@ -1281,6 +1458,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return out;
 	}
 
+	/**
+	 * Changes the ordering of the child zones, placing the given one on top
+	 * 
+	 * @param zone
+	 *            The child to place on top of the others
+	 */
 	public void putChildOnTop(Zone zone) {
 		// only remove and add if actually in the children arraylist and not
 		// already the last(top) already
@@ -1304,23 +1487,26 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void keyTyped(KeyEvent e) {
 		SMTUtilities.invoke(keyTypedMethod, applet, this, e);
 	}
-	
+
 	void touchUpInvoker() {
 		SMTUtilities.invoke(touchUpMethod, applet, this);
 	}
-	
+
 	void touchDownInvoker() {
 		SMTUtilities.invoke(touchDownMethod, applet, this);
 	}
-	
+
 	void touchMovedInvoker() {
 		SMTUtilities.invoke(touchMovedMethod, applet, this);
 	}
-	
-	protected void drawImpl(){}
-	
-	protected void touchImpl(){}
-	
-	protected void pickDrawImpl(){}
-	
+
+	protected void drawImpl() {
+	}
+
+	protected void touchImpl() {
+	}
+
+	protected void pickDrawImpl() {
+	}
+
 }
