@@ -93,6 +93,11 @@ public class SMTZonePicker {
 	public Zone pick(Touch t) {
 		PGL pgl = applet.g.beginPGL();
 		
+		if(pgl==null){
+			System.err.print("GL not available, picking failed");
+			return null;
+		}
+		
 		IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT).order(ByteOrder.nativeOrder())
 				.asIntBuffer();
 
