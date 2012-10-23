@@ -43,18 +43,22 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * This is the main zone class which RectZone and ImageZone extend. It holds the
- * zone's coordinates, size, matrices, friction, etc.. It was done with help
- * from the tuioZones library.
+ * This is the main zone class which all other Zones extend. It holds the zone's
+ * coordinates, size, matrices, etc.. It was done with help from the tuioZones
+ * library.
  * <P>
  * 
- * University of Ontario Institute of Technology. Summer Research Assistant with
- * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
+ * University of Ontario Institute of Technology. Erik Paluka, Summer Research
+ * Assistant (Summer 2011). Zach Cook, SurfNet Intern (2012-2013). With Dr.
+ * Christopher Collins collaborating with Dr. Mark Hancock.
  * <P>
  * 
  * @author Erik Paluka, Zach Cook
- * @date Summer, 2011
  * @version 1.0
+ */
+/**
+ * @author zach
+ *
  */
 public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** Processing PApplet */
@@ -139,7 +143,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 										// default, still has sampling issues
 
 	/**
-	 * @see {@link Zone#direct}
+	 * Check state of the direct flag.
+	 * <P>
+	 * The direct flag controls whether rendering directly onto
+	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
+	 * drawing into an image we have assured size(cant draw outside of zone),
+	 * and background() will work for just the zone, but we lose a large amount
+	 * of performance.
+	 * 
 	 * @return whether zone is rendering directly onto screen/pickBuffer, or not
 	 */
 	public boolean isDirect() {
@@ -147,7 +158,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @see {@link Zone#direct}
+	 * Change state of the direct flag.
+	 * <P>
+	 * The direct flag controls whether rendering directly onto
+	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
+	 * drawing into an image we have assured size(cant draw outside of zone),
+	 * and background() will work for just the zone, but we lose a large amount
+	 * of performance.
+	 * 
 	 * @param direct
 	 *            controls rendering directly onto screen/pickBuffer, or not
 	 */
@@ -163,22 +181,73 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		this(null);
 	}
 
+	/**
+	 * Zone constructor, with a name, (x,y) position is (0,0) , width and height
+	 * are 1
+	 * 
+	 * @param name
+	 *            Name of the zone, used in the draw, touch ,etc methods
+	 */
 	public Zone(String name) {
 		this(name, TouchClient.defaultRenderer);
 	}
 
+	/**
+	 * Zone constructor, with a name, (x,y) position is (0,0) , width and height
+	 * are 1
+	 * 
+	 * @param name
+	 *            Name of the zone, used in the draw, touch ,etc methods
+	 * @param renderer
+	 *            The PGraphics renderer that draws the Zone
+	 */
 	public Zone(String name, String renderer) {
 		this(name, 0, 0, 1, 1, renderer);
 	}
 
+	/**
+	 * @param x
+	 *            The x position of the zone
+	 * @param y
+	 *            The y position of the zone
+	 * @param width
+	 *            of the zone
+	 * @param height
+	 *            of the zone
+	 */
 	public Zone(int x, int y, int width, int height) {
 		this(x, y, width, height, TouchClient.defaultRenderer);
 	}
 
+	/**
+	 * @param x
+	 *            The x position of the zone
+	 * @param y
+	 *            The y position of the zone
+	 * @param width
+	 *            of the zone
+	 * @param height
+	 *            of the zone
+	 * @param renderer
+	 *            The renderer that draws the zone
+	 */
 	public Zone(int x, int y, int width, int height, String renderer) {
 		this(null, x, y, width, height, renderer);
 	}
 
+	/**
+	 * @param name
+	 *            The name of the zone, used for the reflection methods
+	 *            (drawname(),touchname(),etc)
+	 * @param x
+	 *            The x position of the zone
+	 * @param y
+	 *            The y position of the zone
+	 * @param width
+	 *            of the zone
+	 * @param height
+	 *            of the zone
+	 */
 	public Zone(String name, int x, int y, int width, int height) {
 		this(name, x, y, width, height, TouchClient.defaultRenderer);
 	}
@@ -318,9 +387,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * 
+	 * This function [re]creates the PGraphics for the zone, for advanced use
+	 * only, override when something needs to be done when the PGraphics is
+	 * recreated, ie. during a zone resize
 	 */
-	public void init() {
+	protected void init() {
 		pg = applet.createGraphics(width, height, renderer);
 	}
 
@@ -389,6 +460,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Assigns a touch to this zone, maintaining the order of touches.
 	 * 
 	 * @param touches
+	 *            A number of Touch objects, variable number of arguments
 	 */
 	public void assign(Touch... touches) {
 		for (Touch touch : touches) {
@@ -396,34 +468,68 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * Assigns a touch to this zone, maintaining the order of touches.
+	 * 
+	 * @param touches
+	 *            A number of Touch objects, in an Iterable object that contains
+	 *            Touch objects
+	 */
 	public void assign(Iterable<? extends Touch> touches) {
 		for (Touch touch : touches) {
 			activeTouches.put(touch.sessionID, touch);
 		}
 	}
 
+	/**
+	 * @param touch
+	 * @return Whether the given touch is assigned to this zone
+	 */
 	public boolean isAssigned(Touch touch) {
 		return isAssigned(touch.sessionID);
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return Whether the Touch corresponding to the given id is assigned to
+	 *         this zone
+	 */
 	public boolean isAssigned(long id) {
 		return activeTouches.containsKey(id);
 	}
 
+	/**
+	 * Unassigns the given Touch from this zone, removing it from activeTouches.
+	 * 
+	 * @param touch
+	 */
 	public void unassign(Touch touch) {
 		unassign(touch.sessionID);
 	}
 
+	/**
+	 * Unassigns all Touch objects from this zone, clearing activeTouches.
+	 */
 	public void unassignAll() {
 		activeTouches.clear();
 	}
 
+	/**
+	 * Unassigns the Touch corresponding to the sessionID given from this zone,
+	 * removing it from activeTouches.
+	 * 
+	 * @param sessionID
+	 */
 	public void unassign(long sessionID) {
 		if (activeTouches.containsKey(sessionID)) {
 			activeTouches.remove(sessionID);
 		}
 	}
 
+	/**
+	 * Override this if something needs to occur before any drawing commands
+	 */
 	@Override
 	protected void beginDraw() {
 		if (direct) {
@@ -442,6 +548,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * Override this if something needs to occur after drawing commands
+	 */
 	@Override
 	protected void endDraw() {
 		if (!direct) {
@@ -452,6 +561,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * Override this if something needs to occur before pickdrawing commands
+	 */
 	protected void beginPickDraw() {
 		if (direct) {
 			if (getParent() == null) {
@@ -486,6 +598,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// pickInitialized = true;
 	}
 
+	/**
+	 * Override this if something needs to occur after pickdrawing commands
+	 */
 	protected void endPickDraw() {
 		if (!direct) {
 			super.endDraw();
@@ -513,17 +628,36 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * Call this to before matrix operations on a zone to make them apply when
+	 * not in a touch method.
+	 * <P>
+	 * Needs a matching endTouch() call to be made afterwards, otherwise the
+	 * matrix stack will overflow with too many pushMatrix commands.
+	 * <P>
+	 * Override this if something needs to occur before touch commands
+	 */
 	public void beginTouch() {
 		pg.pushMatrix();
 		pg.setMatrix(new PMatrix3D());
 	}
 
+	/**
+	 * Call this to before matrix operations on a zone to make them apply when
+	 * not in a touch method.
+	 * <P>
+	 * Needs a matching beginTouch() call to be made beforehand, otherwise the
+	 * matrix stack will underflow with too many popMatrix commands.
+	 * <P>
+	 * Override this if something needs to occur after touch commands
+	 */
 	public void endTouch() {
 		matrix.preApply((PMatrix3D) pg.getMatrix());
 		pg.popMatrix();
 	}
 
-	public int getPickColor() {
+	
+	int getPickColor() {
 		return pickColor;
 	}
 
@@ -577,24 +711,37 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		children.clear();
 	}
 
+	/**
+	 * @param index
+	 * @return The child at the given index, or null if  the index is invalid
+	 */
 	public Zone getChild(int index) {
 		return children.get(index);
 	}
 
+	/**
+	 * @return The number of children of this zone
+	 */
 	public int getChildCount() {
 		return children.size();
 	}
 
+	/**
+	 * @return An array containing this zone's children
+	 */
 	public Zone[] getChildren() {
 		return Collections.unmodifiableList(children).toArray(new Zone[getChildCount()]);
 	}
 
+	/**
+	 * @return The zone that is the parent of this zone
+	 */
 	public Zone getParent() {
 		return parent;
 	}
 
 	/**
-	 * Reset the transformation matrix
+	 * Reset the transformation matrix of the zone
 	 */
 	@Override
 	public void resetMatrix() {
@@ -623,12 +770,23 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		resetMatrix();
 	}
 
+	
+	/**
+	 * Moves the zone to a given location with a reset matrix
+	 * @param x
+	 * @param y
+	 */
 	public void setLocation(int x, int y) {
 		this.x = x;
 		this.y = y;
 		resetMatrix();
 	}
 
+	/**
+	 * This recreates the zone's PGraphics with a new size
+	 * @param w The new width of the zone
+	 * @param h The new height of the zone
+	 */
 	@Override
 	public void setSize(int w, int h) {
 		this.width = w;
@@ -674,10 +832,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return this.height;
 	}
 
+	/**
+	 * @return The rotation radius of the zone, which is used by at least rnt() for now, controlling when rotation is done
+	 */
 	public float getRntRadius() {
 		return rntRadius;
 	}
 
+	/**
+	 * @param rntRadius The new rotation radius of the zone, which is used by at least rnt() for now, controlling when rotation is done
+	 */
 	public void setRntRadius(float rntRadius) {
 		this.rntRadius = rntRadius;
 	}
@@ -703,20 +867,18 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Translates the zone, its group, and its children 
+	 * Translates the zone, its group, and its children
 	 */
 	public void drag() {
 		drag(true, true);
 	}
 
 	/**
-	 * Performs translate on the current graphics context. This is equivalent to
-	 * a call to {@link Zone#rst(boolean, boolean, boolean)} with the parameters
-	 * false, false, true, but is probably faster. Should typically be called
+	 * Performs translate on the current graphics context. Should typically be called
 	 * inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
 	 * 
-	 * @param dragX
-	 * @param dragY
+	 * @param dragX Whether to drag along the x-axis
+	 * @param dragY Whether to drag along the y-axis
 	 */
 	public void drag(boolean dragX, boolean dragY) {
 		if (!activeTouches.isEmpty()) {
@@ -725,14 +887,37 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * Performs translate on the current graphics context. Should typically be called
+	 * inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param from The Touch to drag from
+	 * @param to The Touch to drag to
+	 */
 	public void drag(Touch from, Touch to) {
 		drag(from, to, true, true);
 	}
 
+	/**
+	 * Performs translate on the current graphics context. Should typically be called
+	 * inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param from The Touch to drag from
+	 * @param to The Touch to drag to
+	 * @param dragX Whether to drag along the x-axis
+	 * @param dragY Whether to drag along the y-axis
+	 */
 	public void drag(Touch from, Touch to, boolean dragX, boolean dragY) {
 		drag(new TouchPair(from, to), dragX, dragY);
 	}
 
+	/**
+	 * Performs translate on the current graphics context. Should typically be called
+	 * inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * @param pair The TouchPair to drag to/from
+	 * @param dragX Whether to drag along the x-axis
+	 * @param dragY Whether to drag along the y-axis
+	 */
 	public void drag(TouchPair pair, boolean dragX, boolean dragY) {
 		if (pair.matches()) {
 			lastUpdate = maxTime(pair);
@@ -750,10 +935,30 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		lastUpdate = maxTime(pair);
 	}
 
+	/**
+	 * * Performs translate on the current graphics context. Should typically be called
+	 * inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param fromX The x value to drag from
+	 * @param fromY The y value to drag from
+	 * @param toX The x value to drag to
+	 * @param toY The y value to drag to
+	 */
 	public void drag(int fromX, int fromY, int toX, int toY) {
 		drag(fromX, fromY, toX, toY, true, true);
 	}
 
+	/**
+	 * Performs translate on the current graphics context. Should typically be called
+	 * inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param fromX The x value to drag from
+	 * @param fromY The y value to drag from
+	 * @param toX The x value to drag to
+	 * @param toY The y value to drag to
+	 * @param dragX Whether to drag along the x-axis
+	 * @param dragY Whether to drag along the y-axis
+	 */
 	public void drag(int fromX, int fromY, int toX, int toY, boolean dragX, boolean dragY) {
 		if (dragX) {
 			translate(toX - fromX, 0);
@@ -799,8 +1004,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            true if rotation should happen
 	 * @param scale
 	 *            true if scale should happen
-	 * @param translate
-	 *            true if translation should happen
+	 * @param translateX
+	 *            true if x-translation should happen
+	 * @param translateY
+	 *            true if y-translation should happen
 	 */
 	public void rst(boolean rotate, boolean scale, boolean translateX, boolean translateY) {
 		if (!activeTouches.isEmpty()) {
@@ -1402,7 +1609,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Clones the zone and optionally any child zones up to the specified
 	 * generation of children
 	 * 
-	 * @param cloneMaxChildGenereations
+	 * @param cloneMaxChildGenerations
 	 *            - Max limit on how many generations of children to clone (0 -
 	 *            None, 1 - First Generation children, ... , Integer.MAX_VALUE -
 	 *            All generations of children)

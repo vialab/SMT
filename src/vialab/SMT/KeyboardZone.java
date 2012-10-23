@@ -240,7 +240,7 @@ public class KeyboardZone extends Zone {
 	}
 
 	@Override
-	public void init() {
+	protected void init() {
 		super.init();
 		client.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
 	}
