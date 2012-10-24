@@ -184,7 +184,7 @@ public final class SMTUtilities {
 	 * @param lastUpdate
 	 * @return TuioCursor
 	 */
-	public static Touch getLastTouch(TuioCursor c, TuioTime lastUpdate) {
+	public static Touch getLastTouchAtTime(TuioCursor c, TuioTime lastUpdate) {
 		Vector<TuioPoint> path = new Vector<TuioPoint>(c.getPath());
 
 		Collections.reverse(path);

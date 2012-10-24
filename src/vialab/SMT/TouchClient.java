@@ -56,13 +56,14 @@ import vialab.TUIOSource.*;
 import TUIO.*;
 
 /**
- * The TUIO Processing client.
+ * The TUIO/Touch Processing client.
  * 
  * University of Ontario Institute of Technology. Summer Research Assistant with
  * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
  * <P>
  * 
- * @author Erik Paluka, Zach Cook
+ * @author Erik Paluka
+ * @author Zach Cook
  * @version 1.0
  */
 public class TouchClient {
@@ -100,12 +101,19 @@ public class TouchClient {
 
 	static Boolean warnUnimplemented;
 
+	/**
+	 * The renderer to use as a default for zones, can be P3D, P2D, OPENGL, etc, upon TouchClient initialization this is set to the same as the PApplet's renderer
+	 */
 	public static String defaultRenderer;
 
 	/** TUIO adapter depending on which TouchSource is used */
 	AndroidToTUIO att = null;
 	MouseToTUIO mtt = null;
 
+	/**
+	 * This displays the methods that have not been called by the
+	 * Zones/TouchClient, useful for debugging that a method is being called
+	 */
 	public void warnUncalled() {
 		SMTUtilities.warnUncalledMethods(parent);
 	}
@@ -138,19 +146,45 @@ public class TouchClient {
 	 * @param parent
 	 *            PApplet - The Processing PApplet, usually just 'this' when
 	 *            using the Processing IDE
-	 * @param touchSource
-	 *            int - The source of touch events to listen to. One of:
-	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
-	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
+	 * @param port
+	 *            int - The port to listen on
 	 */
 	public TouchClient(PApplet parent, int port) {
 		this(parent, port, TouchSource.TUIO_DEVICE);
 	}
 
+	/**
+	 * Constructor. Allows you to select the TouchSource backend from which to
+	 * get multi-touch events from
+	 * 
+	 * @param parent
+	 *            PApplet - The Processing PApplet, usually just 'this' when
+	 *            using the Processing IDE
+	 * @param touchSource
+	 *            int - The source of touch events to listen to. One of:
+	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
+	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
+	 */
 	public TouchClient(PApplet parent, TouchSource source) {
 		this(parent, 3333, source);
 	}
 
+	/**
+	 * Constructor. Allows you to select the TouchSource backend from which to
+	 * get multi-touch events from
+	 * 
+	 * @param parent
+	 *            PApplet - The Processing PApplet, usually just 'this' when
+	 *            using the Processing IDE
+	 * 
+	 * @param port
+	 *            int - The port to listen on
+	 * 
+	 * @param source
+	 *            int - The source of touch events to listen to. One of:
+	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
+	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
+	 */
 	private TouchClient(PApplet parent, int port, TouchSource source) {
 		// As of now the toolkit only supports OpenGL
 		if (!parent.g.isGL()) {
@@ -329,6 +363,15 @@ public class TouchClient {
 		}
 	}
 
+	/**
+	 * This adds zones by creating them from XML specs, the XML needs "zone"
+	 * tags, and currently supports the following variables: name, x, y, width,
+	 * height, img
+	 * 
+	 * @param xmlFilename
+	 *            The XML file to read in for zone configuration
+	 * @return The array of zones created from the XML File
+	 */
 	public Zone[] add(String xmlFilename) {
 		List<Zone> zoneList = new ArrayList<Zone>();
 		try {
@@ -351,6 +394,17 @@ public class TouchClient {
 		return zoneList.toArray(new Zone[zoneList.size()]);
 	}
 
+	/**
+	 * This organizes the given zones into a grid configuration with the given
+	 * x, y, width, height, and spacing
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param xSpace
+	 * @param ySpace
+	 * @param zones
+	 */
 	public void grid(int x, int y, int width, int xSpace, int ySpace, Zone... zones) {
 		int currentX = x;
 		int currentY = y;
@@ -437,6 +491,15 @@ public class TouchClient {
 		add(node.getChildNodes(), zoneList);
 	}
 
+	/**
+	 * This removes the zone given from the TouchClient, meaning it will not be
+	 * drawn anymore or be assigned touches, but can be added back with a call
+	 * to add(zone);
+	 * 
+	 * @param zone
+	 *            The zone to remove
+	 * @return Whether the zone was removed
+	 */
 	public boolean remove(Zone zone) {
 		picker.remove(zone);
 		return removeFromZoneList(zone);
@@ -498,6 +561,9 @@ public class TouchClient {
 		return tuioClient.getTuioObjects();
 	}
 
+	/**
+	 * @return An array containing all touches that are currently NOT assigned to zones
+	 */
 	public Touch[] getUnassignedTouches() {
 		Map<Long, Touch> touches = getTouchMap();
 		for (Zone zone : zoneList) {
@@ -508,6 +574,9 @@ public class TouchClient {
 		return touches.values().toArray(new Touch[touches.size()]);
 	}
 
+	/**
+	 * @return An array containing all touches that are currently assigned to zones
+	 */
 	public Touch[] getAssignedTouches() {
 		List<Touch> touches = new ArrayList<Touch>();
 		for (Zone zone : zoneList) {
@@ -518,6 +587,10 @@ public class TouchClient {
 		return touches.toArray(new Touch[touches.size()]);
 	}
 
+	/**
+	 * @param zone The zone to assign touches to
+	 * @param touches The touches to assign to the zone, variable number of arguments
+	 */
 	public void assignTouches(Zone zone, Touch... touches) {
 		for (Touch touch : touches) {
 			manager.assignTouch(zone, touch);
@@ -533,6 +606,9 @@ public class TouchClient {
 		return getTouchMap().values();
 	}
 
+	/**
+	 * @return A Map<Long,Touch> indexing all touches by their session_id's
+	 */
 	public Map<Long, Touch> getTouchMap() {
 		return SMTTouchManager.currentTouchState.idToTouches;
 	}
@@ -555,6 +631,9 @@ public class TouchClient {
 	// return touches.toArray(new Touch[touches.size()]);
 	// }
 
+	/**
+	 * @return An array of all zones that currently have touches/are active.
+	 */
 	public Zone[] getActiveZones() {
 		ArrayList<Zone> zones = new ArrayList<Zone>();
 		for (Zone zone : zoneList) {
@@ -565,6 +644,10 @@ public class TouchClient {
 		return zones.toArray(new Zone[zones.size()]);
 	}
 
+	/**
+	 * @param zone The zone to get the touches of
+	 * @return A Collection<Touch> containing all touches from the given zone
+	 */
 	public Collection<Touch> getTouchesFromZone(Zone zone) {
 		return zone.getTouches();
 	}
@@ -591,6 +674,10 @@ public class TouchClient {
 		return SMTTouchManager.currentTouchState.getById(s_id);
 	}
 
+	/**
+	 * @param s_id The session_id of the Touch to get the path start of
+	 * @return A new Touch containing the state of the touch at path start
+	 */
 	public static Touch getPathStartTouch(long s_id) {
 		TuioCursor c = tuioClient.getTuioCursor(s_id);
 		Vector<TuioPoint> path = new Vector<TuioPoint>(c.getPath());
@@ -600,6 +687,20 @@ public class TouchClient {
 				start.getY());
 	}
 
+	/**
+	 * This creates a new Touch object from the last touch of a given Touch
+	 * object, the new Touch will not update.
+	 * <P>
+	 * It is easier to just create a new Touch with the given Touch object as
+	 * its parameter "new Touch(current)" where current is
+	 * the Touch we want the last touch of, so this is deprecated.
+	 * 
+	 * @param current
+	 *            The Touch to get the last touch from
+	 * @return A Touch containing the last touch, will not update, stays
+	 *         consistent
+	 * @deprecated
+	 */
 	public static Touch getLastTouch(Touch current) {
 		Vector<TuioPoint> path = current.path;
 		if (path.size() > 1) {

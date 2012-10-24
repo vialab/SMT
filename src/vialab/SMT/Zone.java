@@ -1539,7 +1539,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	private List<TouchPair> getTouchPairs() {
 		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(activeTouches.size());
 		for (Touch touch : activeTouches.values()) {
-			pairs.add(new TouchPair(SMTUtilities.getLastTouch(touch, lastUpdate), touch));
+			pairs.add(new TouchPair(SMTUtilities.getLastTouchAtTime(touch, lastUpdate), touch));
 		}
 		return pairs;
 	}
