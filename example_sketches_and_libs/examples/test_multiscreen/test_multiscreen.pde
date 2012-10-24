@@ -7,7 +7,6 @@
 import vialab.SMT.*;
 
 //set some configuration constants
-final boolean USE_MOUSE_TO_TUIO=true;
 final boolean DRAW_TOUCH_POINTS=true;
 final int PIECES_PER_PLAYER=12;
 String t="";

@@ -1,5 +1,6 @@
 package vialab.SMT;
 
+import processing.core.PFont;
 import processing.core.PVector;
 
 /**
@@ -8,6 +9,8 @@ import processing.core.PVector;
  * @author Zach
  */
 public class SliderZone extends Zone {
+	
+	private PFont font = applet.createFont("Arial", 16);
 
 	private int currentValue;
 
@@ -125,6 +128,7 @@ public class SliderZone extends Zone {
 
 	@Override
 	protected void drawImpl() {
+		textFont(font);
 		moveKnob();
 		fill(255);
 		rect(0, 0, width, height);
@@ -134,9 +138,9 @@ public class SliderZone extends Zone {
 		ellipse((((currentValue - minValue) / (float) maxValue) * width * (float) 8 / 10)
 				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
 		fill(0);
-		text(currentValue, width/2, 10);
-		text(minValue, 10, height - 10);
-		text(maxValue, width - 20, height - 10);
+		text(currentValue, width/2-10, 15);
+		text(minValue, 0, height);
+		text(maxValue, width - 30, height);
 		fill(255);
 		// draw the ticks
 		for (int i = minValue; i <= maxValue; i++) {

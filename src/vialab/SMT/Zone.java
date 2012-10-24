@@ -67,18 +67,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** TouchClient */
 	static TouchClient client;
 
-	private int tempFillColor;
-
-	private int tempStrokeColor;
-
-	private int tempTintColor;
-
-	private boolean tempFill;
-
-	private boolean tempStroke;
-
-	private boolean tempTint;
-
 	/** The zone's transformation matrix */
 	protected PMatrix3D matrix = new PMatrix3D();
 
@@ -139,7 +127,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * and background() will work for just the zone, but we lose a large amount
 	 * of performance.
 	 */
-	private boolean direct = !false; // don't use indirect rendering yet by
+	private boolean direct = false; // don't use indirect rendering yet by
 										// default, still has sampling issues
 
 	/**
@@ -546,6 +534,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			super.beginDraw();
 			background(0, 0, 0, 0);
 		}
+		pg.pushStyle();
 	}
 
 	/**
@@ -559,6 +548,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			pg.popMatrix();
 		}
+		pg.popStyle();
 	}
 
 	/**
@@ -578,12 +568,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			super.beginDraw();
 		}
-		tempFillColor = pg.fillColor;
-		tempStrokeColor = pg.strokeColor;
-		tempTintColor = pg.tintColor;
-		tempFill = pg.fill;
-		tempStroke = pg.stroke;
-		tempTint = pg.tint;
+		pg.pushStyle();
 
 		noLights();
 		noTint();
@@ -595,7 +580,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			fill(red(pickColor), green(pickColor), blue(pickColor));
 		}
-		// pickInitialized = true;
 	}
 
 	/**
@@ -608,24 +592,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			pg.popMatrix();
 		}
-		if (tempFill) {
-			pg.fill(tempFillColor);
-		}
-		else {
-			pg.noFill();
-		}
-		if (tempStroke) {
-			pg.stroke(tempStrokeColor);
-		}
-		else {
-			pg.noStroke();
-		}
-		if (tempTint) {
-			pg.tint(tempTintColor);
-		}
-		else {
-			pg.noTint();
-		}
+		pg.popStyle();
 	}
 
 	/**
