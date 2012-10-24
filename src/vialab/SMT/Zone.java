@@ -127,7 +127,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * and background() will work for just the zone, but we lose a large amount
 	 * of performance.
 	 */
-	private boolean direct = false; // don't use indirect rendering yet by
+	private boolean direct = !false; // don't use indirect rendering yet by
 										// default, still has sampling issues
 
 	/**
