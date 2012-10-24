@@ -63,7 +63,6 @@ import TUIO.*;
  * <P>
  * 
  * @author Erik Paluka, Zach Cook
- * @date Summer, 2011
  * @version 1.0
  */
 public class TouchClient {
@@ -133,16 +132,17 @@ public class TouchClient {
 	}
 
 	/**
-	 * Constructor. Allows you to set the port to connect to.
+	 * Constructor. Allows you to select the TouchSource backend from which to
+	 * get multi-touch events from
 	 * 
 	 * @param parent
-	 *            PApplet - The Processing PApplet
+	 *            PApplet - The Processing PApplet, usually just 'this' when
+	 *            using the Processing IDE
 	 * @param touchSource
 	 *            int - The source of touch events to listen to. One of:
-	 *            TOUCH_SOURCE_MOUSE, TOUCH_SOURCE_TUIO_DEVICE,
-	 *            TOUCH_SOURCE_ANDROID, TOUCH_SOURCE.
+	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
+	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-
 	public TouchClient(PApplet parent, int port) {
 		this(parent, port, TouchSource.TUIO_DEVICE);
 	}
@@ -169,8 +169,8 @@ public class TouchClient {
 		picker = new SMTZonePicker();
 
 		TouchClient.client = this;
-		
-		defaultRenderer=parent.g.getClass().getName();
+
+		defaultRenderer = parent.g.getClass().getName();
 
 		switch (source) {
 		case ANDROID:
@@ -564,7 +564,7 @@ public class TouchClient {
 		}
 		return zones.toArray(new Zone[zones.size()]);
 	}
-	
+
 	public Collection<Touch> getTouchesFromZone(Zone zone) {
 		return zone.getTouches();
 	}
@@ -653,10 +653,8 @@ public class TouchClient {
 	/**
 	 * Runs a server that sends TUIO events using Windows 7 Touch events
 	 * 
-	 * @param touch2TuioExePath
-	 *            String - the full name (including path) of the exe of
-	 *            Touch2Tuio
-	 * @see <a href='http://dm.tzi.de/touch2tuio/'>Touch2Tuio</a>
+	 * @param is64Bit
+	 *            Whether to use the 64-bit version of the exe
 	 */
 	private void runWinTouchTuioServer(boolean is64Bit) {
 		try {
@@ -815,7 +813,8 @@ public class TouchClient {
 	}
 
 	/**
-	 * Runs an exe from a path, presumably for translating native events to tuio events
+	 * Runs an exe from a path, presumably for translating native events to tuio
+	 * events
 	 */
 	public static void runExe(final String path) {
 		Thread serverThread = new Thread() {
@@ -841,6 +840,10 @@ public class TouchClient {
 		serverThread.start();
 	}
 
+	/**
+	 * @param zone
+	 *            The zone to place on top of the others
+	 */
 	public void putZoneOnTop(Zone zone) {
 		if (zoneList.indexOf(zone) < zoneList.size() - 1) {
 			if (zone.getParent() != null) {
