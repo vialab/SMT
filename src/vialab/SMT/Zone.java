@@ -1276,7 +1276,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				applet.g.applyMatrix(zone.matrix);
 			}
 			applet.g.applyMatrix(matrix);
-			applet.g.image(img, 0, 0);
+			applet.g.image(img.get(),0,0);
 			applet.g.popMatrix();
 
 			if (drawChildren) {
