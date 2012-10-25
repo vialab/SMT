@@ -179,13 +179,13 @@ public final class SMTUtilities {
 	/**
 	 * Returns the Touch(TuioCursor) associated with the session ID
 	 * 
-	 * @param s_id
-	 *            long - Session ID of the Touch(TuioCursor)
-	 * @param lastUpdate
+	 * @param cursor
+	 *            The Touch(TuioCursor) to get the last touch of befoer the specified lastUpdate time
+	 * @param lastUpdate TuioTime of the last update
 	 * @return TuioCursor
 	 */
-	public static Touch getLastTouchAtTime(TuioCursor c, TuioTime lastUpdate) {
-		Vector<TuioPoint> path = new Vector<TuioPoint>(c.getPath());
+	public static Touch getLastTouchAtTime(TuioCursor cursor, TuioTime lastUpdate) {
+		Vector<TuioPoint> path = new Vector<TuioPoint>(cursor.getPath());
 
 		Collections.reverse(path);
 		// path.remove(0); // this should be the current touch
@@ -197,7 +197,7 @@ public final class SMTUtilities {
 
 		for (TuioPoint tuioPoint : path) {
 			if (tuioTimeComparator.compare(tuioPoint.getTuioTime(), lastUpdate) <= 0) {
-				return new Touch(tuioPoint.getTuioTime(), c.getSessionID(), c.getCursorID(),
+				return new Touch(tuioPoint.getTuioTime(), cursor.getSessionID(), cursor.getCursorID(),
 						tuioPoint.getX(), tuioPoint.getY());
 			}
 		}

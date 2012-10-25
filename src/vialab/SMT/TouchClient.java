@@ -160,8 +160,8 @@ public class TouchClient {
 	 * @param parent
 	 *            PApplet - The Processing PApplet, usually just 'this' when
 	 *            using the Processing IDE
-	 * @param touchSource
-	 *            int - The source of touch events to listen to. One of:
+	 * @param source
+	 *            enum TouchSource - The source of touch events to listen to. One of:
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
@@ -344,8 +344,8 @@ public class TouchClient {
 	 * Adds a zone to the zone list. When a student creates a zone, they must
 	 * add it to this list.
 	 * 
-	 * @param zone
-	 *            Zone - The zone to add to the list.
+	 * @param zones
+	 *            Zone - The zones to add to the list.
 	 */
 	public void add(Zone... zones) {
 		for (Zone zone : zones) {

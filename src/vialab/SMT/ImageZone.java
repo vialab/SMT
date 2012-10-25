@@ -34,7 +34,6 @@ import processing.core.PImage;
  * <P>
  * 
  * @author Erik Paluka
- * @date Summer, 2011
  * @version 1.0
  */
 public class ImageZone extends Zone {
