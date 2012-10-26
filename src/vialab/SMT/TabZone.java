@@ -77,9 +77,9 @@ public class TabZone extends Zone {
 						(int) (h * 0.8));
 			}
 		}
-		
+
 		@Override
-		public void setName(String name){
+		public void setName(String name) {
 			super.setName(name, false);
 		}
 	}
@@ -145,9 +145,11 @@ public class TabZone extends Zone {
 	@Override
 	public boolean add(Zone zone) {
 		if (zone.name == null) {
-			return this.add(zone, "Tab"+(Tabs.size()+1), "Tab"+(Tabs.size()+1)+ ": " +zone.toString());
+			return this.add(zone, "Tab" + (Tabs.size() + 1), "Tab" + (Tabs.size() + 1) + ": "
+					+ zone.toString());
 		}
-		return this.add(zone, "Tab"+(Tabs.size()+1), "Tab"+(Tabs.size()+1)+ ": " +zone.name + "::" + zone.toString());
+		return this.add(zone, "Tab" + (Tabs.size() + 1), "Tab" + (Tabs.size() + 1) + ": "
+				+ zone.name + "::" + zone.toString());
 	}
 
 	public boolean add(Zone zone, String tabName, String tabText) {

@@ -102,7 +102,9 @@ public class TouchClient {
 	static Boolean warnUnimplemented;
 
 	/**
-	 * The renderer to use as a default for zones, can be P3D, P2D, OPENGL, etc, upon TouchClient initialization this is set to the same as the PApplet's renderer
+	 * The renderer to use as a default for zones, can be P3D, P2D, OPENGL, etc,
+	 * upon TouchClient initialization this is set to the same as the PApplet's
+	 * renderer
 	 */
 	public static String defaultRenderer;
 
@@ -161,8 +163,8 @@ public class TouchClient {
 	 *            PApplet - The Processing PApplet, usually just 'this' when
 	 *            using the Processing IDE
 	 * @param source
-	 *            enum TouchSource - The source of touch events to listen to. One of:
-	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
+	 *            enum TouchSource - The source of touch events to listen to.
+	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
 	public TouchClient(PApplet parent, TouchSource source) {
@@ -562,7 +564,8 @@ public class TouchClient {
 	}
 
 	/**
-	 * @return An array containing all touches that are currently NOT assigned to zones
+	 * @return An array containing all touches that are currently NOT assigned
+	 *         to zones
 	 */
 	public Touch[] getUnassignedTouches() {
 		Map<Long, Touch> touches = getTouchMap();
@@ -575,7 +578,8 @@ public class TouchClient {
 	}
 
 	/**
-	 * @return An array containing all touches that are currently assigned to zones
+	 * @return An array containing all touches that are currently assigned to
+	 *         zones
 	 */
 	public Touch[] getAssignedTouches() {
 		List<Touch> touches = new ArrayList<Touch>();
@@ -588,8 +592,11 @@ public class TouchClient {
 	}
 
 	/**
-	 * @param zone The zone to assign touches to
-	 * @param touches The touches to assign to the zone, variable number of arguments
+	 * @param zone
+	 *            The zone to assign touches to
+	 * @param touches
+	 *            The touches to assign to the zone, variable number of
+	 *            arguments
 	 */
 	public void assignTouches(Zone zone, Touch... touches) {
 		for (Touch touch : touches) {
@@ -645,7 +652,8 @@ public class TouchClient {
 	}
 
 	/**
-	 * @param zone The zone to get the touches of
+	 * @param zone
+	 *            The zone to get the touches of
 	 * @return A Collection<Touch> containing all touches from the given zone
 	 */
 	public Collection<Touch> getTouchesFromZone(Zone zone) {
@@ -675,7 +683,8 @@ public class TouchClient {
 	}
 
 	/**
-	 * @param s_id The session_id of the Touch to get the path start of
+	 * @param s_id
+	 *            The session_id of the Touch to get the path start of
 	 * @return A new Touch containing the state of the touch at path start
 	 */
 	public static Touch getPathStartTouch(long s_id) {
@@ -692,8 +701,8 @@ public class TouchClient {
 	 * object, the new Touch will not update.
 	 * <P>
 	 * It is easier to just create a new Touch with the given Touch object as
-	 * its parameter "new Touch(current)" where current is
-	 * the Touch we want the last touch of, so this is deprecated.
+	 * its parameter "new Touch(current)" where current is the Touch we want the
+	 * last touch of, so this is deprecated.
 	 * 
 	 * @param current
 	 *            The Touch to get the last touch from

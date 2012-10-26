@@ -16,9 +16,9 @@ import TUIO.TuioPoint;
 import TUIO.TuioTime;
 
 public final class SMTUtilities {
-	
+
 	private static boolean warned = false;
-	
+
 	private static class TuioTimeComparator implements Comparator<TuioTime> {
 		@Override
 		public int compare(TuioTime timeA, TuioTime timeB) {
@@ -89,18 +89,19 @@ public final class SMTUtilities {
 			Class<?> parameter, boolean warnMissing) {
 		Method method = getAnyPMethod(parent, methodPrefix, name, parameter);
 		if (method == null) {
-			
-			//warn only if the flag is set, the methodSet doesn't contain it(to only warn once per method)
-			//and the methodPrefix+Impl method is not provided by the class itself
-			if (warnMissing && !methodSet.contains(methodPrefix + name) && !checkImpl(methodPrefix, parameter)) {
-				if(!warned){
-					System.err.println("\nCall TouchClient.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
-					warned=true;
+
+			// warn only if the flag is set, the methodSet doesn't contain it(to
+			// only warn once per method)
+			// and the methodPrefix+Impl method is not provided by the class
+			// itself
+			if (warnMissing && !methodSet.contains(methodPrefix + name)
+					&& !checkImpl(methodPrefix, parameter)) {
+				if (!warned) {
+					System.err
+							.println("\nCall TouchClient.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
+					warned = true;
 				}
-				System.err
-				.println("No such method: "
-						+ methodPrefix
-						+ name);
+				System.err.println("No such method: " + methodPrefix + name);
 			}
 			method = getAnyPMethod(parent, methodPrefix, "Default", parameter);
 		}
@@ -110,25 +111,33 @@ public final class SMTUtilities {
 	}
 
 	/**
-	 * This checks whether a method that has the given methodPrefix exists in the parameter given with the assumed suffix of 'Impl'.
-	 * For example the prefix 'draw' would mean this method checks for the method drawImpl() existing in the given class.
-	 * @param methodPrefix The prefix to check for on methods in the given Class
-	 * @param parameter The Class to check for having a method with the given methodPrefix
+	 * This checks whether a method that has the given methodPrefix exists in
+	 * the parameter given with the assumed suffix of 'Impl'. For example the
+	 * prefix 'draw' would mean this method checks for the method drawImpl()
+	 * existing in the given class.
+	 * 
+	 * @param methodPrefix
+	 *            The prefix to check for on methods in the given Class
+	 * @param parameter
+	 *            The Class to check for having a method with the given
+	 *            methodPrefix
 	 * @return Whether the given class has a method with the given Prefix
 	 */
 	public static boolean checkImpl(String methodPrefix, Class<?> parameter) {
 		Method impl = null;
-		//only if class is not Zone
-		if(!parameter.equals(Zone.class)){
-			try{
-				//get the method if the class declared the prefix+Impl method, otherwise null
-				impl = parameter.getDeclaredMethod(methodPrefix+"Impl");
-			}catch(Exception e){}
+		// only if class is not Zone
+		if (!parameter.equals(Zone.class)) {
+			try {
+				// get the method if the class declared the prefix+Impl method,
+				// otherwise null
+				impl = parameter.getDeclaredMethod(methodPrefix + "Impl");
+			}
+			catch (Exception e) {}
 		}
-		if(impl==null){
+		if (impl == null) {
 			return false;
 		}
-		else{
+		else {
 			return true;
 		}
 	}
@@ -176,9 +185,13 @@ public final class SMTUtilities {
 				}
 				catch (IllegalAccessException e2) {}
 				catch (IllegalArgumentException e2) {}
-				catch (InvocationTargetException e2) {e2.printStackTrace();}
+				catch (InvocationTargetException e2) {
+					e2.printStackTrace();
+				}
 			}
-			catch (InvocationTargetException e) {e.printStackTrace();}
+			catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -187,8 +200,10 @@ public final class SMTUtilities {
 	 * Returns the Touch(TuioCursor) associated with the session ID
 	 * 
 	 * @param cursor
-	 *            The Touch(TuioCursor) to get the last touch of befoer the specified lastUpdate time
-	 * @param lastUpdate TuioTime of the last update
+	 *            The Touch(TuioCursor) to get the last touch of befoer the
+	 *            specified lastUpdate time
+	 * @param lastUpdate
+	 *            TuioTime of the last update
 	 * @return TuioCursor
 	 */
 	public static Touch getLastTouchAtTime(TuioCursor cursor, TuioTime lastUpdate) {
@@ -204,8 +219,8 @@ public final class SMTUtilities {
 
 		for (TuioPoint tuioPoint : path) {
 			if (tuioTimeComparator.compare(tuioPoint.getTuioTime(), lastUpdate) <= 0) {
-				return new Touch(tuioPoint.getTuioTime(), cursor.getSessionID(), cursor.getCursorID(),
-						tuioPoint.getX(), tuioPoint.getY());
+				return new Touch(tuioPoint.getTuioTime(), cursor.getSessionID(),
+						cursor.getCursorID(), tuioPoint.getX(), tuioPoint.getY());
 			}
 		}
 		return null;
@@ -213,7 +228,9 @@ public final class SMTUtilities {
 
 	/**
 	 * This calls the main method in the PApplet
-	 * @param args The args to call the main method with
+	 * 
+	 * @param args
+	 *            The args to call the main method with
 	 */
 	public static void start(String... args) {
 		PApplet.main(args);
@@ -265,7 +282,8 @@ public final class SMTUtilities {
 	 * parameters, but maintaining the aspect ratio of the image.
 	 * 
 	 * @param applet
-	 *            the PApplet to draw the image in, specifically the PApplet's graphics context g
+	 *            the PApplet to draw the image in, specifically the PApplet's
+	 *            graphics context g
 	 * @param image
 	 *            the image to draw
 	 * @param x

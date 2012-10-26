@@ -9,7 +9,7 @@ import processing.core.PVector;
  * @author Zach
  */
 public class SliderZone extends Zone {
-	
+
 	private PFont font = applet.createFont("Arial", 16);
 
 	private int currentValue;
@@ -138,7 +138,7 @@ public class SliderZone extends Zone {
 		ellipse((((currentValue - minValue) / (float) maxValue) * width * (float) 8 / 10)
 				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
 		fill(0);
-		text(currentValue, width/2-10, 15);
+		text(currentValue, width / 2 - 10, 15);
 		text(minValue, 0, height);
 		text(maxValue, width - 30, height);
 		fill(255);

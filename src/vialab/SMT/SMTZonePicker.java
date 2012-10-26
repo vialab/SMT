@@ -42,10 +42,10 @@ public class SMTZonePicker {
 	private SortedSet<Integer> activePickColors = new TreeSet<Integer>();
 
 	int SIZEOF_INT = Integer.SIZE / 8;
-	
+
 	public SMTZonePicker() {
 		this.applet = TouchClient.parent;
-		//image=new PImage(applet.width,applet.height);
+		// image=new PImage(applet.width,applet.height);
 		if (SMTZonePicker.MAX_COLOR_VALUE == 255) {
 			Zone.grayscale = true;
 		}
@@ -92,33 +92,34 @@ public class SMTZonePicker {
 
 	public Zone pick(Touch t) {
 		PGL pgl = applet.g.beginPGL();
-		
-		if(pgl==null){
+
+		if (pgl == null) {
 			System.err.print("GL not available, picking failed");
 			return null;
 		}
-		
-		IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT).order(ByteOrder.nativeOrder())
-				.asIntBuffer();
 
-		pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
+		IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT)
+				.order(ByteOrder.nativeOrder()).asIntBuffer();
+
+		pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE,
+				buffer);
 
 		int pickColor = buffer.get(0);
-		
-		pgl.gl.glDeleteBuffers(1,buffer);
-		
+
+		pgl.gl.glDeleteBuffers(1, buffer);
+
 		applet.g.endPGL();
 
 		pickColor = nativeToJavaARGB(pickColor);
-		
-		//System.out.println(pickColor);
+
+		// System.out.println(pickColor);
 
 		/*
 		 * //pixel color method that works when using GLGraphicsOffScreen, but
 		 * causes slowdown due to reading all pixels //int[] pixels = new
 		 * int[applet.width*applet.height];
-		 * //applet.g.getTexture().getBuffer(pixels); //was upsidedown with
-		 * some settings //int pickColor =
+		 * //applet.g.getTexture().getBuffer(pixels); //was upsidedown with some
+		 * settings //int pickColor =
 		 * pixels[(applet.height-screenY)*applet.width+screenX]; GLTexture
 		 * tex=applet.g.getTexture(); tex.loadPixels(); tex.updateTexture();
 		 * //applet.g.updatePixels(); int pickColor =
@@ -175,7 +176,7 @@ public class SMTZonePicker {
 			// zone does the matrix manipulation to place it self properly
 			zone.drawForPickBuffer();
 		}
-		//image=applet.g.get();
+		// image=applet.g.get();
 		applet.g.flush();
 	}
 

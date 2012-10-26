@@ -301,26 +301,36 @@ public class KeyboardZone extends Zone {
 			modifierUp(KeyEvent.VK_META);
 		}
 	}
-	
+
 	/**
 	 * This is a convenience method, which only adds Zone's as KeyListener
-	 * @param zone The Zone to add to this keyboard as a KeyListener
+	 * 
+	 * @param zone
+	 *            The Zone to add to this keyboard as a KeyListener
 	 */
-	public void addZoneKeyListener(Zone zone){
+	public void addZoneKeyListener(Zone zone) {
 		this.addKeyListener(zone);
 	}
 
 	/**
-	 * This adds a KeyListener to listen to this keyboard implementation. Since Zone implements the KeyListener interface, Zone can be passed to this method
-	 * @param listener The KeyListener to add to the keyboard, usually a Zone, which implements the KeyListener interface
+	 * This adds a KeyListener to listen to this keyboard implementation. Since
+	 * Zone implements the KeyListener interface, Zone can be passed to this
+	 * method
+	 * 
+	 * @param listener
+	 *            The KeyListener to add to the keyboard, usually a Zone, which
+	 *            implements the KeyListener interface
 	 */
 	public void addKeyListener(KeyListener listener) {
 		this.keyListeners.add(listener);
 	}
-	
+
 	/**
-	 * This is a convenience method, which only removes a Zone from being a KeyListener on this keyboard
-	 * @param zone The Zone to remove from being a KeyListener on this keyboard
+	 * This is a convenience method, which only removes a Zone from being a
+	 * KeyListener on this keyboard
+	 * 
+	 * @param zone
+	 *            The Zone to remove from being a KeyListener on this keyboard
 	 */
 	public void removeZoneKeyListener(Zone zone) {
 		this.removeKeyListener(zone);
@@ -328,7 +338,10 @@ public class KeyboardZone extends Zone {
 
 	/**
 	 * This removes a KeyListener from this keyboard
-	 * @param listener The KeyListener to remove from the keyboard, usually a Zone, which implements the KeyListener interface
+	 * 
+	 * @param listener
+	 *            The KeyListener to remove from the keyboard, usually a Zone,
+	 *            which implements the KeyListener interface
 	 */
 	public void removeKeyListener(KeyListener listener) {
 		this.keyListeners.remove(listener);

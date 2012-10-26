@@ -4,9 +4,10 @@ import java.lang.reflect.Method;
 
 import processing.core.PFont;
 
-
 /**
- * ButtonZone is a simple button, that when touched calls the press[ButtonName]() function
+ * ButtonZone is a simple button, that when touched calls the
+ * press[ButtonName](), or the pressImpl() function if ButtonZone is extended
+ * with an overriden pressImpl()
  */
 public class ButtonZone extends Zone {
 
@@ -33,7 +34,7 @@ public class ButtonZone extends Zone {
 	private float angle = 0;
 
 	private Method pressMethod;
-	
+
 	private boolean buttonDown = false;
 
 	public ButtonZone() {
@@ -122,9 +123,9 @@ public class ButtonZone extends Zone {
 		rotateAbout(angle, CENTER);
 		endTouch();
 	}
-	
+
 	@Override
-	public void touchImpl(){
+	public void touchImpl() {
 		setButtonDown();
 	}
 
@@ -137,18 +138,19 @@ public class ButtonZone extends Zone {
 			drawImpl(color, textColor);
 		}
 	}
-	
-	public boolean isButtonDown(){
+
+	public boolean isButtonDown() {
 		return buttonDown;
 	}
 
 	private boolean setButtonDown() {
-		buttonDown=false;
+		buttonDown = false;
 		for (Touch t : getTouches()) {
 			Zone picked = client.picker.pick(t);
 			if (picked != null && picked.equals(this)) {
-				buttonDown=true;
-			}else{
+				buttonDown = true;
+			}
+			else {
 				unassign(t);
 			}
 		}
@@ -177,27 +179,29 @@ public class ButtonZone extends Zone {
 	public void touchUp(Touch touch) {
 		super.touchUp(touch);
 		setButtonDown();
-		
+
 		if (!isButtonDown()) {
 			pressImpl();
 			SMTUtilities.invoke(pressMethod, applet, this);
 		}
 	}
-	
+
 	@Override
 	public void touchDown(Touch touch) {
 		super.touchDown(touch);
-		buttonDown=true;
+		buttonDown = true;
 	}
 
 	@Override
-	public void setName(String name){
+	public void setName(String name) {
 		this.setName(name, true);
 	}
+
 	public void setName(String name, boolean warnPress) {
 		super.setName(name);
 		if (name != null) {
-			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(), warnPress);
+			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(),
+					warnPress);
 		}
 	}
 
@@ -208,6 +212,7 @@ public class ButtonZone extends Zone {
 	public void setFontSize(int fontSize) {
 		this.fontSize = fontSize;
 	}
-	
-	protected void pressImpl(){}
+
+	protected void pressImpl() {
+	}
 }

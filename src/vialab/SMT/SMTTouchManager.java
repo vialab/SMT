@@ -43,8 +43,8 @@ public class SMTTouchManager {
 	// private Method addObject, removeObject, updateObject;
 
 	// private Method refresh;
-	
-	static TouchState currentTouchState= new TouchState();
+
+	static TouchState currentTouchState = new TouchState();
 
 	public SMTTouchManager(SMTTuioListener touchListener, SMTZonePicker picker) {
 		this.touchListener = touchListener;
@@ -156,7 +156,7 @@ public class SMTTouchManager {
 	protected void handleTouchesUp() {
 		SMTUtilities.invoke(touchUp, applet);
 		ArrayList<Touch> TouchToRemove = new ArrayList<Touch>();
-		for (Touch t: TouchToZone.keySet()) {
+		for (Touch t : TouchToZone.keySet()) {
 			if (!currentTouchState.contains(t.sessionID)) {
 				// the touch existed, but no longer exists, so it went up
 				Zone zone = TouchToZone.get(t);
@@ -232,7 +232,7 @@ public class SMTTouchManager {
 			if (touchesPerObject.get(zone) == 0) {
 				touchesPerObject.remove(zone);
 			}
-			
+
 			zone.touchUpInvoker();
 		}
 	}

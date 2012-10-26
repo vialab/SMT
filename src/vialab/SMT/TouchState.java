@@ -64,32 +64,33 @@ public class TouchState implements Iterable<Touch> {
 	public Iterator<Touch> iterator() {
 		return idToTouches.values().iterator();
 	}
-	
+
 	public void update(List<TuioCursor> currentTuioState) {
-		ArrayList<Touch> currentCursors= new ArrayList<Touch>();
-		for(TuioCursor t : currentTuioState){
+		ArrayList<Touch> currentCursors = new ArrayList<Touch>();
+		for (TuioCursor t : currentTuioState) {
 			Touch c;
-			if(!this.contains(t.getSessionID())){
-				//if no touch maps to it, create touch from it, add to map
+			if (!this.contains(t.getSessionID())) {
+				// if no touch maps to it, create touch from it, add to map
 				c = new Touch(t);
 				this.add(c);
-				c.isDown=true;
-			}else{
-				//otherwise find corresponding touch and update the touch
+				c.isDown = true;
+			}
+			else {
+				// otherwise find corresponding touch and update the touch
 				c = this.getById(t.getSessionID());
 				c.updateTouch(t);
 			}
 			currentCursors.add(c);
 		}
-		
-		//remove touches that correspond to removed cursors
+
+		// remove touches that correspond to removed cursors
 		Iterator<Touch> rmv = iterator();
-		while(rmv.hasNext()){
+		while (rmv.hasNext()) {
 			Touch t = rmv.next();
-			if(!currentCursors.contains(t)){
-				//the cursor was not updated, assume up and remove
+			if (!currentCursors.contains(t)) {
+				// the cursor was not updated, assume up and remove
 				rmv.remove();
-				t.isDown=false;
+				t.isDown = false;
 			}
 		}
 	}

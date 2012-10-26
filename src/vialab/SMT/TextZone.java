@@ -32,12 +32,12 @@ public class TextZone extends Zone {
 			if (selected) {
 				fill(0, 0, 255, 127);
 			}
-			if(width>0){
+			if (width > 0) {
 				noStroke();
 				rect(0, 0, width, height);
 			}
 			fill(0);
-			text(this.word, 0, this.getParent().isDirect()?0:5, width, height);
+			text(this.word, 0, this.getParent().isDirect() ? 0 : 5, width, height);
 		}
 
 	}
