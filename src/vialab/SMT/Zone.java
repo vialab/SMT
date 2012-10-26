@@ -56,10 +56,6 @@ import java.awt.event.KeyListener;
  * @author Erik Paluka, Zach Cook
  * @version 1.0
  */
-/**
- * @author zach
- *
- */
 public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** Processing PApplet */
 	static PApplet applet;

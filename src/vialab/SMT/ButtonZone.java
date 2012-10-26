@@ -4,6 +4,10 @@ import java.lang.reflect.Method;
 
 import processing.core.PFont;
 
+
+/**
+ * ButtonZone is a simple button, that when touched calls the press[ButtonName]() function
+ */
 public class ButtonZone extends Zone {
 
 	private int fontSize;

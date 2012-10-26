@@ -9,8 +9,9 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 /**
- * @author Zach
- * 
+ * KeyboardZone is an implementation of an on-screen keyboard, use this zones
+ * addKeyListener(Zone) method to add zones such as TextZone to listen to this
+ * keyboard
  */
 public class KeyboardZone extends Zone {
 
@@ -38,7 +39,7 @@ public class KeyboardZone extends Zone {
 		}
 
 		private void keyDown() {
-			keyDown=true;
+			keyDown = true;
 			char k = key.keyChar;
 			// if not undefined char and shift is on, set to upper case
 			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && (MODIFIERS >> 6) % 2 == 1) {
@@ -56,18 +57,16 @@ public class KeyboardZone extends Zone {
 			}
 		}
 
-		
-
 		@Override
 		public void touchUp(Touch touch) {
 			super.touchUp(touch);
-			if (!isButtonDown()&&keyDown) {
+			if (!isButtonDown() && keyDown) {
 				keyUp();
 			}
 		}
 
 		private void keyUp() {
-			keyDown=false;
+			keyDown = false;
 			char k = key.keyChar;
 			// if not undefined char and shift is on, set to upper case
 			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && (MODIFIERS >> 6) % 2 == 1) {
@@ -249,65 +248,92 @@ public class KeyboardZone extends Zone {
 	public void drawImpl() {
 		fill(0);
 		rect(0, 0, width, height);
-		
+
 		// make sure modifiers have the correct setting as they act
 		// differently than normal keys and should be unset even without a
 		// touchUp event, although really just a hack, as touchUp should be
 		// generated whenever a touch is unassigned from a zone
-		boolean shiftDown=false;
-		boolean altDown=false;
-		boolean ctrlDown=false;
-		boolean metaDown=false;
-		for(Zone k : this.children){
-			if(k instanceof KeyZone){
+		boolean shiftDown = false;
+		boolean altDown = false;
+		boolean ctrlDown = false;
+		boolean metaDown = false;
+		for (Zone k : this.children) {
+			if (k instanceof KeyZone) {
 				KeyZone key = (KeyZone) k;
-				if (key.isButtonDown()){
-					if(key.key.keyCode==KeyEvent.VK_SHIFT) {
-						shiftDown=true;
-					}else if(key.key.keyCode==KeyEvent.VK_CONTROL) {
-						ctrlDown=true;
-					}else if(key.key.keyCode==KeyEvent.VK_ALT) {
-						altDown=true;
-					}else if(key.key.keyCode==KeyEvent.VK_META) {
-						metaDown=true;
+				if (key.isButtonDown()) {
+					if (key.key.keyCode == KeyEvent.VK_SHIFT) {
+						shiftDown = true;
+					}
+					else if (key.key.keyCode == KeyEvent.VK_CONTROL) {
+						ctrlDown = true;
+					}
+					else if (key.key.keyCode == KeyEvent.VK_ALT) {
+						altDown = true;
+					}
+					else if (key.key.keyCode == KeyEvent.VK_META) {
+						metaDown = true;
 					}
 				}
 			}
 		}
-		if(shiftDown){
+		if (shiftDown) {
 			modifierDown(KeyEvent.VK_SHIFT);
 		}
 		else {
 			modifierUp(KeyEvent.VK_SHIFT);
 		}
-		if(ctrlDown){
+		if (ctrlDown) {
 			modifierDown(KeyEvent.VK_CONTROL);
 		}
 		else {
 			modifierUp(KeyEvent.VK_CONTROL);
 		}
-		if(altDown){
+		if (altDown) {
 			modifierDown(KeyEvent.VK_ALT);
 		}
 		else {
 			modifierUp(KeyEvent.VK_ALT);
 		}
-		if(metaDown){
+		if (metaDown) {
 			modifierDown(KeyEvent.VK_META);
 		}
 		else {
 			modifierUp(KeyEvent.VK_META);
 		}
 	}
-
-	public void addKeyListener(KeyListener l) {
-		this.keyListeners.add(l);
+	
+	/**
+	 * This is a convenience method, which only adds Zone's as KeyListener
+	 * @param zone The Zone to add to this keyboard as a KeyListener
+	 */
+	public void addZoneKeyListener(Zone zone){
+		this.addKeyListener(zone);
 	}
 
-	public void removeKeyListener(KeyListener l) {
-		this.keyListeners.remove(l);
+	/**
+	 * This adds a KeyListener to listen to this keyboard implementation. Since Zone implements the KeyListener interface, Zone can be passed to this method
+	 * @param listener The KeyListener to add to the keyboard, usually a Zone, which implements the KeyListener interface
+	 */
+	public void addKeyListener(KeyListener listener) {
+		this.keyListeners.add(listener);
 	}
 	
+	/**
+	 * This is a convenience method, which only removes a Zone from being a KeyListener on this keyboard
+	 * @param zone The Zone to remove from being a KeyListener on this keyboard
+	 */
+	public void removeZoneKeyListener(Zone zone) {
+		this.removeKeyListener(zone);
+	}
+
+	/**
+	 * This removes a KeyListener from this keyboard
+	 * @param listener The KeyListener to remove from the keyboard, usually a Zone, which implements the KeyListener interface
+	 */
+	public void removeKeyListener(KeyListener listener) {
+		this.keyListeners.remove(listener);
+	}
+
 	private void modifierDown(int keyCode) {
 		switch (keyCode) {
 		case KeyEvent.VK_SHIFT:
@@ -332,7 +358,7 @@ public class KeyboardZone extends Zone {
 			break;
 		}
 	}
-	
+
 	private void modifierUp(int keyCode) {
 		switch (keyCode) {
 		case KeyEvent.VK_SHIFT:
