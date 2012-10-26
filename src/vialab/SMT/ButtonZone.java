@@ -7,7 +7,7 @@ import processing.core.PFont;
 /**
  * ButtonZone is a simple button, that when touched calls the
  * press[ButtonName](), or the pressImpl() function if ButtonZone is extended
- * with an overriden pressImpl()
+ * with an overridden pressImpl()
  */
 public class ButtonZone extends Zone {
 
