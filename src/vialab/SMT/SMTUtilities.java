@@ -109,6 +109,13 @@ public final class SMTUtilities {
 		return method;
 	}
 
+	/**
+	 * This checks whether a method that has the given methodPrefix exists in the parameter given with the assumed suffix of 'Impl'.
+	 * For example the prefix 'draw' would mean this method checks for the method drawImpl() existing in the given class.
+	 * @param methodPrefix The prefix to check for on methods in the given Class
+	 * @param parameter The Class to check for having a method with the given methodPrefix
+	 * @return Whether the given class has a method with the given Prefix
+	 */
 	public static boolean checkImpl(String methodPrefix, Class<?> parameter) {
 		Method impl = null;
 		//only if class is not Zone
@@ -204,6 +211,10 @@ public final class SMTUtilities {
 		return null;
 	}
 
+	/**
+	 * This calls the main method in the PApplet
+	 * @param args The args to call the main method with
+	 */
 	public static void start(String... args) {
 		PApplet.main(args);
 	}
@@ -249,11 +260,24 @@ public final class SMTUtilities {
 		g.image(image, bgX, bgY, bgWidth, bgHeight);
 	}
 
+	/**
+	 * This method draws the image at (x,y) within the specified width/height
+	 * parameters, but maintaining the aspect ratio of the image.
+	 * 
+	 * @param applet
+	 *            the PApplet to draw the image in, specifically the PApplet's graphics context g
+	 * @param image
+	 *            the image to draw
+	 * @param x
+	 *            the x-coordinate of the position to draw it at
+	 * @param y
+	 *            the y-coordinate of the position to draw it at
+	 * @param width
+	 *            the width to draw the image within
+	 * @param height
+	 *            the height to draw the image within
+	 */
 	public static void aspectImage(PApplet applet, PImage image, int x, int y, int width, int height) {
 		aspectImage(applet.g, image, x, y, width, height);
 	}
-
-	// public static Rectangle fit(Rectangle outer, Rectangle inner) {
-	//
-	// }
 }
