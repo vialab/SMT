@@ -35,12 +35,25 @@ public class Touch extends TuioCursor {
 	/** The motion acceleration value. */
 	public float motionAcceleration;
 
-	public TuioTime startTime, currentTime;
+	/**
+	 * The start time of the TuioCursor/Touch
+	 */
+	public TuioTime startTime;
+	
+	/**
+	 * The current time of the TuioCursor/Touch
+	 */
+	public TuioTime currentTime;
 	/**
 	 * A Vector of TuioPoints containing all the previous positions of the TUIO
 	 * component.
 	 */
 	public Vector<TuioPoint> path;
+	
+	
+	/**
+	 * True means the touch is currently down on the screen, false means that the touch has been lifted up.
+	 */
 	public boolean isDown;
 
 	/**
@@ -140,6 +153,9 @@ public class Touch extends TuioCursor {
 		return super.getScreenY(height);
 	}
 
+	/**
+	 * @return The TuioPoint containing the last point of the Touch
+	 */
 	public TuioPoint getLastPoint() {
 		Vector<TuioPoint> path = getPath();
 		if (path.size() <= 1) {
@@ -149,6 +165,9 @@ public class Touch extends TuioCursor {
 		return path.get(path.size() - 2);
 	}
 	
+	/**
+	 * @param t TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
+	 */
 	public void updateTouch(TuioCursor t){
 		cursorId = t.getCursorID();
 		x = t.getScreenX(applet.width);
