@@ -11,7 +11,7 @@ import java.util.Set;
 
 import processing.core.PApplet;
 
-public class SMTTouchManager {
+class SMTTouchManager {
 	private PApplet applet;
 
 	private SMTTuioListener touchListener;

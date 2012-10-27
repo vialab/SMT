@@ -16,7 +16,7 @@ import java.nio.IntBuffer;
 
 import javax.media.opengl.GL;
 
-public class SMTZonePicker {
+class SMTZonePicker {
 
 	private static boolean BIG_ENDIAN = (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN);
 

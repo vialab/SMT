@@ -7,7 +7,7 @@ import java.util.List;
 
 import TUIO.TuioCursor;
 
-public class TouchState implements Iterable<Touch> {
+class TouchState implements Iterable<Touch> {
 	LinkedHashMap<Long, Touch> idToTouches = new LinkedHashMap<Long, Touch>();
 
 	public TouchState() {
