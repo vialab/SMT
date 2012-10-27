@@ -10,7 +10,11 @@ import processing.core.PMatrix3D;
 import processing.core.PShape;
 import processing.core.PStyle;
 
-class PGraphicsDelegate {
+/**
+ * PGraphicsDelegate wraps the Rrocessing functions for use by Zone.
+ * @see <a href="http://processing.org/reference">Processing Documentation</a>
+ */
+public abstract class PGraphicsDelegate {
 	protected PGraphics pg;
 
 	// PGraphicsDelegate(PGraphics g) {
