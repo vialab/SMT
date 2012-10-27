@@ -94,7 +94,6 @@ public final class SMTUtilities {
 	 * @param zone The Zone whose name is used as the method suffix
 	 * @param warnMissing If True show a warning when the method does not exist for the given Zone
 	 * @return A Method, which can be called by invoke(Method, Zone)
-	 * @see {@link SMTUtilities#invoke(Method, Zone)}
 	 */
 	public static Method getZoneMethod(String methodPrefix, Zone zone, boolean warnMissing){
 		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, zone.getClass(), warnMissing);
@@ -191,7 +190,6 @@ public final class SMTUtilities {
 	 * @param method The method to invoke, usually from getZoneMethod(String, Zone, boolean)
 	 * @param zone The zone to invoke the method of
 	 * @return The return of the method that was invoked
-	 * @see {@link SMTUtilities#getZoneMethod(String, Zone, boolean)}
 	 */
 	public static Object invoke(Method method, Zone zone){
 		return SMTUtilities.invoke(method, Zone.applet, zone);
