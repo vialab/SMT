@@ -15,6 +15,9 @@ import TUIO.TuioCursor;
 import TUIO.TuioPoint;
 import TUIO.TuioTime;
 
+/**
+ * SMTUtilities has some methods that are useful throughout SMT, and in extending classes
+ */
 public final class SMTUtilities {
 
 	private static boolean warned = false;
@@ -83,6 +86,18 @@ public final class SMTUtilities {
 			method = getAnyPMethod(parent, methodPrefix, methodSuffix, superClass);
 		}
 		return method;
+	}
+	
+	/**
+	 * Use this method when creating Classes extending Zone, to acquires a Method which can be called by invoke(Method, Zone)
+	 * @param methodPrefix The prefix to look for on a method
+	 * @param zone The Zone whose name is used as the method suffix
+	 * @param warnMissing If True show a warning when the method does not exist for the given Zone
+	 * @return A Method, which can be called by invoke(Method, Zone)
+	 * @see {@link SMTUtilities#invoke(Method, Zone)}
+	 */
+	public static Method getZoneMethod(String methodPrefix, Zone zone, boolean warnMissing){
+		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, zone.getClass(), warnMissing);
 	}
 
 	static Method getZoneMethod(PApplet parent, String methodPrefix, String name,
@@ -169,6 +184,17 @@ public final class SMTUtilities {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Invokes the given method of the given Zone
+	 * @param method The method to invoke, usually from getZoneMethod(String, Zone, boolean)
+	 * @param zone The zone to invoke the method of
+	 * @return The return of the method that was invoked
+	 * @see {@link SMTUtilities#getZoneMethod(String, Zone, boolean)}
+	 */
+	public static Object invoke(Method method, Zone zone){
+		return SMTUtilities.invoke(method, Zone.applet, zone);
 	}
 
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
