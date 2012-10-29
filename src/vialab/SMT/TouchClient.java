@@ -56,7 +56,9 @@ import vialab.TUIOSource.*;
 import TUIO.*;
 
 /**
- * The TUIO/Touch Processing client.
+ * The Core SMT class, it provides the TUIO/Touch Processing client
+ * implementation, Specifies the back-end source of Touches via TouchSource, and
+ * SMT cannot be used without it.
  * 
  * University of Ontario Institute of Technology. Summer Research Assistant with
  * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
