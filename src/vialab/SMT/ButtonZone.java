@@ -139,6 +139,9 @@ public class ButtonZone extends Zone {
 		}
 	}
 
+	/**
+	 * @return Whether the button is currently pushed down
+	 */
 	public boolean isButtonDown() {
 		return buttonDown;
 	}
@@ -146,7 +149,7 @@ public class ButtonZone extends Zone {
 	private boolean setButtonDown() {
 		buttonDown = false;
 		for (Touch t : getTouches()) {
-			Zone picked = client.picker.pick(t);
+			Zone picked = TouchClient.picker.pick(t);
 			if (picked != null && picked.equals(this)) {
 				buttonDown = true;
 			}
@@ -194,14 +197,19 @@ public class ButtonZone extends Zone {
 
 	@Override
 	public void setName(String name) {
-		this.setName(name, true);
+		setName(name,true);
 	}
-
-	public void setName(String name, boolean warnPress) {
+	
+	
+	/**
+	 * Overide setName(String name) with the preferred call to this method, to change warning behavior of classes that extend this.
+	 * @param name
+	 * @param warnPress Whether to show a warning when the pressZoneName() method is not implemented
+	 */
+	protected void setName(String name, boolean warnPress){
 		super.setName(name);
 		if (name != null) {
-			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(),
-					warnPress);
+			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(), warnPress);
 		}
 	}
 

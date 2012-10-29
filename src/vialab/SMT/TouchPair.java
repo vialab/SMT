@@ -5,7 +5,7 @@ import processing.core.PVector;
 /**
  * TouchPair is a group of two touches, with some convenience methods
  */
-public class TouchPair {
+class TouchPair {
 	public Touch from;
 
 	public Touch to;

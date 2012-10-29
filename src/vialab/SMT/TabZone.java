@@ -152,6 +152,13 @@ public class TabZone extends Zone {
 				+ zone.name + "::" + zone.toString());
 	}
 
+	/**
+	 * This adds the Given zone to a tab, with the given tabName and tabText
+	 * @param zone
+	 * @param tabName The Tab name for use in reflection methods: drawTabName(), touchTabName(), etc
+	 * @param tabText The text to display on the Tab
+	 * @return Whether the zone was added
+	 */
 	public boolean add(Zone zone, String tabName, String tabText) {
 		// resize all tabs to equal size with constant all tabs size
 		for (Tab tab : Tabs.keySet()) {

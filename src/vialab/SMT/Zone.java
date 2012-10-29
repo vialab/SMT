@@ -898,7 +898,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param dragY
 	 *            Whether to drag along the y-axis
 	 */
-	public void drag(TouchPair pair, boolean dragX, boolean dragY) {
+	void drag(TouchPair pair, boolean dragX, boolean dragY) {
 		if (pair.matches()) {
 			lastUpdate = maxTime(pair);
 			return;
@@ -1072,8 +1072,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param translateX
 	 * @param translateY
 	 */
-	public void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale,
-			boolean translateX, boolean translateY) {
+	void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale, boolean translateX,
+			boolean translateY) {
 
 		if (first.matches() && second.matches()) {
 			// nothing to do
@@ -1479,7 +1479,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            The rotation radius (how far out from centre before rotation
 	 *            is applied)
 	 */
-	public void rnt(TouchPair pair, float centreRadius) {
+	void rnt(TouchPair pair, float centreRadius) {
 
 		if (pair.matches()) {
 			// nothing to do

@@ -99,6 +99,10 @@ public class TextZone extends Zone {
 		super.keyTyped(e);
 	}
 
+	/**
+	 * This method is for use by Processing, override it to change what occurs when a Processing KeyEvent is passed to the TextZone
+	 * @param event The Processing KeyEvent that the textZone will use to change its state
+	 */
 	public void keyEvent(processing.event.KeyEvent event) {
 		KeyEvent nevent = (KeyEvent) event.getNative();
 		switch (nevent.getID()) {

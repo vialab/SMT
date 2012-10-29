@@ -11,7 +11,8 @@ import processing.core.PShape;
 import processing.core.PStyle;
 
 /**
- * PGraphicsDelegate wraps the Rrocessing functions for use by Zone.
+ * PGraphicsDelegate wraps the Processing functions for use by Zone.
+ * 
  * @see <a href="http://processing.org/reference">Processing Documentation</a>
  */
 public abstract class PGraphicsDelegate {

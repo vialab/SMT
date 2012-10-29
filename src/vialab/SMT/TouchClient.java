@@ -91,11 +91,11 @@ public class TouchClient {
 	/** Matrix used to test if the zone has gone off the screen */
 	// private PMatrix3D mTest = new PMatrix3D();
 
-	protected SMTZonePicker picker;
+	static SMTZonePicker picker;
 
-	private SMTTuioListener listener;
+	private static SMTTuioListener listener;
 
-	private SMTTouchManager manager;
+	private static SMTTouchManager manager;
 
 	private Method touch;
 
