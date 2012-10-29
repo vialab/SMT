@@ -44,7 +44,9 @@ public class ImageZone extends Zone {
 	 * ImageZone constructor, creates a rectangular zone and draws a PImage to
 	 * it.
 	 * 
-	 * @param name The name of the zone, used for the drawZoneName() and touchZoneName(), etc methods
+	 * @param name
+	 *            The name of the zone, used for the drawZoneName() and
+	 *            touchZoneName(), etc methods
 	 * 
 	 * @param img
 	 *            PImage - The PImage that will be drawn to the zone's

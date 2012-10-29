@@ -5,6 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+/**
+ * TabZone is a container for other Zones, it has tabs along its top, allowing
+ * easy switching between different views. Optionally has close buttons on tabs.
+ * Currently, each zone added to TabZone becomes its own Tab, and so to have
+ * multiple Zones, use another zone as a container (no draw/touch etc method,
+ * but has children) and add that zone to TabZone.
+ */
 public class TabZone extends Zone {
 
 	private int TAB_HEIGHT;
@@ -154,9 +161,13 @@ public class TabZone extends Zone {
 
 	/**
 	 * This adds the Given zone to a tab, with the given tabName and tabText
+	 * 
 	 * @param zone
-	 * @param tabName The Tab name for use in reflection methods: drawTabName(), touchTabName(), etc
-	 * @param tabText The text to display on the Tab
+	 * @param tabName
+	 *            The Tab name for use in reflection methods: drawTabName(),
+	 *            touchTabName(), etc
+	 * @param tabText
+	 *            The text to display on the Tab
 	 * @return Whether the zone was added
 	 */
 	public boolean add(Zone zone, String tabName, String tabText) {

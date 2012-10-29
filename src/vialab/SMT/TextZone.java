@@ -4,8 +4,11 @@ import java.awt.event.KeyEvent;
 
 import processing.core.PFont;
 
-//import processing.core.PFont;
-
+/**
+ * TextZone displays text, and is selectable by touch, each word is
+ * independently highlighted by touch, toggled whenever a TouchDown occurs on
+ * the word
+ */
 public class TextZone extends Zone {
 
 	private class WordZone extends Zone {
@@ -100,8 +103,12 @@ public class TextZone extends Zone {
 	}
 
 	/**
-	 * This method is for use by Processing, override it to change what occurs when a Processing KeyEvent is passed to the TextZone
-	 * @param event The Processing KeyEvent that the textZone will use to change its state
+	 * This method is for use by Processing, override it to change what occurs
+	 * when a Processing KeyEvent is passed to the TextZone
+	 * 
+	 * @param event
+	 *            The Processing KeyEvent that the textZone will use to change
+	 *            its state
 	 */
 	public void keyEvent(processing.event.KeyEvent event) {
 		KeyEvent nevent = (KeyEvent) event.getNative();

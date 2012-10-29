@@ -197,19 +197,23 @@ public class ButtonZone extends Zone {
 
 	@Override
 	public void setName(String name) {
-		setName(name,true);
+		setName(name, true);
 	}
-	
-	
+
 	/**
-	 * Overide setName(String name) with the preferred call to this method, to change warning behavior of classes that extend this.
+	 * Overide setName(String name) with the preferred call to this method, to
+	 * change warning behavior of classes that extend this.
+	 * 
 	 * @param name
-	 * @param warnPress Whether to show a warning when the pressZoneName() method is not implemented
+	 * @param warnPress
+	 *            Whether to show a warning when the pressZoneName() method is
+	 *            not implemented
 	 */
-	protected void setName(String name, boolean warnPress){
+	protected void setName(String name, boolean warnPress) {
 		super.setName(name);
 		if (name != null) {
-			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(), warnPress);
+			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, this.getClass(),
+					warnPress);
 		}
 	}
 
