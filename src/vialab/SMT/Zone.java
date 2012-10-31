@@ -1625,14 +1625,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * This makes a PVector into one relative to the zone's matrix (not the
-	 * zone's parents, etc that modify what is drawn)
+	 * This makes a PVector into one relative to the zone's matrix
 	 * 
-	 * @param in
+	 * @param global
 	 *            The PVector to put into relative coordinate space
 	 * @return A PVector relative to the zone's coordinate space
 	 */
-	public PVector toZoneVector(PVector in) {
+	public PVector toZoneVector(PVector global) {
 		PMatrix3D temp = new PMatrix3D();
 		// list ancestors in order from most distant to closest, in order to
 		// apply their matrix's in order
@@ -1651,7 +1650,36 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 		temp.invert();
 		PVector out = new PVector();
-		temp.mult(in, out);
+		temp.mult(global, out);
+		return out;
+	}
+	
+	/**
+	 * This makes a PVector into a global coordinates from the given local zone's coordinate space
+	 * 
+	 * @param local
+	 *            The PVector to put into global coordinate space
+	 * @return A PVector relative to the global coordinate space
+	 */
+	public PVector fromZoneVector(PVector local) {
+		PMatrix3D temp = new PMatrix3D();
+		// list ancestors in order from most distant to closest, in order to
+		// apply their matrix's in order
+		LinkedList<Zone> ancestors = new LinkedList<Zone>();
+		Zone zone = this;
+		while (zone.getParent() != null) {
+			zone = zone.getParent();
+			ancestors.addFirst(zone);
+		}
+		// apply ancestors matrix's in proper order to make sure image is
+		// correctly oriented
+		for (Zone i : ancestors) {
+			temp.apply(i.matrix);
+		}
+		temp.apply(matrix);
+		
+		PVector out = new PVector();
+		temp.mult(local, out);
 		return out;
 	}
 
