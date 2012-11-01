@@ -155,6 +155,18 @@ public final class SMTUtilities {
 				impl = parameter.getDeclaredMethod(methodPrefix + "Impl");
 			}
 			catch (Exception e) {}
+			if(impl==null){
+				try {
+					// check if we find the method with the parameter Zone, and give warning
+					impl = parameter.getDeclaredMethod(methodPrefix + "Impl", Zone.class);
+					if(impl!=null){
+						System.err.println(methodPrefix+"Impl() in the class "+parameter.getName()+" should not have Zone as a parameter, please remove it to override "+methodPrefix+"Impl() correctly.");
+						//make sure we don't set impl as to return the wrong result when this method is called, as we just want to add the error
+						impl=null;
+					}
+				}
+				catch (Exception e) {}
+			}
 		}
 		if (impl == null) {
 			return false;
