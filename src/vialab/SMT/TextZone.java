@@ -31,16 +31,17 @@ public class TextZone extends Zone {
 
 		@Override
 		public void drawImpl() {
+			width= (int) Math.ceil(textWidth(word));
 			fill(255);
 			if (selected) {
 				fill(0, 0, 255, 127);
 			}
 			if (width > 0) {
 				noStroke();
-				rect(0, 0, textWidth(word), height);
+				rect(0, 0, width, height);
 			}
 			fill(0);
-			text(this.word, 0, this.getParent().isDirect() ? 0 : 5, textWidth(word), height);
+			text(this.word, 0, 0, width, height);
 		}
 
 	}
@@ -65,7 +66,7 @@ public class TextZone extends Zone {
 
 	public TextZone(String name, int x, int y, int width, int height, boolean keysRecievedFromApplet) {
 		super(name, x, y, width, height);
-		this.currentWordZone = new WordZone(0, 0, 1, 20);
+		this.currentWordZone = new WordZone(0, 0, 0, 20);
 		if (keysRecievedFromApplet) {
 			applet.registerMethod("keyEvent", this);
 		}
@@ -83,21 +84,21 @@ public class TextZone extends Zone {
 	public void keyTyped(KeyEvent e) {
 		//textFont(font);
 		if (e.getKeyChar() == ' ') {
-			this.currentWordZone = new WordZone(currentWordZone.x
-					+ (int) textWidth(currentWordZone.word + e.getKeyChar()), currentWordZone.y, 0,
-					20);
+			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width, currentWordZone.y, 0, 20);
+			currentWordZone.word+=" ";
 		}
 		else if (e.getKeyChar() == '\t') {
-			this.currentWordZone = new WordZone(currentWordZone.x
-					+ (int) textWidth(currentWordZone.word + "    "), currentWordZone.y, 1, 20);
+			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width, currentWordZone.y, 0, 20);
+			currentWordZone.word+="    ";
 		}
 		else if (e.getKeyChar() == '\n') {
-			this.currentWordZone = new WordZone(0, currentWordZone.y + 20, 1, 20);
+			this.currentWordZone = new WordZone(0, currentWordZone.y + 20, 0, 20);
 		}
 		else {
+			if(currentWordZone.word.trim().equals("")){
+				currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width, currentWordZone.y, 0, 20);
+			}
 			this.currentWordZone.word += e.getKeyChar();
-			this.currentWordZone.setData(currentWordZone.x, currentWordZone.y,
-					Math.max((int) textWidth(currentWordZone.word), 1), currentWordZone.height);
 		}
 		super.keyTyped(e);
 	}
