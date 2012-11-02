@@ -346,30 +346,32 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM) {
-		if(name!=null){
-			drawMethod = SMTUtilities.getZoneMethod(applet, "draw", name, this.getClass(), warnDraw);
-	
+		if (name != null) {
+			drawMethod = SMTUtilities
+					.getZoneMethod(applet, "draw", name, this.getClass(), warnDraw);
+
 			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass(),
 					warnPick);
-			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass(), warnTouch);
-	
-			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name, this.getClass(),
-					warnKeys);
+			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass(),
+					warnTouch);
+
+			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name,
+					this.getClass(), warnKeys);
 			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name,
 					this.getClass(), warnKeys);
 			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass(),
 					warnKeys);
 			touchUpMethod = SMTUtilities.getZoneMethod(applet, "touchUp", name, this.getClass(),
 					warnTouchUDM);
-	
-			touchDownMethod = SMTUtilities.getZoneMethod(applet, "touchDown", name, this.getClass(),
-					warnTouchUDM);
-	
-			touchMovedMethod = SMTUtilities.getZoneMethod(applet, "touchMoved", name, this.getClass(),
-					warnTouchUDM);
+
+			touchDownMethod = SMTUtilities.getZoneMethod(applet, "touchDown", name,
+					this.getClass(), warnTouchUDM);
+
+			touchMovedMethod = SMTUtilities.getZoneMethod(applet, "touchMoved", name,
+					this.getClass(), warnTouchUDM);
 		}
-		
-		touchImpl=SMTUtilities.checkImpl("touch", this.getClass());
+
+		touchImpl = SMTUtilities.checkImpl("touch", this.getClass());
 		SMTUtilities.checkImpl("draw", this.getClass());
 		SMTUtilities.checkImpl("pickDraw", this.getClass());
 	}
@@ -855,9 +857,26 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            Whether to drag along the y-axis
 	 */
 	public void drag(boolean dragX, boolean dragY) {
+		drag(dragX, dragX, dragY, dragY);
+	}
+
+	/**
+	 * Performs translate on the current graphics context. Should typically be
+	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param dragLeft
+	 *            Allow dragging left
+	 * @param dragRight
+	 *            Allow dragging Right
+	 * @param dragUp
+	 *            Allow dragging Up
+	 * @param dragDown
+	 *            Allow dragging Down
+	 */
+	public void drag(boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown) {
 		if (!activeTouches.isEmpty()) {
 			List<TouchPair> pairs = getTouchPairs(1);
-			drag(pairs.get(0), dragX, dragY);
+			drag(pairs.get(0), dragLeft, dragRight, dragUp, dragDown);
 		}
 	}
 
@@ -888,7 +907,29 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            Whether to drag along the y-axis
 	 */
 	public void drag(Touch from, Touch to, boolean dragX, boolean dragY) {
-		drag(new TouchPair(from, to), dragX, dragY);
+		drag(from, to, dragX, dragX, dragY, dragY);
+	}
+
+	/**
+	 * Performs translate on the current graphics context. Should typically be
+	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param from
+	 *            The Touch to drag from
+	 * @param to
+	 *            The Touch to drag to
+	 * @param dragLeft
+	 *            Allow dragging left
+	 * @param dragRight
+	 *            Allow dragging Right
+	 * @param dragUp
+	 *            Allow dragging Up
+	 * @param dragDown
+	 *            Allow dragging Down
+	 */
+	public void drag(Touch from, Touch to, boolean dragLeft, boolean dragRight, boolean dragUp,
+			boolean dragDown) {
+		drag(new TouchPair(from, to), dragLeft, dragRight, dragUp, dragDown);
 	}
 
 	/**
@@ -902,17 +943,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param dragY
 	 *            Whether to drag along the y-axis
 	 */
-	void drag(TouchPair pair, boolean dragX, boolean dragY) {
+	void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown) {
 		if (pair.matches()) {
 			lastUpdate = maxTime(pair);
 			return;
 		}
 
-		if (dragX) {
+		if ((dragLeft && pair.to.x < pair.from.x) || (dragRight && pair.to.x > pair.from.x)) {
 			translate(pair.to.x - pair.from.x, 0);
 		}
 
-		if (dragY) {
+		if (dragUp &&pair.to.y>pair.from.y|| dragDown &&pair.to.y<pair.from.y) {
 			translate(0, pair.to.y - pair.from.y);
 		}
 
@@ -1239,6 +1280,38 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void vSwipe() {
 		drag(false, true);
 	}
+	
+	/**
+	 * Swipe which only allows moving left. Uses a single touch. Only works inside the zone's touch
+	 * method, or between calls to beginTouch() and endTouch()
+	 */
+	public void swipeLeft(){
+		drag(true,false,false,false);
+	}
+	
+	/**
+	 * Swipe which only allows moving right. Uses a single touch. Only works inside the zone's touch
+	 * method, or between calls to beginTouch() and endTouch()
+	 */
+	public void swipeRight(){
+		drag(false,true,false,false);
+	}
+	
+	/**
+	 * Swipe which only allows moving up. Uses a single touch. Only works inside the zone's touch
+	 * method, or between calls to beginTouch() and endTouch()
+	 */
+	public void swipeUp(){
+		drag(false,false,true,false);
+	}
+	
+	/**
+	 * Swipe which only allows moving down. Uses a single touch. Only works inside the zone's touch
+	 * method, or between calls to beginTouch() and endTouch()
+	 */
+	public void swipeDown(){
+		drag(false,false,false,true);
+	}
 
 	void draw() {
 		draw(true, false);
@@ -1377,8 +1450,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			endTouch();
 
 			if (touchMethod == null && !(this instanceof ButtonZone) && !(this instanceof KeyZone)
-					&& !(this instanceof SliderZone)
-					&& !touchImpl) {
+					&& !(this instanceof SliderZone) && !touchImpl) {
 				unassignAll();
 			}
 
@@ -1657,9 +1729,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		temp.mult(global, out);
 		return out;
 	}
-	
+
 	/**
-	 * This makes a PVector into a global coordinates from the given local zone's coordinate space
+	 * This makes a PVector into a global coordinates from the given local
+	 * zone's coordinate space
 	 * 
 	 * @param local
 	 *            The PVector to put into global coordinate space
@@ -1681,7 +1754,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			temp.apply(i.matrix);
 		}
 		temp.apply(matrix);
-		
+
 		PVector out = new PVector();
 		temp.mult(local, out);
 		return out;
