@@ -1,6 +1,8 @@
 SMT (Simple MultiTouch Toolkit) is a project to support the learning of HCI concepts.
 It provides an easy to use library for processing sketches to handle touch input and associated matrix and drawing functions, to allow quick development of the desired application.
 
+Online Javadoc is available at http://vialab.github.com/SMT
+
 The example_sketches_and_libs folder provides some test processing sketches that can be copied to or used as the processing sketchbook location, and the libraries needed in the sketchbook location to run the sketches
 
 Steps to use with Processing IDE:
