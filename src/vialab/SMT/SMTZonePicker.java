@@ -11,14 +11,10 @@ import processing.core.PApplet;
 import processing.opengl.PGL;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 
 import javax.media.opengl.GL;
 
 class SMTZonePicker {
-
-	private static boolean BIG_ENDIAN = (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN);
 
 	private static int MAX_COLOR_VALUE = 0x00ffffff;
 
@@ -91,6 +87,7 @@ class SMTZonePicker {
 	}
 
 	public Zone pick(Touch t) {
+		
 		PGL pgl = applet.g.beginPGL();
 
 		if (pgl == null) {
@@ -98,21 +95,22 @@ class SMTZonePicker {
 			return null;
 		}
 
-		IntBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT)
-				.order(ByteOrder.nativeOrder()).asIntBuffer();
+		ByteBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT);
 
-		pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE,
-				buffer);
+		pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
 
-		int pickColor = buffer.get(0);
-
-		pgl.gl.glDeleteBuffers(1, buffer);
+		//get the first three bytes
+		int r=buffer.get()&0xFF;
+		int g=buffer.get()&0xFF;
+		int b=buffer.get()&0xFF;
+		int pickColor = (r<<16)+(g<<8)+(b);
+		
+		buffer.clear();
 
 		applet.g.endPGL();
-
-		pickColor = nativeToJavaARGB(pickColor);
-
-		// System.out.println(pickColor);
+		
+		//System.out.println("pickColor"+pickColor+ "r" + r + "g"
+		//		+ g + "b" + b);
 
 		/*
 		 * //pixel color method that works when using GLGraphicsOffScreen, but
@@ -183,19 +181,5 @@ class SMTZonePicker {
 	public void putZoneOnTop(Zone zone) {
 		zonesByPickColor.remove(zone.getPickColor());
 		zonesByPickColor.put(zone.getPickColor(), zone);
-	}
-
-	/**
-	 * Converts input native OpenGL value (RGBA on big endian, ABGR on little
-	 * endian) to Java ARGB. Copied from processing 2.0 source code
-	 */
-	public static int nativeToJavaARGB(int color) {
-		if (BIG_ENDIAN) { // RGBA to ARGB
-			return (color & 0xff000000) | ((color >> 8) & 0x00ffffff);
-		}
-		else { // ABGR to ARGB
-			return (color & 0xff000000) | ((color << 16) & 0xff0000) | (color & 0xff00)
-					| ((color >> 16) & 0xff);
-		}
 	}
 }
