@@ -88,7 +88,7 @@ class SMTZonePicker {
 
 	public Zone pick(Touch t) {
 		int pickColor=-1;
-		System.out.println(System.getProperty("os.name"));
+		
 		if(System.getProperty("os.name").equals("Mac OS X")){
 			//Fall back to the working but slow method of getting the pixel color on Mac
 			pickColor=applet.g.get(t.x,t.y);
