@@ -92,7 +92,7 @@ void setup() {
     board.add(p2[i]);
     p2[i].setDirect(true);
   }
-  //placePieces();
+  placePieces();
   
   KeyboardZone k = new KeyboardZone("Keyboard");
   KeyboardZone k2 = new KeyboardZone(1150,0);
@@ -203,7 +203,6 @@ void placePieces(){
 
 void pressPlayButton(Zone zone){
   client.remove(title);
-  placePieces();
   client.add(board);
 }
 

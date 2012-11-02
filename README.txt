@@ -12,9 +12,9 @@ Steps to use with Processing IDE:
 		-or by clicking the clone button on the github page using: 
 			GitHub for Windows (http://windows.github.com) or
  			GitHub for Mac (http://mac.github.com)
-		-by downloading the zip of the source
+		-or by downloading the zip of the source: https://github.com/vialab/SMT/zipball/master
 	0b. Download Processing IDE: http://www.processing.org/download/
-	1. Open Processing IDE, File->Preferences->Sketchbook location: set this to the example_sketches_and_libs folder that is located where the SMT repository was cloned to
+	1. Copy the libraries folder and optionally the examples folder, from example_sketches_and_libs to your sketchbook folder (The sketchbook folder location can be found via Preferences in the Processing File menu)
 	2. Open examples and run them (Sketch->Present for fullscreen)
 	3. Edit or create new sketches to learn HCI concepts, create touch capable games, etc
 

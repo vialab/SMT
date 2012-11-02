@@ -37,10 +37,10 @@ public class TextZone extends Zone {
 			}
 			if (width > 0) {
 				noStroke();
-				rect(0, 0, width, height);
+				rect(0, 0, textWidth(word), height);
 			}
 			fill(0);
-			text(this.word, 0, this.getParent().isDirect() ? 0 : 5, width, height);
+			text(this.word, 0, this.getParent().isDirect() ? 0 : 5, textWidth(word), height);
 		}
 
 	}
@@ -49,7 +49,7 @@ public class TextZone extends Zone {
 
 	private WordZone currentWordZone;
 
-	private PFont font = applet.createFont("Arial", 16);
+	//private PFont font = applet.createFont("Arial", 16);
 
 	public TextZone(int x, int y, int width, int height) {
 		this(null, x, y, width, height, false);
@@ -81,7 +81,7 @@ public class TextZone extends Zone {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		textFont(font);
+		//textFont(font);
 		if (e.getKeyChar() == ' ') {
 			this.currentWordZone = new WordZone(currentWordZone.x
 					+ (int) textWidth(currentWordZone.word + e.getKeyChar()), currentWordZone.y, 0,
