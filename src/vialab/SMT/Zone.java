@@ -953,7 +953,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			translate(pair.to.x - pair.from.x, 0);
 		}
 
-		if (dragUp &&pair.to.y>pair.from.y|| dragDown &&pair.to.y<pair.from.y) {
+		if (dragUp && pair.to.y > pair.from.y || dragDown && pair.to.y < pair.from.y) {
 			translate(0, pair.to.y - pair.from.y);
 		}
 
@@ -1280,37 +1280,40 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void vSwipe() {
 		drag(false, true);
 	}
-	
+
 	/**
-	 * Swipe which only allows moving left. Uses a single touch. Only works inside the zone's touch
-	 * method, or between calls to beginTouch() and endTouch()
+	 * Swipe which only allows moving left. Uses a single touch. Only works
+	 * inside the zone's touch method, or between calls to beginTouch() and
+	 * endTouch()
 	 */
-	public void swipeLeft(){
-		drag(true,false,false,false);
+	public void swipeLeft() {
+		drag(true, false, false, false);
 	}
-	
+
 	/**
-	 * Swipe which only allows moving right. Uses a single touch. Only works inside the zone's touch
-	 * method, or between calls to beginTouch() and endTouch()
+	 * Swipe which only allows moving right. Uses a single touch. Only works
+	 * inside the zone's touch method, or between calls to beginTouch() and
+	 * endTouch()
 	 */
-	public void swipeRight(){
-		drag(false,true,false,false);
+	public void swipeRight() {
+		drag(false, true, false, false);
 	}
-	
+
 	/**
-	 * Swipe which only allows moving up. Uses a single touch. Only works inside the zone's touch
-	 * method, or between calls to beginTouch() and endTouch()
+	 * Swipe which only allows moving up. Uses a single touch. Only works inside
+	 * the zone's touch method, or between calls to beginTouch() and endTouch()
 	 */
-	public void swipeUp(){
-		drag(false,false,true,false);
+	public void swipeUp() {
+		drag(false, false, true, false);
 	}
-	
+
 	/**
-	 * Swipe which only allows moving down. Uses a single touch. Only works inside the zone's touch
-	 * method, or between calls to beginTouch() and endTouch()
+	 * Swipe which only allows moving down. Uses a single touch. Only works
+	 * inside the zone's touch method, or between calls to beginTouch() and
+	 * endTouch()
 	 */
-	public void swipeDown(){
-		drag(false,false,false,true);
+	public void swipeDown() {
+		drag(false, false, false, true);
 	}
 
 	void draw() {
@@ -1718,9 +1721,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			ancestors.addFirst(zone);
 		}
 		// apply ancestors matrix's in proper order to make sure image is
-		// correctly oriented
-		for (Zone i : ancestors) {
-			temp.apply(i.matrix);
+		// correctly oriented, but not when backupMatrix is set, as then it
+		// already has its parents applied to it.
+		if (backupMatrix == null) {
+			for (Zone i : ancestors) {
+				temp.apply(i.matrix);
+			}
 		}
 		temp.apply(matrix);
 
@@ -1749,9 +1755,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			ancestors.addFirst(zone);
 		}
 		// apply ancestors matrix's in proper order to make sure image is
-		// correctly oriented
-		for (Zone i : ancestors) {
-			temp.apply(i.matrix);
+		// correctly oriented, but not when backupMatrix is set, as then it
+		// already has its parents applied to it.
+		if (backupMatrix == null) {
+			for (Zone i : ancestors) {
+				temp.apply(i.matrix);
+			}
 		}
 		temp.apply(matrix);
 
