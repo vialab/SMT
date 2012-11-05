@@ -53,21 +53,23 @@ class SMTZonePicker {
 					+ " pickable zones");
 		}
 		else {
-			// TODO: a uniform distribution would be ideal here
-			zone.setPickColor(currentPickColor);
-			// applet.g.beginDraw();
-			zonesByPickColor.put(currentPickColor, zone);
-			activePickColors.add(currentPickColor);
-			// applet.g.endDraw();
-			do {
-				currentPickColor += PICK_COLOR_INC;
-				// mod 255 instead of mod 256, as to not choose background color
-				currentPickColor %= MAX_COLOR_VALUE;
-			} while (activePickColors.contains(currentPickColor)
-					&& activePickColors.size() < MAX_COLOR_VALUE);
-
-			for (Zone child : zone.children) {
-				this.add(child);
+			if(!zonesByPickColor.containsValue(zone)){
+				// TODO: a uniform distribution would be ideal here
+				zone.setPickColor(currentPickColor);
+				// applet.g.beginDraw();
+				zonesByPickColor.put(currentPickColor, zone);
+				activePickColors.add(currentPickColor);
+				// applet.g.endDraw();
+				do {
+					currentPickColor += PICK_COLOR_INC;
+					// mod 255 instead of mod 256, as to not choose background color
+					currentPickColor %= MAX_COLOR_VALUE;
+				} while (activePickColors.contains(currentPickColor)
+						&& activePickColors.size() < MAX_COLOR_VALUE);
+	
+				for (Zone child : zone.children) {
+					this.add(child);
+				}
 			}
 		}
 	}

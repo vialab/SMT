@@ -644,12 +644,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return Whether the zone was successfully added or not
 	 */
 	public boolean add(Zone zone) {
-		// if the parent already is in the client zoneList, then add the child
-		if (TouchClient.zoneList.contains(this)) {
-			client.add(zone);
+		if(zone !=null){
+			// if the parent already is in the client zoneList, then add the child
+			if (TouchClient.zoneList.contains(this)) {
+				client.add(zone);
+			}
+			zone.parent = this;
+			if(!children.contains(zone)){
+				return children.add(zone);
+			}
 		}
-		zone.parent = this;
-		return children.add(zone);
+		return false;
 	}
 
 	/**
@@ -658,15 +663,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return Whether the zone was successfully removed or not
 	 */
 	public boolean remove(Zone child) {
-		// if the parent is in the client zoneList, then remove the child from
-		// the zoneList, but only if it is in children
-		if (TouchClient.zoneList.contains(this) && this.children.contains(child)) {
-			client.remove(child);
-		}
-		if (child != null) {
+		if(child !=null){
+			// if the parent is in the client zoneList, then remove the child from
+			// the zoneList, but only if it is in children
+			if (TouchClient.zoneList.contains(this) && this.children.contains(child)) {
+				client.remove(child);
+			}
 			child.parent = null;
+			return children.remove(child);
 		}
-		return children.remove(child);
+		return false;
 	}
 
 	/**
