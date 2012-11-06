@@ -10,7 +10,7 @@ import vialab.SMT.*;
 final boolean DRAW_TOUCH_POINTS=true;
 
 TouchClient client;
-ButtonZone z;
+ButtonZone z,z2,z3;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
@@ -18,6 +18,14 @@ void setup() {
   client.setDrawTouchPoints(DRAW_TOUCH_POINTS,10);
   z = new CustomButtonZone();
   client.add(z);
+  z2 = new ButtonZone("Test",0,0,200,200,"test");
+  client.add(z2);
+  z3 = new ButtonZone("test",0,0,200,200,"test");
+  client.add(z3);
+}
+
+void pressTest(){
+  
 }
 
 void draw() {
