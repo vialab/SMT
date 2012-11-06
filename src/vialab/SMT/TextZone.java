@@ -31,7 +31,7 @@ public class TextZone extends Zone {
 
 		@Override
 		public void drawImpl() {
-			width= (int) Math.ceil(textWidth(word));
+			width = (int) Math.ceil(textWidth(word));
 			fill(255);
 			if (selected) {
 				fill(0, 0, 255, 127);
@@ -50,7 +50,7 @@ public class TextZone extends Zone {
 
 	private WordZone currentWordZone;
 
-	//private PFont font = applet.createFont("Arial", 16);
+	// private PFont font = applet.createFont("Arial", 16);
 
 	public TextZone(int x, int y, int width, int height) {
 		this(null, x, y, width, height, false);
@@ -82,21 +82,24 @@ public class TextZone extends Zone {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		//textFont(font);
+		// textFont(font);
 		if (e.getKeyChar() == ' ') {
-			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width, currentWordZone.y, 0, 20);
-			currentWordZone.word+=" ";
+			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
+					currentWordZone.y, 0, 20);
+			currentWordZone.word += " ";
 		}
 		else if (e.getKeyChar() == '\t') {
-			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width, currentWordZone.y, 0, 20);
-			currentWordZone.word+="    ";
+			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
+					currentWordZone.y, 0, 20);
+			currentWordZone.word += "    ";
 		}
 		else if (e.getKeyChar() == '\n') {
 			this.currentWordZone = new WordZone(0, currentWordZone.y + 20, 0, 20);
 		}
 		else {
-			if(currentWordZone.word.trim().equals("")){
-				currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width, currentWordZone.y, 0, 20);
+			if (currentWordZone.word.trim().equals("")) {
+				currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
+						currentWordZone.y, 0, 20);
 			}
 			this.currentWordZone.word += e.getKeyChar();
 		}

@@ -53,7 +53,7 @@ class SMTZonePicker {
 					+ " pickable zones");
 		}
 		else {
-			if(!zonesByPickColor.containsValue(zone)){
+			if (!zonesByPickColor.containsValue(zone)) {
 				// TODO: a uniform distribution would be ideal here
 				zone.setPickColor(currentPickColor);
 				// applet.g.beginDraw();
@@ -62,11 +62,12 @@ class SMTZonePicker {
 				// applet.g.endDraw();
 				do {
 					currentPickColor += PICK_COLOR_INC;
-					// mod 255 instead of mod 256, as to not choose background color
+					// mod 255 instead of mod 256, as to not choose background
+					// color
 					currentPickColor %= MAX_COLOR_VALUE;
 				} while (activePickColors.contains(currentPickColor)
 						&& activePickColors.size() < MAX_COLOR_VALUE);
-	
+
 				for (Zone child : zone.children) {
 					this.add(child);
 				}
@@ -89,36 +90,39 @@ class SMTZonePicker {
 	}
 
 	public Zone pick(Touch t) {
-		int pickColor=-1;
-		
-		if(System.getProperty("os.name").equals("Mac OS X")){
-			//Fall back to the working but slow method of getting the pixel color on Mac
-			pickColor=applet.g.get(t.x,t.y);
-		}else{
+		int pickColor = -1;
+
+		if (System.getProperty("os.name").equals("Mac OS X")) {
+			// Fall back to the working but slow method of getting the pixel
+			// color on Mac
+			pickColor = applet.g.get(t.x, t.y);
+		}
+		else {
 			PGL pgl = applet.g.beginPGL();
-		
+
 			if (pgl == null) {
 				System.err.print("GL not available, picking failed");
 				return null;
 			}
-		
+
 			ByteBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT);
-		
-			pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
-		
-			//get the first three bytes
-			int r=buffer.get()&0xFF;
-			int g=buffer.get()&0xFF;
-			int b=buffer.get()&0xFF;
-			pickColor = (r<<16)+(g<<8)+(b);
-			
+
+			pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA,
+					GL.GL_UNSIGNED_BYTE, buffer);
+
+			// get the first three bytes
+			int r = buffer.get() & 0xFF;
+			int g = buffer.get() & 0xFF;
+			int b = buffer.get() & 0xFF;
+			pickColor = (r << 16) + (g << 8) + (b);
+
 			buffer.clear();
-		
+
 			applet.g.endPGL();
 		}
-		
-		//System.out.println("pickColor"+pickColor+ "r" + r + "g"
-		//		+ g + "b" + b);
+
+		// System.out.println("pickColor"+pickColor+ "r" + r + "g"
+		// + g + "b" + b);
 
 		/*
 		 * //pixel color method that works when using GLGraphicsOffScreen, but
