@@ -109,6 +109,9 @@ public final class SMTUtilities {
 
 	static Method getZoneMethod(PApplet parent, String methodPrefix, String name,
 			Class<?> parameter, boolean warnMissing) {
+		// uppercase the first letter of the name so that we have consistent
+		// naming warnings
+		name = name.substring(0, 1).toUpperCase() + name.substring(1);
 		Method method = getAnyPMethod(parent, methodPrefix, name, parameter);
 		if (method == null) {
 
@@ -147,27 +150,47 @@ public final class SMTUtilities {
 	 */
 	public static boolean checkImpl(String methodPrefix, Class<?> parameter) {
 		Method impl = null;
-		// only if class is not Zone
-		if (!parameter.equals(Zone.class)) {
-			try {
-				// get the method if the class declared the prefix+Impl method,
-				// otherwise null
-				impl = parameter.getDeclaredMethod(methodPrefix + "Impl");
-			}
-			catch (Exception e) {}
-			if(impl==null){
+		// only check for method impl if the parent class has the method too,
+		// because by default this method is only called when warnMissing is
+		// true when getZoneMethod(...) is called, so we only give a warning
+		// when the extending class has no [methodPefix+impl]() method and the
+		// pressMethod cannot be found, which is exactly what we want to occur.
+		try {
+			if (parameter.getSuperclass().getDeclaredMethod(methodPrefix + "Impl") != null) {
 				try {
-					// check if we find the method with the parameter Zone, and give warning
-					impl = parameter.getDeclaredMethod(methodPrefix + "Impl", Zone.class);
-					if(impl!=null){
-						System.err.println(methodPrefix+"Impl() in the class "+parameter.getName()+" should not have Zone as a parameter, please remove it to override "+methodPrefix+"Impl() correctly.");
-						//make sure we don't set impl as to return the wrong result when this method is called, as we just want to add the error
-						impl=null;
-					}
+					// get the method if the class declared the prefix+Impl
+					// method,
+					// otherwise null
+					impl = parameter.getDeclaredMethod(methodPrefix + "Impl");
 				}
 				catch (Exception e) {}
+				if (impl == null) {
+					try {
+						// check if we find the method with the parameter Zone,
+						// and
+						// give warning
+						impl = parameter.getDeclaredMethod(methodPrefix + "Impl", Zone.class);
+						if (impl != null) {
+							System.err
+									.println(methodPrefix
+											+ "Impl() in the class "
+											+ parameter.getName()
+											+ " should not have Zone as a parameter, please remove it to override "
+											+ methodPrefix + "Impl() correctly.");
+							// make sure we don't set impl as to return the
+							// wrong
+							// result when this method is called, as we just
+							// want to
+							// add the error
+							impl = null;
+						}
+					}
+					catch (Exception e) {}
+				}
 			}
 		}
+		catch (Exception e) {}
+
 		if (impl == null) {
 			return false;
 		}
