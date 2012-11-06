@@ -10,6 +10,8 @@ import processing.core.PFont;
  * with an overridden pressImpl()
  */
 public class ButtonZone extends Zone {
+	
+	public boolean deactivated = false;
 
 	private int fontSize;
 
@@ -37,6 +39,10 @@ public class ButtonZone extends Zone {
 
 	private boolean buttonDown = false;
 
+	private int deactivatedColor = applet.color(255);
+	
+	private int deactivatedTextColor = applet.color(175);
+
 	public ButtonZone() {
 		this(null);
 	}
@@ -50,7 +56,7 @@ public class ButtonZone extends Zone {
 	}
 
 	public ButtonZone(String name, String text, PFont font) {
-		this(name, 0, 0, 200, 100, text, 12, font);
+		this(name, 0, 0, 200, 100, text, 16, font);
 	}
 
 	public ButtonZone(int x, int y, int width, int height) {
@@ -58,24 +64,24 @@ public class ButtonZone extends Zone {
 	}
 
 	public ButtonZone(int x, int y, int width, int height, String text) {
-		this(null, x, y, width, height, text, 12);
+		this(null, x, y, width, height, text, 16);
 	}
 
 	public ButtonZone(String name, int x, int y, int width, int height) {
-		this(name, x, y, width, height, null, 12, null, 0);
+		this(name, x, y, width, height, null, 16, null, 0);
 	}
 
 	public ButtonZone(String name, int x, int y, int width, int height, String text) {
-		this(name, x, y, width, height, text, 12, null, 0);
+		this(name, x, y, width, height, text, 16, null, 0);
 	}
 
 	public ButtonZone(String name, int x, int y, int width, int height, String text, PFont font) {
-		this(name, x, y, width, height, text, 12, font, 0);
+		this(name, x, y, width, height, text, 16, font, 0);
 	}
 
 	public ButtonZone(String name, int x, int y, int width, int height, String text, PFont font,
 			float angle) {
-		this(name, x, y, width, height, text, 12, font, 0);
+		this(name, x, y, width, height, text, 16, font, 0);
 	}
 
 	public ButtonZone(String name, int x, int y, int width, int height, String text, int fontSize) {
@@ -131,11 +137,15 @@ public class ButtonZone extends Zone {
 
 	@Override
 	public void drawImpl() {
-		if (buttonDown) {
-			drawImpl(pressedColor, pressedTextColor);
-		}
-		else {
-			drawImpl(color, textColor);
+		if(deactivated){
+			drawImpl(deactivatedColor, deactivatedTextColor);
+		}else{
+			if (buttonDown) {
+				drawImpl(pressedColor, pressedTextColor);
+			}
+			else {
+				drawImpl(color, textColor);
+			}
 		}
 	}
 
@@ -183,7 +193,7 @@ public class ButtonZone extends Zone {
 		super.touchUp(touch);
 		setButtonDown();
 
-		if (!isButtonDown()) {
+		if (!isButtonDown()&&!deactivated) {
 			pressImpl();
 			SMTUtilities.invoke(pressMethod, applet, this);
 		}

@@ -20,6 +20,7 @@ void setup() {
   client.add(z);
   z2 = new ButtonZone("Test",0,0,200,200,"test");
   client.add(z2);
+  z2.deactivated=true;
   z3 = new ButtonZone("test",0,0,200,200,"test");
   client.add(z3);
 }
