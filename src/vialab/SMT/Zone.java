@@ -128,6 +128,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	private boolean touchImpl;
 
+	private boolean pickImpl;
+
 	/**
 	 * Check state of the direct flag.
 	 * <P>
@@ -373,7 +375,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 		touchImpl = SMTUtilities.checkImpl("touch", this.getClass());
 		SMTUtilities.checkImpl("draw", this.getClass());
-		SMTUtilities.checkImpl("pickDraw", this.getClass());
+		pickImpl = SMTUtilities.checkImpl("pickDraw", this.getClass());
 	}
 
 	/**
@@ -1454,7 +1456,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		applet.g = pg;
 
 		if (picking) {
-			if (pickDrawMethod == null) {
+			if (pickDrawMethod == null && !pickImpl) {
 				rect(0, 0, width, height);
 			}
 			else {
