@@ -882,10 +882,60 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            Allow dragging Down
 	 */
 	public void drag(boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown) {
+		drag(dragLeft, dragRight, dragUp, dragDown, Integer.MIN_VALUE, Integer.MAX_VALUE,
+				Integer.MIN_VALUE, Integer.MAX_VALUE);
+	}
+
+	/**
+	 * Performs translate on the current graphics context. Should typically be
+	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param dragLeft
+	 *            Allow dragging left
+	 * @param dragRight
+	 *            Allow dragging Right
+	 * @param dragUp
+	 *            Allow dragging Up
+	 * @param dragDown
+	 *            Allow dragging Down
+	 * @param leftLimit
+	 *            Limit on how far to be able to drag left
+	 * @param rightLimit
+	 *            Limit on how far to be able to drag right
+	 * @param upLimit
+	 *            Limit on how far to be able to drag up
+	 * @param downLimit
+	 *            Limit on how far to be able to drag down
+	 */
+	public void drag(boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown,
+			int leftLimit, int rightLimit, int upLimit, int downLimit) {
 		if (!activeTouches.isEmpty()) {
 			List<TouchPair> pairs = getTouchPairs(1);
-			drag(pairs.get(0), dragLeft, dragRight, dragUp, dragDown);
+			drag(pairs.get(0), dragLeft, dragRight, dragUp, dragDown, leftLimit, rightLimit,
+					upLimit, downLimit);
 		}
+	}
+	
+	/**
+	 * Performs translate on the current graphics context. Should typically be
+	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param dragX
+	 *            Allow dragging along the x-axis
+	 * @param dragY
+	 *            Allow dragging along the y-axis
+	 * @param leftLimit
+	 *            Limit on how far to be able to drag left
+	 * @param rightLimit
+	 *            Limit on how far to be able to drag right
+	 * @param upLimit
+	 *            Limit on how far to be able to drag up
+	 * @param downLimit
+	 *            Limit on how far to be able to drag down
+	 */
+	public void drag(boolean dragX, boolean dragY, int leftLimit, int rightLimit, int upLimit,
+			int downLimit) {
+		drag(dragX, dragX, dragY, dragY, leftLimit, rightLimit, upLimit, downLimit);
 	}
 
 	/**
@@ -952,6 +1002,35 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            Whether to drag along the y-axis
 	 */
 	void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown) {
+		drag(pair, dragLeft, dragRight, dragUp, dragDown, Integer.MIN_VALUE, Integer.MAX_VALUE,
+				Integer.MIN_VALUE, Integer.MAX_VALUE);
+	}
+
+	/**
+	 * Performs translate on the current graphics context. Should typically be
+	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param pair
+	 *            The TouchPair to drag to/from
+	 * @param dragLeft
+	 *            Allow dragging left
+	 * @param dragRight
+	 *            Allow dragging Right
+	 * @param dragUp
+	 *            Allow dragging Up
+	 * @param dragDown
+	 *            Allow dragging Down
+	 * @param leftLimit
+	 *            Limit on how far to be able to drag left
+	 * @param rightLimit
+	 *            Limit on how far to be able to drag right
+	 * @param upLimit
+	 *            Limit on how far to be able to drag up
+	 * @param downLimit
+	 *            Limit on how far to be able to drag down
+	 */
+	void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp,
+			boolean dragDown, int leftLimit, int rightLimit, int upLimit, int downLimit) {
 		if (pair.matches()) {
 			lastUpdate = maxTime(pair);
 			return;
@@ -965,6 +1044,30 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			translate(0, pair.to.y - pair.from.y);
 		}
 
+		// get position with fromZoneVector (not counting any transformations
+		// applied during since the last endTouch())
+		PVector prevPos = fromZoneVector(new PVector(0, 0));
+
+		// get the movement limits, left and up is negative, right and down
+		// positive
+		int maxLeftMove = -(int) (prevPos.x - leftLimit);
+		int maxRightMove = (int) (rightLimit - (prevPos.x + width));
+		int maxUpMove = -(int) (prevPos.y - upLimit);
+		int maxDownMove = (int) (downLimit - (prevPos.y + height));
+
+		// respect the limits by translating back to limit if needed
+		if ((pair.to.x - pair.from.x) < maxLeftMove) {
+			translate(-((pair.to.x - pair.from.x) - maxLeftMove), 0);
+		}
+		if ((pair.to.x - pair.from.x) > maxRightMove) {
+			translate(-((pair.to.x - pair.from.x) - maxRightMove), 0);
+		}
+		if ((pair.to.y - pair.from.y) < maxUpMove) {
+			translate(0, -((pair.to.y - pair.from.y) - maxUpMove));
+		}
+		if ((pair.to.y - pair.from.y) > maxDownMove) {
+			translate(0, -((pair.to.y - pair.from.y) - maxDownMove));
+		}
 		lastUpdate = maxTime(pair);
 	}
 
@@ -1279,6 +1382,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public void hSwipe() {
 		drag(true, false);
+	}
+
+	/**
+	 * Horizontal Swipe. Uses a single touch. Only works inside the zone's touch
+	 * method, or between calls to beginTouch() and endTouch()
+	 */
+	public void hSwipe(int leftLimit, int rightLimit) {
+		drag(true, false, leftLimit, rightLimit, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 
 	/**
