@@ -12,6 +12,8 @@ Steps to use with Processing IDE:
 
 See the processing api at http://www.processing.org/reference/ for a complete list and documentation of all available processing functions
 
+If you have problems running SMT, first test that the Processing examples work (File->Examples), if they do not check the troubleshooting page for solutions(http://wiki.processing.org/w/Troubleshooting).
 
+If you still have problems, please open an Issue (https://github.com/vialab/SMT/issues) to report the problems you are having, and we will try our best to fix them promptly.
 
 Authors: Zach Cook, Erik Paluka, Dr. Christopher Collins, Dr. Mark Hancock
