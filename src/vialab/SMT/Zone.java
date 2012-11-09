@@ -129,6 +129,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	private boolean touchImpl;
 
 	private boolean pickImpl;
+	
+	PGraphics drawPG;
+	
+	PGraphics zonePG;
 
 	/**
 	 * Check state of the direct flag.
@@ -384,7 +388,20 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * recreated, ie. during a zone resize
 	 */
 	protected void init() {
-		pg = applet.createGraphics(width, height, renderer);
+		if(pg!=null){
+			matrix.preApply((PMatrix3D) zonePG.getMatrix());
+			zonePG.popMatrix();
+		}
+		
+		//pgraphics for the zone
+		zonePG = applet.createGraphics(width, height, renderer);
+		//pgraphics for drawing
+		drawPG=zonePG;
+		//pgraphics that all methods call be default
+		pg=drawPG;
+		
+		zonePG.pushMatrix();
+		zonePG.setMatrix(new PMatrix3D());
 	}
 
 	/**
@@ -526,11 +543,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void beginDraw() {
 		if (direct) {
 			if (getParent() == null) {
-				pg = applet.g;
+				drawPG = applet.g;
 			}
 			else {
-				pg = getParent().pg;
+				drawPG = getParent().drawPG;
 			}
+			pg=drawPG;
 			pg.pushMatrix();
 			pg.applyMatrix(matrix);
 		}
@@ -553,19 +571,27 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			pg.popMatrix();
 		}
 		pg.popStyle();
+		pg=zonePG;
 	}
 
 	/**
 	 * Override this if something needs to occur before pickdrawing commands
 	 */
 	protected void beginPickDraw() {
+		//update with changes from zonePG
+		matrix.preApply((PMatrix3D) zonePG.getMatrix());
+		zonePG.popMatrix();
+		zonePG.pushMatrix();
+		zonePG.setMatrix(new PMatrix3D());
+		
 		if (direct) {
 			if (getParent() == null) {
-				pg = applet.g;
+				drawPG = applet.g;
 			}
 			else {
-				pg = getParent().pg;
+				drawPG = getParent().drawPG;
 			}
+			pg=drawPG;
 			pg.pushMatrix();
 			pg.applyMatrix(matrix);
 		}
@@ -597,6 +623,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			pg.popMatrix();
 		}
 		pg.popStyle();
+		pg=zonePG;
 	}
 
 	/**
@@ -609,6 +636,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur before touch commands
 	 */
 	public void beginTouch() {
+		pg=drawPG;
 		pg.pushMatrix();
 		pg.setMatrix(new PMatrix3D());
 	}

@@ -185,15 +185,11 @@ void placePieces(){
     for(int j=0; j<8; j++){
       if((i+j)%2==1){
         if(j<3){
-          p1[c1].beginTouch();
           p1[c1].translate(i*125+12,j*125+12);
-          p1[c1].endTouch();
           c1+=1;
         }
         if(j>4){
-          p2[c2].beginTouch();
           p2[c2].translate(i*125+12,j*125+12);
-          p2[c2].endTouch();
           c2+=1;
         }
       }  
