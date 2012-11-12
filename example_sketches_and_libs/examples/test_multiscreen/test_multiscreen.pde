@@ -20,6 +20,7 @@ Zone title;
 Zone options;
 SliderZone s[]=new SliderZone[6];
 TouchClient client;
+PFont largeFont = createFont("Arial",100);
 
 class CheckerZone extends Zone{
    color c;
@@ -97,7 +98,7 @@ void setup() {
   KeyboardZone k = new KeyboardZone("Keyboard");
   KeyboardZone k2 = new KeyboardZone(1150,0);
   TextZone t= new TextZone(300,300,200,200);
-  TextZone t2= new TextZone(1150,300,200,200);
+  TextZone t2= new TextZone(1350,300,200,200);
   title.add(k);
   title.add(k2);
   title.add(t);
@@ -144,8 +145,9 @@ void drawBoard(Zone zone){
 void drawTitle(){
   background(100,200,150);
   fill(255);
+  textFont(largeFont);
   textSize(100);
-  text("Checkers",displayWidth/2-250,displayHeight/3);
+  text("Checkers",displayWidth/2-textWidth("Checkers")/2,displayHeight/2.8);
   textSize(16);
   text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,20);
   text("typed text: "+t,width/2,50);
@@ -154,6 +156,7 @@ void drawTitle(){
 void drawOptions(Zone zone){
   background(200,100,55);
   fill(255);
+  textFont(largeFont);
   textSize(100);
   text("Options",displayWidth/2-200,displayHeight/3);
 }
