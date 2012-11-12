@@ -398,7 +398,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		//pgraphics for drawing
 		drawPG=zonePG;
 		//pgraphics that all methods call be default
-		pg=drawPG;
+		pg=zonePG;
 		
 		zonePG.pushMatrix();
 		zonePG.setMatrix(new PMatrix3D());
