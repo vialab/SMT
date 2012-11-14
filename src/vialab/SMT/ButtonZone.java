@@ -1,6 +1,7 @@
 package vialab.SMT;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import processing.core.PFont;
 
@@ -131,9 +132,23 @@ public class ButtonZone extends Zone {
 	}
 
 	@Override
-	public void touchImpl() {
-		setButtonDown();
+	public void touchesMoved(List<Touch> currentLocalState){
+		super.touchesMoved(currentLocalState);
+		
+		buttonDown = false;
+		for (Touch t : currentLocalState) {
+			Zone picked = TouchClient.picker.pick(t);
+			if (picked != null && picked.equals(this)) {
+				buttonDown = true;
+			}
+			else {
+				unassign(t);
+			}
+		}
 	}
+	
+	@Override
+	public void touchImpl() {}
 
 	@Override
 	public void drawImpl() {
