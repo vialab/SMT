@@ -389,6 +389,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void init() {
 		if(pg!=null){
+			//save and pop the matrix to finish the matrix loading cycle for the current zonePG, as we are about to change it
 			matrix.preApply((PMatrix3D) zonePG.getMatrix());
 			zonePG.popMatrix();
 		}
@@ -400,6 +401,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		//pgraphics that all methods call be default
 		pg=zonePG;
 		
+		//push and clear the matrix to [re]start the matrix loading cycle
 		zonePG.pushMatrix();
 		zonePG.setMatrix(new PMatrix3D());
 	}
