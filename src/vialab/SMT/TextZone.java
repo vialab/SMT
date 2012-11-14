@@ -34,6 +34,8 @@ public class TextZone extends Zone {
 			if (blur) {
 				textFont(font);
 				textSize(16);
+			}else{
+				textSize(16);
 			}
 			width = (int) Math.ceil(textWidth(word));
 			fill(255);
@@ -134,8 +136,8 @@ public class TextZone extends Zone {
 				currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
 						currentWordZone.y, 0, 20);
 			}
-			if (currentWordZone.x + currentWordZone.width + 5 > width) {
-				this.currentWordZone = new WordZone(0, currentWordZone.y + 20, 0, 20);
+			if (currentWordZone.x + currentWordZone.width + 15 > width) {
+				this.currentWordZone.setData(0, currentWordZone.y + 20, 0, 20);
 			}
 			this.currentWordZone.word += c;
 		}
