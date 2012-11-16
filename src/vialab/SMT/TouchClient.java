@@ -104,6 +104,16 @@ public class TouchClient {
 	static Boolean warnUnimplemented;
 
 	/**
+	 * This controls whether we give a warning for uncalled methods which use
+	 * one of the reserved method prefixes (draw,pickDraw,touch,etc and any that
+	 * have been added by calls to SMTUtilities.getZoneMethod() with a unique
+	 * prefix).
+	 * <P>
+	 * Default state is on.
+	 */
+	public static boolean warnUncalledMethods = true;
+
+	/**
 	 * The renderer to use as a default for zones, can be P3D, P2D, OPENGL, etc,
 	 * upon TouchClient initialization this is set to the same as the PApplet's
 	 * renderer
@@ -115,21 +125,13 @@ public class TouchClient {
 	MouseToTUIO mtt = null;
 
 	/**
-	 * This displays the methods that have not been called by the
-	 * Zones/TouchClient, useful for debugging that a method is being called
-	 */
-	public void warnUncalled() {
-		SMTUtilities.warnUncalledMethods(parent);
-	}
-
-	/**
 	 * Calling this function overrides the default behavior of showing select
 	 * unimplemented based on defaults for each zone specified in loadMethods()
 	 * 
 	 * @param warn
 	 *            whether to warn when there are unimplemented methods for zones
 	 */
-	public void setWarnUnimplemented(boolean warn) {
+	public static void setWarnUnimplemented(boolean warn) {
 		TouchClient.warnUnimplemented = warn;
 	}
 
@@ -756,7 +758,10 @@ public class TouchClient {
 	 * Disconnects the TuioClient when the PApplet is stopped. Shuts down any
 	 * threads, disconnect from the net, unload memory, etc.
 	 */
-	public void dispose() {
+	public static void dispose() {
+		if (warnUncalledMethods) {
+			SMTUtilities.warnUncalledMethods(parent);
+		}
 		if (tuioClient.isConnected()) {
 			tuioClient.disconnect();
 		}

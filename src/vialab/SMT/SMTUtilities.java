@@ -215,13 +215,11 @@ public final class SMTUtilities {
 					// any reserved prefixes
 					if (method.getName().startsWith(prefix)) {
 						System.err
-								.println("The method: "
+								.println("The method '"
 										+ method.getName()
-										+ " starts with the reserved method prefix: "
-										+ prefix
-										+ " and so should be renamed, otherwise it was meant for a zone named: "
+										+ "' corresponds a zone named '"
 										+ method.getName().replaceFirst(prefix, "")
-										+ " which has not been initialized in this run");
+										+ "' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '"+prefix+"'.");
 					}
 				}
 			}

@@ -629,8 +629,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Call this to before matrix operations on a zone to make them apply when
-	 * not in a touch method.
+	 * Call this to before matrix operations on a zone to make them apply immediately
 	 * <P>
 	 * Needs a matching endTouch() call to be made afterwards, otherwise the
 	 * matrix stack will overflow with too many pushMatrix commands.
@@ -644,8 +643,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Call this to before matrix operations on a zone to make them apply when
-	 * not in a touch method.
+	 * Call this to before matrix operations on a zone to make them apply immediately
 	 * <P>
 	 * Needs a matching beginTouch() call to be made beforehand, otherwise the
 	 * matrix stack will underflow with too many popMatrix commands.
