@@ -101,6 +101,10 @@ public class ImageZone extends Zone {
 	public ImageZone(String name, PImage img, int x, int y) {
 		this(name, img, x, y, img.width, img.height);
 	}
+	
+	public ImageZone(ImageZone imgZone){
+		this(imgZone.name, imgZone.img, imgZone.x, imgZone.y, imgZone.width, imgZone.height);
+	}
 
 	@Override
 	public void drawImpl() {

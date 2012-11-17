@@ -20,6 +20,7 @@
  */
 package vialab.SMT;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1837,7 +1838,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            All generations of children)
 	 */
 	public Zone clone(int cloneMaxChildGenerations) {
-		Zone clone = new Zone(this.getName(), this.x, this.y, this.width, this.height);
+		Zone clone;
+		try {
+			//clone a Zone using a copy constructor
+			clone = this.getClass().getConstructor(this.getClass()).newInstance(this);
+		}
+		catch (Exception e) {
+			//if no copy constructor, use the old way of making a normal Zone
+			clone = new Zone(this.getName(), this.x, this.y, this.width, this.height);
+		}
 		// use the backupMatrix if the zone being clone has its matrix modified
 		// by parent, and so has backupMatrix set
 		if (this.backupMatrix != null) {
