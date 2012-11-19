@@ -75,7 +75,7 @@ public class TextZone extends Zone {
 
 	private PFont font = applet.createFont("SansSerif", 16);
 
-	private PFont sFont = applet.createFont("SansSerif", 4);
+	private PFont sFont = applet.createFont("SansSerif", 3.0f);
 
 	private boolean blur = false;
 
