@@ -47,6 +47,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PImage;
 
 import android.view.*;
@@ -254,6 +255,8 @@ public class TouchClient {
 
 		tuioClient.addTuioListener(listener);
 		tuioClient.connect();
+		
+		parent.hint(PConstants.ENABLE_ACCURATE_2D);
 	}
 
 	/**
