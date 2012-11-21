@@ -53,15 +53,7 @@ public final class SMTUtilities {
 		try {
 			return parent.getClass().getMethod(methodName, parameterTypes);
 		}
-		catch (NoSuchMethodException e) {
-			// try to call with no parameter too, to allow optional zone
-			// parameter
-			try {
-				return parent.getClass().getMethod(methodName);
-			}
-			catch (NoSuchMethodException e2) {}
-			catch (SecurityException e2) {}
-		}
+		catch (NoSuchMethodException e) {}
 		catch (SecurityException e) {}
 		return null;
 	}
@@ -76,15 +68,24 @@ public final class SMTUtilities {
 	}
 
 	static Method getAnyPMethod(PApplet parent, String methodPrefix, String methodSuffix,
-			Class<?> parameter) {
-		if (parameter == null) {
-			return null;
+			Class<?>... parameter) {
+		if(parameter.length==0){
+			return getPMethod(parent, methodPrefix, methodSuffix, parameter);
+		}
+		
+		if (parameter[0] == null) {
+			//try to get a method with the first class removed from the parameter list since it is null
+			Class<?>[] firstRemoved = new Class<?>[parameter.length-1];
+			System.arraycopy(parameter, 1, firstRemoved, 0, parameter.length-1);
+			return getAnyPMethod(parent, methodPrefix, methodSuffix, firstRemoved);
 		}
 
 		Method method = getPMethod(parent, methodPrefix, methodSuffix, parameter);
 		if (method == null) {
-			Class<?> superClass = parameter.getSuperclass();
-			method = getAnyPMethod(parent, methodPrefix, methodSuffix, superClass);
+			//recurse only on first class
+			Class<?> superClass = parameter[0].getSuperclass();
+			parameter[0]=superClass;
+			method = getAnyPMethod(parent, methodPrefix, methodSuffix, parameter);
 		}
 		return method;
 	}
@@ -103,12 +104,12 @@ public final class SMTUtilities {
 	 * @return A Method, which can be called by invoke(Method, Zone)
 	 */
 	public static Method getZoneMethod(String methodPrefix, Zone zone, boolean warnMissing) {
-		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, zone.getClass(),
-				warnMissing);
+		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, warnMissing,
+				zone.getClass());
 	}
 
 	static Method getZoneMethod(PApplet parent, String methodPrefix, String name,
-			Class<?> parameter, boolean warnMissing) {
+			boolean warnMissing, Class<?>... parameter) {
 		// uppercase the first letter of the name so that we have consistent
 		// naming warnings
 		name = name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -128,6 +129,7 @@ public final class SMTUtilities {
 				}
 				System.err.println("No such method: " + methodPrefix + name);
 			}
+			//set method to methodPrefix+Default if defined
 			method = getAnyPMethod(parent, methodPrefix, "Default", parameter);
 		}
 		methodSet.add(methodPrefix + name);
@@ -148,7 +150,7 @@ public final class SMTUtilities {
 	 *            methodPrefix
 	 * @return Whether the given class has a method with the given Prefix
 	 */
-	public static boolean checkImpl(String methodPrefix, Class<?> parameter) {
+	public static boolean checkImpl(String methodPrefix, Class<?>... parameter) {
 		Method impl = null;
 		// only check for method impl if the parent class has the method too,
 		// because by default this method is only called when warnMissing is
@@ -156,12 +158,12 @@ public final class SMTUtilities {
 		// when the extending class has no [methodPefix+impl]() method and the
 		// pressMethod cannot be found, which is exactly what we want to occur.
 		try {
-			if (parameter.getSuperclass().getDeclaredMethod(methodPrefix + "Impl") != null) {
+			if (parameter[0].getSuperclass().getDeclaredMethod(methodPrefix + "Impl") != null) {
 				try {
 					// get the method if the class declared the prefix+Impl
 					// method,
 					// otherwise null
-					impl = parameter.getDeclaredMethod(methodPrefix + "Impl");
+					impl = parameter[0].getDeclaredMethod(methodPrefix + "Impl");
 				}
 				catch (Exception e) {}
 				if (impl == null) {
@@ -169,12 +171,12 @@ public final class SMTUtilities {
 						// check if we find the method with the parameter Zone,
 						// and
 						// give warning
-						impl = parameter.getDeclaredMethod(methodPrefix + "Impl", Zone.class);
+						impl = parameter[0].getDeclaredMethod(methodPrefix + "Impl", Zone.class);
 						if (impl != null) {
 							System.err
 									.println(methodPrefix
 											+ "Impl() in the class "
-											+ parameter.getName()
+											+ parameter[0].getName()
 											+ " should not have Zone as a parameter, please remove it to override "
 											+ methodPrefix + "Impl() correctly.");
 							// make sure we don't set impl as to return the
@@ -219,7 +221,8 @@ public final class SMTUtilities {
 										+ method.getName()
 										+ "' corresponds a zone named '"
 										+ method.getName().replaceFirst(prefix, "")
-										+ "' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '"+prefix+"'.");
+										+ "' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '"
+										+ prefix + "'.");
 					}
 				}
 			}

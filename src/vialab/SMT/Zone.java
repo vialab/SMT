@@ -20,7 +20,6 @@
  */
 package vialab.SMT;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -355,27 +354,32 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			boolean warnPick, boolean warnTouchUDM) {
 		if (name != null) {
 			drawMethod = SMTUtilities
-					.getZoneMethod(applet, "draw", name, this.getClass(), warnDraw);
+					.getZoneMethod(applet, "draw", name, warnDraw, this.getClass());
 
-			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, this.getClass(),
-					warnPick);
-			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, this.getClass(),
-					warnTouch);
+			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, warnPick,
+					this.getClass());
 
-			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name,
-					this.getClass(), warnKeys);
-			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name,
-					this.getClass(), warnKeys);
-			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, this.getClass(),
-					warnKeys);
-			touchUpMethod = SMTUtilities.getZoneMethod(applet, "touchUp", name, this.getClass(),
-					warnTouchUDM);
+			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name, warnKeys,
+					this.getClass(), KeyEvent.class);
+			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name, warnKeys,
+					this.getClass(), KeyEvent.class);
+			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, warnKeys,
+					this.getClass(), KeyEvent.class);
+			touchUpMethod = SMTUtilities.getZoneMethod(applet, "touchUp", name, warnTouchUDM,
+					this.getClass(), Touch.class);
 
-			touchDownMethod = SMTUtilities.getZoneMethod(applet, "touchDown", name,
-					this.getClass(), warnTouchUDM);
+			touchDownMethod = SMTUtilities.getZoneMethod(applet, "touchDown", name, warnTouchUDM,
+					this.getClass(), Touch.class);
 
-			touchMovedMethod = SMTUtilities.getZoneMethod(applet, "touchMoved", name,
-					this.getClass(), warnTouchUDM);
+			touchMovedMethod = SMTUtilities.getZoneMethod(applet, "touchMoved", name, warnTouchUDM,
+					this.getClass(), Touch.class);
+			
+			if(touchUpMethod!=null||touchDownMethod!=null||touchMovedMethod!=null){
+				warnTouch=false;
+			}
+			
+			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, warnTouch,
+					this.getClass());
 		}
 
 		touchImpl = SMTUtilities.checkImpl("touch", this.getClass());
@@ -1611,7 +1615,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			endTouch();
 
 			if (touchMethod == null && !(this instanceof ButtonZone) && !(this instanceof KeyZone)
-					&& !(this instanceof SliderZone) && !touchImpl) {
+					&& !(this instanceof SliderZone) && !touchImpl && touchUpMethod==null && touchDownMethod==null && touchMovedMethod==null) {
 				unassignAll();
 			}
 
@@ -1855,14 +1859,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            All generations of children)
 	 * 
 	 * @param enclosingClass
-	 *            - The enclosingClass of the Zone (needed when cloning a Zone that is an inner
-	 *            class and refereneces its data, otherwise passing null is fine)
+	 *            - The enclosingClass of the Zone (needed when cloning a Zone
+	 *            that is an inner class and refereneces its data, otherwise
+	 *            passing null is fine)
 	 */
 	public Zone clone(int cloneMaxChildGenerations, Object enclosingClass) {
 		Zone clone;
 		try {
-			// if inner class, call its constructor properly by passing its enclosing class too
-			if (this.getClass().getEnclosingClass() !=null && this.getClass().getEnclosingClass() == enclosingClass.getClass()) {
+			// if inner class, call its constructor properly by passing its
+			// enclosing class too
+			if (this.getClass().getEnclosingClass() != null
+					&& this.getClass().getEnclosingClass() == enclosingClass.getClass()) {
 				// clone a Zone using a copy constructor
 				clone = this.getClass()
 						.getConstructor(this.getClass().getEnclosingClass(), this.getClass())
@@ -1995,19 +2002,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		SMTUtilities.invoke(keyTypedMethod, applet, this, e);
 	}
 
-	void touchUpInvoker() {
-		touchUpImpl();
-		SMTUtilities.invoke(touchUpMethod, applet, this);
+	void touchUpInvoker(Touch touch) {
+		touchUpImpl(touch);
+		SMTUtilities.invoke(touchUpMethod, applet, this, touch);
 	}
 
-	void touchDownInvoker() {
-		touchDownImpl();
-		SMTUtilities.invoke(touchDownMethod, applet, this);
+	void touchDownInvoker(Touch touch) {
+		touchDownImpl(touch);
+		SMTUtilities.invoke(touchDownMethod, applet, this, touch);
 	}
 
-	void touchMovedInvoker() {
-		touchMovedImpl();
-		SMTUtilities.invoke(touchMovedMethod, applet, this);
+	void touchMovedInvoker(Touch touch) {
+		touchMovedImpl(touch);
+		SMTUtilities.invoke(touchMovedMethod, applet, this, touch);
 	}
 
 	/**
@@ -2031,19 +2038,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * Override to specify a default behavior for touchDown
 	 */
-	protected void touchDownImpl() {
+	protected void touchDownImpl(Touch touch) {
 	}
 
 	/**
 	 * Override to specify a default behavior for touchUp
 	 */
-	protected void touchUpImpl() {
+	protected void touchUpImpl(Touch touch) {
 	}
 
 	/**
 	 * Override to specify a default behavior for touchMoved
 	 */
-	protected void touchMovedImpl() {
+	protected void touchMovedImpl(Touch touch) {
 	}
 
 	/**

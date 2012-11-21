@@ -198,7 +198,7 @@ class SMTTouchManager {
 
 		if (zone != null) {
 			assignTouch(zone, touchPoint);
-			zone.touchDownInvoker();
+			zone.touchDownInvoker(touchPoint);
 		}
 
 		// upon a touch-down anywhere, we set all objects that don't currently
@@ -233,14 +233,16 @@ class SMTTouchManager {
 				touchesPerObject.remove(zone);
 			}
 
-			zone.touchUpInvoker();
+			zone.touchUpInvoker(touch);
 		}
 	}
 
 	private void doTouchesMoved(Zone zone, TouchState currentTouchState) {
 		List<Touch> currentLocalState = localTouchState(currentTouchState, zone);
 		zone.touchesMoved(currentLocalState);
-		zone.touchMovedInvoker();
+		for (Touch t : currentLocalState){
+			zone.touchMovedInvoker(t);
+		}
 	}
 
 	/**
