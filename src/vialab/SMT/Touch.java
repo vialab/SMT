@@ -1,5 +1,6 @@
 package vialab.SMT;
 
+import java.awt.Point;
 import java.util.Vector;
 
 import processing.core.PApplet;
@@ -200,5 +201,20 @@ public class Touch extends TuioCursor {
 
 		super.state = t.getTuioState();
 		state = t.getTuioState();
+	}
+
+	/**
+	 * Gets a Point on the Touch's path history
+	 * @param index
+	 *            The index of the point on the Touch's path (0 is first Point,
+	 *            path.size()-1 is the last Point)
+	 * @return A Point containing the x,y values of the Touch's path at the
+	 *         specified index, returns null if invalid index
+	 */
+	public Point getPointOnPath(int index) {
+		if (index < 0 || index >= path.size()) {
+			return null;
+		}
+		return new Point(path.get(index).getScreenX(applet.width),path.get(index).getScreenY(applet.height));
 	}
 }
