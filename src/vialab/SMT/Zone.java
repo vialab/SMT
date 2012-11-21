@@ -1854,19 +1854,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            None, 1 - First Generation children, ... , Integer.MAX_VALUE -
 	 *            All generations of children)
 	 * 
-	 * @param parentZone
-	 *            - The parent Zone of the clone (needed when cloning a inner
-	 *            class, otherwise passing null is fine)
+	 * @param enclosingClass
+	 *            - The enclosingClass of the Zone (needed when cloning a Zone that is an inner
+	 *            class and refereneces its data, otherwise passing null is fine)
 	 */
-	public Zone clone(int cloneMaxChildGenerations, Zone parentZone) {
+	public Zone clone(int cloneMaxChildGenerations, Object enclosingClass) {
 		Zone clone;
 		try {
 			// if inner class, call its constructor properly by passing its enclosing class too
-			if (this.getClass().getEnclosingClass() != null) {
+			if (this.getClass().getEnclosingClass() !=null && this.getClass().getEnclosingClass() == enclosingClass.getClass()) {
 				// clone a Zone using a copy constructor
 				clone = this.getClass()
 						.getConstructor(this.getClass().getEnclosingClass(), this.getClass())
-						.newInstance(parentZone, this);
+						.newInstance(enclosingClass, this);
 			}
 			else {
 				// clone a Zone using a copy constructor
