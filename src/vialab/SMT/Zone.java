@@ -130,9 +130,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	private boolean touchImpl;
 
 	private boolean pickImpl;
-	
+
 	PGraphics drawPG;
-	
+
 	PGraphics zonePG;
 
 	/**
@@ -389,20 +389,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * recreated, ie. during a zone resize
 	 */
 	protected void init() {
-		if(pg!=null){
-			//save and pop the matrix to finish the matrix loading cycle for the current zonePG, as we are about to change it
+		if (pg != null) {
+			// save and pop the matrix to finish the matrix loading cycle for
+			// the current zonePG, as we are about to change it
 			matrix.preApply((PMatrix3D) zonePG.getMatrix());
 			zonePG.popMatrix();
 		}
-		
-		//pgraphics for the zone
+
+		// pgraphics for the zone
 		zonePG = applet.createGraphics(width, height, renderer);
-		//pgraphics for drawing
-		drawPG=zonePG;
-		//pgraphics that all methods call be default
-		pg=zonePG;
-		
-		//push and clear the matrix to [re]start the matrix loading cycle
+		// pgraphics for drawing
+		drawPG = zonePG;
+		// pgraphics that all methods call be default
+		pg = zonePG;
+
+		// push and clear the matrix to [re]start the matrix loading cycle
 		zonePG.pushMatrix();
 		zonePG.setMatrix(new PMatrix3D());
 	}
@@ -551,7 +552,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			else {
 				drawPG = getParent().drawPG;
 			}
-			pg=drawPG;
+			pg = drawPG;
 			pg.pushMatrix();
 			pg.applyMatrix(matrix);
 		}
@@ -574,19 +575,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			pg.popMatrix();
 		}
 		pg.popStyle();
-		pg=zonePG;
+		pg = zonePG;
 	}
 
 	/**
 	 * Override this if something needs to occur before pickdrawing commands
 	 */
 	protected void beginPickDraw() {
-		//update with changes from zonePG
+		// update with changes from zonePG
 		matrix.preApply((PMatrix3D) zonePG.getMatrix());
 		zonePG.popMatrix();
 		zonePG.pushMatrix();
 		zonePG.setMatrix(new PMatrix3D());
-		
+
 		if (direct) {
 			if (getParent() == null) {
 				drawPG = applet.g;
@@ -594,7 +595,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			else {
 				drawPG = getParent().drawPG;
 			}
-			pg=drawPG;
+			pg = drawPG;
 			pg.pushMatrix();
 			pg.applyMatrix(matrix);
 		}
@@ -626,11 +627,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			pg.popMatrix();
 		}
 		pg.popStyle();
-		pg=zonePG;
+		pg = zonePG;
 	}
 
 	/**
-	 * Call this to before matrix operations on a zone to make them apply immediately
+	 * Call this to before matrix operations on a zone to make them apply
+	 * immediately
 	 * <P>
 	 * Needs a matching endTouch() call to be made afterwards, otherwise the
 	 * matrix stack will overflow with too many pushMatrix commands.
@@ -638,13 +640,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur before touch commands
 	 */
 	public void beginTouch() {
-		pg=drawPG;
+		pg = drawPG;
 		pg.pushMatrix();
 		pg.setMatrix(new PMatrix3D());
 	}
 
 	/**
-	 * Call this to before matrix operations on a zone to make them apply immediately
+	 * Call this to before matrix operations on a zone to make them apply
+	 * immediately
 	 * <P>
 	 * Needs a matching beginTouch() call to be made beforehand, otherwise the
 	 * matrix stack will underflow with too many popMatrix commands.
@@ -723,9 +726,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return The child at the given index, or null if the index is invalid
 	 */
 	public Zone getChild(int index) {
-		try{
+		try {
 			return children.get(index);
-		}catch(Exception e){
+		}
+		catch (Exception e) {
 			return null;
 		}
 	}
@@ -950,7 +954,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 					upLimit, downLimit);
 		}
 	}
-	
+
 	/**
 	 * Performs translate on the current graphics context. Should typically be
 	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
@@ -1825,7 +1829,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	@Override
 	public Zone clone() {
-		return clone(Integer.MAX_VALUE);
+		return clone(Integer.MAX_VALUE, null);
 	}
 
 	/**
@@ -1838,15 +1842,42 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            All generations of children)
 	 */
 	public Zone clone(int cloneMaxChildGenerations) {
+		return clone(cloneMaxChildGenerations, null);
+	}
+
+	/**
+	 * Clones the zone and optionally any child zones up to the specified
+	 * generation of children
+	 * 
+	 * @param cloneMaxChildGenerations
+	 *            - Max limit on how many generations of children to clone (0 -
+	 *            None, 1 - First Generation children, ... , Integer.MAX_VALUE -
+	 *            All generations of children)
+	 * 
+	 * @param parentZone
+	 *            - The parent Zone of the clone (needed when cloning a inner
+	 *            class, otherwise passing null is fine)
+	 */
+	public Zone clone(int cloneMaxChildGenerations, Zone parentZone) {
 		Zone clone;
 		try {
-			//clone a Zone using a copy constructor
-			clone = this.getClass().getConstructor(this.getClass()).newInstance(this);
+			// if inner class, call its constructor properly by passing its enclosing class too
+			if (this.getClass().getEnclosingClass() != null) {
+				// clone a Zone using a copy constructor
+				clone = this.getClass()
+						.getConstructor(this.getClass().getEnclosingClass(), this.getClass())
+						.newInstance(parentZone, this);
+			}
+			else {
+				// clone a Zone using a copy constructor
+				clone = this.getClass().getConstructor(this.getClass()).newInstance(this);
+			}
 		}
 		catch (Exception e) {
-			//if no copy constructor, use the old way of making a normal Zone
+			// if no copy constructor, use the old way of making a normal Zone
 			clone = new Zone(this.getName(), this.x, this.y, this.width, this.height);
 		}
+
 		// use the backupMatrix if the zone being clone has its matrix modified
 		// by parent, and so has backupMatrix set
 		if (this.backupMatrix != null) {
@@ -1859,7 +1890,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 		if (cloneMaxChildGenerations > 0) {
 			for (Zone child : this.getChildren()) {
-				clone.add(child.clone(cloneMaxChildGenerations - 1));
+				clone.add(child.clone(cloneMaxChildGenerations - 1, clone));
 			}
 		}
 		return clone;

@@ -15,6 +15,14 @@ public class TextZone extends Zone {
 
 		public String word;
 		private boolean selected = false;
+		
+		@SuppressWarnings("unused")
+		public WordZone(WordZone original){
+			super(original.x, original.y, original.width, original.height);
+			this.word = original.word;
+			this.setDirect(true);
+			this.selected = original.selected;
+		}
 
 		public WordZone(int x, int y, int width, int height) {
 			super(x, y, width, height);
@@ -78,6 +86,14 @@ public class TextZone extends Zone {
 	private PFont sFont = applet.createFont("SansSerif", 3.0f);
 
 	private boolean blur = false;
+	
+	public TextZone(TextZone original){
+		super(original.x, original.y, original.width, original.height);
+		this.currentWordZone = (WordZone) original.currentWordZone.clone();
+		this.inputText = original.inputText;
+		this.blur = original.blur;
+		this.text = original.text;
+	}
 
 	public TextZone(int x, int y, int width, int height, String inputText, boolean blur) {
 		super(x, y, width, height);
@@ -104,7 +120,6 @@ public class TextZone extends Zone {
 		if (keysRecievedFromApplet) {
 			applet.registerMethod("keyEvent", this);
 		}
-
 	}
 
 	@Override
