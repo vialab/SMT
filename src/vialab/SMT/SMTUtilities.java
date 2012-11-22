@@ -166,7 +166,7 @@ public final class SMTUtilities {
 	 * 
 	 * @param methodPrefix
 	 *            The prefix to check for on methods in the given Class
-	 * @param parameter
+	 * @param parameters
 	 *            The Class to check for having a method with the given
 	 *            methodPrefix
 	 * @return Whether the given class has a method with the given Prefix
