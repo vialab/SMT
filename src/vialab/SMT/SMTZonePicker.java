@@ -91,20 +91,14 @@ class SMTZonePicker {
 
 	public Zone pick(Touch t) {
 		int pickColor = -1;
-
-		if (System.getProperty("os.name").equals("Mac OS X")) {
+		PGL pgl = applet.g.beginPGL();
+		
+		if (pgl == null || System.getProperty("os.name").equals("Mac OS X")) {
 			// Fall back to the working but slow method of getting the pixel
 			// color on Mac
 			pickColor = applet.g.get(t.x, t.y);
 		}
 		else {
-			PGL pgl = applet.g.beginPGL();
-
-			if (pgl == null) {
-				System.err.print("GL not available, picking failed");
-				return null;
-			}
-
 			ByteBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT);
 
 			pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA,
