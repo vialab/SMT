@@ -107,13 +107,34 @@ public final class SMTUtilities {
 		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, warnMissing,
 				zone.getClass());
 	}
+	
+	/**
+	 * Use this method when creating Classes extending Zone, to acquires a
+	 * Method which can be called by invoke(Method, Zone)
+	 * 
+	 * @param methodPrefix
+	 *            The prefix to look for on a method
+	 * @param zone
+	 *            The Zone whose name is used as the method suffix
+	 * @param warnMissing
+	 *            If True show a warning when the method does not exist for the
+	 *            given Zone
+	 * @param parameters
+	 * 			  The parameters that the method will have (use getClass() on an object to get its class to use here)
+	 *            
+	 * @return A Method, which can be called by invoke(Method, parameters... )
+	 */
+	public static Method getZoneMethod(String methodPrefix, Zone zone, boolean warnMissing, Class<?>... parameters) {
+		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, warnMissing,
+				parameters);
+	}
 
 	static Method getZoneMethod(PApplet parent, String methodPrefix, String name,
-			boolean warnMissing, Class<?>... parameter) {
+			boolean warnMissing, Class<?>... parameters) {
 		// uppercase the first letter of the name so that we have consistent
 		// naming warnings
 		name = name.substring(0, 1).toUpperCase() + name.substring(1);
-		Method method = getAnyPMethod(parent, methodPrefix, name, parameter);
+		Method method = getAnyPMethod(parent, methodPrefix, name, parameters);
 		if (method == null) {
 
 			// warn only if the flag is set, the methodSet doesn't contain it(to
@@ -121,7 +142,7 @@ public final class SMTUtilities {
 			// and the methodPrefix+Impl method is not provided by the class
 			// itself
 			if (warnMissing && !methodSet.contains(methodPrefix + name)
-					&& !checkImpl(methodPrefix, parameter)) {
+					&& !checkImpl(methodPrefix, parameters)) {
 				if (!warned) {
 					System.err
 							.println("\nCall TouchClient.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
@@ -130,7 +151,7 @@ public final class SMTUtilities {
 				System.err.println("No such method: " + methodPrefix + name);
 			}
 			//set method to methodPrefix+Default if defined
-			method = getAnyPMethod(parent, methodPrefix, "Default", parameter);
+			method = getAnyPMethod(parent, methodPrefix, "Default", parameters);
 		}
 		methodSet.add(methodPrefix + name);
 		prefixSet.add(methodPrefix);
@@ -150,7 +171,7 @@ public final class SMTUtilities {
 	 *            methodPrefix
 	 * @return Whether the given class has a method with the given Prefix
 	 */
-	public static boolean checkImpl(String methodPrefix, Class<?>... parameter) {
+	public static boolean checkImpl(String methodPrefix, Class<?>... parameters) {
 		Method impl = null;
 		// only check for method impl if the parent class has the method too,
 		// because by default this method is only called when warnMissing is
@@ -158,12 +179,12 @@ public final class SMTUtilities {
 		// when the extending class has no [methodPefix+impl]() method and the
 		// pressMethod cannot be found, which is exactly what we want to occur.
 		try {
-			if (parameter[0].getSuperclass().getDeclaredMethod(methodPrefix + "Impl") != null) {
+			if (parameters[0].getSuperclass().getDeclaredMethod(methodPrefix + "Impl") != null) {
 				try {
 					// get the method if the class declared the prefix+Impl
 					// method,
 					// otherwise null
-					impl = parameter[0].getDeclaredMethod(methodPrefix + "Impl");
+					impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl");
 				}
 				catch (Exception e) {}
 				if (impl == null) {
@@ -171,12 +192,12 @@ public final class SMTUtilities {
 						// check if we find the method with the parameter Zone,
 						// and
 						// give warning
-						impl = parameter[0].getDeclaredMethod(methodPrefix + "Impl", Zone.class);
+						impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl", parameters);
 						if (impl != null) {
 							System.err
 									.println(methodPrefix
 											+ "Impl() in the class "
-											+ parameter[0].getName()
+											+ parameters[0].getName()
 											+ " should not have Zone as a parameter, please remove it to override "
 											+ methodPrefix + "Impl() correctly.");
 							// make sure we don't set impl as to return the
