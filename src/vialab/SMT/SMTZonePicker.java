@@ -111,9 +111,9 @@ class SMTZonePicker {
 			pickColor = (r << 16) + (g << 8) + (b);
 
 			buffer.clear();
-
-			applet.g.endPGL();
 		}
+		
+		applet.g.endPGL();
 
 		// System.out.println("pickColor"+pickColor+ "r" + r + "g"
 		// + g + "b" + b);
