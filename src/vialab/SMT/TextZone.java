@@ -33,7 +33,10 @@ public class TextZone extends Zone {
 
 		@Override
 		public void touchDown(Touch touch) {
-			selected = !selected;
+			if(selectable){
+				selected = !selected;
+			}
+			
 			super.touchDown(touch);
 		}
 
@@ -74,6 +77,8 @@ public class TextZone extends Zone {
 		}
 
 	}
+	
+	private boolean selectable = false;
 
 	private String text = "";
 
@@ -93,12 +98,14 @@ public class TextZone extends Zone {
 		this.inputText = original.inputText;
 		this.blur = original.blur;
 		this.text = original.text;
+		this.selectable = original.selectable;
 	}
 
-	public TextZone(int x, int y, int width, int height, String inputText, boolean blur) {
+	public TextZone(int x, int y, int width, int height, String inputText, boolean selectable, boolean blur) {
 		super(x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 0, 20);
 		this.inputText = inputText;
+		this.selectable = selectable;
 		this.blur = blur;
 	}
 
