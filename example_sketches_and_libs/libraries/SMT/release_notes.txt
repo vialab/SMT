@@ -1,0 +1,9 @@
+SMTv3.2 Release Notes
+_____________________
+
+	API Changes:
+		-applet and client variables now protected
+		-TextZone constructor has a selectable boolean, to specify whether highlighting is done, in addition to blur
+
+	Bug Fixes:
+		-push/pop style for every zone draw properly (no longer inherit style from parent zones)
