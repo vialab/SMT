@@ -256,7 +256,9 @@ public class TouchClient {
 		tuioClient.addTuioListener(listener);
 		tuioClient.connect();
 		
-		parent.hint(PConstants.ENABLE_ACCURATE_2D);
+		if(defaultRenderer.equals("P3D")){
+			parent.hint(PConstants.ENABLE_ACCURATE_2D);
+		}
 	}
 
 	/**
