@@ -1495,7 +1495,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		PGraphics temp = applet.g;
 		applet.g = pg;
-
+		pushStyle();
 		if (picking) {
 			if (pickDrawMethod == null && !pickImpl) {
 				rect(0, 0, width, height);
@@ -1509,6 +1509,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			drawImpl();
 			SMTUtilities.invoke(drawMethod, applet, this);
 		}
+		popStyle();
 		if (drawChildren) {
 			drawDirectChildren(pg, picking);
 		}
