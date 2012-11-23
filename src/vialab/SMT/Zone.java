@@ -58,10 +58,10 @@ import java.awt.event.KeyListener;
  */
 public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** Processing PApplet */
-	static PApplet applet;
+	protected static PApplet applet;
 
 	/** TouchClient */
-	static TouchClient client;
+	protected static TouchClient client;
 
 	/** The zone's transformation matrix */
 	protected PMatrix3D matrix = new PMatrix3D();
