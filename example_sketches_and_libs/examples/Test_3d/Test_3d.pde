@@ -33,11 +33,13 @@ void pickDrawZ3D(Zone zone){
 }
 
 void drawTest(Zone zone){
-  background(123);
+  fill(123);
+  rect(0,0,zone.width,zone.height);
 }
 
 void drawZ3D(Zone zone){
-  background(0);
+  fill(0);
+  rect(0,0,zone.width,zone.height);
   lights();
   translate(zone.width / 2, zone.height / 2);
   rotateY(map(mouseX, 0, zone.width, 0, PI));
