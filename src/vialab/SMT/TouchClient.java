@@ -663,7 +663,16 @@ public class TouchClient {
 	 *            The zone to get the touches of
 	 * @return A Collection<Touch> containing all touches from the given zone
 	 */
-	public Collection<Touch> getTouchesFromZone(Zone zone) {
+	public Collection<Touch> getTouchCollectionFromZone(Zone zone) {
+		return zone.getTouchCollection();
+	}
+	
+	/**
+	 * @param zone
+	 *            The zone to get the touches of
+	 * @return A Touch[] containing all touches from the given zone
+	 */
+	public Touch[] getTouchesFromZone(Zone zone) {
 		return zone.getTouches();
 	}
 

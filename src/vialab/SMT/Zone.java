@@ -423,8 +423,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return A Collection<Touch> containing all touches that are active on the
 	 *         zone
 	 */
-	public Collection<Touch> getTouches() {
+	public Collection<Touch> getTouchCollection() {
 		return Collections.unmodifiableCollection(activeTouches.values());
+	}
+	
+	/**
+	 * @return A Touch[] containing all touches that are active on the
+	 *         zone
+	 */
+	public Touch[] getTouches() {
+		return activeTouches.values().toArray(new Touch[activeTouches.values().size()]);
 	}
 
 	/**
