@@ -1781,6 +1781,43 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		translate(-pair.from.x, -pair.from.y);
 		lastUpdate = maxTime(pair);
 	}
+	
+	/**
+	 * Rotate about the centre (x, y). Single finger gesture.
+	 * Only works inside the zone's touch method, or between calls to
+	 * beginTouch() and endTouch()
+	 * 
+	 */
+	public void rotateAboutCenter() {
+		if (!activeTouches.isEmpty()) {
+			List<TouchPair> pairs = getTouchPairs(1);
+			TouchPair pair = pairs.get(0);
+			
+			if (pair.matches()) {
+				// nothing to do
+				lastUpdate = maxTime(pair);
+				return;
+			}
+
+			PVector centre = new PVector(x, y);
+
+			PVector fromVec = pair.getFromVec();
+			fromVec.sub(centre);
+
+			PVector toVec = pair.getToVec();
+			toVec.sub(centre);
+			
+			float angle = PVector.angleBetween(fromVec, toVec);
+			PVector cross = fromVec.cross(toVec);
+			cross.normalize();
+			
+			translate(x, y);
+			rotate(angle*cross.z);
+			translate(-x, -y);
+			
+			lastUpdate = maxTime(pair);
+		}
+	}
 
 	/**
 	 * @return A PVector containing the centre point of the Zone
@@ -2045,55 +2082,55 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Override to specify a default behavior for draw
+	 * Override to specify a default behaviour for draw
 	 */
 	protected void drawImpl() {
 	}
 
 	/**
-	 * Override to specify a default behavior for touch
+	 * Override to specify a default behaviour for touch
 	 */
 	protected void touchImpl() {
 	}
 
 	/**
-	 * Override to specify a default behavior for pickDraw
+	 * Override to specify a default behaviour for pickDraw
 	 */
 	protected void pickDrawImpl() {
 	}
 
 	/**
-	 * Override to specify a default behavior for touchDown
+	 * Override to specify a default behaviour for touchDown
 	 */
 	protected void touchDownImpl(Touch touch) {
 	}
 
 	/**
-	 * Override to specify a default behavior for touchUp
+	 * Override to specify a default behaviour for touchUp
 	 */
 	protected void touchUpImpl(Touch touch) {
 	}
 
 	/**
-	 * Override to specify a default behavior for touchMoved
+	 * Override to specify a default behaviour for touchMoved
 	 */
 	protected void touchMovedImpl(Touch touch) {
 	}
 
 	/**
-	 * Override to specify a default behavior for keyPressed
+	 * Override to specify a default behaviour for keyPressed
 	 */
 	protected void keyPressedImpl(KeyEvent e) {
 	}
 
 	/**
-	 * Override to specify a default behavior for keyReleased
+	 * Override to specify a default behaviour for keyReleased
 	 */
 	protected void keyReleasedImpl(KeyEvent e) {
 	}
 
 	/**
-	 * Override to specify a default behavior for keyTyped
+	 * Override to specify a default behaviour for keyTyped
 	 */
 	protected void keyTypedImpl(KeyEvent e) {
 	}
