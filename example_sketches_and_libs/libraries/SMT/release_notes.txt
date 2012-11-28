@@ -7,8 +7,10 @@ _____________________
 		-Touch.getLastPoint() now returns a Point instead of a TuioPoint
 	
 	API Additions:
-		-applet and client variables now protected
+		-applet and client variables in Zone now protected
+		-parent variable in Zone now protected
 		-Touch.getCurrentPoint(), similar to getLastPoint except gets the current point
 
 	Bug Fixes:
 		-push/pop style for every zone draw properly (no longer inherit style from parent zones)
+		-push/pop style in touch methods properly
