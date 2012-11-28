@@ -20,6 +20,8 @@
  */
 package vialab.SMT;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,9 +40,6 @@ import processing.core.PMatrix3D;
 import processing.core.PVector;
 import vialab.SMT.KeyboardZone.KeyZone;
 import TUIO.TuioTime;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 /**
  * This is the main zone class which all other Zones extend. It holds the zone's
@@ -841,24 +840,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public int getY() {
 		return this.y;
-	}
-	
-	/**
-	 * Get the zone x-coordinate mapped to the global coordinate system.
-	 * 
-	 * @return x int representing the upper left x-coordinate of the zone.
-	 */
-	public int getGlobalX() {
-		return (int) matrix.m03;
-	}
-	
-	/**
-	 * Get the zone y-coordinate mapped to the global coordinate system.
-	 * 
-	 * @return y int representing the upper left y-coordinate of the zone.
-	 */
-	public int getGlobalY() {
-		return (int) matrix.m13;
 	}
 
 	/**
@@ -1783,12 +1764,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 	
 	/**
-	 * Rotate about the centre (x, y). Single finger gesture.
+	 * Rotate about the centre. Single finger gesture.
 	 * Only works inside the zone's touch method, or between calls to
 	 * beginTouch() and endTouch()
 	 * 
 	 */
-	public void rotateAboutCenter() {
+	public void rotateAboutCentre() {
 		if (!activeTouches.isEmpty()) {
 			List<TouchPair> pairs = getTouchPairs(1);
 			TouchPair pair = pairs.get(0);
@@ -1799,25 +1780,66 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				return;
 			}
 
-			PVector centre = new PVector(x, y);
+			// PMatrix3D matrix = new PMatrix3D();
+			
+			PVector centre = getCentre();
+			
+			translate(centre.x, centre.y);
 
 			PVector fromVec = pair.getFromVec();
 			fromVec.sub(centre);
 
 			PVector toVec = pair.getToVec();
 			toVec.sub(centre);
+
+			float toDist = toVec.mag();
+			if (toDist > 0) {
+				float angle = PVector.angleBetween(fromVec, toVec);
+				PVector cross = PVector.cross(fromVec, toVec, new PVector());
+				cross.normalize();
+
+				if (angle != 0 && cross.z != 0) {
+					//TODO: figure out why angle is incorrect
+					rotate(angle*2f, cross.x, cross.y, cross.z);
+				}
+			}
 			
-			float angle = PVector.angleBetween(fromVec, toVec);
-			PVector cross = fromVec.cross(toVec);
-			cross.normalize();
-			
-			translate(x, y);
-			rotate(angle*cross.z);
-			translate(-x, -y);
-			
+			translate(-centre.x, -centre.y);
 			lastUpdate = maxTime(pair);
 		}
 	}
+	
+	/**
+	 * Performs translate on the current graphics context. Should typically be
+	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * 
+	 * @param dragX
+	 *            Allow dragging left and right
+	 * @param dragY
+	 *            Allow dragging up and down
+	 * @param leftLimit
+	 *            Limit on how far to be able to drag left
+	 * @param rightLimit
+	 *            Limit on how far to be able to drag right
+	 * @param upLimit
+	 *            Limit on how far to be able to drag up
+	 * @param downLimit
+	 *            Limit on how far to be able to drag down
+	 */
+	//TODO: finish this method
+	/*
+	public void rotateAboutCenterAndDrag(boolean dragX, boolean dragY, int leftLimit, int rightLimit, int upLimit, int downLimit) {
+		if (!activeTouches.isEmpty()) {
+			List<TouchPair> pairs = getTouchPairs(1);
+			TouchPair pair = pairs.get(0);
+		
+			if (pair.matches()) {
+				lastUpdate = maxTime(pair);
+				return;
+			}
+		}
+	}
+	*/
 
 	/**
 	 * @return A PVector containing the centre point of the Zone
