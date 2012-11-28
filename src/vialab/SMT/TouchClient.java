@@ -73,6 +73,8 @@ public class TouchClient {
 
 	private static int MAX_PATH_LENGTH = 50;
 
+	private static Process tuioServer;
+
 	/** Processing PApplet */
 	static PApplet parent;
 
@@ -192,7 +194,7 @@ public class TouchClient {
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	private TouchClient(PApplet parent, int port, TouchSource source) {
+	private TouchClient(final PApplet parent, int port, TouchSource source) {
 		// As of now the toolkit only supports OpenGL
 		if (!parent.g.isGL()) {
 			System.out
@@ -202,7 +204,7 @@ public class TouchClient {
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
-		parent.registerMethod("dispose", this);
+		//parent.registerMethod("dispose", this);
 		parent.registerMethod("draw", this);
 		parent.registerMethod("pre", this);
 		// handler = new GestureHandler();
@@ -255,8 +257,26 @@ public class TouchClient {
 
 		tuioClient.addTuioListener(listener);
 		tuioClient.connect();
-		
+
 		parent.hint(PConstants.ENABLE_ACCURATE_2D);
+
+		/**
+		 * Disconnects the TuioClient when the PApplet is stopped. Shuts down
+		 * any threads, disconnect from the net, unload memory, etc.
+		 */
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				if (warnUncalledMethods) {
+					SMTUtilities.warnUncalledMethods(parent);
+				}
+				if (tuioClient.isConnected()) {
+					tuioClient.disconnect();
+				}
+				if (tuioServer != null) {
+					tuioServer.destroy();
+				}
+			}
+		}));
 	}
 
 	/**
@@ -358,6 +378,11 @@ public class TouchClient {
 	 */
 	public void add(Zone... zones) {
 		for (Zone zone : zones) {
+			//Zone is being added at top level, make sure its parent is set to null, so that we draw it at TouchClient level
+			//the zone will set parent afterwards when adding anyways, so we should always do this to make sure we dont have issues
+			//when a zone has not been removed from its parent (and so parent!=null), and so is not drawn after being added to TouchClient
+			zone.parent=null;
+			
 			addToZoneList(zone);
 			picker.add(zone);
 		}
@@ -666,7 +691,7 @@ public class TouchClient {
 	public Collection<Touch> getTouchCollectionFromZone(Zone zone) {
 		return zone.getTouchCollection();
 	}
-	
+
 	/**
 	 * @param zone
 	 *            The zone to get the touches of
@@ -767,19 +792,6 @@ public class TouchClient {
 	}
 
 	/**
-	 * Disconnects the TuioClient when the PApplet is stopped. Shuts down any
-	 * threads, disconnect from the net, unload memory, etc.
-	 */
-	public static void dispose() {
-		if (warnUncalledMethods) {
-			SMTUtilities.warnUncalledMethods(parent);
-		}
-		if (tuioClient.isConnected()) {
-			tuioClient.disconnect();
-		}
-	}
-
-	/**
 	 * Runs a server that sends TUIO events using Windows 7 Touch events
 	 * 
 	 * @param is64Bit
@@ -831,7 +843,7 @@ public class TouchClient {
 				@Override
 				public void run() {
 					try {
-						Process tuioServer = Runtime.getRuntime().exec(
+						tuioServer = Runtime.getRuntime().exec(
 								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
 						BufferedInputStream err = new BufferedInputStream(
 								tuioServer.getInputStream());
@@ -914,8 +926,7 @@ public class TouchClient {
 				@Override
 				public void run() {
 					try {
-						Process tuioServer = Runtime.getRuntime().exec(
-								exeTempFile.getAbsolutePath());
+						tuioServer = Runtime.getRuntime().exec(exeTempFile.getAbsolutePath());
 						BufferedInputStream err = new BufferedInputStream(
 								tuioServer.getInputStream());
 						String s = "";
