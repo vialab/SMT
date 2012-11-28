@@ -10,9 +10,14 @@ _____________________
 		-applet and client variables in Zone now protected
 		-parent variable in Zone now protected
 		-Touch.getCurrentPoint(), similar to getLastPoint except gets the current point
+		-TextZone now has an additional constructor that specifies textSize
 
+	Feature Changes:
+		-TextZone now selects(highlights)/unblurs when moving across the text to the right, and unselects(unhighlights)/blurs when moving across the text to the left 
+		-TextZone now renders its text immediately
 	Bug Fixes:
 		-push/pop style for every zone draw properly (no longer inherit style from parent zones)
 		-push/pop style in touch methods properly
 		-Try to do proper shutdown in TouchClient
 		-set Zone.parent to null in TouchClient.add() to make sure we draw the Zone at the top level unless it gets a new parent set
+		-TextZone.clone()/TextZone copy constructor fixed to copy all TextZone state
