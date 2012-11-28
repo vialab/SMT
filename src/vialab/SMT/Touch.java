@@ -154,15 +154,17 @@ public class Touch extends TuioCursor {
 	}
 
 	/**
-	 * @return The TuioPoint containing the last point of the Touch
+	 * @return The Point containing the last point of the Touch
 	 */
-	public TuioPoint getLastPoint() {
-		Vector<TuioPoint> path = getPath();
-		if (path.size() <= 1) {
-			return null;
-		}
-
-		return path.get(path.size() - 2);
+	public Point getLastPoint() {
+		return getPointOnPath(path.size() - 2);
+	}
+	
+	/**
+	 * @return The Point containing the current point of the Touch
+	 */
+	public Point getCurrentPoint() {
+		return getPointOnPath(path.size() - 1);
 	}
 
 	/**
@@ -207,7 +209,7 @@ public class Touch extends TuioCursor {
 	 * Gets a Point on the Touch's path history
 	 * @param index
 	 *            The index of the point on the Touch's path (0 is first Point,
-	 *            path.size()-1 is the last Point)
+	 *            Touch.path.size()-1 is the current Point)
 	 * @return A Point containing the x,y values of the Touch's path at the
 	 *         specified index, returns null if invalid index
 	 */

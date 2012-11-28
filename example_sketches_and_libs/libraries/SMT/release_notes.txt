@@ -3,8 +3,12 @@ _____________________
 
 	API Changes:
 		-Zone.getTouches() and TouchClient.getTouchesFromZone(Zone) return an array now instead of a collection, the old forms are now called Zone.getTouchCollection() and TouchClient.getTouchCollectionFromZone(Zone)
-		-applet and client variables now protected
 		-TextZone constructor has a selectable boolean, to specify whether highlighting is done, in addition to blur
+		-Touch.getLastPoint() now returns a Point instead of a TuioPoint
+	
+	API Additions:
+		-applet and client variables now protected
+		-Touch.getCurrentPoint(), similar to getLastPoint except gets the current point
 
 	Bug Fixes:
 		-push/pop style for every zone draw properly (no longer inherit style from parent zones)
