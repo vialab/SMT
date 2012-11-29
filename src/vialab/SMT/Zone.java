@@ -691,8 +691,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public boolean add(Zone zone) {
 		if (zone != null) {
 			// if the parent already is in the client zoneList, then add the
-			// child
-			if (TouchClient.zoneList.contains(this)) {
+			// child if it is not in the client zoneList
+			if (TouchClient.zoneList.contains(this) && !TouchClient.zoneList.contains(zone)) {
 				client.add(zone);
 			}
 			zone.parent = this;
@@ -1618,8 +1618,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			applet.g = pg;
 
 			beginTouch();
+			pushStyle();
 			touchImpl();
 			SMTUtilities.invoke(touchMethod, applet, this);
+			popStyle();
 			endTouch();
 
 			if (touchMethod == null && !(this instanceof ButtonZone) && !(this instanceof KeyZone)

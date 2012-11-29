@@ -32,30 +32,28 @@ public class TextZone extends Zone {
 		}
 
 		@Override
-		public void touchDown(Touch touch) {
-			if(selectable){
-				selected = !selected;
+		public void touchMovedImpl(Touch touch) {
+			if(touch.getLastPoint()!=null && !word.matches("\\s*") && selectable){
+				if(touch.getLastPoint().x<touch.x){
+					//moving right, so highlight/unblur by setting selected to true
+					selected=true;
+				}else if(touch.getLastPoint().x>touch.x){
+					//moving left, so unhighlight/blur by setting selected to false
+					selected=false;
+				}
 			}
-			
-			super.touchDown(touch);
 		}
 
 		@Override
 		public void drawImpl() {
-			if (blur) {
-				textFont(font);
-				textSize(16);
-			}else{
-				textSize(16);
-			}
-			width = (int) Math.ceil(textWidth(word));
+			textSize(fontSize);
 			fill(255);
 			if (blur) {
 				textFont(sFont);
 				if (selected) {
 					textFont(font);
 				}
-				textSize(16);
+				textSize(fontSize);
 				if (width > 0) {
 					noStroke();
 					rect(0, 0, width, height);
@@ -80,8 +78,6 @@ public class TextZone extends Zone {
 	
 	private boolean selectable = false;
 
-	private String text = "";
-
 	private String inputText;
 
 	private WordZone currentWordZone;
@@ -91,22 +87,42 @@ public class TextZone extends Zone {
 	private PFont sFont = applet.createFont("SansSerif", 3.0f);
 
 	private boolean blur = false;
+
+	private boolean keysFromApplet = false;
+
+	private float fontSize=16;
 	
 	public TextZone(TextZone original){
 		super(original.x, original.y, original.width, original.height);
 		this.currentWordZone = (WordZone) original.currentWordZone.clone();
 		this.inputText = original.inputText;
 		this.blur = original.blur;
-		this.text = original.text;
 		this.selectable = original.selectable;
+		this.keysFromApplet=original.keysFromApplet;
+		if (this.keysFromApplet) {
+			applet.registerMethod("keyEvent", this);
+		}
+	}
+	
+	public TextZone(int x, int y, int width, int height, String inputText, boolean selectable, boolean blur) {
+		this(x, y, width, height, inputText, selectable, blur, 16);
 	}
 
-	public TextZone(int x, int y, int width, int height, String inputText, boolean selectable, boolean blur) {
+	public TextZone(int x, int y, int width, int height, String inputText, boolean selectable, boolean blur, float fontSize) {
 		super(x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 0, 20);
 		this.inputText = inputText;
 		this.selectable = selectable;
 		this.blur = blur;
+		this.fontSize=fontSize;
+		
+		if(fontSize != 16){
+			font = applet.createFont("SansSerif", fontSize);
+		}
+		
+		for(char c : inputText.toCharArray()){
+			this.addChar(c);
+		}
 	}
 
 	public TextZone(int x, int y, int width, int height) {
@@ -124,6 +140,7 @@ public class TextZone extends Zone {
 	public TextZone(String name, int x, int y, int width, int height, boolean keysRecievedFromApplet) {
 		super(name, x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 0, 20);
+		this.keysFromApplet = keysRecievedFromApplet;
 		if (keysRecievedFromApplet) {
 			applet.registerMethod("keyEvent", this);
 		}
@@ -134,38 +151,36 @@ public class TextZone extends Zone {
 		fill(255);
 		noStroke();
 		rect(0, 0, width, height);
-		if (inputText != null && inputText.length() > text.length()) {
-			addChar(inputText.charAt(text.length()));
-		}
 	}
 
 	public void addChar(char c) {
 		if (c == ' ') {
 			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
-					currentWordZone.y, 0, 20);
+					currentWordZone.y, 0, (int) (fontSize*(20.0/16.0)));
 			currentWordZone.word += " ";
 		}
 		else if (c == '\t') {
 			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
-					currentWordZone.y, 0, 20);
+					currentWordZone.y, 0, (int) (fontSize*(20.0/16.0)));
 			currentWordZone.word += "    ";
 		}
 		else if (c == '\n') {
-			this.currentWordZone = new WordZone(0, currentWordZone.y + 20, 0, 20);
+			this.currentWordZone = new WordZone(0, currentWordZone.y +  (int) (fontSize*(20.0/16.0)), 0,  (int) (fontSize*(20.0/16.0)));
 		}
 		else {
 			if (currentWordZone.word.trim().equals("")) {
 				currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
-						currentWordZone.y, 0, 20);
+						currentWordZone.y, 0,  (int) (fontSize*(20.0/16.0)));
 			}
-			if (currentWordZone.x + currentWordZone.width + 15 > width) {
-				this.currentWordZone.setData(0, currentWordZone.y + 20, 0, 20);
+			if (currentWordZone.x + currentWordZone.width + fontSize > width) {
+				this.currentWordZone.setData(0, currentWordZone.y +  (int) (fontSize*(20.0/16.0)), 0,  (int) (fontSize*(20.0/16.0)));
 			}
 			this.currentWordZone.word += c;
-		}
-		if (inputText != null && inputText.length() > text.length()) {
-			text += inputText.charAt(text.length());
-		}
+		}	
+		pushStyle();
+		textSize(fontSize);
+		currentWordZone.width = (int) Math.ceil(textWidth(currentWordZone.word));
+		popStyle();
 	}
 
 	@Override
