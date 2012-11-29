@@ -1801,7 +1801,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				cross.normalize();
 
 				if (angle != 0 && cross.z != 0) {
-					//TODO: figure out why angle is incorrect
 					rotate(angle, cross.x, cross.y, cross.z);
 				}
 			}
@@ -1810,38 +1809,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			lastUpdate = maxTime(pair);
 		}
 	}
-	
-	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
-	 * 
-	 * @param dragX
-	 *            Allow dragging left and right
-	 * @param dragY
-	 *            Allow dragging up and down
-	 * @param leftLimit
-	 *            Limit on how far to be able to drag left
-	 * @param rightLimit
-	 *            Limit on how far to be able to drag right
-	 * @param upLimit
-	 *            Limit on how far to be able to drag up
-	 * @param downLimit
-	 *            Limit on how far to be able to drag down
-	 */
-	//TODO: finish this method
-	/*
-	public void rotateAboutCenterAndDrag(boolean dragX, boolean dragY, int leftLimit, int rightLimit, int upLimit, int downLimit) {
-		if (!activeTouches.isEmpty()) {
-			List<TouchPair> pairs = getTouchPairs(1);
-			TouchPair pair = pairs.get(0);
-		
-			if (pair.matches()) {
-				lastUpdate = maxTime(pair);
-				return;
-			}
-		}
-	}
-	*/
 
 	/**
 	 * @return A PVector containing the centre point of the Zone
