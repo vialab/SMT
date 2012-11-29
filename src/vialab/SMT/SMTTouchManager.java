@@ -138,7 +138,7 @@ class SMTTouchManager {
 				// or an old touch that just crossed an object
 				// or an old touch that was unassigned from an object
 				Zone picked = picker.pick(touchPoint);
-				// dont fire touchDown when repicking to same zone (both null is
+				// don't fire touchDown when re-picking to same zone (both null is
 				// also caught by this), to avoid the auto-unassignAll() which
 				// allows picking to different zones with one touch by default,
 				// from causing touchDown being called every frame when the
