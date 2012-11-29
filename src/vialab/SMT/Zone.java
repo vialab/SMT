@@ -1800,7 +1800,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 				if (angle != 0 && cross.z != 0) {
 					//TODO: figure out why angle is incorrect
-					rotate(angle*2f, cross.x, cross.y, cross.z);
+					rotate(angle, cross.x, cross.y, cross.z);
 				}
 			}
 			
