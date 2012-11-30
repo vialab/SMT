@@ -2,6 +2,7 @@ package vialab.SMT;
 
 import java.awt.Point;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import processing.core.PApplet;
 import TUIO.*;
@@ -10,6 +11,10 @@ import TUIO.*;
  * Touch has some state information and extends TuioCursor
  */
 public class Touch extends TuioCursor {
+	
+	CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
+	
+	boolean grabbed = false;
 
 	/** Processing PApplet */
 	static PApplet applet = TouchClient.parent;
