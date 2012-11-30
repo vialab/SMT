@@ -20,6 +20,8 @@
  */
 package vialab.SMT;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,9 +41,6 @@ import processing.core.PMatrix3D;
 import processing.core.PVector;
 import vialab.SMT.KeyboardZone.KeyZone;
 import TUIO.TuioTime;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 /**
  * This is the main zone class which all other Zones extend. It holds the zone's
@@ -67,7 +66,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** The zone's transformation matrix */
 	protected PMatrix3D matrix = new PMatrix3D();
 
-	private PMatrix3D backupMatrix = null;
+	protected PMatrix3D backupMatrix = null;
 
 	/** The zone's inverse transformation matrix */
 	protected PMatrix3D inverse = new PMatrix3D();
@@ -75,7 +74,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public int x, y, height, width;
 
 	// A LinkedHashMap will allow insertion order to be maintained.
-	// A synchronized one will prevent concurrent modification (which can happen
+	// A synchronised one will prevent concurrent modification (which can happen
 	// pretty easily with the draw loop + touch event handling).
 	/** All of the currently active touches for this zone */
 	public Map<Long, Touch> activeTouches = Collections
@@ -83,15 +82,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected CopyOnWriteArrayList<Zone> children = new CopyOnWriteArrayList<Zone>();
 
-	private int pickColor = -1;
+	protected int pickColor = -1;
 
-	private TuioTime lastUpdate = TuioTime.getSessionTime();
+	protected TuioTime lastUpdate = TuioTime.getSessionTime();
 
 	// private boolean pickInitialized = false;
 
 	protected Zone parent = null;
 
-	private float rntRadius;
+	protected float rntRadius;
 
 	protected Method drawMethod = null;
 
@@ -120,20 +119,20 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * The direct flag controls whether rendering directly onto
 	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
-	 * drawing into an image we have assured size(cant draw outside of zone),
+	 * drawing into an image we have assured size(can't draw outside of zone),
 	 * and background() will work for just the zone, but we lose a large amount
 	 * of performance.
 	 */
-	private boolean direct = !false; // don't use indirect rendering yet by
+	protected boolean direct = !false; // don't use indirect rendering yet by
 										// default, still has sampling issues
 
-	private boolean touchImpl;
+	protected boolean touchImpl;
 
-	private boolean pickImpl;
+	protected boolean pickImpl;
 
-	PGraphics drawPG;
+	protected PGraphics drawPG;
 
-	PGraphics zonePG;
+	protected PGraphics zonePG;
 
 	/**
 	 * Check state of the direct flag.
@@ -675,16 +674,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		pg.popMatrix();
 	}
 
-	int getPickColor() {
+	protected int getPickColor() {
 		return pickColor;
 	}
 
-	void setPickColor(int color) {
+	protected void setPickColor(int color) {
 		this.pickColor = color;
 		// pickInitialized = false;
 	}
 
-	void removePickColor() {
+	protected void removePickColor() {
 		pickColor = -1;
 	}
 
@@ -1056,7 +1055,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param dragY
 	 *            Whether to drag along the y-axis
 	 */
-	void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown) {
+	protected void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown) {
 		drag(pair, dragLeft, dragRight, dragUp, dragDown, Integer.MIN_VALUE, Integer.MAX_VALUE,
 				Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
@@ -1084,7 +1083,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param downLimit
 	 *            Limit on how far to be able to drag down
 	 */
-	void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp,
+	protected void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp,
 			boolean dragDown, int leftLimit, int rightLimit, int upLimit, int downLimit) {
 		if (pair.matches()) {
 			lastUpdate = maxTime(pair);
@@ -1283,7 +1282,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param translateX
 	 * @param translateY
 	 */
-	void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale, boolean translateX,
+	protected void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale, boolean translateX,
 			boolean translateY) {
 
 		if (first.matches() && second.matches()) {
@@ -1490,15 +1489,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		drag(false, false, false, true);
 	}
 
-	void draw() {
+	protected void draw() {
 		draw(true, false);
 	}
 
-	void drawForPickBuffer() {
+	protected void drawForPickBuffer() {
 		draw(true, true);
 	}
 
-	void draw(boolean drawChildren, boolean picking) {
+	protected void draw(boolean drawChildren, boolean picking) {
 		if (picking) {
 			beginPickDraw();
 		}
@@ -1539,7 +1538,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	void drawIndirectImage(PGraphics img, boolean drawChildren, boolean picking) {
+	protected void drawIndirectImage(PGraphics img, boolean drawChildren, boolean picking) {
 		if (img != null) {
 			img.flush();
 			applet.g.pushMatrix();
@@ -1564,7 +1563,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	}
 
-	void drawDirectChildren(PGraphics pg, boolean picking) {
+	protected void drawDirectChildren(PGraphics pg, boolean picking) {
 		for (Zone child : children) {
 			if (child.direct) {
 				drawChild(child, pg, picking);
@@ -1572,7 +1571,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	void drawIndirectChildren(PGraphics g, boolean picking) {
+	protected void drawIndirectChildren(PGraphics g, boolean picking) {
 		for (Zone child : children) {
 			if (!child.direct) {
 				drawChild(child, g, picking);
@@ -1580,13 +1579,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	void drawChildren(PGraphics g, boolean picking) {
+	protected void drawChildren(PGraphics g, boolean picking) {
 		for (Zone child : children) {
 			drawChild(child, g, picking);
 		}
 	}
 
-	void drawChild(Zone child, PGraphics pg, boolean picking) {
+	protected void drawChild(Zone child, PGraphics pg, boolean picking) {
 		// only draw/pickDraw when the child is in zonelist (parent zone's are
 		// responsible for adding/removing child to/from zonelist)
 		if (TouchClient.zoneList.contains(child)) {
@@ -1609,15 +1608,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		popStyle();
 	}
 
-	void touch() {
+	protected void touch() {
 		touch(true);
 	}
 
-	void touch(boolean touchChildren) {
+	protected void touch(boolean touchChildren) {
 		touch(touchChildren, false);
 	}
 
-	void touch(boolean touchChildren, boolean isChild) {
+	protected void touch(boolean touchChildren, boolean isChild) {
 		if (isActive()) {
 			PGraphics temp = applet.g;
 			applet.g = pg;
@@ -1735,7 +1734,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            The rotation radius (how far out from centre before rotation
 	 *            is applied)
 	 */
-	void rnt(TouchPair pair, float centreRadius) {
+	protected void rnt(TouchPair pair, float centreRadius) {
 
 		if (pair.matches()) {
 			// nothing to do
@@ -1769,6 +1768,51 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		translate(-pair.from.x, -pair.from.y);
 		lastUpdate = maxTime(pair);
 	}
+	
+	/**
+	 * Rotate about the centre. Single finger gesture.
+	 * Only works inside the zone's touch method, or between calls to
+	 * beginTouch() and endTouch()
+	 * 
+	 */
+	public void rotateAboutCentre() {
+		if (!activeTouches.isEmpty()) {
+			List<TouchPair> pairs = getTouchPairs(1);
+			TouchPair pair = pairs.get(0);
+			
+			if (pair.matches()) {
+				// nothing to do
+				lastUpdate = maxTime(pair);
+				return;
+			}
+
+			// PMatrix3D matrix = new PMatrix3D();
+			
+			PVector centre = getCentre();
+			
+			translate(centre.x, centre.y);
+
+			PVector fromVec = pair.getFromVec();
+			fromVec.sub(centre);
+
+			PVector toVec = pair.getToVec();
+			toVec.sub(centre);
+
+			float toDist = toVec.mag();
+			if (toDist > 0) {
+				float angle = PVector.angleBetween(fromVec, toVec);
+				PVector cross = PVector.cross(fromVec, toVec, new PVector());
+				cross.normalize();
+
+				if (angle != 0 && cross.z != 0) {
+					rotate(angle, cross.x, cross.y, cross.z);
+				}
+			}
+			
+			translate(-centre.x, -centre.y);
+			lastUpdate = maxTime(pair);
+		}
+	}
 
 	/**
 	 * @return A PVector containing the centre point of the Zone
@@ -1778,7 +1822,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return matrix.mult(centre, new PVector());
 	}
 
-	private TuioTime maxTime(Iterable<Touch> touches) {
+	protected TuioTime maxTime(Iterable<Touch> touches) {
 		ArrayList<TuioTime> times = new ArrayList<TuioTime>();
 		for (Touch t : touches) {
 			if (t != null) {
@@ -1788,7 +1832,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return Collections.max(times, SMTUtilities.tuioTimeComparator);
 	}
 
-	private TuioTime maxTime(TouchPair... pairs) {
+	protected TuioTime maxTime(TouchPair... pairs) {
 		ArrayList<Touch> touches = new ArrayList<Touch>(pairs.length * 2);
 		for (TouchPair pair : pairs) {
 			touches.add(pair.from);
@@ -1815,7 +1859,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return null;
 	}
 
-	private List<TouchPair> getTouchPairs() {
+	protected List<TouchPair> getTouchPairs() {
 		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(activeTouches.size());
 		for (Touch touch : activeTouches.values()) {
 			//grab all the touchpoints we put into touchpairs
@@ -1825,7 +1869,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return pairs;
 	}
 
-	private List<TouchPair> getTouchPairs(int minSize) {
+	protected List<TouchPair> getTouchPairs(int minSize) {
 		List<TouchPair> pairs = getTouchPairs();
 		for (int i = pairs.size(); i < minSize; i++) {
 			pairs.add(new TouchPair());
@@ -1833,11 +1877,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return pairs;
 	}
 
-	void touchDown(Touch touch) {
+	protected void touchDown(Touch touch) {
 		assign(touch);
 	}
 
-	void touchUp(Touch touch) {
+	protected void touchUp(Touch touch) {
 		unassign(touch);
 	}
 
@@ -2015,71 +2059,71 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		SMTUtilities.invoke(keyTypedMethod, applet, this, e);
 	}
 
-	void touchUpInvoker(Touch touch) {
+	protected void touchUpInvoker(Touch touch) {
 		touchUpImpl(touch);
 		SMTUtilities.invoke(touchUpMethod, applet, this, touch);
 	}
 
-	void touchDownInvoker(Touch touch) {
+	protected void touchDownInvoker(Touch touch) {
 		touchDownImpl(touch);
 		SMTUtilities.invoke(touchDownMethod, applet, this, touch);
 	}
 
-	void touchMovedInvoker(Touch touch) {
+	protected void touchMovedInvoker(Touch touch) {
 		touchMovedImpl(touch);
 		SMTUtilities.invoke(touchMovedMethod, applet, this, touch);
 	}
 
 	/**
-	 * Override to specify a default behavior for draw
+	 * Override to specify a default behaviour for draw
 	 */
 	protected void drawImpl() {
 	}
 
 	/**
-	 * Override to specify a default behavior for touch
+	 * Override to specify a default behaviour for touch
 	 */
 	protected void touchImpl() {
 	}
 
 	/**
-	 * Override to specify a default behavior for pickDraw
+	 * Override to specify a default behaviour for pickDraw
 	 */
 	protected void pickDrawImpl() {
 	}
 
 	/**
-	 * Override to specify a default behavior for touchDown
+	 * Override to specify a default behaviour for touchDown
 	 */
 	protected void touchDownImpl(Touch touch) {
 	}
 
 	/**
-	 * Override to specify a default behavior for touchUp
+	 * Override to specify a default behaviour for touchUp
 	 */
 	protected void touchUpImpl(Touch touch) {
 	}
 
 	/**
-	 * Override to specify a default behavior for touchMoved
+	 * Override to specify a default behaviour for touchMoved
 	 */
 	protected void touchMovedImpl(Touch touch) {
 	}
 
 	/**
-	 * Override to specify a default behavior for keyPressed
+	 * Override to specify a default behaviour for keyPressed
 	 */
 	protected void keyPressedImpl(KeyEvent e) {
 	}
 
 	/**
-	 * Override to specify a default behavior for keyReleased
+	 * Override to specify a default behaviour for keyReleased
 	 */
 	protected void keyReleasedImpl(KeyEvent e) {
 	}
 
 	/**
-	 * Override to specify a default behavior for keyTyped
+	 * Override to specify a default behaviour for keyTyped
 	 */
 	protected void keyTypedImpl(KeyEvent e) {
 	}
