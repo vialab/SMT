@@ -2023,6 +2023,34 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		temp.mult(local, out);
 		return out;
 	}
+	
+	/**
+	 * Returns a matrix relative to global coordinate space
+	 * 
+	 * @return A PMatrix3D relative to the global coordinate space
+	 */
+	public PMatrix3D getGlobalMatrix() {
+		PMatrix3D temp = new PMatrix3D();
+		// list ancestors in order from most distant to closest, in order to
+		// apply their matrix's in order
+		LinkedList<Zone> ancestors = new LinkedList<Zone>();
+		Zone zone = this;
+		while (zone.getParent() != null) {
+			zone = zone.getParent();
+			ancestors.addFirst(zone);
+		}
+		// apply ancestors matrix's in proper order to make sure image is
+		// correctly oriented, but not when backupMatrix is set, as then it
+		// already has its parents applied to it.
+		if (backupMatrix == null) {
+			for (Zone i : ancestors) {
+				temp.apply(i.matrix);
+			}
+		}
+		temp.apply(matrix);
+		
+		return temp;
+	}
 
 	/**
 	 * Changes the ordering of the child zones, placing the given one on top

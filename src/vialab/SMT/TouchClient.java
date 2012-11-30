@@ -76,35 +76,35 @@ public class TouchClient {
 	private static Process tuioServer;
 
 	/** Processing PApplet */
-	static PApplet parent;
+	public static PApplet parent;
 
 	/** The TouchClient */
-	static TouchClient client;
+	public static TouchClient client;
 
 	/** Gesture Handler */
-	// static GestureHandler handler;
+	//public static GestureHandler handler;
 
 	/** Tuio Client that listens for Tuio Messages via port 3333 UDP */
-	static TuioClient tuioClient;
+	public static TuioClient tuioClient;
 
 	/** The main zone list */
 	protected static CopyOnWriteArrayList<Zone> zoneList = new CopyOnWriteArrayList<Zone>();
 
 	/** Flag for drawing touch points */
-	static boolean drawTouchPoints = true;
+	public static boolean drawTouchPoints = true;
 
 	/** Matrix used to test if the zone has gone off the screen */
 	// private PMatrix3D mTest = new PMatrix3D();
 
-	static SMTZonePicker picker;
+	public static SMTZonePicker picker;
 
-	private static SMTTuioListener listener;
+	public static SMTTuioListener listener;
 
-	private static SMTTouchManager manager;
+	public static SMTTouchManager manager;
 
 	private Method touch;
 
-	static Boolean warnUnimplemented;
+	public static Boolean warnUnimplemented;
 
 	/**
 	 * This controls whether we give a warning for uncalled methods which use
