@@ -641,8 +641,17 @@ public class TouchClient {
 	 * 
 	 * @return Collection<Touch>
 	 */
-	public Collection<Touch> getTouches() {
+	public Collection<Touch> getTouchCollection() {
 		return getTouchMap().values();
+	}
+	
+	/**
+	 * Returns a collection containing all the current Touches(TuioCursors).
+	 * 
+	 * @return Touch[] containing all touches that are currently mapped
+	 */
+	public Touch[] getTouches() {
+		return getTouchMap().values().toArray(new Touch[getTouchMap().values().size()]);
 	}
 
 	/**

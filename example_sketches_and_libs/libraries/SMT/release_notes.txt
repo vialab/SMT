@@ -5,6 +5,7 @@ _____________________
 		-Zone.getTouches() and TouchClient.getTouchesFromZone(Zone) return an array now instead of a collection, the old forms are now called Zone.getTouchCollection() and TouchClient.getTouchCollectionFromZone(Zone)
 		-TextZone constructor has a selectable boolean, to specify whether highlighting is done, in addition to blur
 		-Touch.getLastPoint() now returns a Point instead of a TuioPoint
+		-TouchClient.getTouches() now returns an array, the old form is available using TouchClient.getTouchCollection()
 	
 	API Additions:
 		-applet and client variables in Zone now protected
