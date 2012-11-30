@@ -1,8 +1,6 @@
 package vialab.SMT;
 
 import java.lang.reflect.Method;
-import java.util.List;
-
 import processing.core.PFont;
 
 /**
@@ -132,18 +130,14 @@ public class ButtonZone extends Zone {
 	}
 
 	@Override
-	public void touchesMoved(List<Touch> currentLocalState){
-		super.touchesMoved(currentLocalState);
-		
-		buttonDown = false;
-		for (Touch t : currentLocalState) {
-			Zone picked = TouchClient.picker.pick(t);
-			if (picked != null && picked.equals(this)) {
-				buttonDown = true;
-			}
-			else {
-				unassign(t);
-			}
+	public void touchMovedImpl(Touch t){
+		Zone picked = TouchClient.picker.pick(t);
+		if (picked != null && picked.equals(this)) {
+			buttonDown = true;
+		}
+		else {
+			unassign(t);
+			buttonDown = false;
 		}
 	}
 	
@@ -205,10 +199,10 @@ public class ButtonZone extends Zone {
 
 	@Override
 	public void touchUp(Touch touch) {
-		super.touchUp(touch);
 		setButtonDown();
-
-		if (!isButtonDown()&&!deactivated) {
+		super.touchUp(touch);
+		
+		if (isButtonDown()&&!deactivated) {
 			pressImpl();
 			SMTUtilities.invoke(pressMethod, applet, this);
 		}

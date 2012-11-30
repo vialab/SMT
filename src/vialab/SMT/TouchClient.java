@@ -631,9 +631,7 @@ public class TouchClient {
 	 *            arguments
 	 */
 	public void assignTouches(Zone zone, Touch... touches) {
-		for (Touch touch : touches) {
-			manager.assignTouch(zone, touch);
-		}
+		zone.assign(touches);
 	}
 
 	/**

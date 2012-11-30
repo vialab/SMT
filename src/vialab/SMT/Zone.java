@@ -22,6 +22,7 @@ package vialab.SMT;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -488,9 +489,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            A number of Touch objects, variable number of arguments
 	 */
 	public void assign(Touch... touches) {
-		for (Touch touch : touches) {
-			activeTouches.put(touch.sessionID, touch);
-		}
+		assign(Arrays.asList(touches));
 	}
 
 	/**
@@ -503,6 +502,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void assign(Iterable<? extends Touch> touches) {
 		for (Touch touch : touches) {
 			activeTouches.put(touch.sessionID, touch);
+			touch.assignedZones.add(this);
 		}
 	}
 
@@ -537,7 +537,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Unassigns all Touch objects from this zone, clearing activeTouches.
 	 */
 	public void unassignAll() {
-		activeTouches.clear();
+		for(long id : activeTouches.keySet()){
+			unassign(id);
+		}
 	}
 
 	/**
@@ -547,8 +549,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param sessionID
 	 */
 	public void unassign(long sessionID) {
-		if (activeTouches.containsKey(sessionID)) {
+		Touch t = activeTouches.get(sessionID);
+		if(t!=null){
 			activeTouches.remove(sessionID);
+			t.assignedZones.remove(this);
 		}
 	}
 
@@ -1814,6 +1818,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	private List<TouchPair> getTouchPairs() {
 		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(activeTouches.size());
 		for (Touch touch : activeTouches.values()) {
+			//grab all the touchpoints we put into touchpairs
+			touch.grabbed=true;
 			pairs.add(new TouchPair(SMTUtilities.getLastTouchAtTime(touch, lastUpdate), touch));
 		}
 		return pairs;
@@ -1833,10 +1839,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	void touchUp(Touch touch) {
 		unassign(touch);
-	}
-
-	void touchesMoved(List<Touch> currentLocalState) {
-		assign(currentLocalState);
 	}
 
 	/**
