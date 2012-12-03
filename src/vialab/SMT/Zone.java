@@ -134,6 +134,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected PGraphics zonePG;
 
+	private boolean touchUDM;
+
 	/**
 	 * Check state of the direct flag.
 	 * <P>
@@ -352,6 +354,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM) {
+		
+		touchUDM = SMTUtilities.checkImpl("touchDown", this.getClass(), Touch.class) || SMTUtilities.checkImpl("touchUp", this.getClass(), Touch.class) || SMTUtilities.checkImpl("touchMoved", this.getClass(), Touch.class);
+		
 		if (name != null) {
 			drawMethod = SMTUtilities
 					.getZoneMethod(applet, "draw", name, warnDraw, this.getClass());
@@ -374,7 +379,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			touchMovedMethod = SMTUtilities.getZoneMethod(applet, "touchMoved", name, warnTouchUDM,
 					this.getClass(), Touch.class);
 			
-			if(touchUpMethod!=null||touchDownMethod!=null||touchMovedMethod!=null){
+			if(touchUpMethod!=null||touchDownMethod!=null||touchMovedMethod!=null||touchUDM){
 				warnTouch=false;
 			}
 			
@@ -1629,7 +1634,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			endTouch();
 
 			if (touchMethod == null && !(this instanceof ButtonZone) && !(this instanceof KeyZone)
-					&& !(this instanceof SliderZone) && !touchImpl && touchUpMethod==null && touchDownMethod==null && touchMovedMethod==null) {
+					&& !(this instanceof SliderZone) && !touchImpl && touchUpMethod==null && touchDownMethod==null && touchMovedMethod==null && !touchUDM) {
 				unassignAll();
 			}
 

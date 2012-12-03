@@ -23,3 +23,4 @@ _____________________
 		-set Zone.parent to null in TouchClient.add() to make sure we draw the Zone at the top level unless it gets a new parent set
 		-TextZone.clone()/TextZone copy constructor fixed to copy all TextZone state
 		-assign(Touch) and unassign(Touch) now work properly
+		-No longer warn that touchMethod is missing if touchDownImpl/touchUpImpl/touchMovedImpl exists, and also don't auto-unassignall() if these methods are used
