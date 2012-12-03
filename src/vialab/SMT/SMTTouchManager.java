@@ -13,7 +13,7 @@ class SMTTouchManager {
 	private Method touchDown, touchMoved, touchUp;
 
 	static TouchState currentTouchState = new TouchState();
-	
+
 	static TouchState previousTouchState;
 
 	public SMTTouchManager(SMTTuioListener tuioListener, SMTZonePicker picker) {
@@ -38,7 +38,7 @@ class SMTTouchManager {
 		// TouchState currentTouchState = touchListener.dequeueTouchState();
 
 		previousTouchState = new TouchState(currentTouchState);
-		
+
 		currentTouchState.update(tuioListener.getCurrentTuioState());
 
 		// forward events
@@ -47,14 +47,14 @@ class SMTTouchManager {
 		handleTouchesMoved();
 		// }
 	}
-	
+
 	/**
 	 * Handles every touch in the current but not the previous state.
 	 */
 	protected void handleTouchesDown() {
 		for (Touch touchPoint : currentTouchState) {
-			//touchDowns only happen on new touches
-			if(!previousTouchState.contains(touchPoint.sessionID)){
+			// touchDowns only happen on new touches
+			if (!previousTouchState.contains(touchPoint.sessionID)) {
 				SMTUtilities.invoke(touchDown, applet);
 				doTouchDown(picker.pick(touchPoint), touchPoint);
 			}
@@ -69,7 +69,7 @@ class SMTTouchManager {
 			if (!currentTouchState.contains(t.sessionID)) {
 				SMTUtilities.invoke(touchUp, applet);
 				// the touch existed, but no longer exists, so it went up
-				for(Zone zone : t.assignedZones){
+				for (Zone zone : t.assignedZones) {
 					doTouchUp(zone, t);
 				}
 			}
@@ -77,20 +77,22 @@ class SMTTouchManager {
 	}
 
 	/**
-	 * Handles the movement of touches. A touch is "moved" if it is in both the previous and current state
+	 * Handles the movement of touches. A touch is "moved" if it is in both the
+	 * previous and current state
 	 */
 	protected void handleTouchesMoved() {
 		for (Touch t : currentTouchState) {
 			if (previousTouchState.contains(t.sessionID)) {
 				SMTUtilities.invoke(touchMoved, applet);
 				if (!t.grabbed) {
-					//Assign the touch to the picked Zone, as long as the touch is not grabbed
+					// Assign the touch to the picked Zone, as long as the touch
+					// is not grabbed
 					Zone z = picker.pick(t);
-					if(z!=null){
+					if (z != null) {
 						z.assign(t);
 					}
 				}
-				for(Zone zone : t.assignedZones){
+				for (Zone zone : t.assignedZones) {
 					doTouchMoved(zone, t);
 				}
 			}

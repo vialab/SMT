@@ -9,7 +9,7 @@ import processing.core.PFont;
  * with an overridden pressImpl()
  */
 public class ButtonZone extends Zone {
-	
+
 	public boolean deactivated = false;
 
 	private int fontSize;
@@ -39,7 +39,7 @@ public class ButtonZone extends Zone {
 	private boolean buttonDown = false;
 
 	private int deactivatedColor = applet.color(255);
-	
+
 	private int deactivatedTextColor = applet.color(175);
 
 	public ButtonZone() {
@@ -130,7 +130,7 @@ public class ButtonZone extends Zone {
 	}
 
 	@Override
-	public void touchMovedImpl(Touch t){
+	public void touchMovedImpl(Touch t) {
 		Zone picked = TouchClient.picker.pick(t);
 		if (picked != null && picked.equals(this)) {
 			buttonDown = true;
@@ -140,15 +140,17 @@ public class ButtonZone extends Zone {
 			buttonDown = false;
 		}
 	}
-	
+
 	@Override
-	public void touchImpl() {}
+	public void touchImpl() {
+	}
 
 	@Override
 	public void drawImpl() {
-		if(deactivated){
+		if (deactivated) {
 			drawImpl(deactivatedColor, deactivatedTextColor);
-		}else{
+		}
+		else {
 			if (buttonDown) {
 				drawImpl(pressedColor, pressedTextColor);
 			}
@@ -201,8 +203,8 @@ public class ButtonZone extends Zone {
 	public void touchUp(Touch touch) {
 		setButtonDown();
 		super.touchUp(touch);
-		
-		if (isButtonDown()&&!deactivated) {
+
+		if (isButtonDown() && !deactivated) {
 			pressImpl();
 			SMTUtilities.invoke(pressMethod, applet, this);
 		}
