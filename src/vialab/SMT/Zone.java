@@ -701,6 +701,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public boolean add(Zone zone) {
 		if (zone != null) {
+			// make sure children immediately get parents current matrix, these
+			// calls should not occur if we do not call begin/endTouch once per
+			// frame and once at Zone initialization
+			this.endTouch();
+			this.beginTouch();
+
 			// if the parent already is in the client zoneList, then add the
 			// child if it is not in the client zoneList
 			if (TouchClient.zoneList.contains(this) && !TouchClient.zoneList.contains(zone)) {

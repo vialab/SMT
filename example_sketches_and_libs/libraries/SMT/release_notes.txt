@@ -24,3 +24,4 @@ _____________________
 		-TextZone.clone()/TextZone copy constructor fixed to copy all TextZone state
 		-assign(Touch) and unassign(Touch) now work properly
 		-No longer warn that touchMethod is missing if touchDownImpl/touchUpImpl/touchMovedImpl exists, and also don't auto-unassignall() if these methods are used
+		-Zone.add() and TouchClient.add() now updates the Zone's matrix to make sure the first draw is done with the correct matrix (prevents an incorrect frame from being rendered)

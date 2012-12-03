@@ -389,6 +389,12 @@ public class TouchClient {
 
 			addToZoneList(zone);
 			picker.add(zone);
+
+			// make sure the matrix is up to date, these calls should not occur
+			// if we do not call begin/endTouch once per
+			// frame and once at Zone initialization
+			zone.endTouch();
+			zone.beginTouch();
 		}
 	}
 
