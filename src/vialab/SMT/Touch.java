@@ -14,7 +14,7 @@ public class Touch extends TuioCursor {
 
 	CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
 
-	boolean grabbed = false;
+	public boolean grabbed = false;
 
 	/** Processing PApplet */
 	static PApplet applet = TouchClient.parent;
