@@ -134,6 +134,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected PGraphics zonePG;
 
+	private boolean touchUDM;
+
 	/**
 	 * Check state of the direct flag.
 	 * <P>
@@ -352,6 +354,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM) {
+
+		touchUDM = SMTUtilities.checkImpl("touchDown", this.getClass(), Touch.class)
+				|| SMTUtilities.checkImpl("touchUp", this.getClass(), Touch.class)
+				|| SMTUtilities.checkImpl("touchMoved", this.getClass(), Touch.class);
+
 		if (name != null) {
 			drawMethod = SMTUtilities
 					.getZoneMethod(applet, "draw", name, warnDraw, this.getClass());
@@ -373,11 +380,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 			touchMovedMethod = SMTUtilities.getZoneMethod(applet, "touchMoved", name, warnTouchUDM,
 					this.getClass(), Touch.class);
-			
-			if(touchUpMethod!=null||touchDownMethod!=null||touchMovedMethod!=null){
-				warnTouch=false;
+
+			if (touchUpMethod != null || touchDownMethod != null || touchMovedMethod != null
+					|| touchUDM) {
+				warnTouch = false;
 			}
-			
+
 			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, warnTouch,
 					this.getClass());
 		}
@@ -426,10 +434,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public Collection<Touch> getTouchCollection() {
 		return Collections.unmodifiableCollection(activeTouches.values());
 	}
-	
+
 	/**
-	 * @return A Touch[] containing all touches that are active on the
-	 *         zone
+	 * @return A Touch[] containing all touches that are active on the zone
 	 */
 	public Touch[] getTouches() {
 		return activeTouches.values().toArray(new Touch[activeTouches.values().size()]);
@@ -536,7 +543,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Unassigns all Touch objects from this zone, clearing activeTouches.
 	 */
 	public void unassignAll() {
-		for(long id : activeTouches.keySet()){
+		for (long id : activeTouches.keySet()) {
 			unassign(id);
 		}
 	}
@@ -549,7 +556,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public void unassign(long sessionID) {
 		Touch t = activeTouches.get(sessionID);
-		if(t!=null){
+		if (t != null) {
 			activeTouches.remove(sessionID);
 			t.assignedZones.remove(this);
 		}
@@ -655,9 +662,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur before touch commands
 	 */
 	public void beginTouch() {
-		pg = drawPG;
-		pg.pushMatrix();
-		pg.setMatrix(new PMatrix3D());
+		zonePG.pushMatrix();
+		zonePG.setMatrix(new PMatrix3D());
 	}
 
 	/**
@@ -670,8 +676,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur after touch commands
 	 */
 	public void endTouch() {
-		matrix.preApply((PMatrix3D) pg.getMatrix());
-		pg.popMatrix();
+		matrix.preApply((PMatrix3D) zonePG.getMatrix());
+		zonePG.popMatrix();
 	}
 
 	protected int getPickColor() {
@@ -694,6 +700,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public boolean add(Zone zone) {
 		if (zone != null) {
+			// make sure children immediately get parents current matrix, these
+			// calls should not occur if we do not call begin/endTouch once per
+			// frame and once at Zone initialization
+			this.endTouch();
+			this.beginTouch();
+
 			// if the parent already is in the client zoneList, then add the
 			// child if it is not in the client zoneList
 			if (TouchClient.zoneList.contains(this) && !TouchClient.zoneList.contains(zone)) {
@@ -1055,7 +1067,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param dragY
 	 *            Whether to drag along the y-axis
 	 */
-	protected void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown) {
+	protected void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp,
+			boolean dragDown) {
 		drag(pair, dragLeft, dragRight, dragUp, dragDown, Integer.MIN_VALUE, Integer.MAX_VALUE,
 				Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
@@ -1282,8 +1295,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param translateX
 	 * @param translateY
 	 */
-	protected void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale, boolean translateX,
-			boolean translateY) {
+	protected void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale,
+			boolean translateX, boolean translateY) {
 
 		if (first.matches() && second.matches()) {
 			// nothing to do
@@ -1629,7 +1642,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			endTouch();
 
 			if (touchMethod == null && !(this instanceof ButtonZone) && !(this instanceof KeyZone)
-					&& !(this instanceof SliderZone) && !touchImpl && touchUpMethod==null && touchDownMethod==null && touchMovedMethod==null) {
+					&& !(this instanceof SliderZone) && !touchImpl && touchUpMethod == null
+					&& touchDownMethod == null && touchMovedMethod == null && !touchUDM) {
 				unassignAll();
 			}
 
@@ -1768,18 +1782,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		translate(-pair.from.x, -pair.from.y);
 		lastUpdate = maxTime(pair);
 	}
-	
+
 	/**
-	 * Rotate about the centre. Single finger gesture.
-	 * Only works inside the zone's touch method, or between calls to
-	 * beginTouch() and endTouch()
+	 * Rotate about the centre. Single finger gesture. Only works inside the
+	 * zone's touch method, or between calls to beginTouch() and endTouch()
 	 * 
 	 */
 	public void rotateAboutCentre() {
 		if (!activeTouches.isEmpty()) {
 			List<TouchPair> pairs = getTouchPairs(1);
 			TouchPair pair = pairs.get(0);
-			
+
 			if (pair.matches()) {
 				// nothing to do
 				lastUpdate = maxTime(pair);
@@ -1787,9 +1800,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			}
 
 			// PMatrix3D matrix = new PMatrix3D();
-			
+
 			PVector centre = getCentre();
-			
+
 			translate(centre.x, centre.y);
 
 			PVector fromVec = pair.getFromVec();
@@ -1808,7 +1821,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 					rotate(angle, cross.x, cross.y, cross.z);
 				}
 			}
-			
+
 			translate(-centre.x, -centre.y);
 			lastUpdate = maxTime(pair);
 		}
@@ -1862,8 +1875,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected List<TouchPair> getTouchPairs() {
 		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(activeTouches.size());
 		for (Touch touch : activeTouches.values()) {
-			//grab all the touchpoints we put into touchpairs
-			touch.grabbed=true;
+			// grab all the touchpoints we put into touchpairs
+			touch.grabbed = true;
 			pairs.add(new TouchPair(SMTUtilities.getLastTouchAtTime(touch, lastUpdate), touch));
 		}
 		return pairs;

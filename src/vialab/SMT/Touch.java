@@ -11,10 +11,10 @@ import TUIO.*;
  * Touch has some state information and extends TuioCursor
  */
 public class Touch extends TuioCursor {
-	
+
 	CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
-	
-	boolean grabbed = false;
+
+	public boolean grabbed = false;
 
 	/** Processing PApplet */
 	static PApplet applet = TouchClient.parent;
@@ -164,7 +164,7 @@ public class Touch extends TuioCursor {
 	public Point getLastPoint() {
 		return getPointOnPath(path.size() - 2);
 	}
-	
+
 	/**
 	 * @return The Point containing the current point of the Touch
 	 */
@@ -212,6 +212,7 @@ public class Touch extends TuioCursor {
 
 	/**
 	 * Gets a Point on the Touch's path history
+	 * 
 	 * @param index
 	 *            The index of the point on the Touch's path (0 is first Point,
 	 *            Touch.path.size()-1 is the current Point)
@@ -222,6 +223,7 @@ public class Touch extends TuioCursor {
 		if (index < 0 || index >= path.size()) {
 			return null;
 		}
-		return new Point(path.get(index).getScreenX(applet.width),path.get(index).getScreenY(applet.height));
+		return new Point(path.get(index).getScreenX(applet.width), path.get(index).getScreenY(
+				applet.height));
 	}
 }

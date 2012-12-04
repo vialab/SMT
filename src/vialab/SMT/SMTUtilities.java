@@ -69,22 +69,23 @@ public final class SMTUtilities {
 
 	static Method getAnyPMethod(PApplet parent, String methodPrefix, String methodSuffix,
 			Class<?>... parameter) {
-		if(parameter.length==0){
+		if (parameter.length == 0) {
 			return getPMethod(parent, methodPrefix, methodSuffix, parameter);
 		}
-		
+
 		if (parameter[0] == null) {
-			//try to get a method with the first class removed from the parameter list since it is null
-			Class<?>[] firstRemoved = new Class<?>[parameter.length-1];
-			System.arraycopy(parameter, 1, firstRemoved, 0, parameter.length-1);
+			// try to get a method with the first class removed from the
+			// parameter list since it is null
+			Class<?>[] firstRemoved = new Class<?>[parameter.length - 1];
+			System.arraycopy(parameter, 1, firstRemoved, 0, parameter.length - 1);
 			return getAnyPMethod(parent, methodPrefix, methodSuffix, firstRemoved);
 		}
 
 		Method method = getPMethod(parent, methodPrefix, methodSuffix, parameter);
 		if (method == null) {
-			//recurse only on first class
+			// recurse only on first class
 			Class<?> superClass = parameter[0].getSuperclass();
-			parameter[0]=superClass;
+			parameter[0] = superClass;
 			method = getAnyPMethod(parent, methodPrefix, methodSuffix, parameter);
 		}
 		return method;
@@ -107,7 +108,7 @@ public final class SMTUtilities {
 		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, warnMissing,
 				zone.getClass());
 	}
-	
+
 	/**
 	 * Use this method when creating Classes extending Zone, to acquires a
 	 * Method which can be called by invoke(Method, Zone)
@@ -120,11 +121,13 @@ public final class SMTUtilities {
 	 *            If True show a warning when the method does not exist for the
 	 *            given Zone
 	 * @param parameters
-	 * 			  The parameters that the method will have (use getClass() on an object to get its class to use here)
-	 *            
+	 *            The parameters that the method will have (use getClass() on an
+	 *            object to get its class to use here)
+	 * 
 	 * @return A Method, which can be called by invoke(Method, parameters... )
 	 */
-	public static Method getZoneMethod(String methodPrefix, Zone zone, boolean warnMissing, Class<?>... parameters) {
+	public static Method getZoneMethod(String methodPrefix, Zone zone, boolean warnMissing,
+			Class<?>... parameters) {
 		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, warnMissing,
 				parameters);
 	}
@@ -150,7 +153,7 @@ public final class SMTUtilities {
 				}
 				System.err.println("No such method: " + methodPrefix + name);
 			}
-			//set method to methodPrefix+Default if defined
+			// set method to methodPrefix+Default if defined
 			method = getAnyPMethod(parent, methodPrefix, "Default", parameters);
 		}
 		methodSet.add(methodPrefix + name);
