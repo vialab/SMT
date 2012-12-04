@@ -12,6 +12,7 @@ _____________________
 		-parent variable in Zone now protected
 		-Touch.getCurrentPoint(), similar to getLastPoint except gets the current point
 		-TextZone now has an additional constructor that specifies textSize
+		-Zone now has getGlobalMatrix() which returns a PMatrix3D of the Zone's matrix relative to global co-ordinates
 
 	Feature Changes:
 		-TextZone now selects(highlights)/unblurs when moving across the text to the right, and unselects(unhighlights)/blurs when moving across the text to the left 
