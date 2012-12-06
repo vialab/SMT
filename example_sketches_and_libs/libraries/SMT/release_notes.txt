@@ -11,7 +11,7 @@ _____________________
 		-applet and client variables in Zone now protected
 		-parent variable in Zone now protected
 		-Touch.getCurrentPoint(), similar to getLastPoint except gets the current point
-		-TextZone now has an additional constructor that specifies textSize
+		-TextZone now has an additional constructor that specifies fontSize, blur, selectable, and name
 		-Zone now has getGlobalMatrix() which returns a PMatrix3D of the Zone's matrix relative to global co-ordinates
 		-KeyboardZone now has the following additional methods: clearKeyListeners(), getZoneKeyListeners(), getKeyListeners()
 

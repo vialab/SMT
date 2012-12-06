@@ -109,10 +109,10 @@ public class TextZone extends Zone {
 
 	public TextZone(int x, int y, int width, int height, String inputText, boolean selectable,
 			boolean blur) {
-		this(x, y, width, height, inputText, selectable, blur, 16);
+		this(null, x, y, width, height, inputText, selectable, blur, 16);
 	}
 
-	public TextZone(int x, int y, int width, int height, String inputText, boolean selectable,
+	public TextZone(String name, int x, int y, int width, int height, String inputText, boolean selectable,
 			boolean blur, float fontSize) {
 		super(x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 0, 20);
