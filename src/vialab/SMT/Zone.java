@@ -715,6 +715,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			if (!children.contains(zone)) {
 				return children.add(zone);
 			}
+		}else{
+			System.err.println("Error: Added a null Zone");
 		}
 		return false;
 	}
@@ -734,6 +736,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			}
 			child.parent = null;
 			return children.remove(child);
+		}else{
+			System.err.println("Error: Removed a null Zone");
 		}
 		return false;
 	}

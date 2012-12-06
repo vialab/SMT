@@ -396,6 +396,8 @@ public class TouchClient {
 				// frame and once at Zone initialization
 				zone.endTouch();
 				zone.beginTouch();
+			}else{
+				System.err.println("Error: Added a null Zone");
 			}
 		}
 	}
@@ -550,6 +552,8 @@ public class TouchClient {
 		if(zone != null){
 			picker.remove(zone);
 			return removeFromZoneList(zone);
+		}else{
+			System.err.println("Error: Removed a null Zone");
 		}
 		return false;
 	}
