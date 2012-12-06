@@ -380,11 +380,9 @@ public class TouchClient {
 		for (Zone zone : zones) {
 			if (zone != null) {
 				// Zone is being added at top level, make sure its parent is set
-				// to
-				// null, so that we draw it at TouchClient level
+				// to null, so that we draw it at TouchClient level
 				// the zone will set parent afterwards when adding anyways, so
-				// we
-				// should always do this to make sure we dont have issues
+				// we should always do this to make sure we dont have issues
 				// when a zone has not been removed from its parent (and so
 				// parent!=null), and so is not drawn after being added to
 				// TouchClient
@@ -394,8 +392,7 @@ public class TouchClient {
 				picker.add(zone);
 
 				// make sure the matrix is up to date, these calls should not
-				// occur
-				// if we do not call begin/endTouch once per
+				// occur if we do not call begin/endTouch once per
 				// frame and once at Zone initialization
 				zone.endTouch();
 				zone.beginTouch();
