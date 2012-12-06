@@ -178,11 +178,13 @@ public class TextZone extends Zone {
 				currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
 						currentWordZone.y, 0, (int) (fontSize * (20.0 / 16.0)));
 			}
-			if (currentWordZone.x + currentWordZone.width + fontSize > width) {
+			if (currentWordZone.x + currentWordZone.width + fontSize > width && currentWordZone.x != 0) {
 				this.currentWordZone.setData(0, currentWordZone.y
 						+ (int) (fontSize * (20.0 / 16.0)), 0, (int) (fontSize * (20.0 / 16.0)));
 			}
-			this.currentWordZone.word += c;
+			if(currentWordZone.x + currentWordZone.width + fontSize <= width){
+				this.currentWordZone.word += c;
+			}
 		}
 		pushStyle();
 		textSize(fontSize);

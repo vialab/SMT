@@ -18,6 +18,8 @@ _____________________
 	Feature Changes:
 		-TextZone now selects(highlights)/unblurs when moving across the text to the right, and unselects(unhighlights)/blurs when moving across the text to the left 
 		-TextZone now renders its text immediately
+		-TextZone now cuts off text past its width, instead of going to a newline every character
+
 	Bug Fixes:
 		-push/pop style for every zone draw properly (no longer inherit style from parent zones)
 		-push/pop style in touch methods properly
