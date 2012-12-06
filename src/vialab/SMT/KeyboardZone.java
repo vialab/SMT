@@ -354,6 +354,37 @@ public class KeyboardZone extends Zone {
 	public void removeKeyListener(KeyListener listener) {
 		this.keyListeners.remove(listener);
 	}
+	
+	/**
+	 * This clears all KeyListeners from this keyboard
+	 */
+	public void clearKeyListeners(KeyListener listener) {
+		this.keyListeners.clear();
+	}
+	
+	/**
+	 * This returns an array of all KeyListeners on this keyboard that are Zones
+	 * 
+	 * @return A Zone[] containing all zones that are KeyListeners on this keyboard
+	 */
+	public Zone[] getZoneKeyListeners() {
+		ArrayList<Zone> zones = new ArrayList<Zone>();
+		for(KeyListener k : this.keyListeners){
+			if(k instanceof Zone){
+				zones.add((Zone) k);
+			}
+		}
+		return zones.toArray(new Zone[zones.size()]);
+	}
+	
+	/**
+	 * This returns an array of all KeyListeners on this keyboard
+	 * 
+	 * @return A KeyListener[] containing all KeyListeners on this keyboard
+	 */
+	public KeyListener[] getKeyListeners() {
+		return keyListeners.toArray(new Zone[keyListeners.size()]);
+	}
 
 	private void modifierDown(int keyCode) {
 		switch (keyCode) {
