@@ -66,9 +66,8 @@ public class KeyboardZone extends Zone {
 		}
 
 		@Override
-		public void touchUp(Touch touch) {
-			super.touchUp(touch);
-			if (isButtonDown() && keyDown) {
+		public void pressImpl() {
+			if (keyDown) {
 				keyUp();
 			}
 		}
