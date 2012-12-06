@@ -167,7 +167,7 @@ public class ButtonZone extends Zone {
 		return buttonDown;
 	}
 
-	private boolean setButtonDown() {
+	protected boolean setButtonDown() {
 		buttonDown = false;
 		for (Touch t : getTouches()) {
 			Zone picked = TouchClient.picker.pick(t);

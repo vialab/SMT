@@ -37,6 +37,14 @@ public class KeyboardZone extends Zone {
 				keyDown();
 			}
 		}
+		
+		@Override
+		public void touchMovedImpl(Touch touch) {
+			this.setButtonDown();
+			if (!keyDown && this.isButtonDown()) {
+				keyDown();
+			}
+		}
 
 		private void keyDown() {
 			keyDown = true;
@@ -60,7 +68,7 @@ public class KeyboardZone extends Zone {
 		@Override
 		public void touchUp(Touch touch) {
 			super.touchUp(touch);
-			if (!isButtonDown() && keyDown) {
+			if (isButtonDown() && keyDown) {
 				keyUp();
 			}
 		}
