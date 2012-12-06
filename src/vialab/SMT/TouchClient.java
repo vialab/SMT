@@ -547,8 +547,11 @@ public class TouchClient {
 	 * @return Whether the zone was removed
 	 */
 	public boolean remove(Zone zone) {
-		picker.remove(zone);
-		return removeFromZoneList(zone);
+		if(zone != null){
+			picker.remove(zone);
+			return removeFromZoneList(zone);
+		}
+		return false;
 	}
 
 	private boolean removeFromZoneList(Zone zone) {
