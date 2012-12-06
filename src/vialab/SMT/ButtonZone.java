@@ -208,7 +208,7 @@ public class ButtonZone extends Zone {
 			pressImpl();
 			SMTUtilities.invoke(pressMethod, applet, this);
 		}
-		buttonDown=false;
+		buttonDown = false;
 	}
 
 	@Override

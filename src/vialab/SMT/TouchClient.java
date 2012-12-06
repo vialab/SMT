@@ -82,7 +82,7 @@ public class TouchClient {
 	protected static TouchClient client;
 
 	/** Gesture Handler */
-	//private static GestureHandler handler;
+	// private static GestureHandler handler;
 
 	/** Tuio Client that listens for Tuio Messages via port 3333 UDP */
 	protected static TuioClient tuioClient;
@@ -378,25 +378,29 @@ public class TouchClient {
 	 */
 	public void add(Zone... zones) {
 		for (Zone zone : zones) {
-			if(zone !=null){
-				// Zone is being added at top level, make sure its parent is set to
+			if (zone != null) {
+				// Zone is being added at top level, make sure its parent is set
+				// to
 				// null, so that we draw it at TouchClient level
-				// the zone will set parent afterwards when adding anyways, so we
+				// the zone will set parent afterwards when adding anyways, so
+				// we
 				// should always do this to make sure we dont have issues
 				// when a zone has not been removed from its parent (and so
 				// parent!=null), and so is not drawn after being added to
 				// TouchClient
 				zone.parent = null;
-	
+
 				addToZoneList(zone);
 				picker.add(zone);
-	
-				// make sure the matrix is up to date, these calls should not occur
+
+				// make sure the matrix is up to date, these calls should not
+				// occur
 				// if we do not call begin/endTouch once per
 				// frame and once at Zone initialization
 				zone.endTouch();
 				zone.beginTouch();
-			}else{
+			}
+			else {
 				System.err.println("Error: Added a null Zone");
 			}
 		}
@@ -549,10 +553,11 @@ public class TouchClient {
 	 * @return Whether the zone was removed
 	 */
 	public boolean remove(Zone zone) {
-		if(zone != null){
+		if (zone != null) {
 			picker.remove(zone);
 			return removeFromZoneList(zone);
-		}else{
+		}
+		else {
 			System.err.println("Error: Removed a null Zone");
 		}
 		return false;

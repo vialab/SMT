@@ -112,8 +112,8 @@ public class TextZone extends Zone {
 		this(null, x, y, width, height, inputText, selectable, blur, 16);
 	}
 
-	public TextZone(String name, int x, int y, int width, int height, String inputText, boolean selectable,
-			boolean blur, float fontSize) {
+	public TextZone(String name, int x, int y, int width, int height, String inputText,
+			boolean selectable, boolean blur, float fontSize) {
 		super(x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 0, 20);
 		this.inputText = inputText;
@@ -178,11 +178,12 @@ public class TextZone extends Zone {
 				currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
 						currentWordZone.y, 0, (int) (fontSize * (20.0 / 16.0)));
 			}
-			if (currentWordZone.x + currentWordZone.width + fontSize > width && currentWordZone.x != 0) {
+			if (currentWordZone.x + currentWordZone.width + fontSize > width
+					&& currentWordZone.x != 0) {
 				this.currentWordZone.setData(0, currentWordZone.y
 						+ (int) (fontSize * (20.0 / 16.0)), 0, (int) (fontSize * (20.0 / 16.0)));
 			}
-			if(currentWordZone.x + currentWordZone.width + fontSize <= width){
+			if (currentWordZone.x + currentWordZone.width + fontSize <= width) {
 				this.currentWordZone.word += c;
 			}
 		}
