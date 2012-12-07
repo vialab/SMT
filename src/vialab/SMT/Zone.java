@@ -77,7 +77,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	// A synchronised one will prevent concurrent modification (which can happen
 	// pretty easily with the draw loop + touch event handling).
 	/** All of the currently active touches for this zone */
-	public Map<Long, Touch> activeTouches = Collections
+	private Map<Long, Touch> activeTouches = Collections
 			.synchronizedMap(new LinkedHashMap<Long, Touch>());
 
 	protected CopyOnWriteArrayList<Zone> children = new CopyOnWriteArrayList<Zone>();
@@ -508,7 +508,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void assign(Iterable<? extends Touch> touches) {
 		for (Touch touch : touches) {
 			activeTouches.put(touch.sessionID, touch);
-			touch.assignedZones.add(this);
+			touch.assignZone(this);
 		}
 	}
 
@@ -556,9 +556,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public void unassign(long sessionID) {
 		Touch t = activeTouches.get(sessionID);
+		//only removes if it exists in the touch mapping
 		if (t != null) {
 			activeTouches.remove(sessionID);
-			t.assignedZones.remove(this);
+			t.unassignZone(this);
 		}
 	}
 

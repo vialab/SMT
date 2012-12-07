@@ -69,7 +69,7 @@ class SMTTouchManager {
 			if (!currentTouchState.contains(t.sessionID)) {
 				SMTUtilities.invoke(touchUp, applet);
 				// the touch existed, but no longer exists, so it went up
-				for (Zone zone : t.assignedZones) {
+				for (Zone zone : t.getAssignedZones()) {
 					doTouchUp(zone, t);
 				}
 			}
@@ -92,7 +92,7 @@ class SMTTouchManager {
 						z.assign(t);
 					}
 				}
-				for (Zone zone : t.assignedZones) {
+				for (Zone zone : t.getAssignedZones()) {
 					doTouchMoved(zone, t);
 				}
 			}

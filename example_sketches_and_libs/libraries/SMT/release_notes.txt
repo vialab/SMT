@@ -6,6 +6,7 @@ _____________________
 		-TextZone constructor has a selectable boolean, to specify whether highlighting is done, in addition to blur
 		-Touch.getLastPoint() now returns a Point instead of a TuioPoint
 		-TouchClient.getTouches() now returns an array, the old form is available using TouchClient.getTouchCollection()
+		-Zone.activeTouches now private instead of public
 	
 	API Additions:
 		-applet and client variables in Zone now protected
@@ -14,11 +15,14 @@ _____________________
 		-TextZone now has an additional constructor that specifies fontSize, blur, selectable, and name
 		-Zone now has getGlobalMatrix() which returns a PMatrix3D of the Zone's matrix relative to global co-ordinates
 		-KeyboardZone now has the following additional methods: clearKeyListeners(), getZoneKeyListeners(), getKeyListeners()
+		-Touch now has getAssignedZones(), assignZone(), unassignZone(), and a public boolean field 'grabbed'
 
 	Feature Changes:
 		-TextZone now selects(highlights)/unblurs when moving across the text to the right, and unselects(unhighlights)/blurs when moving across the text to the left 
 		-TextZone now renders its text immediately
 		-TextZone now cuts off text past its width, instead of going to a newline every character
+		-Touches no longer have a touchDown whenever they start picking to a new Zone, instead a normal touchMoved will be called, to maintain the same functionality if needed simply do the needed action on the first touchMoved since the last touchUp 
+		-Zone.rst(), drag(), etc now by default set the touches they use to grabbed, so that any other touches can still repick to other zones
 
 	Bug Fixes:
 		-push/pop style for every zone draw properly (no longer inherit style from parent zones)
@@ -30,3 +34,4 @@ _____________________
 		-No longer warn that touchMethod is missing if touchDownImpl/touchUpImpl/touchMovedImpl exists, and also don't auto-unassignall() if these methods are used
 		-Zone.add() and TouchClient.add() now updates the Zone's matrix to make sure the first draw is done with the correct matrix (prevents an incorrect frame from being rendered)
 		-add()/remove() of null Zone will no longer halt the execution of the sketch, and instead just prints an error
+		-checkImpl() now properly checks superclasses, so inheritance of drawImpl() and touchImpl(), etc works now.

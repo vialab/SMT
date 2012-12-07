@@ -12,7 +12,7 @@ import TUIO.*;
  */
 public class Touch extends TuioCursor {
 
-	CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
+	private CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
 
 	public boolean grabbed = false;
 
@@ -225,5 +225,28 @@ public class Touch extends TuioCursor {
 		}
 		return new Point(path.get(index).getScreenX(applet.width), path.get(index).getScreenY(
 				applet.height));
+	}
+	
+	public Zone[] getAssignedZones(){
+		return assignedZones.toArray(new Zone[assignedZones.size()]);
+	}
+	
+	public void assignZone(Zone zone){
+		if(zone != null){
+			assignedZones.add(zone);
+			if(!zone.isAssigned(this)){
+				zone.assign(this);
+			}
+		}
+	}
+	
+	public void unassignZone(Zone zone){
+		if(zone != null){
+			assignedZones.remove(zone);
+			zone.unassign(this);
+			if(assignedZones.isEmpty()){
+				this.grabbed=false;
+			}
+		}
 	}
 }
