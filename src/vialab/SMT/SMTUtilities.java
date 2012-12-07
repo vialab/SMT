@@ -216,6 +216,15 @@ public final class SMTUtilities {
 			}
 		}
 		catch (Exception e) {}
+		
+		//check if a super-class implements it, and the superclass is not Zone
+		if(parameters[0].getSuperclass()!=Zone.class){
+			Class<?> superClass = parameters[0].getSuperclass();
+			parameters[0] = superClass;
+			if(checkImpl(methodPrefix,parameters)){
+				return true;
+			}
+		}
 
 		if (impl == null) {
 			return false;
