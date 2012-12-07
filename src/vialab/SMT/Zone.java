@@ -1880,19 +1880,24 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected List<TouchPair> getTouchPairs() {
-		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(activeTouches.size());
-		for (Touch touch : activeTouches.values()) {
-			// grab all the touchpoints we put into touchpairs
-			touch.grabbed = true;
-			pairs.add(new TouchPair(SMTUtilities.getLastTouchAtTime(touch, lastUpdate), touch));
-		}
-		return pairs;
+		return getTouchPairs(activeTouches.size());
 	}
 
-	protected List<TouchPair> getTouchPairs(int minSize) {
-		List<TouchPair> pairs = getTouchPairs();
-		for (int i = pairs.size(); i < minSize; i++) {
-			pairs.add(new TouchPair());
+	protected List<TouchPair> getTouchPairs(int size) {
+		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(size);
+		for (int i = 0; i < size; i++) {
+			Touch touch = getActiveTouch(i);
+			if(touch == null){
+				pairs.add(new TouchPair());
+			}else{
+				// grab all the Touches we put into TouchPairs
+				touch.grabbed = true;
+				pairs.add(new TouchPair(SMTUtilities.getLastTouchAtTime(touch, lastUpdate), touch));
+			}
+		}
+		//Unassigns unneeded touches
+		for(int i = size; i<activeTouches.size(); i++){
+			unassign(getActiveTouch(i));
 		}
 		return pairs;
 	}
