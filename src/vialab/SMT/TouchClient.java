@@ -259,6 +259,9 @@ public class TouchClient {
 		tuioClient.connect();
 
 		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
+		
+		parent.textFont(parent.createFont("SansSerif", 120),12);
+		
 
 		/**
 		 * Disconnects the TuioClient when the PApplet is stopped. Shuts down
