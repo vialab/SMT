@@ -258,7 +258,7 @@ public class TouchClient {
 		tuioClient.addTuioListener(listener);
 		tuioClient.connect();
 
-		parent.hint(PConstants.ENABLE_ACCURATE_2D);
+		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
 
 		/**
 		 * Disconnects the TuioClient when the PApplet is stopped. Shuts down

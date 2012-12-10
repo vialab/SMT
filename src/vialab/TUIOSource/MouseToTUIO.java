@@ -250,25 +250,25 @@ public class MouseToTUIO {
 
 	public void mouseEvent(MouseEvent event) {
 		switch (event.getAction()) {
-		case MouseEvent.PRESSED:
+		case MouseEvent.PRESS:
 			mousePressed(event);
 			break;
-		case MouseEvent.RELEASED:
+		case MouseEvent.RELEASE:
 			mouseReleased(event);
 			break;
-		case MouseEvent.CLICKED:
+		case MouseEvent.CLICK:
 			mouseClicked(event);
 			break;
-		case MouseEvent.DRAGGED:
+		case MouseEvent.DRAG:
 			mouseDragged(event);
 			break;
-		case MouseEvent.MOVED:
+		case MouseEvent.MOVE:
 			mouseMoved(event);
 			break;
-		case MouseEvent.ENTERED:
+		case MouseEvent.ENTER:
 			mouseEntered(event);
 			break;
-		case MouseEvent.EXITED:
+		case MouseEvent.EXIT:
 			mouseExited(event);
 			break;
 		}
