@@ -27,7 +27,7 @@ import java.awt.Point;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.swing.SwingUtilities;
+import processing.core.PConstants;
 
 import processing.event.MouseEvent;
 
@@ -122,8 +122,7 @@ public class MouseToTUIO {
 				selectedCursor = sim.addCursor(x, y);
 				sim.cursorMessage(selectedCursor);
 				if (me.isShiftDown()
-						|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
-								.getNative())))
+						|| me.getButton() == PConstants.RIGHT)
 					stickyCursors.addElement(selectedCursor.sessionID);
 			}
 		}
@@ -149,8 +148,7 @@ public class MouseToTUIO {
 				if (selectedCursor != null)
 					selCur = selectedCursor.sessionID;
 
-				if ((me.isShiftDown() || SwingUtilities
-						.isRightMouseButton((java.awt.event.MouseEvent) (me.getNative())))
+				if ((me.isShiftDown() || me.getButton() == PConstants.RIGHT)
 						&& selCur != cursor.sessionID) {
 					stickyCursors.removeElement(cursor.sessionID);
 					if (jointCursors.contains(cursor.sessionID))
@@ -160,8 +158,7 @@ public class MouseToTUIO {
 					return;
 				}
 				else if (me.isControlDown()
-						|| SwingUtilities.isMiddleMouseButton((java.awt.event.MouseEvent) (me
-								.getNative()))) {
+						|| me.getButton() == PConstants.CENTER) {
 					if (jointCursors.contains(cursor.sessionID))
 						jointCursors.removeElement(cursor.sessionID);
 					else
@@ -176,15 +173,14 @@ public class MouseToTUIO {
 		}
 
 		if (me.isControlDown()
-				|| SwingUtilities.isMiddleMouseButton((java.awt.event.MouseEvent) (me.getNative())))
+				|| me.getButton() == PConstants.CENTER)
 			return;
 
 		if (sim.contains(new Point(x, y))) {
 			selectedCursor = sim.addCursor(x, y);
 			sim.cursorMessage(selectedCursor);
 			if (me.isShiftDown()
-					|| SwingUtilities.isRightMouseButton((java.awt.event.MouseEvent) (me
-							.getNative())))
+					|| me.getButton() == PConstants.RIGHT)
 				stickyCursors.addElement(selectedCursor.sessionID);
 			return;
 		}
