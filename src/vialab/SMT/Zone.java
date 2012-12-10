@@ -606,7 +606,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void beginPickDraw() {
 		// update with changes from zonePG
-		matrix.preApply((PMatrix3D) zonePG.getMatrix());
+		matrix.preApply(new PMatrix3D(zonePG.getMatrix()));
 		zonePG.popMatrix();
 		zonePG.pushMatrix();
 		zonePG.setMatrix(new PMatrix3D());
@@ -677,7 +677,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur after touch commands
 	 */
 	public void endTouch() {
-		matrix.preApply((PMatrix3D) zonePG.getMatrix());
+		matrix.preApply(new PMatrix3D(zonePG.getMatrix()));
 		zonePG.popMatrix();
 	}
 
