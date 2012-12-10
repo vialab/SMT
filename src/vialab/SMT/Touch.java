@@ -14,7 +14,7 @@ public class Touch extends TuioCursor {
 
 	private CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
 
-	public boolean grabbed = false;
+	private CopyOnWriteArrayList<Zone> grabbedZones = new CopyOnWriteArrayList<Zone>();
 
 	/** Processing PApplet */
 	static PApplet applet = TouchClient.parent;
@@ -231,6 +231,10 @@ public class Touch extends TuioCursor {
 		return assignedZones.toArray(new Zone[assignedZones.size()]);
 	}
 	
+	public Zone[] getGrabbedZones(){
+		return grabbedZones.toArray(new Zone[grabbedZones.size()]);
+	}
+	
 	public void assignZone(Zone zone){
 		if(zone != null){
 			assignedZones.add(zone);
@@ -243,10 +247,21 @@ public class Touch extends TuioCursor {
 	public void unassignZone(Zone zone){
 		if(zone != null){
 			assignedZones.remove(zone);
+			grabbedZones.remove(zone);
 			zone.unassign(this);
-			if(assignedZones.isEmpty()){
-				this.grabbed=false;
-			}
 		}
+	}
+
+	public void grab(Zone zone) {
+		assignZone(zone);
+		grabbedZones.add(zone);
+	}
+	
+	public void ungrab(Zone zone) {
+		grabbedZones.remove(zone);
+	}
+	
+	public boolean isGrabbed(){
+		return !grabbedZones.isEmpty();
 	}
 }

@@ -1891,13 +1891,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				pairs.add(new TouchPair());
 			}else{
 				// grab all the Touches we put into TouchPairs
-				touch.grabbed = true;
+				touch.grab(this);
 				pairs.add(new TouchPair(SMTUtilities.getLastTouchAtTime(touch, lastUpdate), touch));
 			}
-		}
-		//Unassigns unneeded touches
-		for(int i = size; i<activeTouches.size(); i++){
-			unassign(getActiveTouch(i));
 		}
 		return pairs;
 	}

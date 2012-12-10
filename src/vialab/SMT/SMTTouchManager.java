@@ -84,7 +84,7 @@ class SMTTouchManager {
 		for (Touch t : currentTouchState) {
 			if (previousTouchState.contains(t.sessionID)) {
 				SMTUtilities.invoke(touchMoved, applet);
-				if (!t.grabbed) {
+				if (!t.isGrabbed()) {
 					// Assign the touch to the picked Zone, as long as the touch
 					// is not grabbed
 					Zone z = picker.pick(t);
