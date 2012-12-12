@@ -14,8 +14,6 @@ public class Touch extends TuioCursor {
 
 	private CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
 
-	private CopyOnWriteArrayList<Zone> grabbedZones = new CopyOnWriteArrayList<Zone>();
-
 	/** Processing PApplet */
 	static PApplet applet = TouchClient.parent;
 	/** The individual cursor ID number that is assigned to each TuioCursor. */
@@ -227,14 +225,16 @@ public class Touch extends TuioCursor {
 				applet.height));
 	}
 	
+	/**
+	 * @return A Zone[] containing all Zones that currently have this touch assigned
+	 */
 	public Zone[] getAssignedZones(){
 		return assignedZones.toArray(new Zone[assignedZones.size()]);
-	}
-	
-	public Zone[] getGrabbedZones(){
-		return grabbedZones.toArray(new Zone[grabbedZones.size()]);
-	}
-	
+	}	
+
+	/**
+	 * @param zone The Zone to assign this Touch to
+	 */
 	public void assignZone(Zone zone){
 		if(zone != null){
 			assignedZones.add(zone);
@@ -244,24 +244,20 @@ public class Touch extends TuioCursor {
 		}
 	}
 	
+	/**
+	 * @param zone The Zone to unassign this Touch from
+	 */
 	public void unassignZone(Zone zone){
 		if(zone != null){
 			assignedZones.remove(zone);
-			grabbedZones.remove(zone);
 			zone.unassign(this);
 		}
 	}
-
-	public void grab(Zone zone) {
-		assignZone(zone);
-		grabbedZones.add(zone);
-	}
 	
-	public void ungrab(Zone zone) {
-		grabbedZones.remove(zone);
-	}
-	
-	public boolean isGrabbed(){
-		return !grabbedZones.isEmpty();
+	/**
+	 * @return Whether this Touch is currently assigned to a Zone
+	 */
+	public boolean isAssigned(){
+		return !assignedZones.isEmpty();
 	}
 }

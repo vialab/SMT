@@ -22,7 +22,6 @@ _____________________
 		-TextZone now renders its text immediately
 		-TextZone now cuts off text past its width, instead of going to a newline every character
 		-Touches no longer have a touchDown whenever they start picking to a new Zone, instead a normal touchMoved will be called, to maintain the same functionality if needed simply do the needed action on the first touchMoved since the last touchUp 
-		-Zone.rst(), drag(), etc now by default set the touches they use to grabbed, so that any other touches can still repick to other zones, unused Touches are also now unassigned, so if they are needed they should be used before the call to rst(), etc or stored and readded using getTouches() and assign()
 
 	Bug Fixes:
 		-push/pop style for every zone draw properly (no longer inherit style from parent zones)

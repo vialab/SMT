@@ -1879,10 +1879,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return null;
 	}
 
+	/**
+	 * This takes the touches currently assigned to the Zone and converts them into TouchPairs which are pairs of Touches of the current and previous state of each Touch
+	 * @return A List of TouchPairs, one TouchPair per Touch assigned to the Zone, each TouchPair is the Touch at its current state, and its previous state
+	 */
 	protected List<TouchPair> getTouchPairs() {
 		return getTouchPairs(activeTouches.size());
 	}
 
+	/**
+	 * This takes the touches currently assigned to the Zone and converts them into TouchPairs which are pairs of Touches of the current and previous state of each Touch
+	 * @param size The number of Touches to put into Touchpairs, if greater than the number of assigned Touches on the Zone, it is filled with empty TouchPairs (the Touches in each TouchPair are null)
+	 * @return A List of TouchPairs, one TouchPair per Touch assigned to the Zone, each TouchPair is the Touch at its current state, and its previous state
+	 */
 	protected List<TouchPair> getTouchPairs(int size) {
 		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(size);
 		for (int i = 0; i < size; i++) {
@@ -1890,8 +1899,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			if(touch == null){
 				pairs.add(new TouchPair());
 			}else{
-				// grab all the Touches we put into TouchPairs
-				touch.grab(this);
 				pairs.add(new TouchPair(SMTUtilities.getLastTouchAtTime(touch, lastUpdate), touch));
 			}
 		}
@@ -2124,55 +2131,55 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Override to specify a default behaviour for draw
+	 * Override to specify a default behavior for draw
 	 */
 	protected void drawImpl() {
 	}
 
 	/**
-	 * Override to specify a default behaviour for touch
+	 * Override to specify a default behavior for touch
 	 */
 	protected void touchImpl() {
 	}
 
 	/**
-	 * Override to specify a default behaviour for pickDraw
+	 * Override to specify a default behavior for pickDraw
 	 */
 	protected void pickDrawImpl() {
 	}
 
 	/**
-	 * Override to specify a default behaviour for touchDown
+	 * Override to specify a default behavior for touchDown
 	 */
 	protected void touchDownImpl(Touch touch) {
 	}
 
 	/**
-	 * Override to specify a default behaviour for touchUp
+	 * Override to specify a default behavior for touchUp
 	 */
 	protected void touchUpImpl(Touch touch) {
 	}
 
 	/**
-	 * Override to specify a default behaviour for touchMoved
+	 * Override to specify a default behavior for touchMoved
 	 */
 	protected void touchMovedImpl(Touch touch) {
 	}
 
 	/**
-	 * Override to specify a default behaviour for keyPressed
+	 * Override to specify a default behavior for keyPressed
 	 */
 	protected void keyPressedImpl(KeyEvent e) {
 	}
 
 	/**
-	 * Override to specify a default behaviour for keyReleased
+	 * Override to specify a default behavior for keyReleased
 	 */
 	protected void keyReleasedImpl(KeyEvent e) {
 	}
 
 	/**
-	 * Override to specify a default behaviour for keyTyped
+	 * Override to specify a default behavior for keyTyped
 	 */
 	protected void keyTypedImpl(KeyEvent e) {
 	}
