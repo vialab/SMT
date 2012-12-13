@@ -544,12 +544,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public void unassignAll() {
 		long[] touchids = new long[activeTouches.keySet().size()];
-		int i=0;
+		int i = 0;
 		for (long id : activeTouches.keySet()) {
-			touchids[i]=id;
+			touchids[i] = id;
 			i++;
 		}
-		
+
 		for (long id : touchids) {
 			unassign(id);
 		}
@@ -563,7 +563,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public void unassign(long sessionID) {
 		Touch t = activeTouches.get(sessionID);
-		//only removes if it exists in the touch mapping
+		// only removes if it exists in the touch mapping
 		if (t != null) {
 			activeTouches.remove(sessionID);
 			t.unassignZone(this);
@@ -1887,25 +1887,39 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * This takes the touches currently assigned to the Zone and converts them into TouchPairs which are pairs of Touches of the current and previous state of each Touch
-	 * @return A List of TouchPairs, one TouchPair per Touch assigned to the Zone, each TouchPair is the Touch at its current state, and its previous state
+	 * This takes the touches currently assigned to the Zone and converts them
+	 * into TouchPairs which are pairs of Touches of the current and previous
+	 * state of each Touch
+	 * 
+	 * @return A List of TouchPairs, one TouchPair per Touch assigned to the
+	 *         Zone, each TouchPair is the Touch at its current state, and its
+	 *         previous state
 	 */
 	protected List<TouchPair> getTouchPairs() {
 		return getTouchPairs(activeTouches.size());
 	}
 
 	/**
-	 * This takes the touches currently assigned to the Zone and converts them into TouchPairs which are pairs of Touches of the current and previous state of each Touch
-	 * @param size The number of Touches to put into Touchpairs, if greater than the number of assigned Touches on the Zone, it is filled with empty TouchPairs (the Touches in each TouchPair are null)
-	 * @return A List of TouchPairs, one TouchPair per Touch assigned to the Zone, each TouchPair is the Touch at its current state, and its previous state
+	 * This takes the touches currently assigned to the Zone and converts them
+	 * into TouchPairs which are pairs of Touches of the current and previous
+	 * state of each Touch
+	 * 
+	 * @param size
+	 *            The number of Touches to put into Touchpairs, if greater than
+	 *            the number of assigned Touches on the Zone, it is filled with
+	 *            empty TouchPairs (the Touches in each TouchPair are null)
+	 * @return A List of TouchPairs, one TouchPair per Touch assigned to the
+	 *         Zone, each TouchPair is the Touch at its current state, and its
+	 *         previous state
 	 */
 	protected List<TouchPair> getTouchPairs(int size) {
 		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(size);
 		for (int i = 0; i < size; i++) {
 			Touch touch = getActiveTouch(i);
-			if(touch == null){
+			if (touch == null) {
 				pairs.add(new TouchPair());
-			}else{
+			}
+			else {
 				pairs.add(new TouchPair(SMTUtilities.getLastTouchAtTime(touch, lastUpdate), touch));
 			}
 		}

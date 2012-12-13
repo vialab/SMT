@@ -14,9 +14,9 @@ import TUIO.*;
 public class Touch extends TuioCursor {
 
 	private CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
-	
+
 	long originalTimeMillis;
-	
+
 	long startTimeMillis;
 
 	/** Processing PApplet */
@@ -74,8 +74,8 @@ public class Touch extends TuioCursor {
 	public Touch(TuioCursor t) {
 		super(t);
 		this.updateTouch(t);
-		this.startTimeMillis=System.currentTimeMillis();
-		this.originalTimeMillis=this.startTimeMillis;
+		this.startTimeMillis = System.currentTimeMillis();
+		this.originalTimeMillis = this.startTimeMillis;
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class Touch extends TuioCursor {
 	}
 
 	/**
-
+	 * 
 	 * @return The Point containing the last point of the Touch
 	 */
 	public Point getLastPoint() {
@@ -208,48 +208,51 @@ public class Touch extends TuioCursor {
 		return new Point(path.get(index).getScreenX(applet.width), path.get(index).getScreenY(
 				applet.height));
 	}
-	
-	/**
-	 * @return A Zone[] containing all Zones that currently have this touch assigned
-	 */
-	public Zone[] getAssignedZones(){
-		return assignedZones.toArray(new Zone[assignedZones.size()]);
-	}	
 
 	/**
-	 * @param zone The Zone to assign this Touch to
+	 * @return A Zone[] containing all Zones that currently have this touch
+	 *         assigned
 	 */
-	public void assignZone(Zone zone){
-		if(zone != null){
+	public Zone[] getAssignedZones() {
+		return assignedZones.toArray(new Zone[assignedZones.size()]);
+	}
+
+	/**
+	 * @param zone
+	 *            The Zone to assign this Touch to
+	 */
+	public void assignZone(Zone zone) {
+		if (zone != null) {
 			assignedZones.add(zone);
-			if(!zone.isAssigned(this)){
+			if (!zone.isAssigned(this)) {
 				zone.assign(this);
 			}
-			this.startTimeMillis=System.currentTimeMillis();
+			this.startTimeMillis = System.currentTimeMillis();
 		}
 	}
-	
+
 	/**
-	 * @param zone The Zone to unassign this Touch from
+	 * @param zone
+	 *            The Zone to unassign this Touch from
 	 */
-	public void unassignZone(Zone zone){
-		if(zone != null){
+	public void unassignZone(Zone zone) {
+		if (zone != null) {
 			assignedZones.remove(zone);
 			zone.unassign(this);
-			this.startTimeMillis=this.originalTimeMillis;
+			this.startTimeMillis = this.originalTimeMillis;
 		}
 	}
-	
+
 	/**
 	 * @return Whether this Touch is currently assigned to a Zone
 	 */
-	public boolean isAssigned(){
+	public boolean isAssigned() {
 		return !assignedZones.isEmpty();
 	}
 
 	public Point[] getPathPoints() {
 		ArrayList<Point> points = new ArrayList<Point>();
-		for(int i=0; i< path.size(); i++){
+		for (int i = 0; i < path.size(); i++) {
 			points.add(getPointOnPath(i));
 		}
 		return points.toArray(new Point[points.size()]);

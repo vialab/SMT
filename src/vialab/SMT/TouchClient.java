@@ -337,37 +337,37 @@ public class TouchClient {
 	public static void drawTouchPoints() {
 		parent.pushStyle();
 		parent.strokeWeight(3);
-		parent.stroke(200,240,255,50);
+		parent.stroke(200, 240, 255, 50);
 		for (Touch t : SMTTouchManager.currentTouchState) {
 			long time = System.currentTimeMillis() - t.startTimeMillis;
-			
+
 			if (t.isAssigned() && time < 250) {
 				parent.noFill();
-				parent.stroke(255,255,255,100);
-				parent.ellipse(t.x, t.y, 75-time/10, 75-time/10);
+				parent.stroke(255, 255, 255, 100);
+				parent.ellipse(t.x, t.y, 75 - time / 10, 75 - time / 10);
 			}
-			else if(!t.isAssigned() && time < 500){ {
-				parent.noFill();
-				parent.stroke(255,255,255,100);
-				parent.ellipse(t.x, t.y, time/10+50, time/10+50);
+			else if (!t.isAssigned() && time < 500) {
+				{
+					parent.noFill();
+					parent.stroke(255, 255, 255, 100);
+					parent.ellipse(t.x, t.y, time / 10 + 50, time / 10 + 50);
 				}
 			}
-			
-			parent.fill(100,100,100,100);
+
+			parent.fill(100, 100, 100, 100);
 			parent.ellipse(t.x, t.y, 40, 40);
-			parent.fill(255,255,255,100);
+			parent.fill(255, 255, 255, 100);
 			parent.ellipse(t.x, t.y, 30, 30);
 			parent.noFill();
-			parent.stroke(200,240,255,50);
+			parent.stroke(200, 240, 255, 50);
 			Point[] path = t.getPathPoints();
 			if (path.length > 3) {
 				for (int j = 3 + Math.max(0, path.length - (TouchClient.MAX_PATH_LENGTH + 2)); j < path.length; j++) {
-					float weight = 10-(path.length-j)/5;
-					if(weight >= 1){
+					float weight = 10 - (path.length - j) / 5;
+					if (weight >= 1) {
 						parent.strokeWeight(weight);
-						parent.bezier(path[j].x , path[j].y , path[j - 1].x ,
-								path[j - 1].y, path[j-2].x , path[j-2].y , path[j - 3].x ,
-								path[j - 3].y);
+						parent.bezier(path[j].x, path[j].y, path[j - 1].x, path[j - 1].y,
+								path[j - 2].x, path[j - 2].y, path[j - 3].x, path[j - 3].y);
 					}
 				}
 			}

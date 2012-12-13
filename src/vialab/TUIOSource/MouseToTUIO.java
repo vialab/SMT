@@ -121,8 +121,7 @@ public class MouseToTUIO {
 			if (sim.contains(pt)) {
 				selectedCursor = sim.addCursor(x, y);
 				sim.cursorMessage(selectedCursor);
-				if (me.isShiftDown()
-						|| me.getButton() == PConstants.RIGHT)
+				if (me.isShiftDown() || me.getButton() == PConstants.RIGHT)
 					stickyCursors.addElement(selectedCursor.sessionID);
 			}
 		}
@@ -157,8 +156,7 @@ public class MouseToTUIO {
 					selectedCursor = null;
 					return;
 				}
-				else if (me.isControlDown()
-						|| me.getButton() == PConstants.CENTER) {
+				else if (me.isControlDown() || me.getButton() == PConstants.CENTER) {
 					if (jointCursors.contains(cursor.sessionID))
 						jointCursors.removeElement(cursor.sessionID);
 					else
@@ -172,15 +170,13 @@ public class MouseToTUIO {
 			}
 		}
 
-		if (me.isControlDown()
-				|| me.getButton() == PConstants.CENTER)
+		if (me.isControlDown() || me.getButton() == PConstants.CENTER)
 			return;
 
 		if (sim.contains(new Point(x, y))) {
 			selectedCursor = sim.addCursor(x, y);
 			sim.cursorMessage(selectedCursor);
-			if (me.isShiftDown()
-					|| me.getButton() == PConstants.RIGHT)
+			if (me.isShiftDown() || me.getButton() == PConstants.RIGHT)
 				stickyCursors.addElement(selectedCursor.sessionID);
 			return;
 		}

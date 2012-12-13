@@ -216,12 +216,13 @@ public final class SMTUtilities {
 			}
 		}
 		catch (Exception e) {}
-		
-		//check if a super-class implements it, and the superclass is not Zone
-		if(impl == null && parameters[0] != null && parameters[0].getSuperclass()!=null && parameters[0].getSuperclass()!=Zone.class){
+
+		// check if a super-class implements it, and the superclass is not Zone
+		if (impl == null && parameters[0] != null && parameters[0].getSuperclass() != null
+				&& parameters[0].getSuperclass() != Zone.class) {
 			Class<?> superClass = parameters[0].getSuperclass();
 			parameters[0] = superClass;
-			if(checkImpl(methodPrefix,parameters)){
+			if (checkImpl(methodPrefix, parameters)) {
 				return true;
 			}
 		}
