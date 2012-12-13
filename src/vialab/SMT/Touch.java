@@ -1,6 +1,7 @@
 package vialab.SMT;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -247,10 +248,10 @@ public class Touch extends TuioCursor {
 	}
 
 	public Point[] getPathPoints() {
-		Point[] points = new Point[path.size()];
+		ArrayList<Point> points = new ArrayList<Point>();
 		for(int i=0; i< path.size(); i++){
-			points[i] = getPointOnPath(i);
+			points.add(getPointOnPath(i));
 		}
-		return points;
+		return points.toArray(new Point[points.size()]);
 	}
 }
