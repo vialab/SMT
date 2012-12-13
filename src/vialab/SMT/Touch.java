@@ -13,6 +13,10 @@ import TUIO.*;
 public class Touch extends TuioCursor {
 
 	private CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
+	
+	long originalTimeMillis;
+	
+	long startTimeMillis;
 
 	/** Processing PApplet */
 	static PApplet applet = TouchClient.parent;
@@ -69,6 +73,8 @@ public class Touch extends TuioCursor {
 	public Touch(TuioCursor t) {
 		super(t);
 		this.updateTouch(t);
+		this.startTimeMillis=System.currentTimeMillis();
+		this.originalTimeMillis=this.startTimeMillis;
 	}
 
 	/**
@@ -133,30 +139,7 @@ public class Touch extends TuioCursor {
 	}
 
 	/**
-	 * Get the screen-relative x coordinate
-	 * 
-	 * @param width
-	 *            the screen width in pixels
-	 * @return the coordinate of the x position of the touch from 0 to width
-	 */
-	@Override
-	public int getScreenX(int width) {
-		return super.getScreenX(width);
-	}
 
-	/**
-	 * Get the screen-relative y coordinate
-	 * 
-	 * @param height
-	 *            the screen height in pixels
-	 * @return the coordinate of the y position of the touch from 0 to height
-	 */
-	@Override
-	public int getScreenY(int height) {
-		return super.getScreenY(height);
-	}
-
-	/**
 	 * @return The Point containing the last point of the Touch
 	 */
 	public Point getLastPoint() {
@@ -241,6 +224,7 @@ public class Touch extends TuioCursor {
 			if(!zone.isAssigned(this)){
 				zone.assign(this);
 			}
+			this.startTimeMillis=System.currentTimeMillis();
 		}
 	}
 	
@@ -251,6 +235,7 @@ public class Touch extends TuioCursor {
 		if(zone != null){
 			assignedZones.remove(zone);
 			zone.unassign(this);
+			this.startTimeMillis=this.originalTimeMillis;
 		}
 	}
 	
@@ -259,5 +244,13 @@ public class Touch extends TuioCursor {
 	 */
 	public boolean isAssigned(){
 		return !assignedZones.isEmpty();
+	}
+
+	public Point[] getPathPoints() {
+		Point[] points = new Point[path.size()];
+		for(int i=0; i< path.size(); i++){
+			points[i] = getPointOnPath(i);
+		}
+		return points;
 	}
 }

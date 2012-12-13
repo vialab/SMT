@@ -42,12 +42,13 @@ class TouchState implements Iterable<Touch> {
 		return idToTouches.get(id);
 	}
 
-	public Touch getByOrderAdded(int order) {
+	public Touch get(int order) {
 		int i = 0;
 		for (Touch t : idToTouches.values()) {
 			if (i == order) {
 				return t;
 			}
+			i++;
 		}
 		return null;
 	}

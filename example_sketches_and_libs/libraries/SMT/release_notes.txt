@@ -7,6 +7,7 @@ _____________________
 		-Touch.getLastPoint() now returns a Point instead of a TuioPoint
 		-TouchClient.getTouches() now returns an array, the old form is available using TouchClient.getTouchCollection()
 		-Zone.activeTouches now private instead of public
+		-Touch no longer has getScreenX() and getScreenY(), they do not work(aren't updated properly), and Touch.x and Touch.y already give screen relative co-ordinates
 	
 	API Additions:
 		-applet and client variables in Zone now protected
@@ -15,7 +16,7 @@ _____________________
 		-TextZone now has an additional constructor that specifies fontSize, blur, selectable, and name
 		-Zone now has getGlobalMatrix() which returns a PMatrix3D of the Zone's matrix relative to global co-ordinates
 		-KeyboardZone now has the following additional methods: clearKeyListeners(), getZoneKeyListeners(), getKeyListeners()
-		-Touch now has getAssignedZones(), assignZone(), unassignZone(), and a public boolean field 'grabbed'
+		-Touch now has getAssignedZones(), assignZone(), unassignZone(), and getPathPoints()
 
 	Feature Changes:
 		-TextZone now selects(highlights)/unblurs when moving across the text to the right, and unselects(unhighlights)/blurs when moving across the text to the left 

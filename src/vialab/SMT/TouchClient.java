@@ -24,6 +24,7 @@
 
 package vialab.SMT;
 
+import java.awt.Point;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -259,9 +260,8 @@ public class TouchClient {
 		tuioClient.connect();
 
 		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
-		
-		parent.textFont(parent.createFont("SansSerif", 120),12);
-		
+
+		parent.textFont(parent.createFont("SansSerif", 120), 12);
 
 		/**
 		 * Disconnects the TuioClient when the PApplet is stopped. Shuts down
@@ -335,36 +335,39 @@ public class TouchClient {
 	 * Draws the touch points in the PApplet if flag is set to true.
 	 */
 	public static void drawTouchPoints() {
-		Vector<TuioCursor> curs = tuioClient.getTuioCursors();
 		parent.pushStyle();
-		parent.strokeWeight(1);
-		parent.noFill();
-		if (curs.size() > 0) {
-			for (int i = 0; i < curs.size(); i++) {
-				parent.stroke(255);
-				parent.ellipse(curs.get(i).getScreenX(TouchClient.parent.width), curs.get(i)
-						.getScreenY(parent.height), 20, 20);
-				parent.stroke(0);
-				parent.ellipse(curs.get(i).getScreenX(parent.width),
-						curs.get(i).getScreenY(parent.height), 22, 22);
-				Vector<TuioPoint> path = curs.get(i).getPath();
-				if (path.size() > 1) {
-					for (int j = 1 + Math.max(0, path.size() - (TouchClient.MAX_PATH_LENGTH + 2)); j < path
-							.size(); j++) {
-						parent.stroke(255);
-						parent.line(path.get(j).getScreenX(parent.width) - 0.5f, path.get(j)
-								.getScreenY(parent.height) - 0.5f,
-								path.get(j - 1).getScreenX(parent.width) - 0.5f, path.get(j - 1)
-										.getScreenY(parent.height) - 0.5f);
-						parent.ellipse(path.get(j).getScreenX(parent.width), path.get(j)
-								.getScreenY(parent.height), 5, 5);
-						parent.stroke(0);
-						parent.line(path.get(j).getScreenX(parent.width) + 0.5f, path.get(j)
-								.getScreenY(parent.height) + 0.5f,
-								path.get(j - 1).getScreenX(parent.width) + 0.5f, path.get(j - 1)
-										.getScreenY(parent.height) + 0.5f);
-						parent.ellipse(path.get(j).getScreenX(parent.width), path.get(j)
-								.getScreenY(parent.height), 7, 7);
+		parent.strokeWeight(3);
+		parent.stroke(200,240,255,50);
+		for (Touch t : SMTTouchManager.currentTouchState) {
+			long time = System.currentTimeMillis() - t.startTimeMillis;
+			
+			if (t.isAssigned() && time < 250) {
+				parent.noFill();
+				parent.stroke(255,255,255,100);
+				parent.ellipse(t.x, t.y, 75-time/10, 75-time/10);
+			}
+			else if(!t.isAssigned() && time < 500){ {
+				parent.noFill();
+				parent.stroke(255,255,255,100);
+				parent.ellipse(t.x, t.y, time/10+50, time/10+50);
+				}
+			}
+			
+			parent.fill(100,100,100,100);
+			parent.ellipse(t.x, t.y, 40, 40);
+			parent.fill(255,255,255,100);
+			parent.ellipse(t.x, t.y, 30, 30);
+			parent.noFill();
+			parent.stroke(200,240,255,50);
+			Point[] path = t.getPathPoints();
+			if (path.length > 3) {
+				for (int j = 3 + Math.max(0, path.length - (TouchClient.MAX_PATH_LENGTH + 2)); j < path.length; j++) {
+					float weight = 10-(path.length-j)/5;
+					if(weight >= 1){
+						parent.strokeWeight(weight);
+						parent.bezier(path[j].x , path[j].y , path[j - 1].x ,
+								path[j - 1].y, path[j-2].x , path[j-2].y , path[j - 3].x ,
+								path[j - 3].y);
 					}
 				}
 			}

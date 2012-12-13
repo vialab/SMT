@@ -543,7 +543,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Unassigns all Touch objects from this zone, clearing activeTouches.
 	 */
 	public void unassignAll() {
+		long[] touchids = new long[activeTouches.keySet().size()];
+		int i=0;
 		for (long id : activeTouches.keySet()) {
+			touchids[i]=id;
+			i++;
+		}
+		
+		for (long id : touchids) {
 			unassign(id);
 		}
 	}
