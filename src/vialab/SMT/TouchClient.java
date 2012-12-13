@@ -336,9 +336,10 @@ public class TouchClient {
 	 */
 	public static void drawTouchPoints() {
 		parent.pushStyle();
-		parent.strokeWeight(3);
-		parent.stroke(200, 240, 255, 50);
 		for (Touch t : SMTTouchManager.currentTouchState) {
+			parent.strokeWeight(3);
+			parent.stroke(200, 240, 255, 50);
+
 			long time = System.currentTimeMillis() - t.startTimeMillis;
 
 			if (t.isAssigned() && time < 250) {
