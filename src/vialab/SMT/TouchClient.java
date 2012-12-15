@@ -105,7 +105,7 @@ public class TouchClient {
 
 	protected static SMTTouchManager manager;
 
-	protected Method touch;
+	protected static Method touch;
 
 	protected static Boolean warnUnimplemented;
 
@@ -127,7 +127,7 @@ public class TouchClient {
 	public static String defaultRenderer;
 
 	/** TUIO adapter depending on which TouchSource is used */
-	AndroidToTUIO att = null;
+	static AndroidToTUIO att = null;
 	MouseToTUIO mtt = null;
 
 	protected BufferedReader tuioServerErr;
@@ -297,7 +297,7 @@ public class TouchClient {
 	 *            MotionEvent - the motion event triggered in Android
 	 * @return Should the event get consumed elsewhere or not
 	 */
-	public boolean passAndroidTouchEvent(MotionEvent me) {
+	public static boolean passAndroidTouchEvent(MotionEvent me) {
 		return att.onTouchEvent(me);
 	}
 
@@ -306,7 +306,7 @@ public class TouchClient {
 	 * 
 	 * @return zoneList
 	 */
-	public Zone[] getZones() {
+	public static Zone[] getZones() {
 		return zoneList.toArray(new Zone[0]);
 	}
 
@@ -317,7 +317,7 @@ public class TouchClient {
 	 * @param drawTouchPoints
 	 *            boolean - flag
 	 */
-	public void setDrawTouchPoints(boolean drawTouchPoints) {
+	public static void setDrawTouchPoints(boolean drawTouchPoints) {
 		TouchClient.drawTouchPoints = drawTouchPoints;
 	}
 
@@ -332,7 +332,7 @@ public class TouchClient {
 	 * @param max_path_length
 	 *            int - sets maximum path length to draw
 	 */
-	public void setDrawTouchPoints(boolean drawTouchPoints, int max_path_length) {
+	public static void setDrawTouchPoints(boolean drawTouchPoints, int max_path_length) {
 		TouchClient.drawTouchPoints = drawTouchPoints;
 		TouchClient.MAX_PATH_LENGTH = max_path_length;
 	}
@@ -388,7 +388,7 @@ public class TouchClient {
 	 * @param zones
 	 *            Zone - The zones to add to the list.
 	 */
-	public void add(Zone... zones) {
+	public static void add(Zone... zones) {
 		for (Zone zone : zones) {
 			if (zone != null) {
 				// Zone is being added at top level, make sure its parent is set
@@ -415,7 +415,7 @@ public class TouchClient {
 		}
 	}
 
-	private void addToZoneList(Zone zone) {
+	private static void addToZoneList(Zone zone) {
 		if (!zoneList.contains(zone)) {
 			zoneList.add(zone);
 		}
@@ -433,7 +433,7 @@ public class TouchClient {
 	 *            The XML file to read in for zone configuration
 	 * @return The array of zones created from the XML File
 	 */
-	public Zone[] add(String xmlFilename) {
+	public static Zone[] add(String xmlFilename) {
 		List<Zone> zoneList = new ArrayList<Zone>();
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -466,7 +466,7 @@ public class TouchClient {
 	 * @param ySpace
 	 * @param zones
 	 */
-	public void grid(int x, int y, int width, int xSpace, int ySpace, Zone... zones) {
+	public static void grid(int x, int y, int width, int xSpace, int ySpace, Zone... zones) {
 		int currentX = x;
 		int currentY = y;
 
@@ -486,7 +486,7 @@ public class TouchClient {
 		}
 	}
 
-	private void add(NodeList zones, List<Zone> zoneList) {
+	private static void add(NodeList zones, List<Zone> zoneList) {
 		for (int i = 0; i < zones.getLength(); i++) {
 			Node zoneNode = zones.item(i);
 			if (zoneNode.getNodeType() == Node.ELEMENT_NODE
@@ -496,7 +496,7 @@ public class TouchClient {
 		}
 	}
 
-	private void add(Node node, List<Zone> zoneList) {
+	private static void add(Node node, List<Zone> zoneList) {
 		NamedNodeMap map = node.getAttributes();
 		Node nameNode = map.getNamedItem("name");
 		Node xNode = map.getNamedItem("x");
@@ -561,7 +561,7 @@ public class TouchClient {
 	 *            The zone to remove
 	 * @return Whether the zone was removed
 	 */
-	public boolean remove(Zone zone) {
+	public static boolean remove(Zone zone) {
 		if (zone != null) {
 			picker.remove(zone);
 			return removeFromZoneList(zone);
@@ -572,7 +572,7 @@ public class TouchClient {
 		return false;
 	}
 
-	private boolean removeFromZoneList(Zone zone) {
+	private static boolean removeFromZoneList(Zone zone) {
 		for (Zone child : zone.children) {
 			removeFromZoneList(child);
 		}
@@ -585,7 +585,7 @@ public class TouchClient {
 	 * transformation matrix, applies the zone's matrix, draws the zone, pops
 	 * the matrix, and when at the end of the list, it draws the touch points.
 	 */
-	public void draw() {
+	public static void draw() {
 		for (Zone zone : zoneList) {
 			if (zone.getParent() != null) {
 				// the parent should handle the drawing
@@ -615,7 +615,7 @@ public class TouchClient {
 	 * @param h
 	 *            - the height of the pickBuffer image to draw
 	 */
-	public void drawPickBuffer(int x, int y, int w, int h) {
+	public static void drawPickBuffer(int x, int y, int w, int h) {
 		// parent.g.image(picker.image, x, y, w, h);
 	}
 
@@ -624,7 +624,7 @@ public class TouchClient {
 	 * 
 	 * @return Vector<TuioObject>
 	 */
-	public Vector<TuioObject> getTuioObjects() {
+	public static Vector<TuioObject> getTuioObjects() {
 		return tuioClient.getTuioObjects();
 	}
 
@@ -632,7 +632,7 @@ public class TouchClient {
 	 * @return An array containing all touches that are currently NOT assigned
 	 *         to zones
 	 */
-	public Touch[] getUnassignedTouches() {
+	public static Touch[] getUnassignedTouches() {
 		Map<Long, Touch> touches = getTouchMap();
 		for (Zone zone : zoneList) {
 			for (Touch touch : zone.getTouches()) {
@@ -646,7 +646,7 @@ public class TouchClient {
 	 * @return An array containing all touches that are currently assigned to
 	 *         zones
 	 */
-	public Touch[] getAssignedTouches() {
+	public static Touch[] getAssignedTouches() {
 		List<Touch> touches = new ArrayList<Touch>();
 		for (Zone zone : zoneList) {
 			for (Touch touch : zone.getTouches()) {
@@ -663,7 +663,7 @@ public class TouchClient {
 	 *            The touches to assign to the zone, variable number of
 	 *            arguments
 	 */
-	public void assignTouches(Zone zone, Touch... touches) {
+	public static void assignTouches(Zone zone, Touch... touches) {
 		zone.assign(touches);
 	}
 
@@ -672,7 +672,7 @@ public class TouchClient {
 	 * 
 	 * @return Collection<Touch>
 	 */
-	public Collection<Touch> getTouchCollection() {
+	public static Collection<Touch> getTouchCollection() {
 		return getTouchMap().values();
 	}
 
@@ -681,14 +681,14 @@ public class TouchClient {
 	 * 
 	 * @return Touch[] containing all touches that are currently mapped
 	 */
-	public Touch[] getTouches() {
+	public static Touch[] getTouches() {
 		return getTouchMap().values().toArray(new Touch[getTouchMap().values().size()]);
 	}
 
 	/**
 	 * @return A Map<Long,Touch> indexing all touches by their session_id's
 	 */
-	public Map<Long, Touch> getTouchMap() {
+	public static Map<Long, Touch> getTouchMap() {
 		return SMTTouchManager.currentTouchState.idToTouches;
 	}
 
@@ -698,7 +698,7 @@ public class TouchClient {
 	// *
 	// * @return the array
 	// */
-	// public Touch[] getUnassignedTouches() {
+	// public static Touch[] getUnassignedTouches() {
 	// Vector<TuioCursor> cursors = tuioClient.getTuioCursors();
 	// ArrayList<Touch> touches = new ArrayList<>();
 	// for (TuioCursor c : cursors) {
@@ -713,7 +713,7 @@ public class TouchClient {
 	/**
 	 * @return An array of all zones that currently have touches/are active.
 	 */
-	public Zone[] getActiveZones() {
+	public static Zone[] getActiveZones() {
 		ArrayList<Zone> zones = new ArrayList<Zone>();
 		for (Zone zone : zoneList) {
 			if (zone.isActive()) {
@@ -728,7 +728,7 @@ public class TouchClient {
 	 *            The zone to get the touches of
 	 * @return A Collection<Touch> containing all touches from the given zone
 	 */
-	public Collection<Touch> getTouchCollectionFromZone(Zone zone) {
+	public static Collection<Touch> getTouchCollectionFromZone(Zone zone) {
 		return zone.getTouchCollection();
 	}
 
@@ -737,7 +737,7 @@ public class TouchClient {
 	 *            The zone to get the touches of
 	 * @return A Touch[] containing all touches from the given zone
 	 */
-	public Touch[] getTouchesFromZone(Zone zone) {
+	public static Touch[] getTouchesFromZone(Zone zone) {
 		return zone.getTouches();
 	}
 
@@ -748,7 +748,7 @@ public class TouchClient {
 	 *            long - Session ID of the TuioObject
 	 * @return TuioObject
 	 */
-	public TuioObject getTuioObject(long s_id) {
+	public static TuioObject getTuioObject(long s_id) {
 		return tuioClient.getTuioObject(s_id);
 	}
 
@@ -806,7 +806,7 @@ public class TouchClient {
 	 * 
 	 * @return number of current touches
 	 */
-	public int getTouchCount() {
+	public static int getTouchCount() {
 		return tuioClient.getTuioCursors().size();
 	}
 
@@ -815,7 +815,7 @@ public class TouchClient {
 	 * released by a finger (cursor) Done before each call to draw. Uses the
 	 * zone's x and y friction values.
 	 */
-	public void pre() {
+	public static void pre() {
 		// TODO: provide some default assignment of touches
 		manager.handleTouches();
 		parent.g.flush();
@@ -1030,7 +1030,7 @@ public class TouchClient {
 	 * @param zone
 	 *            The zone to place on top of the others
 	 */
-	public void putZoneOnTop(Zone zone) {
+	public static void putZoneOnTop(Zone zone) {
 		if (zoneList.indexOf(zone) < zoneList.size() - 1) {
 			if (zone.getParent() != null) {
 				zone.getParent().putChildOnTop(zone);
