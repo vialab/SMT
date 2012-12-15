@@ -27,9 +27,11 @@ package vialab.SMT;
 import java.awt.Point;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -127,6 +129,10 @@ public class TouchClient {
 	/** TUIO adapter depending on which TouchSource is used */
 	AndroidToTUIO att = null;
 	MouseToTUIO mtt = null;
+
+	protected BufferedReader tuioServerErr;
+
+	protected BufferedReader tuioServerOut;
 
 	/**
 	 * Calling this function overrides the default behavior of showing select
@@ -338,7 +344,6 @@ public class TouchClient {
 		parent.pushStyle();
 		for (Touch t : SMTTouchManager.currentTouchState) {
 			parent.strokeWeight(3);
-			parent.stroke(200, 240, 255, 50);
 
 			long time = System.currentTimeMillis() - t.startTimeMillis;
 
@@ -354,10 +359,10 @@ public class TouchClient {
 					parent.ellipse(t.x, t.y, time / 10 + 50, time / 10 + 50);
 				}
 			}
-
-			parent.fill(100, 100, 100, 100);
+			parent.noStroke();
+			parent.fill(0, 0, 0, 50);
 			parent.ellipse(t.x, t.y, 40, 40);
-			parent.fill(255, 255, 255, 100);
+			parent.fill(255, 255, 255, 50);
 			parent.ellipse(t.x, t.y, 30, 30);
 			parent.noFill();
 			parent.stroke(200, 240, 255, 50);
@@ -880,14 +885,20 @@ public class TouchClient {
 					try {
 						tuioServer = Runtime.getRuntime().exec(
 								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
-						BufferedInputStream err = new BufferedInputStream(
-								tuioServer.getInputStream());
-						String s = "";
-						while (err.available() > 0) {
-							s += err.read();
+						tuioServerErr = new BufferedReader(new InputStreamReader(
+								tuioServer.getErrorStream()));
+						tuioServerOut = new BufferedReader(new InputStreamReader(
+								tuioServer.getInputStream()));
+						
+						while (true) {
+							if(tuioServerErr.ready()){
+								System.err.println(tuioServerErr.readLine());
+							}
+							if(tuioServerOut.ready()){
+								System.out.println(tuioServerOut.readLine());
+							}
+							Thread.sleep(1000);
 						}
-						System.out.println(s);
-						tuioServer.waitFor();
 					}
 					catch (IOException e) {
 						System.err.println(e.getMessage());
