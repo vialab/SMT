@@ -81,9 +81,6 @@ public class TouchClient {
 	/** Processing PApplet */
 	protected static PApplet parent;
 
-	/** The TouchClient */
-	protected static TouchClient client;
-
 	/** Gesture Handler */
 	// private static GestureHandler handler;
 
@@ -128,11 +125,17 @@ public class TouchClient {
 
 	/** TUIO adapter depending on which TouchSource is used */
 	static AndroidToTUIO att = null;
-	MouseToTUIO mtt = null;
+	static MouseToTUIO mtt = null;
 
-	protected BufferedReader tuioServerErr;
+	protected static BufferedReader tuioServerErr;
 
-	protected BufferedReader tuioServerOut;
+	protected static BufferedReader tuioServerOut;
+	
+	/**
+	 * Prevent TouchClient instantiation with private constructor
+	 */
+	private TouchClient(){
+	}
 
 	/**
 	 * Calling this function overrides the default behavior of showing select
@@ -146,17 +149,17 @@ public class TouchClient {
 	}
 
 	/**
-	 * Default Constructor. Default port is 3333 for TUIO
+	 * Initializes the TouchClient, begins listening to a TUIO source on the default port of 3333
 	 * 
 	 * @param parent
 	 *            PApplet - The Processing PApplet
 	 */
-	public TouchClient(PApplet parent) {
-		this(parent, 3333);
+	public static void init(PApplet parent) {
+		init(parent, 3333);
 	}
 
 	/**
-	 * Constructor. Allows you to select the TouchSource backend from which to
+	 * Allows you to select the TouchSource backend from which to
 	 * get multi-touch events from
 	 * 
 	 * @param parent
@@ -165,12 +168,12 @@ public class TouchClient {
 	 * @param port
 	 *            int - The port to listen on
 	 */
-	public TouchClient(PApplet parent, int port) {
-		this(parent, port, TouchSource.TUIO_DEVICE);
+	public static void init(PApplet parent, int port) {
+		init(parent, port, TouchSource.TUIO_DEVICE);
 	}
 
 	/**
-	 * Constructor. Allows you to select the TouchSource backend from which to
+	 * Allows you to select the TouchSource backend from which to
 	 * get multi-touch events from
 	 * 
 	 * @param parent
@@ -181,12 +184,12 @@ public class TouchClient {
 	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	public TouchClient(PApplet parent, TouchSource source) {
-		this(parent, 3333, source);
+	public static void init(PApplet parent, TouchSource source) {
+		init(parent, 3333, source);
 	}
 
 	/**
-	 * Constructor. Allows you to select the TouchSource backend from which to
+	 * Allows you to select the TouchSource backend from which to
 	 * get multi-touch events from
 	 * 
 	 * @param parent
@@ -201,7 +204,7 @@ public class TouchClient {
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	private TouchClient(final PApplet parent, int port, TouchSource source) {
+	private static void init(final PApplet parent, int port, TouchSource source) {
 		// As of now the toolkit only supports OpenGL
 		if (!parent.g.isGL()) {
 			System.out
@@ -211,14 +214,13 @@ public class TouchClient {
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
+		
 		// parent.registerMethod("dispose", this);
-		parent.registerMethod("draw", this);
-		parent.registerMethod("pre", this);
+		parent.registerMethod("draw", new TouchClient());
+		parent.registerMethod("pre", new TouchClient());
 		// handler = new GestureHandler();
 
 		picker = new SMTZonePicker();
-
-		TouchClient.client = this;
 
 		defaultRenderer = parent.g.getClass().getName();
 
@@ -243,15 +245,15 @@ public class TouchClient {
 			break;
 		case WM_TOUCH:
 			if (System.getProperty("os.arch").equals("x86")) {
-				this.runWinTouchTuioServer(false);
+				TouchClient.runWinTouchTuioServer(false);
 			}
 			else {
-				this.runWinTouchTuioServer(true);
+				TouchClient.runWinTouchTuioServer(true);
 			}
 			tuioClient = new TuioClient(port);
 			break;
 		case SMART:
-			this.runSmart2TuioServer();
+			TouchClient.runSmart2TuioServer();
 			tuioClient = new TuioClient(port);
 			break;
 		default:
@@ -837,7 +839,7 @@ public class TouchClient {
 	 * @param is64Bit
 	 *            Whether to use the 64-bit version of the exe
 	 */
-	private void runWinTouchTuioServer(boolean is64Bit) {
+	private static void runWinTouchTuioServer(boolean is64Bit) {
 		try {
 			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
@@ -916,7 +918,7 @@ public class TouchClient {
 		}
 	}
 
-	private void runSmart2TuioServer() {
+	private static void runSmart2TuioServer() {
 		try {
 			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
 

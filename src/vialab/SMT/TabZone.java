@@ -94,9 +94,9 @@ public class TabZone extends Zone {
 	private void tabActive(Tab tab) {
 		// make sure no other tabs will be drawn
 		for (Zone zone : this.Tabs.values()) {
-			client.remove(zone);
+			TouchClient.remove(zone);
 		}
-		client.add(Tabs.get(tab));
+		TouchClient.add(Tabs.get(tab));
 		this.currentTab = tab;
 	}
 
@@ -177,9 +177,9 @@ public class TabZone extends Zone {
 		}
 		Tab tab = new Tab(tabName, 0, 0, width / (Tabs.keySet().size() + 1), TAB_HEIGHT, tabText);
 		Tabs.put(tab, zone);
-		client.add(tab);
+		TouchClient.add(tab);
 		boolean result = super.add(zone);
-		client.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
+		TouchClient.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
 		tabActive(tab);
 		return result;
 	}
@@ -194,7 +194,7 @@ public class TabZone extends Zone {
 			for (Tab key : Tabs.keySet()) {
 				if (Tabs.get(key).equals(zone)) {
 					tabsToRemove.add(key);
-					client.remove(key);
+					TouchClient.remove(key);
 				}
 			}
 			for (Tab tab : tabsToRemove) {
@@ -206,7 +206,7 @@ public class TabZone extends Zone {
 			tab.setSize(width / Tabs.keySet().size(), TAB_HEIGHT);
 		}
 		boolean result = super.remove(zone);
-		client.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
+		TouchClient.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
 		// avoid negative array location, and instead set currentTab to null
 		// when no more tabs
 		if (Tabs.keySet().size() >= 1) {

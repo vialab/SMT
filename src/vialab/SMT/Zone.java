@@ -60,9 +60,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** Processing PApplet */
 	protected static PApplet applet;
 
-	/** TouchClient */
-	protected static TouchClient client;
-
 	/** The zone's transformation matrix */
 	protected PMatrix3D matrix = new PMatrix3D();
 
@@ -265,11 +262,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		super();
 
 		applet = TouchClient.parent;
-		client = TouchClient.client;
 
-		if (applet == null | client == null) {
+		if (applet == null) {
 			System.err
-					.println("Error: Cannot Instantiate zone before TouchClient, zones should be declared outside of setup, and initialized during setup after the touchClient has started. Expect serious issues if you see this message.");
+					.println("Error: Instantiation of Zone before TouchClient.init(). Expect serious issues if you see this message.");
 		}
 
 		this.renderer = renderer;
@@ -717,7 +713,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			// if the parent already is in the client zoneList, then add the
 			// child if it is not in the client zoneList
 			if (TouchClient.zoneList.contains(this) && !TouchClient.zoneList.contains(zone)) {
-				client.add(zone);
+				TouchClient.add(zone);
 			}
 			zone.parent = this;
 			if (!children.contains(zone)) {
@@ -741,7 +737,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			// from
 			// the zoneList, but only if it is in children
 			if (TouchClient.zoneList.contains(this) && this.children.contains(child)) {
-				client.remove(child);
+				TouchClient.remove(child);
 			}
 			child.parent = null;
 			return children.remove(child);

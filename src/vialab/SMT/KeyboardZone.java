@@ -233,7 +233,7 @@ public class KeyboardZone extends Zone {
 					/ NUM_KEYBOARD_ROWS, k));
 		}
 
-		client.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
+		TouchClient.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
 
 		for (Zone zone : this.children) {
 			zone.setDirect(true);
@@ -248,7 +248,7 @@ public class KeyboardZone extends Zone {
 	@Override
 	protected void init() {
 		super.init();
-		client.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
+		TouchClient.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
 	}
 
 	@Override
