@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Class-Path: android.jar TUIO.jar jbox2d-library-2.1.2.2-jar-with-dependencies.jar
+Class-Path: android.jar TUIO.jar jbox2d-library-2.1.2.2-jar-with-dependencies.jar slf4j-nop-1.7.2.jar

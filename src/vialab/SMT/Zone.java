@@ -72,9 +72,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	
 	Body zoneBody;
 	
-	PolygonShape zoneShape;
+	PolygonShape zoneShape = new PolygonShape();
 	
-	FixtureDef zoneFixtureDef;
+	FixtureDef zoneFixtureDef = new FixtureDef();
 	
 	Fixture zoneFixture;
 	
@@ -305,7 +305,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		setName(name);
 		
 		zoneBodyDef.type = BodyType.DYNAMIC;
-		zoneBodyDef.linearDamping=1.0f;
+		zoneBodyDef.linearDamping = 1.0f;
+		zoneBodyDef.angularDamping = 1.0f;
+		zoneShape.setAsBox(TouchClient.box2dScale*width/2, TouchClient.box2dScale*height/2);
+		zoneFixtureDef.shape = zoneShape;
+		zoneFixtureDef.density = 1.0f;
+		zoneFixtureDef.friction = 0.3f;
 	}
 
 	/**
@@ -2229,7 +2234,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		//get global matrix for rotation
 		PMatrix3D g = getGlobalMatrix();
 		//get origin position
-		PVector o = fromZoneVector(new PVector(0,0));
+		PVector o = fromZoneVector(new PVector(width/2,height/2));
 		//height-y to account for difference in co-ordinates
 		float angle = PApplet.atan2(g.m10,g.m00);
 		zoneBody.setTransform(new Vec2(o.x*TouchClient.box2dScale,applet.height-o.y*TouchClient.box2dScale), angle);
@@ -2241,6 +2246,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		//height-y to account for difference in co-ordinates
 		ng.translate(zoneBody.getPosition().x/TouchClient.box2dScale,(applet.height-zoneBody.getPosition().y)/TouchClient.box2dScale);
 		ng.rotate(zoneBody.getAngle());
+		ng.translate(-width/2, -height/2);
 		//ng=PM == (P-1)*ng=M
 		PMatrix3D M = new PMatrix3D(matrix);
 		M.invert();
@@ -2256,7 +2262,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		//enable physics on this zone to make sure it can move from the toss
 		physics=true;
 		Touch t = getActiveTouch(0);
-		if(!Float.isNaN(t.xSpeed)&&!Float.isNaN(t.ySpeed)&&!Float.isInfinite(t.xSpeed)&&!Float.isInfinite(t.ySpeed)){
+		if(zoneBody !=null && !Float.isNaN(t.xSpeed)&&!Float.isNaN(t.ySpeed)&&!Float.isInfinite(t.xSpeed)&&!Float.isInfinite(t.ySpeed)){
 			if(PApplet.abs(100*applet.frameRate*t.xSpeed)>PApplet.abs(zoneBody.getLinearVelocity().x)&&PApplet.abs(100*applet.frameRate*t.ySpeed)>PApplet.abs(zoneBody.getLinearVelocity().y)){
 				zoneBody.setLinearVelocity(new Vec2(100*applet.frameRate*t.xSpeed,100*applet.frameRate*-t.ySpeed));
 			}

@@ -429,7 +429,6 @@ public class TouchClient {
 	private static void addToZoneList(Zone zone) {
 		if (!zoneList.contains(zone)) {
 			zoneList.add(zone);
-			zone.zoneBody = world.createBody(zone.zoneBodyDef);
 		}
 		for (Zone child : zone.children) {
 			addToZoneList(child);
@@ -588,9 +587,7 @@ public class TouchClient {
 		for (Zone child : zone.children) {
 			removeFromZoneList(child);
 		}
-		world.destroyBody(zone.zoneBody);
 		return zoneList.remove(zone);
-
 	}
 
 	/**
@@ -854,7 +851,19 @@ public class TouchClient {
 	private static void updateStep() {
 		for(Zone z : zoneList){
 			if(z.physics){
+				//generate body and fixture for zone if they do not exist
+				if(z.zoneBody == null && z.zoneFixture == null){
+					z.zoneBody = world.createBody(z.zoneBodyDef);
+					z.zoneFixture = z.zoneBody.createFixture(z.zoneFixtureDef);
+				}
 				z.setBodyFromMatrix();
+			}else{
+				//make sure to destroy body for Zones that do not have physics on, as they should not collide with others
+				if(z.zoneBody != null){
+					world.destroyBody(z.zoneBody);
+					z.zoneBody = null;
+					z.zoneFixture = null;
+				}
 			}
 		}
 		
