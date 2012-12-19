@@ -43,6 +43,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.World;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -73,6 +75,10 @@ import TUIO.*;
  * @version 1.0
  */
 public class TouchClient {
+	
+	static float box2dScale = 0.5f;
+
+	private static World world;
 
 	private static int MAX_PATH_LENGTH = 50;
 
@@ -130,11 +136,11 @@ public class TouchClient {
 	protected static BufferedReader tuioServerErr;
 
 	protected static BufferedReader tuioServerOut;
-	
+
 	/**
 	 * Prevent TouchClient instantiation with private constructor
 	 */
-	private TouchClient(){
+	private TouchClient() {
 	}
 
 	/**
@@ -149,7 +155,8 @@ public class TouchClient {
 	}
 
 	/**
-	 * Initializes the TouchClient, begins listening to a TUIO source on the default port of 3333
+	 * Initializes the TouchClient, begins listening to a TUIO source on the
+	 * default port of 3333
 	 * 
 	 * @param parent
 	 *            PApplet - The Processing PApplet
@@ -159,8 +166,8 @@ public class TouchClient {
 	}
 
 	/**
-	 * Allows you to select the TouchSource backend from which to
-	 * get multi-touch events from
+	 * Allows you to select the TouchSource backend from which to get
+	 * multi-touch events from
 	 * 
 	 * @param parent
 	 *            PApplet - The Processing PApplet, usually just 'this' when
@@ -173,8 +180,8 @@ public class TouchClient {
 	}
 
 	/**
-	 * Allows you to select the TouchSource backend from which to
-	 * get multi-touch events from
+	 * Allows you to select the TouchSource backend from which to get
+	 * multi-touch events from
 	 * 
 	 * @param parent
 	 *            PApplet - The Processing PApplet, usually just 'this' when
@@ -189,8 +196,8 @@ public class TouchClient {
 	}
 
 	/**
-	 * Allows you to select the TouchSource backend from which to
-	 * get multi-touch events from
+	 * Allows you to select the TouchSource backend from which to get
+	 * multi-touch events from
 	 * 
 	 * @param parent
 	 *            PApplet - The Processing PApplet, usually just 'this' when
@@ -214,7 +221,7 @@ public class TouchClient {
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
-		
+
 		// parent.registerMethod("dispose", this);
 		parent.registerMethod("draw", new TouchClient());
 		parent.registerMethod("pre", new TouchClient());
@@ -288,6 +295,8 @@ public class TouchClient {
 				}
 			}
 		}));
+
+		world = new World(new Vec2(0.0f, 0.0f), true);
 	}
 
 	/**
@@ -420,6 +429,7 @@ public class TouchClient {
 	private static void addToZoneList(Zone zone) {
 		if (!zoneList.contains(zone)) {
 			zoneList.add(zone);
+			zone.zoneBody = world.createBody(zone.zoneBodyDef);
 		}
 		for (Zone child : zone.children) {
 			addToZoneList(child);
@@ -578,7 +588,9 @@ public class TouchClient {
 		for (Zone child : zone.children) {
 			removeFromZoneList(child);
 		}
+		world.destroyBody(zone.zoneBody);
 		return zoneList.remove(zone);
+
 	}
 
 	/**
@@ -831,6 +843,28 @@ public class TouchClient {
 				zone.touch();
 			}
 		}
+
+		updateStep();
+	}
+
+	/**
+	 * perform a step of physics using jbox2d, update bodies before and matrix
+	 * after of each Zone to keep the matrix and bodies synchronized
+	 */
+	private static void updateStep() {
+		for(Zone z : zoneList){
+			if(z.physics){
+				z.setBodyFromMatrix();
+			}
+		}
+		
+		world.step(1f / parent.frameRate, 8, 3);
+
+		for(Zone z : zoneList){
+			if(z.physics){
+				z.setMatrixFromBody();
+			}
+		}
 	}
 
 	/**
@@ -891,12 +925,12 @@ public class TouchClient {
 								tuioServer.getErrorStream()));
 						tuioServerOut = new BufferedReader(new InputStreamReader(
 								tuioServer.getInputStream()));
-						
+
 						while (true) {
-							if(tuioServerErr.ready()){
+							if (tuioServerErr.ready()) {
 								System.err.println(tuioServerErr.readLine());
 							}
-							if(tuioServerOut.ready()){
+							if (tuioServerOut.ready()) {
 								System.out.println(tuioServerOut.readLine());
 							}
 							Thread.sleep(1000);

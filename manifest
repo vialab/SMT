@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Class-Path: android.jar TUIO.jar
+Class-Path: android.jar TUIO.jar jbox2d-library-2.1.2.2-jar-with-dependencies.jar

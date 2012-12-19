@@ -34,6 +34,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Fixture;
+import org.jbox2d.dynamics.FixtureDef;
+
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -57,6 +65,19 @@ import TUIO.TuioTime;
  * @version 1.0
  */
 public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
+	
+	public boolean physics = false;
+	
+	BodyDef zoneBodyDef = new BodyDef();
+	
+	Body zoneBody;
+	
+	PolygonShape zoneShape;
+	
+	FixtureDef zoneFixtureDef;
+	
+	Fixture zoneFixture;
+	
 	/** Processing PApplet */
 	protected static PApplet applet;
 
@@ -282,6 +303,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		init();
 		resetMatrix();
 		setName(name);
+		
+		zoneBodyDef.type = BodyType.DYNAMIC;
+		zoneBodyDef.linearDamping=1.0f;
 	}
 
 	/**
@@ -2199,5 +2223,43 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override to specify a default behavior for keyTyped
 	 */
 	protected void keyTypedImpl(KeyEvent e) {
+	}
+
+	public void setBodyFromMatrix() {
+		//get global matrix for rotation
+		PMatrix3D g = getGlobalMatrix();
+		//get origin position
+		PVector o = fromZoneVector(new PVector(0,0));
+		//height-y to account for difference in co-ordinates
+		float angle = PApplet.atan2(g.m10,g.m00);
+		zoneBody.setTransform(new Vec2(o.x*TouchClient.box2dScale,applet.height-o.y*TouchClient.box2dScale), angle);
+	}
+
+	public void setMatrixFromBody() {
+		//set global matrix from zoneBody, then get local matrix from global matrix
+		PMatrix3D ng = new PMatrix3D();
+		//height-y to account for difference in co-ordinates
+		ng.translate(zoneBody.getPosition().x/TouchClient.box2dScale,(applet.height-zoneBody.getPosition().y)/TouchClient.box2dScale);
+		ng.rotate(zoneBody.getAngle());
+		//ng=PM == (P-1)*ng=M
+		PMatrix3D M = new PMatrix3D(matrix);
+		M.invert();
+		PMatrix3D P = getGlobalMatrix();
+		P.apply(M);
+		P.invert();
+		ng.apply(P);
+		matrix.set(ng);
+	}
+	
+
+	public void toss(){
+		//enable physics on this zone to make sure it can move from the toss
+		physics=true;
+		Touch t = getActiveTouch(0);
+		if(!Float.isNaN(t.xSpeed)&&!Float.isNaN(t.ySpeed)&&!Float.isInfinite(t.xSpeed)&&!Float.isInfinite(t.ySpeed)){
+			if(PApplet.abs(100*applet.frameRate*t.xSpeed)>PApplet.abs(zoneBody.getLinearVelocity().x)&&PApplet.abs(100*applet.frameRate*t.ySpeed)>PApplet.abs(zoneBody.getLinearVelocity().y)){
+				zoneBody.setLinearVelocity(new Vec2(100*applet.frameRate*t.xSpeed,100*applet.frameRate*-t.ySpeed));
+			}
+		}
 	}
 }
