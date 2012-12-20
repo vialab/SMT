@@ -13,7 +13,6 @@ final float ADD_BALL_PER_SECOND_CHANCE=0.1;
 
 int NUM_BALLS=3;
 
-TouchClient client;
 reflectZone[] zone = new reflectZone[NUM_ZONES];
 ButtonZone score;
 ArrayList<Ball> balls = new ArrayList<Ball>();
@@ -54,14 +53,13 @@ void setup() {
   for (int i=0; i<NUM_BALLS; i++) {
     balls.add(new Ball());
   }
-  client = new TouchClient(this, TouchSource.MOUSE);
-  client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
+  TouchClient.init(this, TouchSource.MOUSE);
   for (int i = 0; i < NUM_ZONES; i++) {
     zone[i] = new reflectZone("Paddle",(i%2)*(displayWidth-450)+200, 400, 50, 300, (i%2==0)? new PVector(1.0, 0):new PVector(-1.0, 0.0));
-    client.add(zone[i]);
+    TouchClient.add(zone[i]);
   }
   score= new ButtonZone("Score",displayWidth/2-50, 100, 100, 50,""+p1score+"|"+p2score,createFont("Arial-Black", 16));
-  client.add(score);
+  TouchClient.add(score);
 }
 
 void touchPaddle(Zone z){

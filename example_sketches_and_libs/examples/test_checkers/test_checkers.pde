@@ -13,8 +13,6 @@ final int PIECES_PER_PLAYER=12;
 CheckerZone p1[]=new CheckerZone[PIECES_PER_PLAYER];
 CheckerZone p2[]=new CheckerZone[PIECES_PER_PLAYER];
 
-TouchClient client;
-
 class CheckerZone extends Zone{
    color c;
    CheckerZone(String name, int x, int y, int w, int h,color c){
@@ -24,16 +22,16 @@ class CheckerZone extends Zone{
 }
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchSource.MOUSE);
-  client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
+  TouchClient.init(this, TouchSource.MOUSE);
+  TouchClient.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   for(int i=0; i<PIECES_PER_PLAYER; i++){
     p1[i]=new CheckerZone("Checker",0, 0, 100, 100,color(255,0,0));
-    client.add(p1[i]);
+    TouchClient.add(p1[i]);
     p1[i].setDirect(true);
   }
   for(int i=0; i<PIECES_PER_PLAYER; i++){
     p2[i]=new CheckerZone("Checker",0, 0, 100, 100,color(255,255,255));
-    client.add(p2[i]);
+    TouchClient.add(p2[i]);
     p2[i].setDirect(true);
   }
   int c1=0,c2=0;
@@ -70,8 +68,8 @@ void draw() {
     }
   }
   fill(255);
-  text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,10);
-  client.drawPickBuffer(0,0,100,100);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length,width/2,10);
+  TouchClient.drawPickBuffer(0,0,100,100);
 }
 
 void drawChecker(CheckerZone zone){

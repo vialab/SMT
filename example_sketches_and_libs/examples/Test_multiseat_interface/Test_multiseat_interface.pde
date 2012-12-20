@@ -10,12 +10,10 @@ import vialab.SMT.*;
 final boolean USE_MOUSE_TO_TUIO=true;
 final boolean DRAW_TOUCH_POINTS=true;
 
-TouchClient client;
-
 void setup() {
   size(displayWidth, displayHeight, OPENGL);
-  client = new TouchClient(this, TouchSource.MOUSE);
-  client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
+  TouchClient.init(this, TouchSource.MOUSE);
+  TouchClient.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   
   Zone z1=new Zone("UserArea",0, 0, 800, 200);
   Zone z2=new Zone("UserArea",0, 0, 800, 200);
@@ -35,15 +33,15 @@ void setup() {
   z3.add(new Zone("Item",0,0,200,100));
   z4.add(new Zone("Item",0,0,200,100));
   
-  client.add(z1);
-  client.add(z2);
-  client.add(z3);
-  client.add(z4);
+  TouchClient.add(z1);
+  TouchClient.add(z2);
+  TouchClient.add(z3);
+  TouchClient.add(z4);
 }
 
 void draw() {
   background(79, 129, 189);
-  text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,height/2);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length,width/2,height/2);
   fill(255);
 }
 

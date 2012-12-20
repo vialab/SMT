@@ -6,19 +6,18 @@
  */
 import vialab.SMT.*;
 
-TouchClient client;
 Touch first=null;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchSource.MOUSE);
+  TouchClient.init(this, TouchSource.MOUSE);
 }
 
 void draw(){ 
   //this tests that a touch object gets updated with the data from tuio
-  if(first==null&&client.getTouches().size()>0){
+  if(first==null&&TouchClient.getTouches().length>0){
     print("found a cursor");
-    first=client.getTouch(0);
+    first=TouchClient.getTouch(0);
   }
   background(123);
   if(first!=null){

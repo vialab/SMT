@@ -6,24 +6,22 @@
  */
 import vialab.SMT.*;
 
-TouchClient client;
-
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchSource.MOUSE);
+  TouchClient.init(this, TouchSource.MOUSE);
   Zone z = new Zone("Grid",400, 400, 100, 100);
   Zone z2 = new Zone("Zone",1200,400, 50, 50);
-  client.add(z2);
+  TouchClient.add(z2);
   for(int i=0; i<25; i++){
-    client.add(z2.clone());
+    TouchClient.add(z2.clone());
   }
-  client.add(z);
-  print(client.getZones().length);
+  TouchClient.add(z);
+  print(TouchClient.getZones().length);
 }
 
 void draw() {
   background(79, 129, 189);
-  text(frameRate+"fps, # of zones: "+client.getZones().length,width/2,10);
+  text(frameRate+"fps, # of zones: "+TouchClient.getZones().length,width/2,10);
   lights();
 }
 
@@ -32,7 +30,7 @@ void touchZone(Zone zone){
 }
 
 void touchGrid(Zone zone){
-  client.grid(100,100,1600,100,100,client.getZones());
+  TouchClient.grid(100,100,1600,100,100,TouchClient.getZones());
 }
 
 void touchPick(Zone zone){

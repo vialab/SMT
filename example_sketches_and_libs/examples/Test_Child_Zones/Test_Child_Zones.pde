@@ -6,13 +6,11 @@
  */
 import vialab.SMT.*;
 
-TouchClient client;
-
 void setup() {
   size(displayWidth, displayHeight, P3D);
   frameRate(600);
-  client = new TouchClient(this, TouchSource.MOUSE);
-  client.setDrawTouchPoints(true);
+  TouchClient.init(this, TouchSource.MOUSE);
+  TouchClient.setDrawTouchPoints(true);
   Zone z = new Zone("Parent1", 400, 400, 200, 200);
   Zone zc = new Zone("Child1", 0, 0, 100, 100);
   zc.add(new Zone("Child1", 100, 0, 100, 100));
@@ -21,14 +19,14 @@ void setup() {
   z.add(zc);
   z.add(zr);
   z.add(clone);
-  client.add(z);
-  //client.add(z.clone());
+  TouchClient.add(z);
+  //TouchClient.add(z.clone());
 }
 
 void draw() {
   background(79, 129, 189);
   fill(0);
-  text(round(frameRate)+"fps, # of zones: "+client.getZones().length, width/2, 10);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length, width/2, 10);
 }
 
 void touchParent1(Zone z) {
@@ -54,7 +52,7 @@ void drawChild1(Zone z) {
 }
 
 void touchRemove(Zone z) {
-  client.remove(z.getParent());
+  TouchClient.remove(z.getParent());
 }
 
 void drawRemove(Zone z) {
@@ -73,7 +71,7 @@ void touchClone(Zone z) {
   Zone clone =new Zone("Child1", 10, 600, 100, 100);
   //adding new indirect zones seems to cause massive slowdowns
   clone.setDirect(true);
-  client.add(clone);
+  TouchClient.add(clone);
 }
 
 void drawClone(Zone z) {

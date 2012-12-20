@@ -9,24 +9,22 @@ import vialab.SMT.*;
 //set some configuration constants
 final boolean DRAW_TOUCH_POINTS=true;
 
-TouchClient client;
-
 float xmag, ymag = 0;
 float newXmag, newYmag = 0; 
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchSource.MOUSE);
-  client.setDrawTouchPoints(DRAW_TOUCH_POINTS,10);
+  TouchClient.init(this, TouchSource.MOUSE);
+  TouchClient.setDrawTouchPoints(DRAW_TOUCH_POINTS,10);
   Zone z = new Zone("Z3D",400, 400, 400, 400);
-  client.add(z);
-  client.add(new Zone("Test",800,400,400,400));
+  TouchClient.add(z);
+  TouchClient.add(new Zone("Test",800,400,400,400));
 }
 
 void draw() {
   background(79, 129, 189);
-  text(frameRate+"fps, # of zones: "+client.getZones().length,width/2,10);
-  client.drawPickBuffer(0,0,100,100);
+  text(frameRate+"fps, # of zones: "+TouchClient.getZones().length,width/2,10);
+  TouchClient.drawPickBuffer(0,0,100,100);
 }
 
 void pickDrawZ3D(Zone zone){ 

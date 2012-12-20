@@ -7,7 +7,6 @@
 import vialab.SMT.*;
 
 //set some configuration constants
-final boolean DRAW_TOUCH_POINTS=true;
 final int PIECES_PER_PLAYER=12;
 String t="";
 
@@ -19,7 +18,6 @@ Zone board;
 Zone title;
 Zone options;
 SliderZone s[]=new SliderZone[6];
-TouchClient client;
 PFont largeFont = createFont("Arial",100);
 
 class CheckerZone extends Zone{
@@ -34,7 +32,7 @@ class CheckerZone extends Zone{
    }
    protected void touchImpl(){
      if(name=="Checker"){
-       client.putZoneOnTop(this);
+       TouchClient.putZoneOnTop(this);
        rst();
      }else{
        unassignAll(); 
@@ -44,16 +42,15 @@ class CheckerZone extends Zone{
 
 void setup() {
   size(displayWidth, displayHeight, OPENGL);
-  client = new TouchClient(this, TouchSource.MOUSE);
+  TouchClient.init(this, TouchSource.MOUSE);
   
   //call this to not display warnings for unimplemented methods
   //client.setWarnUnimplemented(false);
   
-  client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   title = new Zone("Title",0,0,displayWidth,displayHeight);
   board = new Zone("Board",(displayWidth-1000)/2,(displayHeight-1000)/2,1000,1000);
   options = new Zone("Options",0,0,displayWidth,displayHeight);
-  client.add(title);
+  TouchClient.add(title);
   title.add(new ButtonZone("PlayButton",displayWidth/2-100,displayHeight/2-100,200,100,"Play",20));
   title.add(new ButtonZone("OptionsButton",displayWidth/2-100,displayHeight/2+100,200,100,"Options",20));
   title.add(new ButtonZone("ExitButton",displayWidth/2-100,displayHeight/2+300,200,100,"Exit",20));
@@ -124,9 +121,8 @@ void touchKeyboard(Zone zone){
 void draw() {
   background(79, 129, 189);
   fill(255);
-  text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,10);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length,width/2,10);
   text("typed text: "+t,width/10,50);
-  client.drawPickBuffer(0,0,displayWidth/5,displayHeight/5);
 }
 
 void drawBoard(Zone zone){
@@ -149,7 +145,7 @@ void drawTitle(){
   textSize(100);
   text("Checkers",displayWidth/2-textWidth("Checkers")/2,displayHeight/2.8);
   textSize(16);
-  text(round(frameRate)+"fps, # of zones: "+client.getZones().length,width/2,20);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length,width/2,20);
   text("typed text: "+t,width/2,50);
 }
 
@@ -201,13 +197,13 @@ void placePieces(){
 }
 
 void pressPlayButton(Zone zone){
-  client.remove(title);
-  client.add(board);
+  TouchClient.remove(title);
+  TouchClient.add(board);
 }
 
 void pressOptionsButton(Zone zone){
-  client.remove(title);
-  client.add(options);
+  TouchClient.remove(title);
+  TouchClient.add(options);
 }
 
 void pressExitButton(Zone zone){
@@ -215,9 +211,9 @@ void pressExitButton(Zone zone){
 }
 
 void pressToTitleButton(Zone zone){
-  client.remove(board);
-  client.remove(options);
-  client.add(title);
+  TouchClient.remove(board);
+  TouchClient.remove(options);
+  TouchClient.add(title);
 }
 
 void pressChangeC1(Zone zone){

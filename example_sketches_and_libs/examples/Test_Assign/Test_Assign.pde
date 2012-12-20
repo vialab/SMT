@@ -5,15 +5,14 @@
  */
 import vialab.SMT.*;
 
-TouchClient client;
 Zone z;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchSource.MOUSE);
-  client.setDrawTouchPoints(true,100);
+  TouchClient.init(this, TouchSource.MOUSE);
+  TouchClient.setDrawTouchPoints(true,100);
   z = new Zone("Test",0,0,50,50);
-  client.add(z);
+  TouchClient.add(z);
 }
 
 void draw() {
@@ -30,6 +29,6 @@ void touchTest(Zone z){
 }
 
 void touchDown(){
-  z.assign(client.getTouches()); 
+  z.assign(TouchClient.getTouches()); 
 }
 

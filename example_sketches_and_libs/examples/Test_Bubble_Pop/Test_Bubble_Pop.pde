@@ -7,8 +7,6 @@ import vialab.SMT.*;
 
 final boolean DRAW_TOUCH_POINTS=true;
 
-TouchClient client;
-
 class BubbleZone extends Zone {
   color c;
   BubbleZone(String name, int x, int y, int w, int h, color c) {
@@ -25,19 +23,18 @@ class BubbleZone extends Zone {
 void setup() {
   frameRate(1000);
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchSource.MOUSE);
-  client.setDrawTouchPoints(DRAW_TOUCH_POINTS);
-  client.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
+  TouchClient.init(this, TouchSource.MOUSE);
+  TouchClient.setDrawTouchPoints(DRAW_TOUCH_POINTS);
+  TouchClient.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
 }
 
 void draw() { 
-  if (client.getZones().length<100) {
-    client.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
+  if (TouchClient.getZones().length<100) {
+    TouchClient.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
   }
   background(79, 129, 189);
   fill(255);
-  text(round(frameRate)+"fps, # of zones: "+client.getZones().length, width/2, 10);
-  client.drawPickBuffer(800, 800, 200, 200);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length, width/2, 10);
 }
 
 void drawBubble(BubbleZone zone) {
@@ -53,6 +50,6 @@ void pickDrawBubble(BubbleZone zone) {
 
 void touchBubble(BubbleZone zone) {
   zone.unassignAll();
-  client.remove(zone);
+  TouchClient.remove(zone);
 }
 

@@ -5,12 +5,10 @@
  */
 import vialab.SMT.*;
 
-TouchClient client;
-
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  client = new TouchClient(this, TouchSource.ANDROID);
-  client.setDrawTouchPoints(true,100);
+  TouchClient.init(this, TouchSource.ANDROID);
+  TouchClient.setDrawTouchPoints(true,100);
 }
 
 void draw() {

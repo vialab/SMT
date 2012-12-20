@@ -22,11 +22,11 @@ void setup() {
   //This provides the multi-touch functionality, and TouchSource selection
   //change MOUSE to SMART to switch from using the mouse for
   //input to Smart table multitouch input for example 
-  TouchClient client = new TouchClient(this, TouchSource.MOUSE);
+  TouchClient.init(this, TouchSource.MOUSE);
   
   //this adds a zone to the TouchClient, with the given parameters
   //new Zone(String name, int x, int y, int width, int height)
-  client.add(new Zone("MyZone", 0, 0, 200, 200));
+  TouchClient.add(new Zone("MyZone", 0, 0, 200, 200));
 }
 
 //same as processing, except we take out the part
