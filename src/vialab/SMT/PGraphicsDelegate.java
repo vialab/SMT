@@ -492,6 +492,9 @@ public abstract class PGraphicsDelegate {
 		pg.loadPixels();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void mask(int[] arg0) {
 		pg.mask(arg0);
 	}

@@ -20,6 +20,7 @@ _____________________
 		-Touch now has getAssignedZones(), assignZone(), unassignZone(), and getPathPoints()
 		-Zone now has toss(), which uses a physics engine to simulate tossing the Zone
 		-TouchClient.createStaticBox() will create a box that interacts with the physics engine, and by default these already exist at the edges of the screen
+		-New Zone: ContainerZone - Has no draw and not selectable by default and gives no warnings about it, useful for ordering other Zones
 
 	Feature Changes:
 		-TextZone now selects(highlights)/unblurs when moving across the text to the right, and unselects(unhighlights)/blurs when moving across the text to the left 
