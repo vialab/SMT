@@ -41,6 +41,8 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
+import org.jbox2d.dynamics.joints.MouseJoint;
+import org.jbox2d.dynamics.joints.MouseJointDef;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -153,6 +155,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected PGraphics zonePG;
 
 	private boolean touchUDM;
+
+	private MouseJoint mJoint;
+	
+	private MouseJointDef mJointDef;
 
 	/**
 	 * Check state of the direct flag.
@@ -1953,10 +1959,28 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected void touchDown(Touch touch) {
 		assign(touch);
+		if(mJoint == null){
+			if(zoneBody == null && zoneFixture == null){
+				zoneBody = TouchClient.world.createBody(zoneBodyDef);
+				zoneFixture = zoneBody.createFixture(zoneFixtureDef);
+			}
+			mJointDef = new MouseJointDef();
+			mJointDef.maxForce = 1000000.0f;
+			mJointDef.frequencyHz = applet.frameRate;
+			mJointDef.bodyA = TouchClient.groundBody;
+			mJointDef.bodyB = zoneBody;
+			mJointDef.target.set(new Vec2(zoneBody.getPosition().x, zoneBody.getPosition().y));
+			mJoint = (MouseJoint) TouchClient.world.createJoint(mJointDef);
+			zoneBody.setAwake(true);
+		}
 	}
 
 	protected void touchUp(Touch touch) {
 		unassign(touch);
+		if(mJoint != null){
+			TouchClient.world.destroyJoint(mJoint);
+			mJoint = null;
+		}
 	}
 
 	/**
@@ -2262,10 +2286,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		//enable physics on this zone to make sure it can move from the toss
 		physics=true;
 		Touch t = getActiveTouch(0);
-		if(zoneBody !=null && !Float.isNaN(t.xSpeed)&&!Float.isNaN(t.ySpeed)&&!Float.isInfinite(t.xSpeed)&&!Float.isInfinite(t.ySpeed)){
-			if(PApplet.abs(100*applet.frameRate*t.xSpeed)>PApplet.abs(zoneBody.getLinearVelocity().x)&&PApplet.abs(100*applet.frameRate*t.ySpeed)>PApplet.abs(zoneBody.getLinearVelocity().y)){
-				zoneBody.setLinearVelocity(new Vec2(100*applet.frameRate*t.xSpeed,100*applet.frameRate*-t.ySpeed));
-			}
+		if(zoneBody !=null && mJoint != null){
+			mJoint.setTarget(new Vec2(t.x*TouchClient.box2dScale, (applet.height-t.y)*TouchClient.box2dScale));
 		}
 	}
 }

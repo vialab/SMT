@@ -81,7 +81,7 @@ public class TouchClient {
 	
 	static float box2dScale = 0.1f;
 
-	private static World world;
+	static World world;
 
 	private static int MAX_PATH_LENGTH = 50;
 
@@ -139,6 +139,8 @@ public class TouchClient {
 	protected static BufferedReader tuioServerErr;
 
 	protected static BufferedReader tuioServerOut;
+
+	static Body groundBody;
 
 	/**
 	 * Prevent TouchClient instantiation with private constructor
@@ -301,7 +303,7 @@ public class TouchClient {
 
 		world = new World(new Vec2(0.0f, 0.0f), true);
 		//top
-		createStaticBox(0, -10.0f, parent.width, 10.f);
+		groundBody = createStaticBox(0, -10.0f, parent.width, 10.f);
 		//bottom
 		createStaticBox(0, parent.height+10.0f, parent.width, 10.f);
 		//left
@@ -317,13 +319,14 @@ public class TouchClient {
 	 * @param w Width
 	 * @param h Height
 	 */
-	public static void createStaticBox(float x, float y, float w, float h){
+	public static Body createStaticBox(float x, float y, float w, float h){
 		BodyDef boxDef = new BodyDef();
 		boxDef.position.set(TouchClient.box2dScale*(x+w/2), TouchClient.box2dScale*(parent.height-(y+h/2)));
 		Body box = world.createBody(boxDef);
 		PolygonShape boxShape = new PolygonShape();
 		boxShape.setAsBox(TouchClient.box2dScale*w/2, TouchClient.box2dScale*h/2);
 		box.createFixture(boxShape, 0.0f);
+		return box;
 	}
 
 	/**
