@@ -2237,14 +2237,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		PVector o = fromZoneVector(new PVector(width/2,height/2));
 		//height-y to account for difference in co-ordinates
 		float angle = PApplet.atan2(g.m10,g.m00);
-		zoneBody.setTransform(new Vec2(o.x*TouchClient.box2dScale,applet.height-o.y*TouchClient.box2dScale), angle);
+		zoneBody.setTransform(new Vec2(o.x*TouchClient.box2dScale,(applet.height-o.y)*TouchClient.box2dScale), angle);
 	}
 
 	public void setMatrixFromBody() {
 		//set global matrix from zoneBody, then get local matrix from global matrix
 		PMatrix3D ng = new PMatrix3D();
 		//height-y to account for difference in co-ordinates
-		ng.translate(zoneBody.getPosition().x/TouchClient.box2dScale,(applet.height-zoneBody.getPosition().y)/TouchClient.box2dScale);
+		ng.translate(zoneBody.getPosition().x/TouchClient.box2dScale,(applet.height-zoneBody.getPosition().y/TouchClient.box2dScale));
 		ng.rotate(zoneBody.getAngle());
 		ng.translate(-width/2, -height/2);
 		//ng=PM == (P-1)*ng=M

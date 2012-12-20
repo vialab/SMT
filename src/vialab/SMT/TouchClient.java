@@ -43,7 +43,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.World;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -76,7 +79,7 @@ import TUIO.*;
  */
 public class TouchClient {
 	
-	static float box2dScale = 0.5f;
+	static float box2dScale = 0.1f;
 
 	private static World world;
 
@@ -297,6 +300,30 @@ public class TouchClient {
 		}));
 
 		world = new World(new Vec2(0.0f, 0.0f), true);
+		//top
+		createStaticBox(0, -10.0f, parent.width, 10.f);
+		//bottom
+		createStaticBox(0, parent.height+10.0f, parent.width, 10.f);
+		//left
+		createStaticBox(-10.0f, 0, 10.0f, parent.height);
+		//right
+		createStaticBox(parent.width+10.0f, 0, 10.0f, parent.height);
+	}
+	
+	/**
+	 * This creates a static box to interact with the physics engine, collisions will occur with Zones that have physics == true, keeping them on the screen
+	 * @param x X-position
+	 * @param y Y-position
+	 * @param w Width
+	 * @param h Height
+	 */
+	public static void createStaticBox(float x, float y, float w, float h){
+		BodyDef boxDef = new BodyDef();
+		boxDef.position.set(TouchClient.box2dScale*(x+w/2), TouchClient.box2dScale*(parent.height-(y+h/2)));
+		Body box = world.createBody(boxDef);
+		PolygonShape boxShape = new PolygonShape();
+		boxShape.setAsBox(TouchClient.box2dScale*w/2, TouchClient.box2dScale*h/2);
+		box.createFixture(boxShape, 0.0f);
 	}
 
 	/**
@@ -586,6 +613,12 @@ public class TouchClient {
 	private static boolean removeFromZoneList(Zone zone) {
 		for (Zone child : zone.children) {
 			removeFromZoneList(child);
+		}
+		//destroy the Zones Body, so it does not collide with other Zones any more
+		if(zone.zoneBody != null){
+			world.destroyBody(zone.zoneBody);
+			zone.zoneBody = null;
+			zone.zoneFixture = null;
 		}
 		return zoneList.remove(zone);
 	}
