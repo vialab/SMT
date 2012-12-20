@@ -631,6 +631,7 @@ public class TouchClient {
 			world.destroyBody(zone.zoneBody);
 			zone.zoneBody = null;
 			zone.zoneFixture = null;
+			zone.mJoint = null;
 		}
 		return zoneList.remove(zone);
 	}
@@ -910,6 +911,7 @@ public class TouchClient {
 					world.destroyBody(z.zoneBody);
 					z.zoneBody = null;
 					z.zoneFixture = null;
+					z.mJoint = null;
 				}
 			}
 		}

@@ -156,7 +156,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	private boolean touchUDM;
 
-	private MouseJoint mJoint;
+	MouseJoint mJoint;
 
 	private MouseJointDef mJointDef;
 
