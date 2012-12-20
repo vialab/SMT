@@ -78,7 +78,7 @@ import TUIO.*;
  * @version 1.0
  */
 public class TouchClient {
-	
+
 	static float box2dScale = 0.1f;
 
 	static World world;
@@ -302,29 +302,37 @@ public class TouchClient {
 		}));
 
 		world = new World(new Vec2(0.0f, 0.0f), true);
-		//top
+		// top
 		groundBody = createStaticBox(0, -10.0f, parent.width, 10.f);
-		//bottom
-		createStaticBox(0, parent.height+10.0f, parent.width, 10.f);
-		//left
+		// bottom
+		createStaticBox(0, parent.height + 10.0f, parent.width, 10.f);
+		// left
 		createStaticBox(-10.0f, 0, 10.0f, parent.height);
-		//right
-		createStaticBox(parent.width+10.0f, 0, 10.0f, parent.height);
+		// right
+		createStaticBox(parent.width + 10.0f, 0, 10.0f, parent.height);
 	}
-	
+
 	/**
-	 * This creates a static box to interact with the physics engine, collisions will occur with Zones that have physics == true, keeping them on the screen
-	 * @param x X-position
-	 * @param y Y-position
-	 * @param w Width
-	 * @param h Height
+	 * This creates a static box to interact with the physics engine, collisions
+	 * will occur with Zones that have physics == true, keeping them on the
+	 * screen
+	 * 
+	 * @param x
+	 *            X-position
+	 * @param y
+	 *            Y-position
+	 * @param w
+	 *            Width
+	 * @param h
+	 *            Height
 	 */
-	public static Body createStaticBox(float x, float y, float w, float h){
+	public static Body createStaticBox(float x, float y, float w, float h) {
 		BodyDef boxDef = new BodyDef();
-		boxDef.position.set(TouchClient.box2dScale*(x+w/2), TouchClient.box2dScale*(parent.height-(y+h/2)));
+		boxDef.position.set(TouchClient.box2dScale * (x + w / 2), TouchClient.box2dScale
+				* (parent.height - (y + h / 2)));
 		Body box = world.createBody(boxDef);
 		PolygonShape boxShape = new PolygonShape();
-		boxShape.setAsBox(TouchClient.box2dScale*w/2, TouchClient.box2dScale*h/2);
+		boxShape.setAsBox(TouchClient.box2dScale * w / 2, TouchClient.box2dScale * h / 2);
 		box.createFixture(boxShape, 0.0f);
 		return box;
 	}
@@ -617,8 +625,9 @@ public class TouchClient {
 		for (Zone child : zone.children) {
 			removeFromZoneList(child);
 		}
-		//destroy the Zones Body, so it does not collide with other Zones any more
-		if(zone.zoneBody != null){
+		// destroy the Zones Body, so it does not collide with other Zones any
+		// more
+		if (zone.zoneBody != null) {
 			world.destroyBody(zone.zoneBody);
 			zone.zoneBody = null;
 			zone.zoneFixture = null;
@@ -885,28 +894,30 @@ public class TouchClient {
 	 * after of each Zone to keep the matrix and bodies synchronized
 	 */
 	private static void updateStep() {
-		for(Zone z : zoneList){
-			if(z.physics){
-				//generate body and fixture for zone if they do not exist
-				if(z.zoneBody == null && z.zoneFixture == null){
+		for (Zone z : zoneList) {
+			if (z.physics) {
+				// generate body and fixture for zone if they do not exist
+				if (z.zoneBody == null && z.zoneFixture == null) {
 					z.zoneBody = world.createBody(z.zoneBodyDef);
 					z.zoneFixture = z.zoneBody.createFixture(z.zoneFixtureDef);
 				}
 				z.setBodyFromMatrix();
-			}else{
-				//make sure to destroy body for Zones that do not have physics on, as they should not collide with others
-				if(z.zoneBody != null){
+			}
+			else {
+				// make sure to destroy body for Zones that do not have physics
+				// on, as they should not collide with others
+				if (z.zoneBody != null) {
 					world.destroyBody(z.zoneBody);
 					z.zoneBody = null;
 					z.zoneFixture = null;
 				}
 			}
 		}
-		
+
 		world.step(1f / parent.frameRate, 8, 3);
 
-		for(Zone z : zoneList){
-			if(z.physics){
+		for (Zone z : zoneList) {
+			if (z.physics) {
 				z.setMatrixFromBody();
 			}
 		}

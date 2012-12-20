@@ -67,19 +67,19 @@ import TUIO.TuioTime;
  * @version 1.0
  */
 public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
-	
+
 	public boolean physics = false;
-	
+
 	BodyDef zoneBodyDef = new BodyDef();
-	
+
 	Body zoneBody;
-	
+
 	PolygonShape zoneShape = new PolygonShape();
-	
+
 	FixtureDef zoneFixtureDef = new FixtureDef();
-	
+
 	Fixture zoneFixture;
-	
+
 	/** Processing PApplet */
 	protected static PApplet applet;
 
@@ -157,7 +157,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	private boolean touchUDM;
 
 	private MouseJoint mJoint;
-	
+
 	private MouseJointDef mJointDef;
 
 	/**
@@ -309,11 +309,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		init();
 		resetMatrix();
 		setName(name);
-		
+
 		zoneBodyDef.type = BodyType.DYNAMIC;
 		zoneBodyDef.linearDamping = 1.0f;
 		zoneBodyDef.angularDamping = 1.0f;
-		zoneShape.setAsBox(TouchClient.box2dScale*width/2, TouchClient.box2dScale*height/2);
+		zoneShape.setAsBox(TouchClient.box2dScale * width / 2, TouchClient.box2dScale * height / 2);
 		zoneFixtureDef.shape = zoneShape;
 		zoneFixtureDef.density = 1.0f;
 		zoneFixtureDef.friction = 0.3f;
@@ -1959,8 +1959,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected void touchDown(Touch touch) {
 		assign(touch);
-		if(mJoint == null){
-			if(zoneBody == null && zoneFixture == null){
+		if (mJoint == null) {
+			if (zoneBody == null && zoneFixture == null) {
 				zoneBody = TouchClient.world.createBody(zoneBodyDef);
 				zoneFixture = zoneBody.createFixture(zoneFixtureDef);
 			}
@@ -1977,7 +1977,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected void touchUp(Touch touch) {
 		unassign(touch);
-		if(mJoint != null){
+		if (mJoint != null) {
 			TouchClient.world.destroyJoint(mJoint);
 			mJoint = null;
 		}
@@ -2255,23 +2255,26 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void setBodyFromMatrix() {
-		//get global matrix for rotation
+		// get global matrix for rotation
 		PMatrix3D g = getGlobalMatrix();
-		//get origin position
-		PVector o = fromZoneVector(new PVector(width/2,height/2));
-		//height-y to account for difference in co-ordinates
-		float angle = PApplet.atan2(g.m10,g.m00);
-		zoneBody.setTransform(new Vec2(o.x*TouchClient.box2dScale,(applet.height-o.y)*TouchClient.box2dScale), angle);
+		// get origin position
+		PVector o = fromZoneVector(new PVector(width / 2, height / 2));
+		// height-y to account for difference in co-ordinates
+		float angle = PApplet.atan2(g.m10, g.m00);
+		zoneBody.setTransform(new Vec2(o.x * TouchClient.box2dScale, (applet.height - o.y)
+				* TouchClient.box2dScale), angle);
 	}
 
 	public void setMatrixFromBody() {
-		//set global matrix from zoneBody, then get local matrix from global matrix
+		// set global matrix from zoneBody, then get local matrix from global
+		// matrix
 		PMatrix3D ng = new PMatrix3D();
-		//height-y to account for difference in co-ordinates
-		ng.translate(zoneBody.getPosition().x/TouchClient.box2dScale,(applet.height-zoneBody.getPosition().y/TouchClient.box2dScale));
+		// height-y to account for difference in co-ordinates
+		ng.translate(zoneBody.getPosition().x / TouchClient.box2dScale,
+				(applet.height - zoneBody.getPosition().y / TouchClient.box2dScale));
 		ng.rotate(zoneBody.getAngle());
-		ng.translate(-width/2, -height/2);
-		//ng=PM == (P-1)*ng=M
+		ng.translate(-width / 2, -height / 2);
+		// ng=PM == (P-1)*ng=M
 		PMatrix3D M = new PMatrix3D(matrix);
 		M.invert();
 		PMatrix3D P = getGlobalMatrix();
@@ -2280,14 +2283,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		ng.apply(P);
 		matrix.set(ng);
 	}
-	
 
-	public void toss(){
-		//enable physics on this zone to make sure it can move from the toss
-		physics=true;
+	public void toss() {
+		// enable physics on this zone to make sure it can move from the toss
+		physics = true;
 		Touch t = getActiveTouch(0);
-		if(zoneBody !=null && mJoint != null){
-			mJoint.setTarget(new Vec2(t.x*TouchClient.box2dScale, (applet.height-t.y)*TouchClient.box2dScale));
+		if (zoneBody != null && mJoint != null) {
+			mJoint.setTarget(new Vec2(t.x * TouchClient.box2dScale, (applet.height - t.y)
+					* TouchClient.box2dScale));
 		}
 	}
 }
