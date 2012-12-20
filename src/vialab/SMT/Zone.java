@@ -1107,10 +1107,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * 
 	 * @param pair
 	 *            The TouchPair to drag to/from
-	 * @param dragX
-	 *            Whether to drag along the x-axis
-	 * @param dragY
-	 *            Whether to drag along the y-axis
+	 * @param dragLeft
+	 *            Allow dragging left
+	 * @param dragRight
+	 *            Allow dragging Right
+	 * @param dragUp
+	 *            Allow dragging Up
+	 * @param dragDown
+	 *            Allow dragging Down
 	 */
 	protected void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp,
 			boolean dragDown) {
