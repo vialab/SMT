@@ -41,6 +41,11 @@ public class ImageZone extends Zone {
 	public PImage img;
 
 	/**
+	 * Default tint colour of image is opaque white, as to not change appearance
+	 */
+	public int tintColour = applet.g.color(255, 255, 255, 255);
+
+	/**
 	 * ImageZone constructor, creates a rectangular zone and draws a PImage to
 	 * it.
 	 * 
@@ -67,6 +72,33 @@ public class ImageZone extends Zone {
 		// beginDraw();
 		// image(img, 0, 0, this.width, this.height);
 		// endDraw();
+	}
+	
+	/**
+	 * ImageZone constructor, creates a rectangular zone and draws a PImage to
+	 * it.
+	 * 
+	 * @param name
+	 *            The name of the zone, used for the drawZoneName() and
+	 *            touchZoneName(), etc methods
+	 * 
+	 * @param img
+	 *            PImage - The PImage that will be drawn to the zone's
+	 *            coordinates.
+	 * @param x
+	 *            int - X-coordinate of the upper left corner of the zone
+	 * @param y
+	 *            int - Y-coordinate of the upper left corner of the zone
+	 * @param width
+	 *            int - Width of the zone
+	 * @param height
+	 *            int - Height of the zone
+	 * @param tintColour
+	 *            int - colour the image will be tinted by
+	 */
+	public ImageZone(String name, PImage img, int x, int y, int width, int height, int tintColour) {
+		this(name, img, x, y, width, height);
+		this.tintColour = tintColour;
 	}
 
 	public ImageZone(PImage img, int x, int y, int width, int height) {
@@ -108,6 +140,7 @@ public class ImageZone extends Zone {
 
 	@Override
 	public void drawImpl() {
+		tint(tintColour);
 		image(img, 0, 0, this.width, this.height);
 	}
 
