@@ -81,8 +81,6 @@ public class TextZone extends Zone {
 
 	private boolean selectable = false;
 
-	private String inputText;
-
 	private WordZone currentWordZone;
 
 	private PFont font = applet.createFont("SansSerif", 16);
@@ -96,27 +94,33 @@ public class TextZone extends Zone {
 	private float fontSize = 16;
 
 	public TextZone(TextZone original) {
-		super(original.x, original.y, original.width, original.height);
+		super(original.name, original.x, original.y, original.width, original.height);
 		this.currentWordZone = (WordZone) original.currentWordZone.clone();
-		this.inputText = original.inputText;
 		this.blur = original.blur;
 		this.selectable = original.selectable;
 		this.keysFromApplet = original.keysFromApplet;
 		if (this.keysFromApplet) {
 			applet.registerMethod("keyEvent", this);
 		}
+		this.fontSize = original.fontSize;
+		if (this.fontSize != 16) {
+			this.font = applet.createFont("SansSerif", fontSize);
+		}
 	}
 
 	public TextZone(int x, int y, int width, int height, String inputText, boolean selectable,
-			boolean blur) {
-		this(null, x, y, width, height, inputText, selectable, blur, 16);
+			boolean blur, boolean keysRecievedFromApplet) {
+		this(null, x, y, width, height, inputText, selectable, blur, keysRecievedFromApplet, 16);
 	}
 
 	public TextZone(String name, int x, int y, int width, int height, String inputText,
-			boolean selectable, boolean blur, float fontSize) {
+			boolean selectable, boolean blur, boolean keysRecievedFromApplet, float fontSize) {
 		super(x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 0, 20);
-		this.inputText = inputText;
+		this.keysFromApplet = keysRecievedFromApplet;
+		if (keysRecievedFromApplet) {
+			applet.registerMethod("keyEvent", this);
+		}
 		this.selectable = selectable;
 		this.blur = blur;
 		this.fontSize = fontSize;
@@ -143,12 +147,7 @@ public class TextZone extends Zone {
 	}
 
 	public TextZone(String name, int x, int y, int width, int height, boolean keysRecievedFromApplet) {
-		super(name, x, y, width, height);
-		this.currentWordZone = new WordZone(0, 0, 0, 20);
-		this.keysFromApplet = keysRecievedFromApplet;
-		if (keysRecievedFromApplet) {
-			applet.registerMethod("keyEvent", this);
-		}
+		this(name, x, y, width, height, null, false, false, false, 16f);
 	}
 
 	@Override
