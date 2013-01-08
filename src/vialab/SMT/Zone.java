@@ -1502,7 +1502,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * Horizontal Swipe. Uses a single touch. Only works inside the zone's touch
-	 * method, or between calls to beginTouch() and endTouch()
+	 * method, or between calls to beginTouch() and endTouch().
+	 * <P>
+	 * Limits are absolute and are in global coordinates.
+	 *
+	 * @param leftLimit
+	 *            Limit on how far to be able to drag left
+	 * @param rightLimit
+	 *            Limit on how far to be able to drag right
 	 */
 	public void hSwipe(int leftLimit, int rightLimit) {
 		drag(true, false, leftLimit, rightLimit, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -1514,6 +1521,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public void vSwipe() {
 		drag(false, true);
+	}
+	
+	/**
+	 * Vertical Swipe. Uses a single touch. Only works inside the zone's touch
+	 * method, or between calls to beginTouch() and endTouch().
+	 * <P>
+	 * Limits are absolute and are in global coordinates.
+	 * 
+	 * @param upLimit
+	 *            Limit on how far to be able to drag up
+	 * @param downLimit
+	 *            Limit on how far to be able to drag down
+	 */
+	public void vSwipe(int upLimit, int downLimit) {
+		drag(false, true, Integer.MIN_VALUE, Integer.MAX_VALUE, upLimit, downLimit);
 	}
 
 	/**
