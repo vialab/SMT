@@ -26,6 +26,7 @@ _____________________
 		-Zone.vSwipe() now has optional limits to match hSwipe()
 		-ImageZone now has tintColour to allow setting of transparency and tint of the image
 		-new method Zone.getOrigin()
+		-Some new zones added: LeftPopUPMenuZone, PatternUnlockZone, SlideRevealZone, CheckBoxZone
 
 	Feature Changes:
 		-TextZone now selects(highlights)/unblurs when moving across the text to the right, and unselects(unhighlights)/blurs when moving across the text to the left 
