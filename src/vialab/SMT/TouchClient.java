@@ -100,7 +100,7 @@ public class TouchClient {
 	protected static CopyOnWriteArrayList<Zone> zoneList = new CopyOnWriteArrayList<Zone>();
 
 	/** Flag for drawing touch points */
-	protected static boolean drawTouchPoints = true;
+	protected static TouchDraw drawTouchPoints = TouchDraw.SMOOTH;
 
 	/** Matrix used to test if the zone has gone off the screen */
 	// private PMatrix3D mTest = new PMatrix3D();
@@ -366,7 +366,7 @@ public class TouchClient {
 	 * @param drawTouchPoints
 	 *            boolean - flag
 	 */
-	public static void setDrawTouchPoints(boolean drawTouchPoints) {
+	public static void setDrawTouchPoints(TouchDraw drawTouchPoints) {
 		TouchClient.drawTouchPoints = drawTouchPoints;
 	}
 
@@ -381,7 +381,7 @@ public class TouchClient {
 	 * @param max_path_length
 	 *            int - sets maximum path length to draw
 	 */
-	public static void setDrawTouchPoints(boolean drawTouchPoints, int max_path_length) {
+	public static void setDrawTouchPoints(TouchDraw drawTouchPoints, int max_path_length) {
 		TouchClient.drawTouchPoints = drawTouchPoints;
 		TouchClient.MAX_PATH_LENGTH = max_path_length;
 	}
@@ -389,7 +389,7 @@ public class TouchClient {
 	/**
 	 * Draws the touch points in the PApplet if flag is set to true.
 	 */
-	public static void drawTouchPoints() {
+	public static void drawSmoothTouchPoints() {
 		parent.pushStyle();
 		for (Touch t : SMTTouchManager.currentTouchState) {
 			parent.strokeWeight(3);
@@ -423,6 +423,39 @@ public class TouchClient {
 						parent.strokeWeight(weight);
 						parent.bezier(path[j].x, path[j].y, path[j - 1].x, path[j - 1].y,
 								path[j - 2].x, path[j - 2].y, path[j - 3].x, path[j - 3].y);
+					}
+				}
+			}
+		}
+		parent.popStyle();
+	}
+	
+	/**
+	 *	Draws all Touch objects and their path history, with some data to try to help with debugging
+	 */
+	public static void drawDebugTouchPoints() {
+		parent.pushStyle();
+		for (Touch t : SMTTouchManager.currentTouchState) {
+			parent.fill(255);
+			parent.stroke(0);
+			parent.ellipse(t.x, t.y, 30, 30);
+			parent.line(t.x, t.y-15, t.x, t.y+15);
+			parent.line(t.x-15, t.y, t.x+15, t.y);
+			TuioPoint[] path = t.path.toArray(new TuioPoint[t.path.size()]);
+			TuioPoint lastText = null;
+			if (path.length > 3) {
+				for (int j = 1 + Math.max(0, path.length - (TouchClient.MAX_PATH_LENGTH + 2)); j < path.length; j++) {
+					String pointText = "#"+j+" x:"+path[j].getScreenX(parent.width) + " y:" + path[j].getScreenY(parent.height) + " t:"+ path[j].getTuioTime().getTotalMilliseconds() +"ms";
+					parent.fill(255);
+					parent.line(path[j].getScreenX(parent.width), path[j].getScreenY(parent.height), path[j-1].getScreenX(parent.width), path[j-1].getScreenY(parent.height));
+					parent.ellipse(path[j].getScreenX(parent.width), path[j].getScreenY(parent.height), 5, 5);
+					if(lastText == null || Math.abs(path[j].getScreenY(parent.height) - lastText.getScreenY(parent.height)) > 13 || Math.abs(path[j].getScreenX(parent.width) - lastText.getScreenX(parent.width)) > parent.textWidth(pointText)*1.5){
+						parent.fill(0);
+						parent.textSize(12);
+						parent.text(pointText, path[j].getScreenX(parent.width)+5, path[j].getScreenY(parent.height));
+						lastText=path[j];
+						parent.fill(255,0,0);
+						parent.ellipse(path[j].getScreenX(parent.width), path[j].getScreenY(parent.height), 5, 5);
 					}
 				}
 			}
@@ -651,8 +684,15 @@ public class TouchClient {
 			zone.draw();
 			// zone.drawForPickBuffer(parent.g);
 		}
-		if (drawTouchPoints) {
-			drawTouchPoints();
+		switch (drawTouchPoints){
+			case DEBUG:
+				drawDebugTouchPoints();
+				break;
+			case SMOOTH:
+				drawSmoothTouchPoints();
+				break;
+			case NONE:
+				break;
 		}
 
 		// PApplet.println(parent.color((float) 0));

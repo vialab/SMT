@@ -8,7 +8,6 @@ import vialab.SMT.*;
 void setup() {
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.setDrawTouchPoints(true, 10);
   Zone z = new Zone("Pick1", 400, 400, 200, 200);
   Zone z2 = new Zone("Pick2", 1200, 400, 600, 600);
   z2.setDirect(true);

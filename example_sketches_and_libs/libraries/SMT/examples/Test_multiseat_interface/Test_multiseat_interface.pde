@@ -8,12 +8,10 @@ import vialab.SMT.*;
 
 //set some configuration constants
 final boolean USE_MOUSE_TO_TUIO=true;
-final boolean DRAW_TOUCH_POINTS=true;
 
 void setup() {
   size(displayWidth, displayHeight, OPENGL);
   TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   
   Zone z1=new Zone("UserArea",0, 0, 800, 200);
   Zone z2=new Zone("UserArea",0, 0, 800, 200);

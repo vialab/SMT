@@ -8,7 +8,7 @@ import vialab.SMT.*;
 void setup() {
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MOUSE);
-  client.setDrawTouchPoints(true,100);
+  TouchClient.setDrawTouchPoints(TouchDraw.DEBUG,100);
 }
 
 void draw() {

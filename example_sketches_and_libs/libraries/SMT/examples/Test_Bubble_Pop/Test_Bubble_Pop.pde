@@ -5,8 +5,6 @@
  */
 import vialab.SMT.*;
 
-final boolean DRAW_TOUCH_POINTS=true;
-
 class BubbleZone extends Zone {
   color c;
   BubbleZone(String name, int x, int y, int w, int h, color c) {
@@ -24,7 +22,6 @@ void setup() {
   frameRate(1000);
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   TouchClient.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
 }
 

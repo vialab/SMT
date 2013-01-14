@@ -9,6 +9,7 @@ _____________________
 		-Zone.activeTouches now private instead of public
 		-Touch no longer has getScreenX() and getScreenY(), they do not work(aren't updated properly), and Touch.x and Touch.y already give screen relative co-ordinates
 		-TouchClient no longer has constructors, use TouchClient.init() instead
+		-TouchClient.setDrawTouchPoints() now takes an enum TouchDraw instead of a boolean, options are NONE, DEBUG, and SMOOTH
 	
 	API Additions:
 		-applet and client variables in Zone now protected

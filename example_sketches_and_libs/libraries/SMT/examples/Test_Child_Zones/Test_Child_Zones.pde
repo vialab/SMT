@@ -10,7 +10,6 @@ void setup() {
   size(displayWidth, displayHeight, P3D);
   frameRate(600);
   TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.setDrawTouchPoints(true);
   Zone z = new Zone("Parent1", 400, 400, 200, 200);
   Zone zc = new Zone("Child1", 0, 0, 100, 100);
   zc.add(new Zone("Child1", 100, 0, 100, 100));

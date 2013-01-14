@@ -7,7 +7,6 @@
 import vialab.SMT.*;
 
 //set some configuration constants
-final boolean DRAW_TOUCH_POINTS=true;
 final int PIECES_PER_PLAYER=12;
 
 CheckerZone p1[]=new CheckerZone[PIECES_PER_PLAYER];
@@ -23,7 +22,6 @@ class CheckerZone extends Zone{
 void setup() {
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.setDrawTouchPoints(DRAW_TOUCH_POINTS);
   for(int i=0; i<PIECES_PER_PLAYER; i++){
     p1[i]=new CheckerZone("Checker",0, 0, 100, 100,color(255,0,0));
     TouchClient.add(p1[i]);

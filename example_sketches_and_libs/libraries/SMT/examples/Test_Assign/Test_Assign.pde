@@ -10,7 +10,6 @@ Zone z;
 void setup() {
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.setDrawTouchPoints(true,100);
   z = new Zone("Test",0,0,50,50);
   TouchClient.add(z);
 }
