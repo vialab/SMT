@@ -129,8 +129,10 @@ public class TextZone extends Zone {
 			font = applet.createFont("SansSerif", fontSize);
 		}
 
-		for (char c : inputText.toCharArray()) {
-			this.addChar(c);
+		if(inputText != null){
+			for (char c : inputText.toCharArray()) {
+				this.addChar(c);
+			}
 		}
 	}
 
