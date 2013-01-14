@@ -77,33 +77,27 @@ public class MouseToTUIO {
 	 */
 	public void mouseDragged(MouseEvent me) {
 		Point pt = new Point(me.getX(), me.getY());
-		int x = me.getX();
-		int y = me.getX();
 
 		if (selectedCursor != null) {
 			if (sim.contains(pt)) {
-				if (selectedCursor != null) {
-					if (jointCursors.contains(selectedCursor.sessionID)) {
-						Point selPoint = selectedCursor.getPosition();
-						int dx = pt.x - selPoint.x;
-						int dy = pt.y - selPoint.y;
+				if (jointCursors.contains(selectedCursor.sessionID)) {
+					Point selPoint = selectedCursor.getPosition();
+					int dx = pt.x - selPoint.x;
+					int dy = pt.y - selPoint.y;
 
-						Enumeration<Integer> joints = jointCursors.elements();
-						while (joints.hasMoreElements()) {
-							int jointId = joints.nextElement();
-							if (jointId == selectedCursor.sessionID)
-								continue;
-							Finger joint_cursor = sim.getCursor(jointId);
-							Point joint_point = joint_cursor.getPosition();
-							sim.updateCursor(joint_cursor, joint_point.x + dx, joint_point.y + dy);
-						}
-						sim.updateCursor(selectedCursor, pt.x, pt.y);
-						sim.allCursorMessage();
+					for (int jointId : jointCursors) {
+						if (jointId == selectedCursor.sessionID)
+							continue;
+						Finger joint_cursor = sim.getCursor(jointId);
+						Point joint_point = joint_cursor.getPosition();
+						sim.updateCursor(joint_cursor, joint_point.x + dx, joint_point.y + dy);
 					}
-					else {
-						sim.updateCursor(selectedCursor, pt.x, pt.y);
-						sim.cursorMessage(selectedCursor);
-					}
+					sim.updateCursor(selectedCursor, pt.x, pt.y);
+					sim.allCursorMessage();
+				}
+				else {
+					sim.updateCursor(selectedCursor, pt.x, pt.y);
+					sim.cursorMessage(selectedCursor);
 				}
 			}
 			else {
@@ -119,7 +113,7 @@ public class MouseToTUIO {
 		}
 		else {
 			if (sim.contains(pt)) {
-				selectedCursor = sim.addCursor(x, y);
+				selectedCursor = sim.addCursor(pt.x, pt.y);
 				sim.cursorMessage(selectedCursor);
 				if (me.isShiftDown() || me.getButton() == PConstants.RIGHT)
 					stickyCursors.addElement(selectedCursor.sessionID);
@@ -142,7 +136,7 @@ public class MouseToTUIO {
 			Finger cursor = cursorList.nextElement();
 			Point point = cursor.getPosition();
 
-			if (point.distance(x, y) < 7) {
+			if (point.distance(x, y) < 20) {
 				int selCur = -1;
 				if (selectedCursor != null)
 					selCur = selectedCursor.sessionID;
@@ -165,19 +159,23 @@ public class MouseToTUIO {
 				}
 				else {
 					selectedCursor = cursor;
+					sim.updateCursor(selectedCursor, x, y);
+					sim.cursorMessage(selectedCursor);
 					return;
 				}
 			}
 		}
 
-		if (me.isControlDown() || me.getButton() == PConstants.CENTER)
+		if (me.isControlDown() || me.getButton() == PConstants.CENTER){
 			return;
+		}
 
 		if (sim.contains(new Point(x, y))) {
 			selectedCursor = sim.addCursor(x, y);
 			sim.cursorMessage(selectedCursor);
-			if (me.isShiftDown() || me.getButton() == PConstants.RIGHT)
+			if (me.isShiftDown() || me.getButton() == PConstants.RIGHT){
 				stickyCursors.addElement(selectedCursor.sessionID);
+			}
 			return;
 		}
 
@@ -236,12 +234,14 @@ public class MouseToTUIO {
 	}
 
 	/**
-	 * Currently not used
+	 * Will release the Touch when the mouse exits the window
 	 * 
 	 * @param me
 	 *            MouseEvent
 	 */
 	public void mouseExited(MouseEvent me) {
+		//prevent touches getting stuck down by making them release on exit
+		this.mouseReleased(me);
 	}
 
 	public void mouseEvent(MouseEvent event) {
