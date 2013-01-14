@@ -891,7 +891,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return x int representing the upper left x-coordinate of the zone.
 	 */
 	public int getX() {
-		return this.x;
+		return (int) this.getOrigin().x;
 	}
 
 	/**
@@ -900,7 +900,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return y int representing the upper left y-coordinate of the zone.
 	 */
 	public int getY() {
-		return this.y;
+		return (int) this.getOrigin().y;
 	}
 
 	/**
@@ -1902,8 +1902,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return A PVector containing the centre point of the Zone
 	 */
 	public PVector getCentre() {
-		PVector centre = new PVector(width / 2, height / 2);
-		return matrix.mult(centre, new PVector());
+	    return fromZoneVector(new PVector(width/2, height/2));
+	}
+	
+	/**
+	 * @return A PVector containing the origin of the Zone. The origin is defined to be at the top-right corner of the Zone
+	 */
+	public PVector getOrigin() {
+	    return fromZoneVector(new PVector(0, 0));
 	}
 
 	protected TuioTime maxTime(Iterable<Touch> touches) {
