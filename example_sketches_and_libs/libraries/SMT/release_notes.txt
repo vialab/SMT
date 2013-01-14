@@ -10,24 +10,29 @@ _____________________
 		-Touch no longer has getScreenX() and getScreenY(), they do not work(aren't updated properly), and Touch.x and Touch.y already give screen relative co-ordinates
 		-TouchClient no longer has constructors, use TouchClient.init() instead
 		-TouchClient.setDrawTouchPoints() now takes an enum TouchDraw instead of a boolean, options are NONE, DEBUG, and SMOOTH
+		-some TextZone constructors have some added parameters to allow using all combinations of functionality
 	
 	API Additions:
 		-applet and client variables in Zone now protected
 		-parent variable in Zone now protected
 		-Touch.getCurrentPoint(), similar to getLastPoint except gets the current point
 		-TextZone now has an additional constructor that specifies fontSize, blur, selectable, and name
-		-Zone now has getGlobalMatrix() which returns a PMatrix3D of the Zone's matrix relative to global co-ordinates
+		-Zone now has getGlobalMatrix() which returns a PMatrix3D of the Zone's matrix relative to global coordinates
 		-KeyboardZone now has the following additional methods: clearKeyListeners(), getZoneKeyListeners(), getKeyListeners()
 		-Touch now has getAssignedZones(), assignZone(), unassignZone(), and getPathPoints()
 		-Zone now has toss(), which uses a physics engine to simulate tossing the Zone
 		-TouchClient.createStaticBox() will create a box that interacts with the physics engine, and by default these already exist at the edges of the screen
-		-New Zone: ContainerZone - Has no draw and not selectable by default and gives no warnings about it, useful for ordering other Zones
+		-New Zone: ContainerZone - Has no draw and not selectable by default and gives no warnings about it, useful for ordering and holding other Zones
+		-Zone.vSwipe() now has optional limits to match hSwipe()
+		-ImageZone now has tintColour to allow setting of transparency and tint of the image
+		-new method Zone.getOrigin()
 
 	Feature Changes:
 		-TextZone now selects(highlights)/unblurs when moving across the text to the right, and unselects(unhighlights)/blurs when moving across the text to the left 
 		-TextZone now renders its text immediately
 		-TextZone now cuts off text past its width, instead of going to a newline every character
 		-Touches no longer have a touchDown whenever they start picking to a new Zone, instead a normal touchMoved will be called, to maintain the same functionality if needed simply do the needed action on the first touchMoved since the last touchUp 
+		-Zone.getCentre(), Zone.getX(), and Zone.getY() now return global coordinates
 
 	Bug Fixes:
 		-push/pop style for every zone draw properly (no longer inherit style from parent zones)
