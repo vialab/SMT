@@ -1,7 +1,7 @@
 package vialab.SMT;
 
 public class CheckBoxZone extends Zone {
-	CheckBoxZone(String name, int x, int y, int width, int height) {
+	public CheckBoxZone(String name, int x, int y, int width, int height) {
 		super(name, x, y, width, height);
 	}
 
@@ -13,11 +13,12 @@ public class CheckBoxZone extends Zone {
 		if (checked) {
 			stroke(0);
 			strokeWeight(5);
-			line(0, width, width / 3, height);
+			line(width, 0, width / 3, height);
 			line(width / 3, height, 0, (float) (height * 2. / 3.));
 		}
 	}
 
+	@Override
 	protected void touchUpImpl(Touch t) {
 		checked = !checked;
 	}

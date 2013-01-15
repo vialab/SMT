@@ -182,7 +182,7 @@ public final class SMTUtilities {
 		// when the extending class has no [methodPefix+impl]() method and the
 		// pressMethod cannot be found, which is exactly what we want to occur.
 		try {
-			if (parameters[0].getSuperclass().getDeclaredMethod(methodPrefix + "Impl") != null) {
+			if (parameters[0] !=null && parameters[0].getSuperclass().getDeclaredMethod(methodPrefix + "Impl") != null) {
 				try {
 					// get the method if the class declared the prefix+Impl
 					// method,
