@@ -53,7 +53,10 @@ public class MouseToTUIO {
 
 	/** Vector of the sticky cursors */
 	Vector<Integer> stickyCursors = new Vector<Integer>();
-	/** Vector of the joint cursors */
+	/** 
+	 * Vector of the joint cursors.
+	 * <P> These cursors  are meant to move as a group.
+	 */
 	Vector<Integer> jointCursors = new Vector<Integer>();
 
 	/**
@@ -278,5 +281,9 @@ public class MouseToTUIO {
 		sim.reset();
 		stickyCursors.clear();
 		jointCursors.clear();
+	}
+	
+	public Integer[] getJointCursors(){
+		return jointCursors.toArray(new Integer[jointCursors.size()]);
 	}
 }

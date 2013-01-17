@@ -412,6 +412,9 @@ public class TouchClient {
 			parent.fill(0, 0, 0, 50);
 			parent.ellipse(t.x, t.y, 40, 40);
 			parent.fill(255, 255, 255, 50);
+			if(t.isJointCursor){
+				parent.fill(0, 255, 0, 50);
+			}
 			parent.ellipse(t.x, t.y, 30, 30);
 			parent.noFill();
 			parent.stroke(200, 240, 255, 50);
@@ -437,6 +440,9 @@ public class TouchClient {
 		parent.pushStyle();
 		for (Touch t : SMTTouchManager.currentTouchState) {
 			parent.fill(255);
+			if(t.isJointCursor){
+				parent.fill(0, 255, 0);
+			}
 			parent.stroke(0);
 			parent.ellipse(t.x, t.y, 30, 30);
 			parent.line(t.x, t.y-15, t.x, t.y+15);
@@ -915,6 +921,17 @@ public class TouchClient {
 	public static void pre() {
 		// TODO: provide some default assignment of touches
 		manager.handleTouches();
+		
+		if(mtt != null){
+			//update touches from mouseToTUIO joint cursors as they are a special case and need to be shown to user
+			for(Touch t: SMTTouchManager.currentTouchState){
+				t.isJointCursor=false;
+			}
+			for(Integer i : mtt.getJointCursors()){
+				SMTTouchManager.currentTouchState.getById(i).isJointCursor=true;
+			}
+		}
+		
 		parent.g.flush();
 		SMTUtilities.invoke(touch, parent);
 		for (Zone zone : zoneList) {
