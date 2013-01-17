@@ -47,4 +47,5 @@ _____________________
 		-add()/remove() of null Zone will no longer halt the execution of the sketch, and instead just prints an error
 		-checkImpl() now properly checks superclasses, so inheritance of drawImpl() and touchImpl(), etc works now.
 		-checkImpl() now properly works with additional parameters
-		-Touches no longer get stuck at the edge of the window when it is smaller than screen size 
+		-Touches no longer get stuck at the edge of the window when it is smaller than screen size
+		-JointCursors now are indicated with a green inside of the touch draw (JointCursors are MouseToTUIO specific and are activated my holding CTRL when clicking), they have always worked but were never indicated before
