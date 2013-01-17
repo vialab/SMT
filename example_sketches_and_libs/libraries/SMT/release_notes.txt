@@ -46,3 +46,5 @@ _____________________
 		-Zone.add() and TouchClient.add() now updates the Zone's matrix to make sure the first draw is done with the correct matrix (prevents an incorrect frame from being rendered)
 		-add()/remove() of null Zone will no longer halt the execution of the sketch, and instead just prints an error
 		-checkImpl() now properly checks superclasses, so inheritance of drawImpl() and touchImpl(), etc works now.
+		-checkImpl() now properly works with additional parameters
+		-Touches no longer get stuck at the edge of the window when it is smaller than screen size 
