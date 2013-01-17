@@ -12,7 +12,7 @@ import TUIO.*;
  * Touch has some state information and extends TuioCursor
  */
 public class Touch extends TuioCursor {
-	
+
 	boolean isJointCursor = false;
 
 	private CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();

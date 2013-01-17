@@ -73,7 +73,7 @@ public class ImageZone extends Zone {
 		// image(img, 0, 0, this.width, this.height);
 		// endDraw();
 	}
-	
+
 	/**
 	 * ImageZone constructor, creates a rectangular zone and draws a PImage to
 	 * it.

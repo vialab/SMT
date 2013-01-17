@@ -1,5 +1,5 @@
 package vialab.SMT;
 
-public enum TouchDraw{
+public enum TouchDraw {
 	NONE, DEBUG, SMOOTH;
 }

@@ -53,9 +53,10 @@ public class MouseToTUIO {
 
 	/** Vector of the sticky cursors */
 	Vector<Integer> stickyCursors = new Vector<Integer>();
-	/** 
+	/**
 	 * Vector of the joint cursors.
-	 * <P> These cursors  are meant to move as a group.
+	 * <P>
+	 * These cursors are meant to move as a group.
 	 */
 	Vector<Integer> jointCursors = new Vector<Integer>();
 
@@ -169,14 +170,14 @@ public class MouseToTUIO {
 			}
 		}
 
-		if (me.isControlDown() || me.getButton() == PConstants.CENTER){
+		if (me.isControlDown() || me.getButton() == PConstants.CENTER) {
 			return;
 		}
 
 		if (sim.contains(new Point(x, y))) {
 			selectedCursor = sim.addCursor(x, y);
 			sim.cursorMessage(selectedCursor);
-			if (me.isShiftDown() || me.getButton() == PConstants.RIGHT){
+			if (me.isShiftDown() || me.getButton() == PConstants.RIGHT) {
 				stickyCursors.addElement(selectedCursor.sessionID);
 			}
 			return;
@@ -243,7 +244,7 @@ public class MouseToTUIO {
 	 *            MouseEvent
 	 */
 	public void mouseExited(MouseEvent me) {
-		//prevent touches getting stuck down by making them release on exit
+		// prevent touches getting stuck down by making them release on exit
 		this.mouseReleased(me);
 	}
 
@@ -282,8 +283,8 @@ public class MouseToTUIO {
 		stickyCursors.clear();
 		jointCursors.clear();
 	}
-	
-	public Integer[] getJointCursors(){
+
+	public Integer[] getJointCursors() {
 		return jointCursors.toArray(new Integer[jointCursors.size()]);
 	}
 }

@@ -412,7 +412,7 @@ public class TouchClient {
 			parent.fill(0, 0, 0, 50);
 			parent.ellipse(t.x, t.y, 40, 40);
 			parent.fill(255, 255, 255, 50);
-			if(t.isJointCursor){
+			if (t.isJointCursor) {
 				parent.fill(0, 255, 0, 50);
 			}
 			parent.ellipse(t.x, t.y, 30, 30);
@@ -432,36 +432,50 @@ public class TouchClient {
 		}
 		parent.popStyle();
 	}
-	
+
 	/**
-	 *	Draws all Touch objects and their path history, with some data to try to help with debugging
+	 * Draws all Touch objects and their path history, with some data to try to
+	 * help with debugging
 	 */
 	public static void drawDebugTouchPoints() {
 		parent.pushStyle();
 		for (Touch t : SMTTouchManager.currentTouchState) {
 			parent.fill(255);
-			if(t.isJointCursor){
+			if (t.isJointCursor) {
 				parent.fill(0, 255, 0);
 			}
 			parent.stroke(0);
 			parent.ellipse(t.x, t.y, 30, 30);
-			parent.line(t.x, t.y-15, t.x, t.y+15);
-			parent.line(t.x-15, t.y, t.x+15, t.y);
+			parent.line(t.x, t.y - 15, t.x, t.y + 15);
+			parent.line(t.x - 15, t.y, t.x + 15, t.y);
 			TuioPoint[] path = t.path.toArray(new TuioPoint[t.path.size()]);
 			TuioPoint lastText = null;
 			if (path.length > 3) {
 				for (int j = 1 + Math.max(0, path.length - (TouchClient.MAX_PATH_LENGTH + 2)); j < path.length; j++) {
-					String pointText = "#"+j+" x:"+path[j].getScreenX(parent.width) + " y:" + path[j].getScreenY(parent.height) + " t:"+ path[j].getTuioTime().getTotalMilliseconds() +"ms";
+					String pointText = "#" + j + " x:" + path[j].getScreenX(parent.width) + " y:"
+							+ path[j].getScreenY(parent.height) + " t:"
+							+ path[j].getTuioTime().getTotalMilliseconds() + "ms";
 					parent.fill(255);
-					parent.line(path[j].getScreenX(parent.width), path[j].getScreenY(parent.height), path[j-1].getScreenX(parent.width), path[j-1].getScreenY(parent.height));
-					parent.ellipse(path[j].getScreenX(parent.width), path[j].getScreenY(parent.height), 5, 5);
-					if(lastText == null || Math.abs(path[j].getScreenY(parent.height) - lastText.getScreenY(parent.height)) > 13 || Math.abs(path[j].getScreenX(parent.width) - lastText.getScreenX(parent.width)) > parent.textWidth(pointText)*1.5){
+					parent.line(path[j].getScreenX(parent.width),
+							path[j].getScreenY(parent.height),
+							path[j - 1].getScreenX(parent.width),
+							path[j - 1].getScreenY(parent.height));
+					parent.ellipse(path[j].getScreenX(parent.width),
+							path[j].getScreenY(parent.height), 5, 5);
+					if (lastText == null
+							|| Math.abs(path[j].getScreenY(parent.height)
+									- lastText.getScreenY(parent.height)) > 13
+							|| Math.abs(path[j].getScreenX(parent.width)
+									- lastText.getScreenX(parent.width)) > parent
+									.textWidth(pointText) * 1.5) {
 						parent.fill(0);
 						parent.textSize(12);
-						parent.text(pointText, path[j].getScreenX(parent.width)+5, path[j].getScreenY(parent.height));
-						lastText=path[j];
-						parent.fill(255,0,0);
-						parent.ellipse(path[j].getScreenX(parent.width), path[j].getScreenY(parent.height), 5, 5);
+						parent.text(pointText, path[j].getScreenX(parent.width) + 5,
+								path[j].getScreenY(parent.height));
+						lastText = path[j];
+						parent.fill(255, 0, 0);
+						parent.ellipse(path[j].getScreenX(parent.width),
+								path[j].getScreenY(parent.height), 5, 5);
 					}
 				}
 			}
@@ -690,15 +704,15 @@ public class TouchClient {
 			zone.draw();
 			// zone.drawForPickBuffer(parent.g);
 		}
-		switch (drawTouchPoints){
-			case DEBUG:
-				drawDebugTouchPoints();
-				break;
-			case SMOOTH:
-				drawSmoothTouchPoints();
-				break;
-			case NONE:
-				break;
+		switch (drawTouchPoints) {
+		case DEBUG:
+			drawDebugTouchPoints();
+			break;
+		case SMOOTH:
+			drawSmoothTouchPoints();
+			break;
+		case NONE:
+			break;
 		}
 
 		// PApplet.println(parent.color((float) 0));
@@ -921,17 +935,18 @@ public class TouchClient {
 	public static void pre() {
 		// TODO: provide some default assignment of touches
 		manager.handleTouches();
-		
-		if(mtt != null){
-			//update touches from mouseToTUIO joint cursors as they are a special case and need to be shown to user
-			for(Touch t: SMTTouchManager.currentTouchState){
-				t.isJointCursor=false;
+
+		if (mtt != null) {
+			// update touches from mouseToTUIO joint cursors as they are a
+			// special case and need to be shown to user
+			for (Touch t : SMTTouchManager.currentTouchState) {
+				t.isJointCursor = false;
 			}
-			for(Integer i : mtt.getJointCursors()){
-				SMTTouchManager.currentTouchState.getById(i).isJointCursor=true;
+			for (Integer i : mtt.getJointCursors()) {
+				SMTTouchManager.currentTouchState.getById(i).isJointCursor = true;
 			}
 		}
-		
+
 		parent.g.flush();
 		SMTUtilities.invoke(touch, parent);
 		for (Zone zone : zoneList) {

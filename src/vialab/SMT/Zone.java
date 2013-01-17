@@ -1505,7 +1505,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * method, or between calls to beginTouch() and endTouch().
 	 * <P>
 	 * Limits are absolute and are in global coordinates.
-	 *
+	 * 
 	 * @param leftLimit
 	 *            Limit on how far to be able to drag left
 	 * @param rightLimit
@@ -1522,7 +1522,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void vSwipe() {
 		drag(false, true);
 	}
-	
+
 	/**
 	 * Vertical Swipe. Uses a single touch. Only works inside the zone's touch
 	 * method, or between calls to beginTouch() and endTouch().
@@ -1902,14 +1902,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return A PVector containing the centre point of the Zone
 	 */
 	public PVector getCentre() {
-	    return fromZoneVector(new PVector(width/2, height/2));
+		return fromZoneVector(new PVector(width / 2, height / 2));
 	}
-	
+
 	/**
-	 * @return A PVector containing the origin of the Zone. The origin is defined to be at the top-right corner of the Zone
+	 * @return A PVector containing the origin of the Zone. The origin is
+	 *         defined to be at the top-right corner of the Zone
 	 */
 	public PVector getOrigin() {
-	    return fromZoneVector(new PVector(0, 0));
+		return fromZoneVector(new PVector(0, 0));
 	}
 
 	protected TuioTime maxTime(Iterable<Touch> touches) {
