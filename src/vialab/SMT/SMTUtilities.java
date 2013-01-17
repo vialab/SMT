@@ -173,10 +173,15 @@ public final class SMTUtilities {
 	 *            The prefix to check for on methods in the given Class
 	 * @param parameters
 	 *            The Class to check for having a method with the given
-	 *            methodPrefix
+	 *            methodPrefix, the first of this array should be the Zone class
 	 * @return Whether the given class has a method with the given Prefix
 	 */
 	public static boolean checkImpl(String methodPrefix, Class<?>... parameters) {
+		if(parameters[0] == null){
+			System.err.println("Error: CheckImpl() first class parameter was null.");
+			return false;
+		}
+		
 		if(!(Zone.class.isAssignableFrom(parameters[0]))){
 			System.err.println("Error: CheckImpl() first class parameter was not Zone or a subclass, please give the current Zone class (using this.getClass()) as the first class parameter.");
 			return false;
@@ -191,7 +196,7 @@ public final class SMTUtilities {
 		try {
 			Class<?>[] firstRemoved = new Class<?>[parameters.length - 1];
 			System.arraycopy(parameters, 1, firstRemoved, 0, parameters.length - 1);
-			if (parameters[0] !=null && parameters[0].getSuperclass().getDeclaredMethod(methodPrefix + "Impl", firstRemoved) != null) {
+			if (parameters[0].getSuperclass().getDeclaredMethod(methodPrefix + "Impl", firstRemoved) != null) {
 				try {
 					// get the method if the class declared the prefix+Impl
 					// method,
@@ -227,7 +232,7 @@ public final class SMTUtilities {
 		catch (Exception e) {}
 
 		// check if a super-class implements it, and the superclass is not Zone
-		if (impl == null && parameters[0] != null && parameters[0].getSuperclass() != null
+		if (impl == null && parameters[0].getSuperclass() != null
 				&& parameters[0].getSuperclass() != Zone.class) {
 			Class<?> superClass = parameters[0].getSuperclass();
 			parameters[0] = superClass;
