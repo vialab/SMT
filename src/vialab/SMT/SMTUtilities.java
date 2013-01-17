@@ -85,8 +85,10 @@ public final class SMTUtilities {
 		if (method == null) {
 			// recurse only on first class
 			Class<?> superClass = parameter[0].getSuperclass();
-			parameter[0] = superClass;
-			method = getAnyPMethod(parent, methodPrefix, methodSuffix, parameter);
+			Class<?>[] firstSupered = new Class<?>[parameter.length];
+			System.arraycopy(parameter, 0, firstSupered, 0, parameter.length);
+			firstSupered[0] = superClass;
+			method = getAnyPMethod(parent, methodPrefix, methodSuffix, firstSupered);
 		}
 		return method;
 	}
