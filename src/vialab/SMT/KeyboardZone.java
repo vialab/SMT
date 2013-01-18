@@ -29,6 +29,21 @@ public class KeyboardZone extends Zone {
 			super(x, y, width, height, key.text);
 			this.key = key;
 		}
+		
+		@Override
+		public void drawImpl() {
+			if (deactivated) {
+				drawImpl(color(255, alpha), color(175, alpha));
+			}
+			else {
+				if (buttonDown) {
+					drawImpl(color(150, alpha), color(0, alpha));
+				}
+				else {
+					drawImpl(color(200, alpha), color(0, alpha));
+				}
+			}
+		}
 
 		@Override
 		public void touchDown(Touch touch) {
@@ -96,6 +111,8 @@ public class KeyboardZone extends Zone {
 		}
 	}
 
+	private int alpha = 255;
+	
 	private static final int DEFAULT_HEIGHT = 250;
 	private static final int DEFAULT_WIDTH = 750;
 
@@ -201,28 +218,48 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(int x, int y, boolean keysSentToApplet) {
 		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, keysSentToApplet);
 	}
-
+	
 	public KeyboardZone(String name) {
-		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, true);
+		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, true, 255);
 	}
 
 	public KeyboardZone(String name, boolean keysSentToApplet) {
-		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, keysSentToApplet);
+		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, keysSentToApplet, 255);
 	}
 
 	public KeyboardZone(int x, int y, int width, int height) {
-		this(null, x, y, width, height, true);
+		this(null, x, y, width, height, true, 255);
 	}
 
 	public KeyboardZone(int x, int y, int width, int height, boolean keysSentToApplet) {
-		this(null, x, y, width, height, keysSentToApplet);
+		this(null, x, y, width, height, keysSentToApplet, 255);
 	}
 
 	public KeyboardZone(String name, int x, int y, int width, int height) {
-		this(name, x, y, width, height, true);
+		this(name, x, y, width, height, true, 255);
+	}
+	
+	public KeyboardZone(String name, int alpha) {
+		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, true, alpha);
 	}
 
-	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet) {
+	public KeyboardZone(String name, boolean keysSentToApplet, int alpha) {
+		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, keysSentToApplet, alpha);
+	}
+
+	public KeyboardZone(int x, int y, int width, int height, int alpha) {
+		this(null, x, y, width, height, true, alpha);
+	}
+
+	public KeyboardZone(int x, int y, int width, int height, boolean keysSentToApplet, int alpha) {
+		this(null, x, y, width, height, keysSentToApplet, alpha);
+	}
+
+	public KeyboardZone(String name, int x, int y, int width, int height, int alpha) {
+		this(name, x, y, width, height, true, alpha);
+	}
+
+	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet, int alpha) {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
@@ -243,6 +280,8 @@ public class KeyboardZone extends Zone {
 			// add the processing applet as a KeyListener by default
 			this.addKeyListener(applet);
 		}
+		
+		this.alpha = alpha;
 	}
 
 	@Override
@@ -253,7 +292,7 @@ public class KeyboardZone extends Zone {
 
 	@Override
 	public void drawImpl() {
-		fill(0);
+		fill(0, alpha);
 		rect(0, 0, width, height);
 
 		// make sure modifiers have the correct setting as they act
@@ -436,5 +475,13 @@ public class KeyboardZone extends Zone {
 		default:
 			break;
 		}
+	}
+
+	public int getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(int alpha) {
+		this.alpha = alpha;
 	}
 }

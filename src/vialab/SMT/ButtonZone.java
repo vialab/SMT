@@ -20,27 +20,27 @@ public class ButtonZone extends Zone {
 
 	private float cornerRadius = 12;
 
-	private int color = applet.color(200);
+	protected int color = applet.color(200);
 
-	private int pressedColor = applet.color(150);
+	protected int pressedColor = applet.color(150);
 
 	private int borderWeight = 1;
 
 	private int borderColor = applet.color(0);
 
-	private int textColor = applet.color(0);
+	protected int textColor = applet.color(0);
 
-	private int pressedTextColor = applet.color(0);
+	protected int pressedTextColor = applet.color(0);
 
 	private float angle = 0;
 
 	private Method pressMethod;
 
-	private boolean buttonDown = false;
+	protected boolean buttonDown = false;
 
-	private int deactivatedColor = applet.color(255);
+	protected int deactivatedColor = applet.color(255);
 
-	private int deactivatedTextColor = applet.color(175);
+	protected int deactivatedTextColor = applet.color(175);
 
 	public ButtonZone() {
 		this(null);
@@ -181,7 +181,7 @@ public class ButtonZone extends Zone {
 		return buttonDown;
 	}
 
-	private void drawImpl(int buttonColor, int textColor) {
+	protected void drawImpl(int buttonColor, int textColor) {
 		stroke(borderColor);
 		strokeWeight(borderWeight);
 		fill(buttonColor);
