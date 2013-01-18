@@ -6,18 +6,13 @@
  */
 import vialab.SMT.*;
 
-ButtonZone z,z2,z3;
-
 void setup() {
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MOUSE);
-  z = new CustomButtonZone();
-  TouchClient.add(z);
-  z2 = new ButtonZone("Test",0,0,200,200,"test");
-  TouchClient.add(z2);
-  z2.deactivated=true;
-  z3 = new ButtonZone("test",600,0,200,200,"test");
-  TouchClient.add(z3);
+  TouchClient.add(new CustomButtonZone());
+  TouchClient.add(new ButtonZone("Test",0,0,200,200,"test"));
+  TouchClient.getZoneByName("Test",ButtonZone.class).deactivated=true;
+  TouchClient.add(new ButtonZone("test",600,0,200,200,"test"));
 }
 
 void pressTest(){
@@ -27,7 +22,7 @@ void pressTest(){
 void draw() {
   background(79, 129, 189);
   text(frameRate+"fps, # of zones: "+TouchClient.getZones().length,width/2,10);
-  text(""+z.isButtonDown(),200,200);
+  text(""+TouchClient.getZoneByName("CustomButton",ButtonZone.class).isButtonDown(),200,200);
 }
 
 class CustomButtonZone extends ButtonZone{

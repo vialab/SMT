@@ -1,3 +1,9 @@
+
+SMTv3.3 Release Notes
+_____________________
+	API Additions:
+		-getZoneByName() this takes a string and returns a Zone, optionally a class such as Zone.class can be given as a second parameter, in which case an attempt to cast it to this class will be made. This should allow the use of less globally defined Zones
+
 SMTv3.2 Release Notes
 _____________________
 

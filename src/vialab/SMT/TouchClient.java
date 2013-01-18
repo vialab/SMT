@@ -1207,4 +1207,32 @@ public class TouchClient {
 			picker.putZoneOnTop(zone);
 		}
 	}
+	
+	
+	/**
+	 * This finds a zone by its name, returning the first zone with the given name or null.
+	 * <P> This will throw ClassCastException if the Zone is not an instance of the given class
+	 * , and non-applicable type compile errors when the given class does not extend Zone. 
+	 * @param name The name of the zone to find
+	 * @param type a class type to cast the Zone to (e.g. Zone.class)
+	 * @return a Zone with the given name or null if it cannot be found
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Zone> T getZoneByName(String name, Class<T> type){
+		for (Zone z : zoneList){
+			if(z.name.equals(name)){
+				return (T) z;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * This finds a zone by its name, returning the first zone with the given name or null
+	 * @param name The name of the zone to find
+	 * @return a Zone with the given name or null if it cannot be found
+	 */
+	public static Zone getZoneByName(String name){
+		return getZoneByName(name,Zone.class);
+	}
 }
