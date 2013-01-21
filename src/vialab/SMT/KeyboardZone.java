@@ -312,6 +312,10 @@ public class KeyboardZone extends Zone {
 		fill(0, alpha);
 		rect(0, 0, width, height);
 
+		updateModifiersFromKeys();
+	}
+
+	protected void updateModifiersFromKeys() {
 		// make sure modifiers have the correct setting as they act
 		// differently than normal keys and should be unset even without a
 		// touchUp event, although really just a hack, as touchUp should be

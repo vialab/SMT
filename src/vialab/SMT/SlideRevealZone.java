@@ -37,11 +37,22 @@ public class SlideRevealZone extends Zone {
 	}
 
 	protected void drawImpl() {
-		textSize(12);
 		fill(255);
 		rect(0, 0, width, height);
+		
+		drawHiddenText();
+		
+		drawCoverRect();
+	}
+
+	protected void drawHiddenText() {
+		textSize(12);
 		fill(0);
 		text(revealText, 5, 20, width, height);
+	}
+
+	protected void drawCoverRect() {
+		textSize(12);
 		fill(255);
 		float childxpos = toZoneVector(getChild(0).getOrigin()).x;
 		rect(childxpos, 0, width - childxpos, height);

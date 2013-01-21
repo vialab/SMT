@@ -1,6 +1,5 @@
 package vialab.SMT;
 
-import processing.core.PFont;
 import processing.core.PVector;
 
 /**
@@ -9,8 +8,6 @@ import processing.core.PVector;
  * @author Zach
  */
 public class SliderZone extends Zone {
-
-	private PFont font = applet.createFont("Arial", 16);
 
 	private int currentValue;
 
@@ -113,7 +110,7 @@ public class SliderZone extends Zone {
 		this.minorTickSpacing = minorTickSpacing;
 	}
 
-	private void moveKnob() {
+	protected void moveKnob() {
 		for (Touch t : getTouches()) {
 			// if(this.contains(t.x, t.y)){
 			PVector touchInZone = this.toZoneVector(new PVector(t.x, t.y));
@@ -128,20 +125,26 @@ public class SliderZone extends Zone {
 
 	@Override
 	protected void drawImpl() {
-		textFont(font);
 		moveKnob();
+
 		fill(255);
 		rect(0, 0, width, height);
 
-		// draw something for the slider knob
-		ellipseMode(CORNER);
-		ellipse((((currentValue - minValue) / (float) maxValue) * width * (float) 8 / 10)
-				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
+		drawKnob();
+
+		drawMinMaxCur();
+
+		drawTicks();
+	}
+
+	protected void drawMinMaxCur() {
 		fill(0);
 		text(currentValue, width / 2 - 10, 15);
 		text(minValue, 0, height);
 		text(maxValue, width - 30, height);
-		fill(255);
+	}
+
+	protected void drawTicks() {
 		// draw the ticks
 		for (int i = minValue; i <= maxValue; i++) {
 			if (i % majorTickSpacing == 0) {
@@ -157,5 +160,12 @@ public class SliderZone extends Zone {
 						height * 5 / 8);
 			}
 		}
+	}
+
+	protected void drawKnob() {
+		// draw something for the slider knob
+		ellipseMode(CORNER);
+		ellipse((((currentValue - minValue) / (float) maxValue) * width * (float) 8 / 10)
+				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
 	}
 }

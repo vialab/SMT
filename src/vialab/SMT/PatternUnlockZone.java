@@ -57,6 +57,11 @@ public class PatternUnlockZone extends Zone {
 	protected void drawImpl() {
 		fill(255);
 		rect(0, 0, width, height);
+		
+		checkPasscode();
+	}
+
+	protected void checkPasscode() {
 		String pass = "";
 		for (Integer i : code) {
 			pass += i;

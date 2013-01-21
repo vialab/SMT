@@ -11,11 +11,15 @@ public class CheckBoxZone extends Zone {
 		fill(255);
 		rect(0, 0, width, height, 10);
 		if (checked) {
-			stroke(0);
-			strokeWeight(5);
-			line(width, 0, width / 3, height);
-			line(width / 3, height, 0, (float) (height * 2. / 3.));
+			drawCheckmark();
 		}
+	}
+
+	protected void drawCheckmark() {
+		stroke(0);
+		strokeWeight(5);
+		line(width, 0, width / 3, height);
+		line(width / 3, height, 0, (float) (height * 2. / 3.));
 	}
 
 	@Override
