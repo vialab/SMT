@@ -14,19 +14,19 @@ public class ButtonZone extends Zone {
 
 	protected int fontSize;
 
-	private String text;
+	protected String text;
 
-	private PFont font;
+	protected PFont font;
 
-	private float cornerRadius = 12;
+	protected float cornerRadius = 12;
 
 	protected int color = applet.color(200);
 
 	protected int pressedColor = applet.color(150);
 
-	private int borderWeight = 1;
+	protected int borderWeight = 1;
 
-	private int borderColor = applet.color(0);
+	protected int borderColor = applet.color(0);
 
 	protected int textColor = applet.color(0);
 

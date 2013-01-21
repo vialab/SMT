@@ -11,7 +11,7 @@ _____________________
 		
 	Feature Changes:
 		-KeyboardZone now has a 10% size border to make it easier to move (5% zone size on each side)
-	
+		-KeyboardZone's letters now switch between lower and upper case depending on if shift is pressed
 
 SMTv3.2 Release Notes
 _____________________

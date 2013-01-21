@@ -44,6 +44,28 @@ public class KeyboardZone extends Zone {
 				}
 			}
 		}
+		
+		protected void drawImpl(int buttonColor, int textColor) {
+			stroke(borderColor);
+			strokeWeight(borderWeight);
+			fill(buttonColor);
+			rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
+					cornerRadius);
+
+			if (text != null) {
+				if (font != null) {
+					textFont(font);
+				}
+				textAlign(CENTER, CENTER);
+				textSize(fontSize);
+				fill(textColor);
+				if(isModifierDown(KeyEvent.VK_SHIFT) && key.text.length()==1){
+					text(text.toUpperCase(), width / 2 - borderWeight, height / 2 - borderWeight);
+				}else{
+					text(text, width / 2 - borderWeight, height / 2 - borderWeight);
+				}
+			}
+		}
 
 		@Override
 		public void touchDown(Touch touch) {
@@ -166,7 +188,7 @@ public class KeyboardZone extends Zone {
 		private final float keyWidthRatio;
 
 		Keys(char keyChar, int keyCode, boolean isModifier) {
-			this(keyChar, keyCode, isModifier, Character.toString(Character.toUpperCase(keyChar)));
+			this(keyChar, keyCode, isModifier, Character.toString(keyChar));
 		}
 
 		Keys(char keyChar, int keyCode, boolean isModifier, String text) {
@@ -504,5 +526,29 @@ public class KeyboardZone extends Zone {
 
 	public void setAlpha(int alpha) {
 		this.alpha = alpha;
+	}
+	
+	public boolean isModifierDown(int keyCode) {
+		switch (keyCode) {
+		case KeyEvent.VK_SHIFT:
+			if ((MODIFIERS >> 6) % 2 == 1) {
+				return true;
+			}
+			break;
+		case KeyEvent.VK_CONTROL:
+			if ((MODIFIERS >> 7) % 2 == 1) {
+				return true;
+			}
+			break;
+		case KeyEvent.VK_ALT:
+			if ((MODIFIERS >> 8) % 2 == 1) {
+				return true;
+			}
+			break;
+		default:
+			break;
+		}
+		
+		return false;
 	}
 }
