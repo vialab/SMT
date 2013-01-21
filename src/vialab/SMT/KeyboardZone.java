@@ -14,6 +14,8 @@ import java.util.ArrayList;
  * keyboard
  */
 public class KeyboardZone extends Zone {
+	
+	public boolean capsLockOn = false;
 
 	private int MODIFIERS = 0;
 
@@ -43,6 +45,15 @@ public class KeyboardZone extends Zone {
 					drawImpl(color(200, alpha), color(0, alpha));
 				}
 			}
+			
+			//drawCapsLock state
+			if(key.keyCode ==KeyEvent.VK_CAPS_LOCK){
+				if(capsLockOn){
+					text("On",width/2, height*3/4);
+				}else{
+					text("Off",width/2, height*3/4);
+				}
+			}
 		}
 		
 		protected void drawImpl(int buttonColor, int textColor) {
@@ -59,7 +70,7 @@ public class KeyboardZone extends Zone {
 				textAlign(CENTER, CENTER);
 				textSize(fontSize);
 				fill(textColor);
-				if(isModifierDown(KeyEvent.VK_SHIFT) && key.text.length()==1){
+				if(((!capsLockOn&&isModifierDown(KeyEvent.VK_SHIFT))||(capsLockOn&&!isModifierDown(KeyEvent.VK_SHIFT))) && key.text.length()==1){
 					text(text.toUpperCase(), width / 2 - borderWeight, height / 2 - borderWeight);
 				}else{
 					text(text, width / 2 - borderWeight, height / 2 - borderWeight);
@@ -87,7 +98,7 @@ public class KeyboardZone extends Zone {
 			keyDown = true;
 			char k = key.keyChar;
 			// if not undefined char and shift is on, set to upper case
-			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && (MODIFIERS >> 6) % 2 == 1) {
+			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && ((((MODIFIERS >> 6) % 2 == 1)&&!capsLockOn)||(((MODIFIERS >> 6) % 2 == 0)&&capsLockOn))) {
 				k = Character.toUpperCase(key.keyChar);
 				// if key has a different value for when shift is down, set it
 				// to that
@@ -104,8 +115,14 @@ public class KeyboardZone extends Zone {
 
 		@Override
 		public void pressImpl() {
-			if (keyDown) {
-				keyUp();
+			//toggle Caps Lock
+			if(key.keyCode ==KeyEvent.VK_CAPS_LOCK){
+				capsLockOn = !capsLockOn;
+			}
+			else{
+				if (keyDown) {
+					keyUp();
+				}
 			}
 		}
 
@@ -113,7 +130,7 @@ public class KeyboardZone extends Zone {
 			keyDown = false;
 			char k = key.keyChar;
 			// if not undefined char and shift is on, set to upper case
-			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && (MODIFIERS >> 6) % 2 == 1) {
+			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && ((((MODIFIERS >> 6) % 2 == 1)&&!capsLockOn)||(((MODIFIERS >> 6) % 2 == 0)&&capsLockOn))) {
 				k = Character.toUpperCase(key.keyChar);
 				// if key has a different value for when shift is down, set it
 				// to that
