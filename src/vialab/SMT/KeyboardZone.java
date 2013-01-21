@@ -264,14 +264,14 @@ public class KeyboardZone extends Zone {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
-		int DEFAULT_KEY_WIDTH = width / KEYS_PER_ROW;
+		int DEFAULT_KEY_WIDTH = (width*9/10) / KEYS_PER_ROW;
 
 		for (Keys k : Keys.values()) {
-			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH), this.height
+			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH), (this.height*9/10)
 					/ NUM_KEYBOARD_ROWS, k, (this.height / NUM_KEYBOARD_ROWS)*16/50));
 		}
 
-		TouchClient.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
+		TouchClient.grid(width/20, height/20, (width*9/10), 0, 0, this.children.toArray(new Zone[children.size()]));
 
 		for (Zone zone : this.children) {
 			zone.setDirect(true);
@@ -289,22 +289,22 @@ public class KeyboardZone extends Zone {
 	public void setSize(int w, int h) {
 		super.setSize(w, h);
 		int KEYS_PER_ROW = 15;
-		int DEFAULT_KEY_WIDTH = width / KEYS_PER_ROW;
+		int DEFAULT_KEY_WIDTH = (width*9/10) / KEYS_PER_ROW;
 		for (Zone child : this.children) {
 			if (child instanceof KeyZone) {
 				KeyZone keyZone = (KeyZone) child;
-				keyZone.setSize((int) (keyZone.key.keyWidthRatio * DEFAULT_KEY_WIDTH), this.height
+				keyZone.setSize((int) (keyZone.key.keyWidthRatio * DEFAULT_KEY_WIDTH), (this.height*9/10)
 						/ NUM_KEYBOARD_ROWS);
-				keyZone.fontSize = (this.height / NUM_KEYBOARD_ROWS)*16/50;
+				keyZone.fontSize = ((this.height*9/10) / NUM_KEYBOARD_ROWS)*16/50;
 			}
 		}
-		TouchClient.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
+		TouchClient.grid(width/20, height/20, (width*9/10), 0, 0, this.children.toArray(new Zone[children.size()]));
 	}
 
 	@Override
 	protected void init() {
 		super.init();
-		TouchClient.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
+		TouchClient.grid(width/20, height/20, (width*9/10), 0, 0, this.children.toArray(new Zone[children.size()]));
 	}
 
 	@Override
