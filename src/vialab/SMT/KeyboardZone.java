@@ -29,7 +29,7 @@ public class KeyboardZone extends Zone {
 			super(x, y, width, height, key.text);
 			this.key = key;
 		}
-		
+
 		@Override
 		public void drawImpl() {
 			if (deactivated) {
@@ -112,7 +112,7 @@ public class KeyboardZone extends Zone {
 	}
 
 	private int alpha = 255;
-	
+
 	private static final int DEFAULT_HEIGHT = 250;
 	private static final int DEFAULT_WIDTH = 750;
 
@@ -218,7 +218,7 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(int x, int y, boolean keysSentToApplet) {
 		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, keysSentToApplet);
 	}
-	
+
 	public KeyboardZone(String name) {
 		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, true, 255);
 	}
@@ -238,7 +238,7 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(String name, int x, int y, int width, int height) {
 		this(name, x, y, width, height, true, 255);
 	}
-	
+
 	public KeyboardZone(String name, int alpha) {
 		this(name, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, true, alpha);
 	}
@@ -259,7 +259,8 @@ public class KeyboardZone extends Zone {
 		this(name, x, y, width, height, true, alpha);
 	}
 
-	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet, int alpha) {
+	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
+			int alpha) {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
@@ -280,8 +281,22 @@ public class KeyboardZone extends Zone {
 			// add the processing applet as a KeyListener by default
 			this.addKeyListener(applet);
 		}
-		
+
 		this.alpha = alpha;
+	}
+
+	@Override
+	public void setSize(int w, int h) {
+		super.setSize(w, h);
+		int KEYS_PER_ROW = 15;
+		int DEFAULT_KEY_WIDTH = width / KEYS_PER_ROW;
+		for (Zone child : this.children) {
+			if (child instanceof KeyZone) {
+				KeyZone keyZone = (KeyZone) child;
+				keyZone.setSize((int) (keyZone.key.keyWidthRatio * DEFAULT_KEY_WIDTH), this.height / NUM_KEYBOARD_ROWS);
+			}
+		}
+		TouchClient.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
 	}
 
 	@Override
