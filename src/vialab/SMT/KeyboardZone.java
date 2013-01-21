@@ -25,8 +25,8 @@ public class KeyboardZone extends Zone {
 		private Keys key;
 		private boolean keyDown;
 
-		public KeyZone(int x, int y, int width, int height, Keys key) {
-			super(x, y, width, height, key.text);
+		public KeyZone(int x, int y, int width, int height, Keys key, int fontSize) {
+			super(null, x, y, width, height, key.text, fontSize);
 			this.key = key;
 		}
 
@@ -268,7 +268,7 @@ public class KeyboardZone extends Zone {
 
 		for (Keys k : Keys.values()) {
 			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH), this.height
-					/ NUM_KEYBOARD_ROWS, k));
+					/ NUM_KEYBOARD_ROWS, k, (this.height / NUM_KEYBOARD_ROWS)*16/50));
 		}
 
 		TouchClient.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));
@@ -293,7 +293,9 @@ public class KeyboardZone extends Zone {
 		for (Zone child : this.children) {
 			if (child instanceof KeyZone) {
 				KeyZone keyZone = (KeyZone) child;
-				keyZone.setSize((int) (keyZone.key.keyWidthRatio * DEFAULT_KEY_WIDTH), this.height / NUM_KEYBOARD_ROWS);
+				keyZone.setSize((int) (keyZone.key.keyWidthRatio * DEFAULT_KEY_WIDTH), this.height
+						/ NUM_KEYBOARD_ROWS);
+				keyZone.fontSize = (this.height / NUM_KEYBOARD_ROWS)*16/50;
 			}
 		}
 		TouchClient.grid(0, 0, width, 0, 0, this.children.toArray(new Zone[children.size()]));

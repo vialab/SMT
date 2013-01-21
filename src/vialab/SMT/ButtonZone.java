@@ -12,7 +12,7 @@ public class ButtonZone extends Zone {
 
 	public boolean deactivated = false;
 
-	private int fontSize;
+	protected int fontSize;
 
 	private String text;
 
