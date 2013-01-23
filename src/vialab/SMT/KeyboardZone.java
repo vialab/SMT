@@ -15,6 +15,16 @@ import java.util.ArrayList;
  */
 public class KeyboardZone extends Zone {
 	
+	public int keyColor = applet.g.color(200);
+	
+	public int keyPressedColor = applet.g.color(150);
+	
+	public int backgroundColor = applet.g.color(0);
+	
+	public int textColor = applet.g.color(0);
+	
+	public int alpha = 255;
+	
 	public boolean capsLockOn = false;
 
 	private int MODIFIERS = 0;
@@ -23,15 +33,20 @@ public class KeyboardZone extends Zone {
 		private static final long serialVersionUID = -3237916182106172342L;
 	};
 
+	private static final int DEFAULT_HEIGHT = 250;
+	private static final int DEFAULT_WIDTH = 750;
+
+	private static final int NUM_KEYBOARD_ROWS = 5;
+
 	class KeyZone extends ButtonZone {
 		private Keys key;
 		private boolean keyDown;
-
+	
 		public KeyZone(int x, int y, int width, int height, Keys key, int fontSize) {
 			super(null, x, y, width, height, key.text, fontSize);
 			this.key = key;
 		}
-
+	
 		@Override
 		public void drawImpl() {
 			if (deactivated) {
@@ -39,10 +54,10 @@ public class KeyboardZone extends Zone {
 			}
 			else {
 				if (buttonDown) {
-					drawImpl(color(150, alpha), color(0, alpha));
+					drawImpl(color(keyPressedColor, alpha), color(textColor, alpha));
 				}
 				else {
-					drawImpl(color(200, alpha), color(0, alpha));
+					drawImpl(color(keyColor, alpha), color(textColor, alpha));
 				}
 			}
 			
@@ -62,7 +77,7 @@ public class KeyboardZone extends Zone {
 			fill(buttonColor);
 			rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
 					cornerRadius);
-
+	
 			if (text != null) {
 				if (font != null) {
 					textFont(font);
@@ -77,7 +92,7 @@ public class KeyboardZone extends Zone {
 				}
 			}
 		}
-
+	
 		@Override
 		public void touchDown(Touch touch) {
 			super.touchDown(touch);
@@ -85,7 +100,7 @@ public class KeyboardZone extends Zone {
 				keyDown();
 			}
 		}
-
+	
 		@Override
 		public void touchMovedImpl(Touch touch) {
 			this.setButtonDown();
@@ -93,7 +108,7 @@ public class KeyboardZone extends Zone {
 				keyDown();
 			}
 		}
-
+	
 		private void keyDown() {
 			keyDown = true;
 			char k = key.keyChar;
@@ -112,7 +127,7 @@ public class KeyboardZone extends Zone {
 						.currentTimeMillis(), MODIFIERS, key.keyCode, k));
 			}
 		}
-
+	
 		@Override
 		public void pressImpl() {
 			//toggle Caps Lock
@@ -125,7 +140,7 @@ public class KeyboardZone extends Zone {
 				}
 			}
 		}
-
+	
 		private void keyUp() {
 			keyDown = false;
 			char k = key.keyChar;
@@ -149,13 +164,6 @@ public class KeyboardZone extends Zone {
 			}
 		}
 	}
-
-	private int alpha = 255;
-
-	private static final int DEFAULT_HEIGHT = 250;
-	private static final int DEFAULT_WIDTH = 750;
-
-	private static final int NUM_KEYBOARD_ROWS = 5;
 
 	private enum Keys {
 		KEY_BACK_QUOTE('~', '`', KeyEvent.VK_BACK_QUOTE, false), KEY_1('!', '1', KeyEvent.VK_1,
@@ -297,9 +305,14 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(String name, int x, int y, int width, int height, int alpha) {
 		this(name, x, y, width, height, true, alpha);
 	}
-
+	
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
 			int alpha) {
+		this(name, x, y, width, height, keysSentToApplet, alpha, 0, 200, 150, 0);
+	}
+
+	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
+			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor) {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
@@ -322,6 +335,8 @@ public class KeyboardZone extends Zone {
 		}
 
 		this.alpha = alpha;
+		
+		this.backgroundColor = backgroundColor;
 	}
 
 	@Override
@@ -348,7 +363,7 @@ public class KeyboardZone extends Zone {
 
 	@Override
 	public void drawImpl() {
-		fill(0, alpha);
+		fill(backgroundColor, alpha);
 		rect(0, 0, width, height);
 
 		updateModifiersFromKeys();
