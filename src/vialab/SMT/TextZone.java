@@ -83,9 +83,9 @@ public class TextZone extends Zone {
 
 	private WordZone currentWordZone;
 
-	private PFont font = applet.createFont("SansSerif", 16);
+	private PFont font;
 
-	private PFont sFont = applet.createFont("SansSerif", 3.0f);
+	private PFont sFont;
 
 	private boolean blur = false;
 
@@ -125,9 +125,8 @@ public class TextZone extends Zone {
 		this.blur = blur;
 		this.fontSize = fontSize;
 
-		if (fontSize != 16) {
-			font = applet.createFont("SansSerif", fontSize);
-		}
+		font = applet.createFont("SansSerif", fontSize);
+		sFont = applet.createFont("SansSerif", 3.0f);
 
 		if (inputText != null) {
 			for (char c : inputText.toCharArray()) {

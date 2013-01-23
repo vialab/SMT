@@ -17,15 +17,15 @@ import processing.core.PVector;
  */
 public class KeyboardZone extends Zone {
 	
-	public int keyColor = applet.g.color(200);
+	public int keyColor = 200;
 	
-	public int keyPressedColor = applet.g.color(150);
+	public int keyPressedColor = 150;
 	
-	public int backgroundColor = applet.g.color(0);
+	public int backgroundColor = 0;
 	
-	public int textColor = applet.g.color(0);
+	public int textColor = 0;
 	
-	public int linkColor = applet.g.color(255,150);
+	public int linkColor = 0x96FFFFFF;
 	
 	public int alpha = 255;
 	

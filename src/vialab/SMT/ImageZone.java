@@ -43,7 +43,7 @@ public class ImageZone extends Zone {
 	/**
 	 * Default tint colour of image is opaque white, as to not change appearance
 	 */
-	public int tintColour = applet.g.color(255, 255, 255, 255);
+	public int tintColour = 0xFFFFFFFF;
 
 	/**
 	 * ImageZone constructor, creates a rectangular zone and draws a PImage to
