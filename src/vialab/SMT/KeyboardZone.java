@@ -8,6 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
+import processing.core.PVector;
+
 /**
  * KeyboardZone is an implementation of an on-screen keyboard, use this zones
  * addKeyListener(Zone) method to add zones such as TextZone to listen to this
@@ -22,6 +24,8 @@ public class KeyboardZone extends Zone {
 	public int backgroundColor = applet.g.color(0);
 	
 	public int textColor = applet.g.color(0);
+	
+	public int linkColor = applet.g.color(255,150);
 	
 	public int alpha = 255;
 	
@@ -305,11 +309,11 @@ public class KeyboardZone extends Zone {
 	
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
 			int alpha) {
-		this(name, x, y, width, height, keysSentToApplet, alpha, 0, 200, 150, 0);
+		this(name, x, y, width, height, keysSentToApplet, alpha, 0, 200, 150, 0, applet.g.color(255,150));
 	}
 
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
-			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor) {
+			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor, int linkColor) {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
@@ -332,8 +336,11 @@ public class KeyboardZone extends Zone {
 		}
 
 		this.alpha = alpha;
-		
 		this.backgroundColor = backgroundColor;
+		this.keyColor = keyColor;
+		this.keyPressedColor = keyPressedColor;
+		this.textColor = textColor;
+		this.linkColor = linkColor;
 	}
 
 	@Override
@@ -360,10 +367,23 @@ public class KeyboardZone extends Zone {
 
 	@Override
 	public void drawImpl() {
+		drawKeyLinstenerLink();
+		
 		fill(backgroundColor, alpha);
 		rect(0, 0, width, height);
 
 		updateModifiersFromKeys();
+	}
+
+	protected void drawKeyLinstenerLink() {
+		for(KeyListener listener : keyListeners){
+			if(listener instanceof Zone){
+				Zone zone = (Zone) listener;
+				PVector relativeZoneCentre = this.toZoneVector(zone.getCentre());
+				stroke(linkColor);
+				line(width/2, height/2, relativeZoneCentre.x, relativeZoneCentre.y);
+			}
+		}
 	}
 
 	protected void updateModifiersFromKeys() {
