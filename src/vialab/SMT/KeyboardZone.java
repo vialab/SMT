@@ -194,13 +194,10 @@ public class KeyboardZone extends Zone {
 				false), KEY_COMMA('<', ',', KeyEvent.VK_COMMA, false), KEY_PERIOD('>', '.',
 				KeyEvent.VK_PERIOD, false), KEY_SLASH('?', '/', KeyEvent.VK_SLASH, false), KEY_SHIFT_RIGHT(
 				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT, true, "Shift", 2.7f), KEY_CTRL_LEFT(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true, "Control", 1.5f), KEY_META_LEFT(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_META, true, "Meta", 1.2f), KEY_ALT_LEFT(
+				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true, "Control", 1.5f), KEY_ALT_LEFT(
 				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_SPACE(' ',
-				KeyEvent.VK_SPACE, false, "Space", 6.0f), KEY_ALT_RIGHT(KeyEvent.CHAR_UNDEFINED,
-				KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_META_RIGHT(KeyEvent.CHAR_UNDEFINED,
-				KeyEvent.VK_META, true, "Meta", 1.2f), KEY_CONTEXT_MENU(KeyEvent.CHAR_UNDEFINED,
-				KeyEvent.VK_CONTEXT_MENU, true, "Menu", 1.2f), KEY_CTRL_RIGHT(
+				KeyEvent.VK_SPACE, false, "Space", 9.6f), KEY_ALT_RIGHT(KeyEvent.CHAR_UNDEFINED,
+				KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_CTRL_RIGHT(
 				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true, "Control", 1.5f);
 
 		// KEY_DELETE('\u007F', KeyEvent.VK_DELETE, false, "Delete");
