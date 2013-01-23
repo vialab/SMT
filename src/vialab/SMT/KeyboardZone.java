@@ -309,7 +309,7 @@ public class KeyboardZone extends Zone {
 	
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
 			int alpha) {
-		this(name, x, y, width, height, keysSentToApplet, alpha, 0, 200, 150, 0, applet.g.color(255,150));
+		this(name, x, y, width, height, keysSentToApplet, alpha, 0, 200, 150, 0, 0x96FFFFFF);
 	}
 
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
