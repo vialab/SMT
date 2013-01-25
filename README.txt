@@ -5,8 +5,8 @@ Online Javadoc is available at http://vialab.github.com/SMT
 
 Steps to use with Processing IDE:
 	0. Download Processing IDE 2.0+ (http://processing.org/download/)
-	1. Download latest SMT.zip from https://github.com/vialab/SMT/downloads
-	2. Extract the zip file into the libraries folder in the sketchbook folder (File->Preferences->Sketchbook Location->Libraries)
+	1. Download latest version of source from https://github.com/vialab/SMT/tags
+	2. Merge/Copy the libraries folder into your sketchbook folder (File->Preferences->Sketchbook Location)
 	3. Run SMT examples (File->Examples->Contributed Libraries->SMT)
 
 See the processing api at http://www.processing.org/reference/ for a complete list and documentation of all available processing functions
