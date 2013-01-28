@@ -148,7 +148,7 @@ public class TextZone extends Zone {
 	}
 
 	public TextZone(String name, int x, int y, int width, int height, boolean keysRecievedFromApplet) {
-		this(name, x, y, width, height, null, false, false, false, 16f);
+		this(name, x, y, width, height, null, false, false, keysRecievedFromApplet, 16f);
 	}
 
 	@Override

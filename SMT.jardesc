@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="SMT/example_sketches_and_libs/libraries/SMT/library/SMT.jar"/>
+    <jar path="SMT/libraries/SMT/library/SMT.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/SMT/SMT.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
