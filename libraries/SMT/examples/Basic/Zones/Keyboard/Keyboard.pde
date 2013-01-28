@@ -10,5 +10,3 @@ void draw() {
 void keyTyped(){
   print(key);
 }
-
-

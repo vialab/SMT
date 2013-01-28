@@ -7,5 +7,3 @@ void setup() {
 void draw() {
   background(79, 129, 189);
 }
-
-
