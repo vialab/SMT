@@ -115,7 +115,7 @@ public class TextZone extends Zone {
 
 	public TextZone(String name, int x, int y, int width, int height, String inputText,
 			boolean selectable, boolean blur, boolean keysRecievedFromApplet, float fontSize) {
-		super(x, y, width, height);
+		super(name, x, y, width, height);
 		this.currentWordZone = new WordZone(0, 0, 0, 20);
 		this.keysFromApplet = keysRecievedFromApplet;
 		if (keysRecievedFromApplet) {

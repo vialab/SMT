@@ -1220,7 +1220,7 @@ public class TouchClient {
 	@SuppressWarnings("unchecked")
 	public static <T extends Zone> T getZone(String name, Class<T> type){
 		for (Zone z : zoneList){
-			if(z.name.equals(name)){
+			if(z.name !=null && z.name.equals(name)){
 				return (T) z;
 			}
 		}
