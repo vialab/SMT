@@ -1218,7 +1218,7 @@ public class TouchClient {
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Zone> T getZoneByName(String name, Class<T> type){
+	public static <T extends Zone> T getZone(String name, Class<T> type){
 		for (Zone z : zoneList){
 			if(z.name.equals(name)){
 				return (T) z;
@@ -1232,7 +1232,7 @@ public class TouchClient {
 	 * @param name The name of the zone to find
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
-	public static Zone getZoneByName(String name){
-		return getZoneByName(name,Zone.class);
+	public static Zone getZone(String name){
+		return getZone(name,Zone.class);
 	}
 }
