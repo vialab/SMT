@@ -1,9 +1,3 @@
-/**
- *   Created by Zach Cook
- *   University of Ontario Institute of Technology
- *   May 2012
- *   A test sketch using SMTv3 toolkit
- */
 import vialab.SMT.*;
 
 float xmag, ymag = 0;
@@ -12,23 +6,11 @@ float newXmag, newYmag = 0;
 void setup() {
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MOUSE);
-  Zone z = new Zone("Z3D",400, 400, 400, 400);
-  TouchClient.add(z);
-  TouchClient.add(new Zone("Test",800,400,400,400));
+  TouchClient.add(new Zone("Z3D",400, 400, 400, 400));
 }
 
 void draw() {
   background(79, 129, 189);
-  text(frameRate+"fps, # of zones: "+TouchClient.getZones().length,width/2,10);
-  TouchClient.drawPickBuffer(0,0,100,100);
-}
-
-void pickDrawZ3D(Zone zone){ 
-}
-
-void drawTest(Zone zone){
-  fill(123);
-  rect(0,0,zone.width,zone.height);
 }
 
 void drawZ3D(Zone zone){
