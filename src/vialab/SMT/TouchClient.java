@@ -217,6 +217,11 @@ public class TouchClient {
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
 	private static void init(final PApplet parent, int port, TouchSource source) {
+		if(parent == null){
+			System.err.println("Null parent PApplet, pass 'this' to TouchClient.init() instead of null");
+			return;
+		}
+		
 		// As of now the toolkit only supports OpenGL
 		if (!parent.g.isGL()) {
 			System.out
@@ -226,6 +231,9 @@ public class TouchClient {
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
+		
+		//set Zone.applet so that it is consistently set at this time, not after a zone is constructed
+		Zone.applet = parent;
 
 		// parent.registerMethod("dispose", this);
 		parent.registerMethod("draw", new TouchClient());
