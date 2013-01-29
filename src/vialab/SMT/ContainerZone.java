@@ -45,6 +45,11 @@ public class ContainerZone extends Zone {
 	protected void drawImpl() {
 
 	}
+	
+	@Override
+	protected void touchImpl() {
+
+	}
 
 	@Override
 	protected void pickDrawImpl() {
