@@ -1,3 +1,8 @@
+/**
+ * This Shows the to convert a Processing example into 
+ * a SMT example. You can run both examples by commenting out the other
+ */
+
 //comment out these setup and draw methods to run SMT conversion of this processing code
 /*
 void setup() {
@@ -25,12 +30,12 @@ void setup() {
   TouchClient.init(this, TouchSource.MOUSE);
   
   //this adds a zone to the TouchClient, with the given parameters
-  //new Zone(String name, int x, int y, int width, int height)
+  //String name, int x, int y, int width, int height
   TouchClient.add(new Zone("MyZone", 0, 0, 200, 200));
 }
 
-//same as processing, except we take out the part
-//that we put in the zone
+//same as processing example we need a background
+//we take out the part that we put in the zone
 void draw() {
   background(79, 129, 189);
 }
@@ -44,6 +49,7 @@ void touchMyZone(Zone zone) {
 
 //this is the part of the processing code we removed from draw()
 //since we want it to be multitouch capable
+//This drawing is done relative to the Zone position
 void drawMyZone() {
   fill(255);
   rect(100, 100, 100, 100);

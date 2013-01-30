@@ -1,14 +1,11 @@
-/**
- *   Created by Zach Cook
- *   University of Ontario Institute of Technology
- *   A test sketch using simpleMultiTouch toolkit
- */
 import vialab.SMT.*;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.setDrawTouchPoints(TouchDraw.DEBUG,100);
+  TouchClient.setDrawTouchPoints(TouchDraw.NONE,100);
+  //TouchClient.setDrawTouchPoints(TouchDraw.NONE,100);
+  //TouchClient.setDrawTouchPoints(TouchDraw.SMOOTH,100);
 }
 
 void draw() {
