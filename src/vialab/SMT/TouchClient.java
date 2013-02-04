@@ -142,6 +142,8 @@ public class TouchClient {
 
 	static Body groundBody;
 
+	protected static Class<?>[] extraClasses;
+
 	/**
 	 * Prevent TouchClient instantiation with private constructor
 	 */
@@ -207,6 +209,26 @@ public class TouchClient {
 	 * @param parent
 	 *            PApplet - The Processing PApplet, usually just 'this' when
 	 *            using the Processing IDE
+	 * @param source
+	 *            enum TouchSource - The source of touch events to listen to.
+	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
+	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
+	 * @param classes
+	 *            Class<?> - Classes that should be checked for method
+	 *            definitions similar to PApplet for drawZoneName(), etc, but
+	 *            PApplet takes precedence.
+	 */
+	public static void init(PApplet parent, TouchSource source, Class<?>... classes) {
+		init(parent, 3333, source, classes);
+	}
+
+	/**
+	 * Allows you to select the TouchSource backend from which to get
+	 * multi-touch events from
+	 * 
+	 * @param parent
+	 *            PApplet - The Processing PApplet, usually just 'this' when
+	 *            using the Processing IDE
 	 * 
 	 * @param port
 	 *            int - The port to listen on
@@ -216,12 +238,14 @@ public class TouchClient {
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	private static void init(final PApplet parent, int port, TouchSource source) {
-		if(parent == null){
-			System.err.println("Null parent PApplet, pass 'this' to TouchClient.init() instead of null");
+	private static void init(final PApplet parent, int port, TouchSource source,
+			Class<?>... classes) {
+		if (parent == null) {
+			System.err
+					.println("Null parent PApplet, pass 'this' to TouchClient.init() instead of null");
 			return;
 		}
-		
+
 		// As of now the toolkit only supports OpenGL
 		if (!parent.g.isGL()) {
 			System.out
@@ -232,7 +256,10 @@ public class TouchClient {
 
 		TouchClient.parent = parent;
 		
-		//set Zone.applet so that it is consistently set at this time, not after a zone is constructed
+		extraClasses = classes;
+
+		// set Zone.applet so that it is consistently set at this time, not
+		// after a zone is constructed
 		Zone.applet = parent;
 
 		// parent.registerMethod("dispose", this);
@@ -1215,32 +1242,40 @@ public class TouchClient {
 			picker.putZoneOnTop(zone);
 		}
 	}
-	
-	
+
 	/**
-	 * This finds a zone by its name, returning the first zone with the given name or null.
-	 * <P> This will throw ClassCastException if the Zone is not an instance of the given class
-	 * , and non-applicable type compile errors when the given class does not extend Zone. 
-	 * @param name The name of the zone to find
-	 * @param type a class type to cast the Zone to (e.g. Zone.class)
+	 * This finds a zone by its name, returning the first zone with the given
+	 * name or null.
+	 * <P>
+	 * This will throw ClassCastException if the Zone is not an instance of the
+	 * given class , and non-applicable type compile errors when the given class
+	 * does not extend Zone.
+	 * 
+	 * @param name
+	 *            The name of the zone to find
+	 * @param type
+	 *            a class type to cast the Zone to (e.g. Zone.class)
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Zone> T getZone(String name, Class<T> type){
-		for (Zone z : zoneList){
-			if(z.name !=null && z.name.equals(name)){
+	public static <T extends Zone> T getZone(String name, Class<T> type) {
+		for (Zone z : zoneList) {
+			if (z.name != null && z.name.equals(name)) {
 				return (T) z;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
-	 * This finds a zone by its name, returning the first zone with the given name or null
-	 * @param name The name of the zone to find
+	 * This finds a zone by its name, returning the first zone with the given
+	 * name or null
+	 * 
+	 * @param name
+	 *            The name of the zone to find
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
-	public static Zone getZone(String name){
-		return getZone(name,Zone.class);
+	public static Zone getZone(String name) {
+		return getZone(name, Zone.class);
 	}
 }
