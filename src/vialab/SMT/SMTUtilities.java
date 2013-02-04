@@ -55,18 +55,20 @@ public final class SMTUtilities {
 		}
 		catch (NoSuchMethodException e) {
 			Method m = null;
-			for(Class<?> c : TouchClient.extraClasses){
-				try {
-					m=c.getMethod(methodName, parameterTypes);
-				}
-				catch (NoSuchMethodException e1) {
-					continue;
-				}
-				catch (SecurityException e1) {
-					continue;
-				}
-				if(m != null){
-					return m;
+			if(TouchClient.extraClasses !=null){
+				for(Class<?> c : TouchClient.extraClasses){
+					try {
+						m=c.getMethod(methodName, parameterTypes);
+					}
+					catch (NoSuchMethodException e1) {
+						continue;
+					}
+					catch (SecurityException e1) {
+						continue;
+					}
+					if(m != null){
+						return m;
+					}
 				}
 			}
 		}
