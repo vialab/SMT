@@ -67,6 +67,7 @@ public final class SMTUtilities {
 						continue;
 					}
 					if(m != null){
+						//System.out.println(c.toString()+m.toString());
 						return m;
 					}
 				}
@@ -317,26 +318,54 @@ public final class SMTUtilities {
 		return SMTUtilities.invoke(method, Zone.applet, zone);
 	}
 
+	/**
+	 * This tries every different way we know to invoke the method, although we should just store the needed info when we get the method
+	 * @param method
+	 * @param parent
+	 * @param parameters
+	 * @return
+	 */
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
 		if (method != null) {
+			//System.out.println("Method:"+method.toString());
 			try {
+				//System.out.println("In Papplet with params");
 				return method.invoke(parent, parameters);
 			}
-			catch (IllegalAccessException e) {}
-			catch (IllegalArgumentException e) {
-				// try calling the method with no parameters, to allow optional
-				// zone parameter
-				try {
-					return method.invoke(parent);
-				}
-				catch (IllegalAccessException e2) {}
-				catch (IllegalArgumentException e2) {}
-				catch (InvocationTargetException e2) {
-					e2.printStackTrace();
-				}
+			catch (Exception e) {}
+			// try calling the method with no parameters, to allow optional
+			// zone parameter
+			try {
+				//System.out.println("In Papplet without params");
+				return method.invoke(parent);
 			}
-			catch (InvocationTargetException e) {
-				e.printStackTrace();
+			catch (Exception e) {}
+			if(TouchClient.extraClasses !=null){
+				for(Class<?> c : TouchClient.extraClasses){
+					try {
+						//System.out.println("In "+c.toString()+" with params");
+						return method.invoke(c.getConstructors()[0].newInstance(parent), parameters);
+					}
+					catch (Exception e) {}
+					try {
+						//System.out.println("In "+c.toString()+" without params");
+						//System.out.println(c.getConstructors()[0].getParameterTypes()[0]);
+						return method.invoke(c.getConstructors()[0].newInstance(parent));
+					}
+					catch (Exception e) {}
+					//also try without PApplet instance param if the class is not an inner class
+					try {
+						//System.out.println("In "+c.toString()+" with params");
+						return method.invoke(c.getConstructors()[0].newInstance(), parameters);
+					}
+					catch (Exception e) {}
+					try {
+						//System.out.println("In "+c.toString()+" without params");
+						//System.out.println(c.getConstructors()[0].getParameterTypes()[0]);
+						return method.invoke(c.getConstructors()[0].newInstance());
+					}
+					catch (Exception e) {}
+				}
 			}
 		}
 		return null;
