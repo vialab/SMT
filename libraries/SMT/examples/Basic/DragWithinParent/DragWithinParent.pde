@@ -22,7 +22,7 @@ void drawParent(Zone z) {
 }
 
 void touchChild(Zone z) {
-  z.rst();
+  z.dragWithinParent();
 }
 
 void drawChild(Zone z) {

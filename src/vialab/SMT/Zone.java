@@ -2326,4 +2326,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 					* TouchClient.box2dScale));
 		}
 	}
+	
+	public void dragWithinParent(){
+		Zone parent = getParent();
+		if(parent != null){
+			drag(true, true, parent.getX(), parent.getX()+parent.width, parent.getY(), parent.getY()+parent.height);
+		}
+	}
 }
