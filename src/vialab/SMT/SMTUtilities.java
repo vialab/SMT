@@ -1,6 +1,5 @@
 package vialab.SMT;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
@@ -67,7 +66,7 @@ public final class SMTUtilities {
 						continue;
 					}
 					if(m != null){
-						//System.out.println(c.toString()+m.toString());
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(c.toString()+m.toString());}
 						return m;
 					}
 				}
@@ -324,44 +323,44 @@ public final class SMTUtilities {
 	 * @param parent
 	 * @param parameters
 	 * @return
-	 */
+	 */ 
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
 		if (method != null) {
-			//System.out.println("Method:"+method.toString());
+			if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("Method:"+method.toString());}
 			try {
-				//System.out.println("In Papplet with params");
+				if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In Papplet with params");}
 				return method.invoke(parent, parameters);
 			}
 			catch (Exception e) {}
 			// try calling the method with no parameters, to allow optional
 			// zone parameter
 			try {
-				//System.out.println("In Papplet without params");
+				if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In Papplet without params");}
 				return method.invoke(parent);
 			}
 			catch (Exception e) {}
 			if(TouchClient.extraClasses !=null){
 				for(Class<?> c : TouchClient.extraClasses){
 					try {
-						//System.out.println("In "+c.toString()+" with params");
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In "+c.toString()+" with params");}
 						return method.invoke(c.getConstructors()[0].newInstance(parent), parameters);
 					}
 					catch (Exception e) {}
 					try {
-						//System.out.println("In "+c.toString()+" without params");
-						//System.out.println(c.getConstructors()[0].getParameterTypes()[0]);
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In "+c.toString()+" without params");}
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(c.getConstructors()[0].getParameterTypes()[0]);}
 						return method.invoke(c.getConstructors()[0].newInstance(parent));
 					}
 					catch (Exception e) {}
 					//also try without PApplet instance param if the class is not an inner class
 					try {
-						//System.out.println("In "+c.toString()+" with params");
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In "+c.toString()+" with params");}
 						return method.invoke(c.getConstructors()[0].newInstance(), parameters);
 					}
 					catch (Exception e) {}
 					try {
-						//System.out.println("In "+c.toString()+" without params");
-						//System.out.println(c.getConstructors()[0].getParameterTypes()[0]);
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In "+c.toString()+" without params");}
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(c.getConstructors()[0].getParameterTypes()[0]);}
 						return method.invoke(c.getConstructors()[0].newInstance());
 					}
 					catch (Exception e) {}
