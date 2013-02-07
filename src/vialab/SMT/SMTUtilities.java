@@ -54,10 +54,10 @@ public final class SMTUtilities {
 		}
 		catch (NoSuchMethodException e) {
 			Method m = null;
-			if(TouchClient.extraClasses !=null){
-				for(Class<?> c : TouchClient.extraClasses){
+			if(TouchClient.extraObjects !=null){
+				for(Object o : TouchClient.extraObjects){
 					try {
-						m=c.getMethod(methodName, parameterTypes);
+						m=o.getClass().getMethod(methodName, parameterTypes);
 					}
 					catch (NoSuchMethodException e1) {
 						continue;
@@ -66,7 +66,7 @@ public final class SMTUtilities {
 						continue;
 					}
 					if(m != null){
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(c.toString()+m.toString());}
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(o.getClass().toString()+m.toString());}
 						return m;
 					}
 				}
@@ -339,29 +339,16 @@ public final class SMTUtilities {
 				return method.invoke(parent);
 			}
 			catch (Exception e) {}
-			if(TouchClient.extraClasses !=null){
-				for(Class<?> c : TouchClient.extraClasses){
+			if(TouchClient.extraObjects !=null){
+				for(Object o : TouchClient.extraObjects){
 					try {
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In "+c.toString()+" with params");}
-						return method.invoke(c.getConstructors()[0].newInstance(parent), parameters);
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(o.toString()+" with params");}
+						return method.invoke(o, parameters);
 					}
 					catch (Exception e) {}
 					try {
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In "+c.toString()+" without params");}
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(c.getConstructors()[0].getParameterTypes()[0]);}
-						return method.invoke(c.getConstructors()[0].newInstance(parent));
-					}
-					catch (Exception e) {}
-					//also try without PApplet instance param if the class is not an inner class
-					try {
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In "+c.toString()+" with params");}
-						return method.invoke(c.getConstructors()[0].newInstance(), parameters);
-					}
-					catch (Exception e) {}
-					try {
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In "+c.toString()+" without params");}
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(c.getConstructors()[0].getParameterTypes()[0]);}
-						return method.invoke(c.getConstructors()[0].newInstance());
+						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(o.toString()+" without params");}
+						return method.invoke(o);
 					}
 					catch (Exception e) {}
 				}

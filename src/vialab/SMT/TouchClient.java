@@ -142,7 +142,7 @@ public class TouchClient {
 
 	static Body groundBody;
 
-	protected static Class<?>[] extraClasses;
+	protected static Object[] extraObjects;
 
 	/**
 	 * Prevent TouchClient instantiation with private constructor
@@ -218,7 +218,7 @@ public class TouchClient {
 	 *            definitions similar to PApplet for drawZoneName(), etc, but
 	 *            PApplet takes precedence.
 	 */
-	public static void init(PApplet parent, TouchSource source, Class<?>... classes) {
+	public static void init(PApplet parent, TouchSource source, Object... classes) {
 		init(parent, 3333, source, classes);
 	}
 
@@ -239,7 +239,7 @@ public class TouchClient {
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
 	private static void init(final PApplet parent, int port, TouchSource source,
-			Class<?>... classes) {
+			Object... objects) {
 		if (parent == null) {
 			System.err
 					.println("Null parent PApplet, pass 'this' to TouchClient.init() instead of null");
@@ -256,7 +256,7 @@ public class TouchClient {
 
 		TouchClient.parent = parent;
 		
-		extraClasses = classes;
+		extraObjects = objects;
 
 		// set Zone.applet so that it is consistently set at this time, not
 		// after a zone is constructed
