@@ -142,7 +142,7 @@ public class TouchClient {
 
 	static Body groundBody;
 
-	protected static Object[] extraObjects;
+	protected static ArrayList<Object> extraObjects = new ArrayList<Object>();
 
 	/**
 	 * Prevent TouchClient instantiation with private constructor
@@ -256,7 +256,9 @@ public class TouchClient {
 
 		TouchClient.parent = parent;
 		
-		extraObjects = objects;
+		for(Object obj: objects){
+			extraObjects.add(obj);
+		}
 
 		// set Zone.applet so that it is consistently set at this time, not
 		// after a zone is constructed
@@ -1277,5 +1279,15 @@ public class TouchClient {
 	 */
 	public static Zone getZone(String name) {
 		return getZone(name, Zone.class);
+	}
+	
+	/**
+	 * This adds objects to check for drawZoneName, touchZoneName, etc methods in, similar to PApplet
+	 * @param objects The additional objects to check in for methods
+	 */
+	public static void addMethodObjects(Object... objects){
+		for(Object obj: objects){
+			extraObjects.add(obj);
+		}
 	}
 }
