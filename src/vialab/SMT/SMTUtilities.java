@@ -350,31 +350,71 @@ public final class SMTUtilities {
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
 		if (method != null) {
 			if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("Method:"+method.toString());}
-			try {
-				if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In Papplet with params");}
-				return method.invoke(parent, parameters);
-			}
-			catch (Exception e) {}
-			// try calling the method with no parameters, to allow optional
-			// zone parameter
-			try {
-				if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("In Papplet without params");}
-				return method.invoke(parent);
-			}
-			catch (Exception e) {}
-			if(TouchClient.extraObjects !=null){
-				for(Object o : TouchClient.extraObjects){
-					try {
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(o.toString()+" with params");}
-						return method.invoke(o, parameters);
+			Object[] removeFromFront = parameters.clone();
+			Object[] removeFromBack = parameters.clone();
+			//try to invoke the method many times, with parameters removed from the front and back separately
+			//one of these should return
+			for(int i=0; i<parameters.length+1; i++){
+				//invoke with parameters removed from the front
+				try {
+					if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){
+						System.out.print("In Papplet with params: ");
+						for(Object o: removeFromFront){
+							System.out.print(o.toString());
+						}
+						System.out.println();
 					}
-					catch (Exception e) {}
-					try {
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(o.toString()+" without params");}
-						return method.invoke(o);
-					}
-					catch (Exception e) {}
+					return method.invoke(parent, removeFromFront);
 				}
+				catch (Exception e) {}
+				if(TouchClient.extraObjects !=null){
+					for(Object o : TouchClient.extraObjects){
+						try {
+							if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){
+								System.out.print(o.toString()+" with params: ");
+								for(Object o2: removeFromFront){
+									System.out.print(o2.toString());
+								}
+								System.out.println();
+							}
+							return method.invoke(o, removeFromFront);
+						}
+						catch (Exception e) {}
+					}
+				}
+				
+				//invoke with parameters removed from the back
+				try {
+					if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){
+						System.out.print("In Papplet with params: ");
+						for(Object o: removeFromFront){
+							System.out.print(o.toString());
+						}
+						System.out.println();
+					}
+					return method.invoke(parent, removeFromBack);
+				}
+				catch (Exception e) {}
+				if(TouchClient.extraObjects !=null){
+					for(Object o : TouchClient.extraObjects){
+						try {
+							if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){
+								System.out.print(o.toString()+" with params: ");
+								for(Object o2: removeFromFront){
+									System.out.print(o2.toString());
+								}
+								System.out.println();
+							}
+							return method.invoke(o, removeFromBack);
+						}
+						catch (Exception e) {}
+					}
+				}
+				
+				removeFromFront = new Object[removeFromFront.length - 1];
+				System.arraycopy(parameters, 1+i, removeFromFront, 0, removeFromFront.length);
+				removeFromBack = new Object[removeFromBack.length - 1];
+				System.arraycopy(parameters, 0, removeFromBack, 0, removeFromBack.length);
 			}
 		}
 		return null;
