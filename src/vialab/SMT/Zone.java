@@ -160,6 +160,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	private MouseJointDef mJointDef;
 
+	private boolean pickDraw;
+
 	/**
 	 * Check state of the direct flag.
 	 * <P>
@@ -675,12 +677,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			fill(red(pickColor), green(pickColor), blue(pickColor));
 		}
+		
+		pickDraw=true;
 	}
 
 	/**
 	 * Override this if something needs to occur after pickdrawing commands
 	 */
 	protected void endPickDraw() {
+		pickDraw=false;
+		
 		if (!direct) {
 			super.endDraw();
 		}
@@ -2332,5 +2338,95 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		if(parent != null){
 			drag(true, true, parent.getX(), parent.getX()+parent.width, parent.getY(), parent.getY()+parent.height);
 		}
+	}
+	
+	@Override
+	public void fill(float arg0, float arg1, float arg2, float arg3) {
+		if(!pickDraw){pg.fill(arg0, arg1, arg2, arg3);}
+	}
+
+	@Override
+	public void fill(float arg0, float arg1, float arg2) {
+		if(!pickDraw){pg.fill(arg0, arg1, arg2);}
+	}
+
+	@Override
+	public void fill(float arg0, float arg1) {
+		if(!pickDraw){pg.fill(arg0, arg1);}
+	}
+
+	@Override
+	public void fill(float arg0) {
+		if(!pickDraw){pg.fill(arg0);}
+	}
+
+	@Override
+	public void fill(int arg0, float arg1) {
+		if(!pickDraw){pg.fill(arg0, arg1);}
+	}
+
+	@Override
+	public void fill(int arg0) {
+		if(!pickDraw){pg.fill(arg0);}
+	}
+	
+	@Override
+	public void stroke(float arg0, float arg1, float arg2, float arg3) {
+		if(!pickDraw){pg.stroke(arg0, arg1, arg2, arg3);}
+	}
+
+	@Override
+	public void stroke(float arg0, float arg1, float arg2) {
+		if(!pickDraw){pg.stroke(arg0, arg1, arg2);}
+	}
+
+	@Override
+	public void stroke(float arg0, float arg1) {
+		if(!pickDraw){pg.stroke(arg0, arg1);}
+	}
+
+	@Override
+	public void stroke(float arg0) {
+		if(!pickDraw){pg.stroke(arg0);}
+	}
+
+	@Override
+	public void stroke(int arg0, float arg1) {
+		if(!pickDraw){pg.stroke(arg0, arg1);}
+	}
+
+	@Override
+	public void stroke(int arg0) {
+		if(!pickDraw){pg.stroke(arg0);}
+	}
+
+	@Override
+	public void tint(float arg0, float arg1, float arg2, float arg3) {
+		if(!pickDraw){pg.tint(arg0, arg1, arg2, arg3);}
+	}
+
+	@Override
+	public void tint(float arg0, float arg1, float arg2) {
+		if(!pickDraw){pg.tint(arg0, arg1, arg2);}
+	}
+
+	@Override
+	public void tint(float arg0, float arg1) {
+		if(!pickDraw){pg.tint(arg0, arg1);}
+	}
+
+	@Override
+	public void tint(float arg0) {
+		if(!pickDraw){pg.tint(arg0);}
+	}
+
+	@Override
+	public void tint(int arg0, float arg1) {
+		if(!pickDraw){pg.tint(arg0, arg1);}
+	}
+
+	@Override
+	public void tint(int arg0) {
+		if(!pickDraw){pg.tint(arg0);}
 	}
 }
