@@ -402,8 +402,36 @@ public class TouchClient {
 	 * 
 	 * @param drawTouchPoints
 	 *            boolean - flag
+	 * @deprecated
 	 */
 	public static void setDrawTouchPoints(TouchDraw drawTouchPoints) {
+		setTouchDraw(drawTouchPoints);
+	}
+
+	/**
+	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
+	 * points if flag is set to true. Sets the maximum path length to draw to be
+	 * max_path_length
+	 * 
+	 * @param drawTouchPoints
+	 *            boolean - flag
+	 * 
+	 * @param max_path_length
+	 *            int - sets maximum path length to draw
+	 * @deprecated
+	 */
+	public static void setDrawTouchPoints(TouchDraw drawTouchPoints, int max_path_length) {
+		setTouchDraw(drawTouchPoints, max_path_length);
+	}
+	
+	/**
+	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
+	 * points if flag is set to true.
+	 * 
+	 * @param drawTouchPoints
+	 *            boolean - flag
+	 */
+	public static void setTouchDraw(TouchDraw drawTouchPoints) {
 		TouchClient.drawTouchPoints = drawTouchPoints;
 	}
 
@@ -418,7 +446,7 @@ public class TouchClient {
 	 * @param max_path_length
 	 *            int - sets maximum path length to draw
 	 */
-	public static void setDrawTouchPoints(TouchDraw drawTouchPoints, int max_path_length) {
+	public static void setTouchDraw(TouchDraw drawTouchPoints, int max_path_length) {
 		TouchClient.drawTouchPoints = drawTouchPoints;
 		TouchClient.MAX_PATH_LENGTH = max_path_length;
 	}

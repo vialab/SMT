@@ -1,4 +1,10 @@
 
+SMTv3.4 Release Notes
+_____________________
+
+	API Changes:
+		-TouchClient's setDrawTouchPoints() deprecated/renamed to setTouchDraw()
+
 SMTv3.3 Release Notes
 _____________________
 	API Additions:
