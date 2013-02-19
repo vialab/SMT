@@ -84,29 +84,46 @@ public final class SMTUtilities {
 		}
 		return getPMethod(parent, methodPrefix + suffix, parameterTypes);
 	}
-
-	static Method getAnyPMethod(PApplet parent, String methodPrefix, String methodSuffix,
+	
+	static Method getAnyPMethod(PApplet parent, String methodPrefix, String methodSuffix, boolean removeFirst,
 			Class<?>... parameter) {
 		if (parameter.length == 0) {
 			return getPMethod(parent, methodPrefix, methodSuffix, parameter);
 		}
 
-		if (parameter[0] == null) {
+		if (parameter[0] == null && removeFirst) {
 			// try to get a method with the first class removed from the
 			// parameter list since it is null
 			Class<?>[] firstRemoved = new Class<?>[parameter.length - 1];
 			System.arraycopy(parameter, 1, firstRemoved, 0, parameter.length - 1);
-			return getAnyPMethod(parent, methodPrefix, methodSuffix, firstRemoved);
+			return getAnyPMethod(parent, methodPrefix, methodSuffix, removeFirst, firstRemoved);
+		}
+		
+		if (parameter[parameter.length-1] == null && !removeFirst) {
+			// try to get a method with the last class removed from the
+			// parameter list since it is null
+			Class<?>[] lastRemoved = new Class<?>[parameter.length - 1];
+			System.arraycopy(parameter, 0, lastRemoved, 0, parameter.length - 1);
+			return getAnyPMethod(parent, methodPrefix, methodSuffix, removeFirst, lastRemoved);
 		}
 
 		Method method = getPMethod(parent, methodPrefix, methodSuffix, parameter);
 		if (method == null) {
-			// recurse only on first class
-			Class<?> superClass = parameter[0].getSuperclass();
-			Class<?>[] firstSupered = new Class<?>[parameter.length];
-			System.arraycopy(parameter, 0, firstSupered, 0, parameter.length);
-			firstSupered[0] = superClass;
-			method = getAnyPMethod(parent, methodPrefix, methodSuffix, firstSupered);
+			if(removeFirst){
+				// recurse only on first class
+				Class<?> superClass = parameter[0].getSuperclass();
+				Class<?>[] firstSupered = new Class<?>[parameter.length];
+				System.arraycopy(parameter, 0, firstSupered, 0, parameter.length);
+				firstSupered[0] = superClass;
+				method = getAnyPMethod(parent, methodPrefix, methodSuffix, removeFirst, firstSupered);
+			}else{
+				// recurse only on last class
+				Class<?> superClass = parameter[parameter.length-1].getSuperclass();
+				Class<?>[] lastSupered = new Class<?>[parameter.length];
+				System.arraycopy(parameter, 0, lastSupered, 0, parameter.length);
+				lastSupered[parameter.length-1] = superClass;
+				method = getAnyPMethod(parent, methodPrefix, methodSuffix, removeFirst, lastSupered);
+			}
 		}
 		return method;
 	}
@@ -157,7 +174,10 @@ public final class SMTUtilities {
 		// uppercase the first letter of the name so that we have consistent
 		// naming warnings
 		name = name.substring(0, 1).toUpperCase() + name.substring(1);
-		Method method = getAnyPMethod(parent, methodPrefix, name, parameters);
+		Method method = getAnyPMethod(parent, methodPrefix, name, true, parameters);
+		if(method == null){
+			method = getAnyPMethod(parent, methodPrefix, name, false, parameters);
+		}
 		if (method == null) {
 
 			// warn only if the flag is set, the methodSet doesn't contain it(to
@@ -174,7 +194,10 @@ public final class SMTUtilities {
 				System.err.println("No such method: " + methodPrefix + name);
 			}
 			// set method to methodPrefix+Default if defined
-			method = getAnyPMethod(parent, methodPrefix, "Default", parameters);
+			method = getAnyPMethod(parent, methodPrefix, "Default", true, parameters);
+			if(method == null){
+				method = getAnyPMethod(parent, methodPrefix, "Default", false, parameters);
+			}
 		}
 		methodSet.add(methodPrefix + name);
 		prefixSet.add(methodPrefix);
