@@ -18,6 +18,7 @@ void draw(){
   if(first!=null){
     text("First Touch: x:"+first.x+"\ty:"+first.y+" Touch is down:"+(first.isDown?"yes":"no"),100,100);
   }
+  //show all current touches too
   text("All Touches: ",100,150);
   int c=0;
   for(Touch t : TouchClient.getTouches()){
