@@ -8,8 +8,8 @@ void setup() {
   Zone z2 = new ShapeZone("Pick2", 300, 200, 100, 100);
   //z2.setDirect(true);
   //z.setDirect(true);
-  TouchClient.add(z2);
   TouchClient.add(z);
+  TouchClient.add(z2);
 }
 
 void draw() {
@@ -32,15 +32,10 @@ void drawPick1(Zone zone) {
 
 void drawPick2(Zone zone) {
   fill(255);
-  zone.ellipse(100, 100, 100, 100);
-}
-
-void pickDrawPick1(Zone zone) {
-  rect(100, 100, 100, 100);
   ellipse(100, 100, 100, 100);
 }
 
-void pickDrawPick2(Zone zone) {
+void pickDrawPick1(Zone zone) {
   rect(100, 100, 100, 100);
   ellipse(100, 100, 100, 100);
 }

@@ -160,7 +160,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	private MouseJointDef mJointDef;
 
-	private boolean pickDraw;
+	private boolean pickDraw = false;
 
 	/**
 	 * Check state of the direct flag.
@@ -607,7 +607,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur before any drawing commands
 	 */
 	@Override
-	protected void beginDraw() {
+	public void beginDraw() {
 		if (direct) {
 			if (getParent() == null) {
 				drawPG = applet.g;
@@ -630,7 +630,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur after drawing commands
 	 */
 	@Override
-	protected void endDraw() {
+	public void endDraw() {
 		if (!direct) {
 			super.endDraw();
 		}
@@ -671,12 +671,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		noTint();
 		noStroke();
 
-		if (grayscale) {
-			fill(pickColor);
-		}
-		else {
-			fill(red(pickColor), green(pickColor), blue(pickColor));
-		}
+		fill(pickColor&0x00FF0000, pickColor&0x0000FF00, pickColor&0x000000FF);
 		
 		pickDraw=true;
 	}
@@ -1595,7 +1590,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			beginDraw();
 		}
 		PGraphics temp = applet.g;
-		applet.g = pg;
+		applet.g = this;
 		pushStyle();
 		if (picking) {
 			if (pickDrawMethod == null && !pickImpl) {
