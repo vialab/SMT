@@ -411,10 +411,12 @@ public final class SMTUtilities {
 					}
 				}
 				
-				removeFromFront = new Object[removeFromFront.length - 1];
-				System.arraycopy(parameters, 1+i, removeFromFront, 0, removeFromFront.length);
-				removeFromBack = new Object[removeFromBack.length - 1];
-				System.arraycopy(parameters, 0, removeFromBack, 0, removeFromBack.length);
+				if(removeFromFront.length > 0 && removeFromBack.length > 0){
+					removeFromFront = new Object[removeFromFront.length - 1];
+					System.arraycopy(parameters, 1+i, removeFromFront, 0, removeFromFront.length);
+					removeFromBack = new Object[removeFromBack.length - 1];
+					System.arraycopy(parameters, 0, removeFromBack, 0, removeFromBack.length);
+				}
 			}
 		}
 		return null;
