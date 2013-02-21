@@ -49,6 +49,7 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PMatrix3D;
 import processing.core.PVector;
+import processing.opengl.PGraphicsOpenGL;
 import vialab.SMT.KeyboardZone.KeyZone;
 import TUIO.TuioTime;
 
@@ -150,9 +151,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected boolean pickImpl;
 
-	protected PGraphics drawPG;
+	protected PGraphicsOpenGL drawPG;
 
-	protected PGraphics zonePG;
+	protected PGraphicsOpenGL zonePG;
 
 	private boolean touchUDM;
 
@@ -442,7 +443,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 
 		// pgraphics for the zone
-		zonePG = applet.createGraphics(width, height, renderer);
+		zonePG = (PGraphicsOpenGL) applet.createGraphics(width, height, OPENGL);
 		// pgraphics for drawing
 		drawPG = zonePG;
 		// pgraphics that all methods call be default
@@ -610,7 +611,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void beginDraw() {
 		if (direct) {
 			if (getParent() == null) {
-				drawPG = applet.g;
+				drawPG = (PGraphicsOpenGL) applet.g;
 			}
 			else {
 				drawPG = getParent().drawPG;
@@ -653,7 +654,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 		if (direct) {
 			if (getParent() == null) {
-				drawPG = applet.g;
+				drawPG = (PGraphicsOpenGL) applet.g;
 			}
 			else {
 				drawPG = getParent().drawPG;

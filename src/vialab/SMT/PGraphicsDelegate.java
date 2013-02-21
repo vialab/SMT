@@ -9,14 +9,15 @@ import processing.core.PMatrix2D;
 import processing.core.PMatrix3D;
 import processing.core.PShape;
 import processing.core.PStyle;
+import processing.opengl.PGraphicsOpenGL;
 
 /**
  * PGraphicsDelegate wraps the Processing functions for use by Zone.
  * 
  * @see <a href="http://processing.org/reference">Processing Documentation</a>
  */
-public abstract class PGraphicsDelegate extends PGraphics {
-	protected PGraphics pg;
+public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
+	protected PGraphicsOpenGL pg;
 
 	// PGraphicsDelegate(PGraphics g) {
 	// this.pg = g;
