@@ -137,7 +137,7 @@ class SMTZonePicker {
 			return null;
 		}
 		else {
-			try {
+			
 				int pickColorGray = MAX_COLOR_VALUE & pickColor;
 
 				Zone zone = zonesByPickColor.get(pickColorGray);
@@ -145,6 +145,7 @@ class SMTZonePicker {
 					return zone;
 				}
 
+				/** This should not occur, we only want exact matches.
 				int less = activePickColors.headSet(pickColorGray).last();
 				int more = activePickColors.tailSet(pickColorGray).first();
 
@@ -154,10 +155,9 @@ class SMTZonePicker {
 				else {
 					return zonesByPickColor.get(more);
 				}
-			}
-			catch (NoSuchElementException e) {
+				*/
+				System.err.println("PickColor: "+pickColor+" doesn't match any known Zone's pickColor, or the background, this indicates an incorrect color was drawn to the pickBuffer.");
 				return null;
-			}
 		}
 
 		// // check zones **layers matter--last zone created is on top (wins)
