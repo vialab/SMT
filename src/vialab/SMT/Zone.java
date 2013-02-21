@@ -672,7 +672,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		noTint();
 		noStroke();
 
-		fill(pickColor&0x00FF0000, pickColor&0x0000FF00, pickColor&0x000000FF);
+		//make sure the colorMode makes sense for the components given to it
+		colorMode(RGB, 255);
+		//extract the components using bitshifts with bitwise AND, to get RGB values 0-255
+		fill((pickColor&0x00FF0000)>>16, (pickColor&0x0000FF00)>>8, pickColor&0x000000FF);
 		
 		pickDraw=true;
 	}
