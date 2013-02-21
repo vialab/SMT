@@ -3,11 +3,11 @@ package vialab.SMT;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.opengl.PGL;
 
 import java.nio.ByteBuffer;
@@ -15,10 +15,7 @@ import java.nio.ByteBuffer;
 import javax.media.opengl.GL;
 
 class SMTZonePicker {
-
-	private static int MAX_COLOR_VALUE = 0x00ffffff;
-
-	private final int BG_PICK_COLOR = 0xffffffff;
+	private final static int BG_PICK_COLOR = 0x00ffffff;
 	private final int START_PICK_COLOR = 0;
 	// PICK_COLOR_INC needs a a value that is fairly large to tell the
 	// difference between few zones by eye, and need to have a lcm(I,N)=IxN
@@ -41,32 +38,31 @@ class SMTZonePicker {
 
 	public SMTZonePicker() {
 		this.applet = TouchClient.parent;
-		// image=new PImage(applet.width,applet.height);
-		if (SMTZonePicker.MAX_COLOR_VALUE == 255) {
-			Zone.grayscale = true;
-		}
+
+		// add the background color mapping to null
+		zonesByPickColor.put(BG_PICK_COLOR, null);
 	}
 
 	public void add(Zone zone) {
-		if (activePickColors.size() == MAX_COLOR_VALUE) {
-			System.err.println("Warning, added zone is unpickable, maximum is " + MAX_COLOR_VALUE
+		if (activePickColors.size() == BG_PICK_COLOR) {
+			// This means every color from 0 to BG_PICK_COLOR-1 has been used,
+			// although this should not really occur in use
+			System.err.println("Warning, added zone is unpickable, maximum is " + BG_PICK_COLOR
 					+ " pickable zones");
 		}
 		else {
 			if (!zonesByPickColor.containsValue(zone)) {
-				// TODO: a uniform distribution would be ideal here
 				zone.setPickColor(currentPickColor);
-				// applet.g.beginDraw();
 				zonesByPickColor.put(currentPickColor, zone);
 				activePickColors.add(currentPickColor);
-				// applet.g.endDraw();
+
 				do {
 					currentPickColor += PICK_COLOR_INC;
-					// mod 255 instead of mod 256, as to not choose background
-					// color
-					currentPickColor %= MAX_COLOR_VALUE;
+					// mod by max/background color, so as to wrap around and
+					// never reach it
+					currentPickColor %= BG_PICK_COLOR;
 				} while (activePickColors.contains(currentPickColor)
-						&& activePickColors.size() < MAX_COLOR_VALUE);
+						&& activePickColors.size() < BG_PICK_COLOR);
 
 				for (Zone child : zone.children) {
 					this.add(child);
@@ -115,72 +111,37 @@ class SMTZonePicker {
 
 		applet.g.endPGL();
 
-		// System.out.println("pickColor"+pickColor+ "r" + r + "g"
-		// + g + "b" + b);
-
-		/*
-		 * //pixel color method that works when using GLGraphicsOffScreen, but
-		 * causes slowdown due to reading all pixels //int[] pixels = new
-		 * int[applet.width*applet.height];
-		 * //applet.g.getTexture().getBuffer(pixels); //was upsidedown with some
-		 * settings //int pickColor =
-		 * pixels[(applet.height-screenY)*applet.width+screenX]; GLTexture
-		 * tex=applet.g.getTexture(); tex.loadPixels(); tex.updateTexture();
-		 * //applet.g.updatePixels(); int pickColor =
-		 * tex.pixels[(screenY)*applet.width+screenX];
-		 */
-		// old method that doesn't work with GLGraphicsOffscreen
-		// int pickColor = applet.g.color(applet.g.get(screenX, screenY));
-		// System.out.print(screenX+" "+screenY+" "+pickColor+" "+applet.g.color((float)BG_PICK_COLOR)+" ");
-
-		if (pickColor == BG_PICK_COLOR) {
-			return null;
+		if (zonesByPickColor.containsKey(pickColor)) {
+			// if mapped it is either a Zone or null (background)
+			return zonesByPickColor.get(pickColor);
 		}
 		else {
-			
-				int pickColorGray = MAX_COLOR_VALUE & pickColor;
-
-				Zone zone = zonesByPickColor.get(pickColorGray);
-				if (zone != null) {
-					return zone;
-				}
-
-				/** This should not occur, we only want exact matches.
-				int less = activePickColors.headSet(pickColorGray).last();
-				int more = activePickColors.tailSet(pickColorGray).first();
-
-				if (Math.abs(less - pickColorGray) < Math.abs(more - pickColorGray)) {
-					return zonesByPickColor.get(less);
-				}
-				else {
-					return zonesByPickColor.get(more);
-				}
-				*/
-				System.err.println("PickColor: "+pickColor+" doesn't match any known Zone's pickColor, or the background, this indicates an incorrect color was drawn to the pickBuffer.");
-				return null;
+			// not mapped means a bug in the pickDrawn colors, or maybe that
+			// BG_PICK_COLOR or a Zone got unmapped when it should'nt have
+			System.err
+					.println("PickColor: "
+							+ pickColor
+							+ " doesn't match any known Zone's pickColor or the background, this indicates it was unmapped when it shouldn't be, or an incorrect color was drawn to the pickBuffer.");
+			return null;
 		}
-
-		// // check zones **layers matter--last zone created is on top (wins)
-		// for (Zone zone : zones) {
-		// if (zone != null && zone.contains(xScreen, yScreen)) {
-		// idToZoneMap.put(id, zone);
-		// return zone;
-		// }
-		// }
-		// return null;
 	}
 
 	public void renderPickBuffer() {
-		applet.g.background(BG_PICK_COLOR);
+		// make sure colorMode is correct for the pickBuffer
+		applet.g.colorMode(PConstants.RGB, 255);
+		applet.g.background(BG_PICK_COLOR, 255);
 		for (Zone zone : zonesByPickColor.values()) {
-			if (zone.getParent() != null) {
-				// the parent should handle the drawing
-				continue;
+			// zone will be null once in this loop as the BG_PICK_COLOR is
+			// mapped to null
+			if (zone != null) {
+				if (zone.getParent() != null) {
+					// the parent should handle the drawing
+					continue;
+				}
+				// zone does the matrix manipulation to place it self properly
+				zone.drawForPickBuffer();
 			}
-			// zone does the matrix manipulation to place it self properly
-			zone.drawForPickBuffer();
 		}
-		// image=applet.g.get();
 		applet.g.flush();
 	}
 

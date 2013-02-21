@@ -135,8 +135,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected String renderer = null;
 
-	protected static boolean grayscale = false;
-
 	/**
 	 * The direct flag controls whether rendering directly onto
 	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
