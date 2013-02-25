@@ -87,6 +87,8 @@ class SMTZonePicker {
 
 	public Zone pick(Touch t) {
 		int pickColor = -1;
+		//this doesnt work as of 2.0b8
+		/*
 		PGL pgl = applet.g.beginPGL();
 
 		if (pgl == null || System.getProperty("os.name").equals("Mac OS X")) {
@@ -110,6 +112,9 @@ class SMTZonePicker {
 		}
 
 		applet.g.endPGL();
+		*/
+		//go back to the old really slow way(max 70 fps on a high end card vs 200+ fps with readPixels), with loadPixels at the end of renderPickBuffer()
+		pickColor = applet.g.pixels[t.x+t.y*applet.g.width]&0x00FFFFFF;
 
 		if (zonesByPickColor.containsKey(pickColor)) {
 			// if mapped it is either a Zone or null (background)
@@ -146,6 +151,7 @@ class SMTZonePicker {
 			}
 		}
 		applet.g.flush();
+		applet.g.loadPixels();
 	}
 
 	public void putZoneOnTop(Zone zone) {

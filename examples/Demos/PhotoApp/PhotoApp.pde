@@ -11,7 +11,7 @@ PImage[] img = new PImage[11];
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.SMART);
+  TouchClient.init(this, TouchSource.WM_TOUCH);
 
   for (int i=0; i<11; i++) {  
     img[i] = loadImage(i + ".jpg");
