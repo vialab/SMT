@@ -47,9 +47,9 @@ void setup() {
   //call this to not display warnings for unimplemented methods
   //client.setWarnUnimplemented(false);
   
-  title = new Zone("Title",0,0,displayWidth,displayHeight);
-  board = new Zone("Board",(displayWidth-1000)/2,(displayHeight-1000)/2,1000,1000);
-  options = new Zone("Options",0,0,displayWidth,displayHeight);
+  title = new ContainerZone("Title",0,0,displayWidth,displayHeight);
+  board = new ContainerZone("Board",(displayWidth-1000)/2,(displayHeight-1000)/2,1000,1000);
+  options = new ContainerZone("Options",0,0,displayWidth,displayHeight);
   TouchClient.add(title);
   title.add(new ButtonZone("PlayButton",displayWidth/2-100,displayHeight/2-100,200,100,"Play",20));
   title.add(new ButtonZone("OptionsButton",displayWidth/2-100,displayHeight/2+100,200,100,"Options",20));
