@@ -116,12 +116,15 @@ class SMTZonePicker {
 			return zonesByPickColor.get(pickColor);
 		}
 		else {
-			// not mapped means a bug in the pickDrawn colors, or maybe that
-			// BG_PICK_COLOR or a Zone got unmapped when it should'nt have
-			System.err
-					.println("PickColor: "
-							+ pickColor
-							+ " doesn't match any known Zone's pickColor or the background, this indicates it was unmapped when it shouldn't be, or an incorrect color was drawn to the pickBuffer.");
+			//only show error in debug mode, since it is much to prevalent still to always show
+			if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+				// not mapped means a bug in the pickDrawn colors, or maybe that
+				// BG_PICK_COLOR or a Zone got unmapped when it should'nt have
+				System.err
+						.println("PickColor: "
+								+ pickColor
+								+ " doesn't match any known Zone's pickColor or the background, this indicates it was unmapped when it shouldn't be, or an incorrect color was drawn to the pickBuffer.");
+			}
 			return null;
 		}
 	}
