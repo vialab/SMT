@@ -16,8 +16,8 @@ class SMTTouchManager {
 	static TouchState currentTouchState = new TouchState();
 
 	static TouchState previousTouchState;
-	
-	static HashMap<Touch,Zone> touchPrevZone = new HashMap<Touch, Zone>();
+
+	static HashMap<Touch, Zone> touchPrevZone = new HashMap<Touch, Zone>();
 
 	public SMTTouchManager(SMTTuioListener tuioListener, SMTZonePicker picker) {
 		this.tuioListener = tuioListener;
@@ -38,7 +38,8 @@ class SMTTouchManager {
 
 		currentTouchState.update(tuioListener.getCurrentTuioState());
 
-		// forward events, each touch should go through one of these three methods, and they are mutually exclusive
+		// forward events, each touch should go through one of these three
+		// methods, and they are mutually exclusive
 		handleTouchesDown();
 		handleTouchesUp();
 		handleTouchesMoved();
@@ -67,10 +68,13 @@ class SMTTouchManager {
 			if (!currentTouchState.contains(t.sessionID)) {
 				// the touch existed, but no longer exists, so it went up
 				SMTUtilities.invoke(touchUp, applet);
-				touchPrevZone.remove(t);
 				for (Zone zone : t.getAssignedZones()) {
+					if (touchPrevZone.get(t) == zone) {
+						doPress(zone, t);
+					}
 					doTouchUp(zone, t);
 				}
+				touchPrevZone.remove(t);
 			}
 		}
 	}
@@ -91,11 +95,28 @@ class SMTTouchManager {
 						z.assign(t);
 					}
 				}
+				else {
+					for (Zone zone : t.getAssignedZones()) {
+						// if the zone defines a press method, make sure to
+						// unassign when we no longer pick to the Zone, meaning
+						// that the touchUp can rely on the previous pick of the
+						// Touch to determine if the zone was pressed
+						if ((zone.press || zone.pressMethod != null) && z != zone) {
+							zone.unassign(t);
+						}
+					}
+				}
 				for (Zone zone : t.getAssignedZones()) {
 					doTouchMoved(zone, t);
 				}
 				touchPrevZone.put(t, z);
 			}
+		}
+	}
+
+	private void doPress(Zone zone, Touch t) {
+		if (zone != null) {
+			zone.pressInvoker();
 		}
 	}
 
