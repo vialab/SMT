@@ -57,7 +57,7 @@ public class KeyboardZone extends Zone {
 				drawImpl(color(255, alpha), color(175, alpha));
 			}
 			else {
-				if (buttonDown) {
+				if (isButtonDown()) {
 					drawImpl(color(keyPressedColor, alpha), color(textColor, alpha));
 				}
 				else {
@@ -107,8 +107,7 @@ public class KeyboardZone extends Zone {
 	
 		@Override
 		public void touchMovedImpl(Touch touch) {
-			this.setButtonDown();
-			if (!keyDown && this.isButtonDown()) {
+			if (!keyDown) {
 				keyDown();
 			}
 		}
@@ -133,7 +132,7 @@ public class KeyboardZone extends Zone {
 		}
 	
 		@Override
-		public void pressImpl() {
+		protected void pressImpl() {
 			//toggle Caps Lock
 			if(key.keyCode ==KeyEvent.VK_CAPS_LOCK){
 				capsLockOn = !capsLockOn;

@@ -33,8 +33,6 @@ public class ButtonZone extends Zone {
 
 	private float angle = 0;
 
-	protected boolean buttonDown = false;
-
 	protected int deactivatedColor = 255;
 
 	protected int deactivatedTextColor = 175;

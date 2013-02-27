@@ -87,8 +87,9 @@ class SMTTouchManager {
 		for (Touch t : currentTouchState) {
 			if (previousTouchState.contains(t.sessionID)) {
 				SMTUtilities.invoke(touchMoved, applet);
-				Zone z = picker.pick(t);
+				Zone z = null;
 				if (!t.isAssigned()) {
+					z = picker.pick(t);
 					// Assign the touch to the picked Zone, as long as the touch
 					// is not grabbed
 					if (z != null) {
@@ -96,13 +97,25 @@ class SMTTouchManager {
 					}
 				}
 				else {
+					boolean first = true;
 					for (Zone zone : t.getAssignedZones()) {
-						// if the zone defines a press method, make sure to
-						// unassign when we no longer pick to the Zone, meaning
-						// that the touchUp can rely on the previous pick of the
-						// Touch to determine if the zone was pressed
-						if ((zone.press || zone.pressMethod != null) && z != zone) {
-							zone.unassign(t);
+						System.out.println(zone.press+" "+zone.pressMethod);
+						if (zone.press || zone.pressMethod != null){
+							// if the zone defines a press method, make sure to
+							// unassign when we no longer pick to the Zone, meaning
+							// that the touchUp can rely on the previous pick of the
+							// Touch to determine if the zone was pressed
+							if (first){
+								z = picker.pick(t);
+								first = false;
+							}
+							if (z != zone) {
+								zone.unassign(t);
+								// Assign the touch to the picked Zone
+								if (z != null) {
+									z.assign(t);
+								}
+							}
 						}
 					}
 				}

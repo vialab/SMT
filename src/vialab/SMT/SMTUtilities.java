@@ -232,16 +232,11 @@ public final class SMTUtilities {
 		}
 
 		Method impl = null;
-		// only check for method impl if the parent class has the method too,
-		// because by default this method is only called when warnMissing is
-		// true when getZoneMethod(...) is called, so we only give a warning
-		// when the extending class has no [methodPefix+impl]() method and the
-		// pressMethod cannot be found, which is exactly what we want to occur.
+		//TODO:Clean up and comment this, as it has caused many problems
 		try {
 			Class<?>[] firstRemoved = new Class<?>[parameters.length - 1];
 			System.arraycopy(parameters, 1, firstRemoved, 0, parameters.length - 1);
-			if (parameters[0].getSuperclass()
-					.getDeclaredMethod(methodPrefix + "Impl", firstRemoved) != null) {
+			if (Zone.class.getDeclaredMethod(methodPrefix + "Impl", firstRemoved) != null) {
 				try {
 					// get the method if the class declared the prefix+Impl
 					// method,
