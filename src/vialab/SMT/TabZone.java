@@ -84,11 +84,6 @@ public class TabZone extends Zone {
 						(int) (h * 0.8));
 			}
 		}
-
-		@Override
-		public void setName(String name) {
-			super.setName(name, false);
-		}
 	}
 
 	private void tabActive(Tab tab) {

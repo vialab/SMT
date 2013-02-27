@@ -1,6 +1,5 @@
 package vialab.SMT;
 
-import java.lang.reflect.Method;
 import processing.core.PFont;
 
 /**
@@ -33,8 +32,6 @@ public class ButtonZone extends Zone {
 	protected int pressedTextColor = 0;
 
 	private float angle = 0;
-
-	private Method pressMethod;
 
 	protected boolean buttonDown = false;
 
@@ -130,28 +127,12 @@ public class ButtonZone extends Zone {
 	}
 
 	@Override
-	public void touchMovedImpl(Touch t) {
-		Zone picked = TouchClient.picker.pick(t);
-		if (picked != null && picked.equals(this)) {
-			buttonDown = true;
-		}
-		else {
-			unassign(t);
-			buttonDown = false;
-		}
-	}
-
-	@Override
-	public void touchImpl() {
-	}
-
-	@Override
 	public void drawImpl() {
 		if (deactivated) {
 			drawImpl(deactivatedColor, deactivatedTextColor);
 		}
 		else {
-			if (buttonDown) {
+			if (isButtonDown()) {
 				drawImpl(pressedColor, pressedTextColor);
 			}
 			else {
@@ -164,21 +145,7 @@ public class ButtonZone extends Zone {
 	 * @return Whether the button is currently pushed down
 	 */
 	public boolean isButtonDown() {
-		return buttonDown;
-	}
-
-	protected boolean setButtonDown() {
-		buttonDown = false;
-		for (Touch t : getTouches()) {
-			Zone picked = TouchClient.picker.pick(t);
-			if (picked != null && picked.equals(this)) {
-				buttonDown = true;
-			}
-			else {
-				unassign(t);
-			}
-		}
-		return buttonDown;
+		return (this.getNumTouches()>0);
 	}
 
 	protected void drawImpl(int buttonColor, int textColor) {
@@ -199,54 +166,11 @@ public class ButtonZone extends Zone {
 		}
 	}
 
-	@Override
-	public void touchUp(Touch touch) {
-		setButtonDown();
-		super.touchUp(touch);
-
-		if (isButtonDown() && !deactivated) {
-			pressImpl();
-			SMTUtilities.invoke(pressMethod, applet, this);
-		}
-		buttonDown = false;
-	}
-
-	@Override
-	public void touchDown(Touch touch) {
-		super.touchDown(touch);
-		buttonDown = true;
-	}
-
-	@Override
-	public void setName(String name) {
-		setName(name, true);
-	}
-
-	/**
-	 * Overide setName(String name) with the preferred call to this method, to
-	 * change warning behavior of classes that extend this.
-	 * 
-	 * @param name
-	 * @param warnPress
-	 *            Whether to show a warning when the pressZoneName() method is
-	 *            not implemented
-	 */
-	protected void setName(String name, boolean warnPress) {
-		super.setName(name);
-		if (name != null) {
-			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, warnPress,
-					this.getClass());
-		}
-	}
-
 	public int getFontSize() {
 		return fontSize;
 	}
 
 	public void setFontSize(int fontSize) {
 		this.fontSize = fontSize;
-	}
-
-	protected void pressImpl() {
 	}
 }
