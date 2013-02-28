@@ -463,13 +463,13 @@ public class TouchClient {
 
 			if (t.isAssigned() && time < 250) {
 				parent.noFill();
-				parent.stroke(255, 255, 255, 100);
+				parent.stroke(155, 255, 155, 100);
 				parent.ellipse(t.x, t.y, 75 - time / 10, 75 - time / 10);
 			}
 			else if (!t.isAssigned() && time < 500) {
 				{
 					parent.noFill();
-					parent.stroke(255, 255, 255, 100);
+					parent.stroke(255, 155, 155, 100);
 					parent.ellipse(t.x, t.y, time / 10 + 50, time / 10 + 50);
 				}
 			}
