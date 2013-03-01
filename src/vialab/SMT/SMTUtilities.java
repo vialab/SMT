@@ -54,10 +54,10 @@ public final class SMTUtilities {
 		}
 		catch (NoSuchMethodException e) {
 			Method m = null;
-			if(TouchClient.extraObjects !=null){
-				for(Object o : TouchClient.extraObjects){
+			if (TouchClient.extraObjects != null) {
+				for (Object o : TouchClient.extraObjects) {
 					try {
-						m=o.getClass().getMethod(methodName, parameterTypes);
+						m = o.getClass().getMethod(methodName, parameterTypes);
 					}
 					catch (NoSuchMethodException e1) {
 						continue;
@@ -65,8 +65,10 @@ public final class SMTUtilities {
 					catch (SecurityException e1) {
 						continue;
 					}
-					if(m != null){
-						if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println(o.getClass().toString()+m.toString());}
+					if (m != null) {
+						if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+							System.out.println(o.getClass().toString() + m.toString());
+						}
 						return m;
 					}
 				}
@@ -84,9 +86,9 @@ public final class SMTUtilities {
 		}
 		return getPMethod(parent, methodPrefix + suffix, parameterTypes);
 	}
-	
-	static Method getAnyPMethod(PApplet parent, String methodPrefix, String methodSuffix, boolean removeFirst,
-			Class<?>... parameter) {
+
+	static Method getAnyPMethod(PApplet parent, String methodPrefix, String methodSuffix,
+			boolean removeFirst, Class<?>... parameter) {
 		if (parameter.length == 0) {
 			return getPMethod(parent, methodPrefix, methodSuffix, parameter);
 		}
@@ -98,8 +100,8 @@ public final class SMTUtilities {
 			System.arraycopy(parameter, 1, firstRemoved, 0, parameter.length - 1);
 			return getAnyPMethod(parent, methodPrefix, methodSuffix, removeFirst, firstRemoved);
 		}
-		
-		if (parameter[parameter.length-1] == null && !removeFirst) {
+
+		if (parameter[parameter.length - 1] == null && !removeFirst) {
 			// try to get a method with the last class removed from the
 			// parameter list since it is null
 			Class<?>[] lastRemoved = new Class<?>[parameter.length - 1];
@@ -109,19 +111,21 @@ public final class SMTUtilities {
 
 		Method method = getPMethod(parent, methodPrefix, methodSuffix, parameter);
 		if (method == null) {
-			if(removeFirst){
+			if (removeFirst) {
 				// recurse only on first class
 				Class<?> superClass = parameter[0].getSuperclass();
 				Class<?>[] firstSupered = new Class<?>[parameter.length];
 				System.arraycopy(parameter, 0, firstSupered, 0, parameter.length);
 				firstSupered[0] = superClass;
-				method = getAnyPMethod(parent, methodPrefix, methodSuffix, removeFirst, firstSupered);
-			}else{
+				method = getAnyPMethod(parent, methodPrefix, methodSuffix, removeFirst,
+						firstSupered);
+			}
+			else {
 				// recurse only on last class
-				Class<?> superClass = parameter[parameter.length-1].getSuperclass();
+				Class<?> superClass = parameter[parameter.length - 1].getSuperclass();
 				Class<?>[] lastSupered = new Class<?>[parameter.length];
 				System.arraycopy(parameter, 0, lastSupered, 0, parameter.length);
-				lastSupered[parameter.length-1] = superClass;
+				lastSupered[parameter.length - 1] = superClass;
 				method = getAnyPMethod(parent, methodPrefix, methodSuffix, removeFirst, lastSupered);
 			}
 		}
@@ -141,8 +145,8 @@ public final class SMTUtilities {
 	 *            given Zone
 	 * @return A Method, which can be called by invoke(Method, Zone)
 	 */
-	public static Method getZoneMethod(String methodPrefix, Zone zone, boolean warnMissing) {
-		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, warnMissing,
+	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone, boolean warnMissing) {
+		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name, warnMissing,
 				zone.getClass());
 	}
 
@@ -163,19 +167,19 @@ public final class SMTUtilities {
 	 * 
 	 * @return A Method, which can be called by invoke(Method, parameters... )
 	 */
-	public static Method getZoneMethod(String methodPrefix, Zone zone, boolean warnMissing,
+	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone, boolean warnMissing,
 			Class<?>... parameters) {
-		return SMTUtilities.getZoneMethod(Zone.applet, methodPrefix, zone.name, warnMissing,
+		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name, warnMissing,
 				parameters);
 	}
 
-	static Method getZoneMethod(PApplet parent, String methodPrefix, String name,
+	static Method getZoneMethod(Class<?> callingClass, PApplet parent, String methodPrefix, String name,
 			boolean warnMissing, Class<?>... parameters) {
 		// uppercase the first letter of the name so that we have consistent
 		// naming warnings
 		name = name.substring(0, 1).toUpperCase() + name.substring(1);
 		Method method = getAnyPMethod(parent, methodPrefix, name, true, parameters);
-		if(method == null){
+		if (method == null) {
 			method = getAnyPMethod(parent, methodPrefix, name, false, parameters);
 		}
 		if (method == null) {
@@ -185,7 +189,7 @@ public final class SMTUtilities {
 			// and the methodPrefix+Impl method is not provided by the class
 			// itself
 			if (warnMissing && !methodSet.contains(methodPrefix + name)
-					&& !checkImpl(methodPrefix, parameters)) {
+					&& !checkImpl(callingClass,methodPrefix, parameters)) {
 				if (!warned) {
 					System.err
 							.println("\nCall TouchClient.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
@@ -195,7 +199,7 @@ public final class SMTUtilities {
 			}
 			// set method to methodPrefix+Default if defined
 			method = getAnyPMethod(parent, methodPrefix, "Default", true, parameters);
-			if(method == null){
+			if (method == null) {
 				method = getAnyPMethod(parent, methodPrefix, "Default", false, parameters);
 			}
 		}
@@ -208,7 +212,14 @@ public final class SMTUtilities {
 	 * This checks whether a method that has the given methodPrefix exists in
 	 * the parameter given with the assumed suffix of 'Impl'. For example the
 	 * prefix 'draw' would mean this method checks for the method drawImpl()
-	 * existing in the given class.
+	 * existing in the given class. The first parameter should be the calling
+	 * object that by definition this method will return false for. This means
+	 * we can have the method declared so that its subclasses can override it,
+	 * but it will not count as having our own implementation, so that
+	 * checkImpl() tells us when we have a real implementation of the method.
+	 * 
+	 * @param callingClass
+	 *            The calling object, which will by definition return false
 	 * 
 	 * @param methodPrefix
 	 *            The prefix to check for on methods in the given Class
@@ -217,9 +228,13 @@ public final class SMTUtilities {
 	 *            methodPrefix, the first of this array should be the Zone class
 	 * @return Whether the given class has a method with the given Prefix
 	 */
-	public static boolean checkImpl(String methodPrefix, Class<?>... parameters) {
+	public static boolean checkImpl(Class<?> callingClass, String methodPrefix, Class<?>... parameters) {
 		if (parameters[0] == null) {
 			System.err.println("Error: CheckImpl() first class parameter was null.");
+			return false;
+		}
+		
+		if (parameters[0]==callingClass){
 			return false;
 		}
 
@@ -232,45 +247,36 @@ public final class SMTUtilities {
 		}
 
 		Method impl = null;
-		//TODO:Clean up and comment this, as it has caused many problems
+		Class<?>[] firstRemoved = new Class<?>[parameters.length - 1];
+		System.arraycopy(parameters, 1, firstRemoved, 0, parameters.length - 1);
 		try {
-			Class<?>[] firstRemoved = new Class<?>[parameters.length - 1];
-			System.arraycopy(parameters, 1, firstRemoved, 0, parameters.length - 1);
-			if (parameters[0].getSuperclass().getDeclaredMethod(methodPrefix + "Impl", firstRemoved) != null) {
-				try {
-					// get the method if the class declared the prefix+Impl
-					// method,
-					// otherwise null
-					impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl", firstRemoved);
-				}
-				catch (Exception e) {}
-				if (impl == null) {
-					try {
-						// check if we find the method with the parameter Zone,
-						// and
-						// give warning
-						impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl", parameters);
-						if (impl != null) {
-							System.err
-									.println(methodPrefix
-											+ "Impl() in the class "
-											+ parameters[0].getName()
-											+ " should not have Zone as a parameter, please remove it to override "
-											+ methodPrefix + "Impl() correctly.");
-							// make sure we don't set impl as to return the
-							// wrong
-							// result when this method is called, as we just
-							// want to
-							// add the error
-							impl = null;
-						}
-					}
-					catch (Exception e) {}
-				}
-			}
+			// get the method if the class declared the prefix+Impl
+			// method,
+			// otherwise null
+			impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl", firstRemoved);
 		}
 		catch (Exception e) {}
-
+		if (impl == null) {
+			try {
+				// check if we find the method with the parameter Zone,
+				// and
+				// give warning
+				impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl", parameters);
+				if (impl != null) {
+					System.err.println(methodPrefix + "Impl() in the class "
+							+ parameters[0].getName()
+							+ " should not have Zone as a parameter, please remove it to override "
+							+ methodPrefix + "Impl() correctly.");
+					// make sure we don't set impl as to return the
+					// wrong
+					// result when this method is called, as we just
+					// want to
+					// add the error
+					impl = null;
+				}
+			}
+			catch (Exception e) {}
+		}
 		// check if a super-class implements it, and the superclass is not Zone,
 		// and also that this class is not Zone, as we shouldn't check the
 		// superclass in that case either
@@ -280,7 +286,7 @@ public final class SMTUtilities {
 			Class<?>[] firstSupered = new Class<?>[parameters.length];
 			System.arraycopy(parameters, 0, firstSupered, 0, parameters.length);
 			firstSupered[0] = superClass;
-			if (checkImpl(methodPrefix, firstSupered)) {
+			if (checkImpl(callingClass,methodPrefix, firstSupered)) {
 				return true;
 			}
 		}
@@ -289,6 +295,7 @@ public final class SMTUtilities {
 			return false;
 		}
 		else {
+			System.out.println(methodPrefix);
 			return true;
 		}
 	}
@@ -336,25 +343,30 @@ public final class SMTUtilities {
 	}
 
 	/**
-	 * This tries every different way we know to invoke the method, although we should just store the needed info when we get the method
+	 * This tries every different way we know to invoke the method, although we
+	 * should just store the needed info when we get the method
+	 * 
 	 * @param method
 	 * @param parent
 	 * @param parameters
 	 * @return
-	 */ 
+	 */
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
 		if (method != null) {
-			if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){System.out.println("Method:"+method.toString());}
+			if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+				System.out.println("Method:" + method.toString());
+			}
 			Object[] removeFromFront = parameters.clone();
 			Object[] removeFromBack = parameters.clone();
-			//try to invoke the method many times, with parameters removed from the front and back separately
-			//one of these should return
-			for(int i=0; i<parameters.length+1; i++){
-				//invoke with parameters removed from the front
+			// try to invoke the method many times, with parameters removed from
+			// the front and back separately
+			// one of these should return
+			for (int i = 0; i < parameters.length + 1; i++) {
+				// invoke with parameters removed from the front
 				try {
-					if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){
+					if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
 						System.out.print("In Papplet with params: ");
-						for(Object o: removeFromFront){
+						for (Object o : removeFromFront) {
 							System.out.print(o.toString());
 						}
 						System.out.println();
@@ -362,12 +374,12 @@ public final class SMTUtilities {
 					return method.invoke(parent, removeFromFront);
 				}
 				catch (Exception e) {}
-				if(TouchClient.extraObjects !=null){
-					for(Object o : TouchClient.extraObjects){
+				if (TouchClient.extraObjects != null) {
+					for (Object o : TouchClient.extraObjects) {
 						try {
-							if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){
-								System.out.print(o.toString()+" with params: ");
-								for(Object o2: removeFromFront){
+							if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+								System.out.print(o.toString() + " with params: ");
+								for (Object o2 : removeFromFront) {
 									System.out.print(o2.toString());
 								}
 								System.out.println();
@@ -377,12 +389,12 @@ public final class SMTUtilities {
 						catch (Exception e) {}
 					}
 				}
-				
-				//invoke with parameters removed from the back
+
+				// invoke with parameters removed from the back
 				try {
-					if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){
+					if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
 						System.out.print("In Papplet with params: ");
-						for(Object o: removeFromFront){
+						for (Object o : removeFromFront) {
 							System.out.print(o.toString());
 						}
 						System.out.println();
@@ -390,12 +402,12 @@ public final class SMTUtilities {
 					return method.invoke(parent, removeFromBack);
 				}
 				catch (Exception e) {}
-				if(TouchClient.extraObjects !=null){
-					for(Object o : TouchClient.extraObjects){
+				if (TouchClient.extraObjects != null) {
+					for (Object o : TouchClient.extraObjects) {
 						try {
-							if(TouchClient.drawTouchPoints==TouchDraw.DEBUG){
-								System.out.print(o.toString()+" with params: ");
-								for(Object o2: removeFromFront){
+							if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+								System.out.print(o.toString() + " with params: ");
+								for (Object o2 : removeFromFront) {
 									System.out.print(o2.toString());
 								}
 								System.out.println();
@@ -405,10 +417,10 @@ public final class SMTUtilities {
 						catch (Exception e) {}
 					}
 				}
-				
-				if(removeFromFront.length > 0 && removeFromBack.length > 0){
+
+				if (removeFromFront.length > 0 && removeFromBack.length > 0) {
 					removeFromFront = new Object[removeFromFront.length - 1];
-					System.arraycopy(parameters, 1+i, removeFromFront, 0, removeFromFront.length);
+					System.arraycopy(parameters, 1 + i, removeFromFront, 0, removeFromFront.length);
 					removeFromBack = new Object[removeFromBack.length - 1];
 					System.arraycopy(parameters, 0, removeFromBack, 0, removeFromBack.length);
 				}

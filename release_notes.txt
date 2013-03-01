@@ -4,6 +4,7 @@ _____________________
 
 	API Changes:
 		-TouchClient's setDrawTouchPoints() deprecated/renamed to setTouchDraw()
+		-SMTUtilities' checkImpl() and getZoneMethod() have an addidition first parameter which is the callingClass to by definition return false that an implementation exists for
 
 SMTv3.3 Release Notes
 _____________________

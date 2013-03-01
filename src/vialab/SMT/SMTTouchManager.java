@@ -99,7 +99,6 @@ class SMTTouchManager {
 				else {
 					boolean first = true;
 					for (Zone zone : t.getAssignedZones()) {
-						System.out.println(zone.press+" "+zone.pressMethod);
 						if (zone.press || zone.pressMethod != null){
 							// if the zone defines a press method, make sure to
 							// unassign when we no longer pick to the Zone, meaning

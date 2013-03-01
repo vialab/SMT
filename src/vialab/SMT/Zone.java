@@ -396,35 +396,35 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM, boolean warnPress) {
 
-		touchUDM = SMTUtilities.checkImpl("touchDown", this.getClass(), Touch.class)
-				|| SMTUtilities.checkImpl("touchUp", this.getClass(), Touch.class)
-				|| SMTUtilities.checkImpl("touchMoved", this.getClass(), Touch.class);
+		touchUDM = SMTUtilities.checkImpl(Zone.class, "touchDown", this.getClass(), Touch.class)
+				|| SMTUtilities.checkImpl(Zone.class, "touchUp", this.getClass(), Touch.class)
+				|| SMTUtilities.checkImpl(Zone.class, "touchMoved", this.getClass(), Touch.class);
 		
-		press = SMTUtilities.checkImpl("press", this.getClass());
+		press = SMTUtilities.checkImpl(Zone.class, "press", this.getClass());
 
 		if (name != null) {
 			drawMethod = SMTUtilities
-					.getZoneMethod(applet, "draw", name, warnDraw, this.getClass());
+					.getZoneMethod(Zone.class, applet, "draw", name, warnDraw, this.getClass());
 
-			pickDrawMethod = SMTUtilities.getZoneMethod(applet, "pickDraw", name, warnPick,
+			pickDrawMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "pickDraw", name, warnPick,
 					this.getClass());
 
-			keyPressedMethod = SMTUtilities.getZoneMethod(applet, "keyPressed", name, warnKeys,
+			keyPressedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyPressed", name, warnKeys,
 					this.getClass(), KeyEvent.class);
-			keyReleasedMethod = SMTUtilities.getZoneMethod(applet, "keyReleased", name, warnKeys,
+			keyReleasedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyReleased", name, warnKeys,
 					this.getClass(), KeyEvent.class);
-			keyTypedMethod = SMTUtilities.getZoneMethod(applet, "keyTyped", name, warnKeys,
+			keyTypedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyTyped", name, warnKeys,
 					this.getClass(), KeyEvent.class);
-			touchUpMethod = SMTUtilities.getZoneMethod(applet, "touchUp", name, warnTouchUDM,
+			touchUpMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchUp", name, warnTouchUDM,
 					this.getClass(), Touch.class);
 
-			touchDownMethod = SMTUtilities.getZoneMethod(applet, "touchDown", name, warnTouchUDM,
+			touchDownMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchDown", name, warnTouchUDM,
 					this.getClass(), Touch.class);
 
-			touchMovedMethod = SMTUtilities.getZoneMethod(applet, "touchMoved", name, warnTouchUDM,
+			touchMovedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchMoved", name, warnTouchUDM,
 					this.getClass(), Touch.class);
 			
-			pressMethod = SMTUtilities.getZoneMethod(applet, "press", name, warnPress,
+			pressMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "press", name, warnPress,
 					this.getClass());
 
 			if (touchUpMethod != null || touchDownMethod != null || touchMovedMethod != null
@@ -432,13 +432,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				warnTouch = false;
 			}
 
-			touchMethod = SMTUtilities.getZoneMethod(applet, "touch", name, warnTouch,
+			touchMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touch", name, warnTouch,
 					this.getClass());
 		}
 
-		touchImpl = SMTUtilities.checkImpl("touch", this.getClass());
-		SMTUtilities.checkImpl("draw", this.getClass());
-		pickImpl = SMTUtilities.checkImpl("pickDraw", this.getClass());
+		touchImpl = SMTUtilities.checkImpl(Zone.class, "touch", this.getClass());
+		SMTUtilities.checkImpl(Zone.class, "draw", this.getClass());
+		pickImpl = SMTUtilities.checkImpl(Zone.class, "pickDraw", this.getClass());
 	}
 
 	/**
