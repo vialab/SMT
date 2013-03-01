@@ -295,7 +295,6 @@ public final class SMTUtilities {
 			return false;
 		}
 		else {
-			System.out.println(methodPrefix);
 			return true;
 		}
 	}
