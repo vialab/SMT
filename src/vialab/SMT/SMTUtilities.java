@@ -236,7 +236,7 @@ public final class SMTUtilities {
 		try {
 			Class<?>[] firstRemoved = new Class<?>[parameters.length - 1];
 			System.arraycopy(parameters, 1, firstRemoved, 0, parameters.length - 1);
-			if (Zone.class.getDeclaredMethod(methodPrefix + "Impl", firstRemoved) != null) {
+			if (parameters[0].getSuperclass().getDeclaredMethod(methodPrefix + "Impl", firstRemoved) != null) {
 				try {
 					// get the method if the class declared the prefix+Impl
 					// method,
