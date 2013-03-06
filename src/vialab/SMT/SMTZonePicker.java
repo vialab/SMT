@@ -113,8 +113,24 @@ class SMTZonePicker {
 
 		applet.g.endPGL();
 		*/
+		
+		//prevent ArrayOutOfBoundsException, although maybe this should be done in Touch itself
+		int x=t.x;
+		int y=t.y;
+		if(t.y>=applet.g.height){
+			y=applet.g.height-1;
+		}
+		if(t.x>=applet.g.width){
+			x=applet.g.width-1;
+		}
+		if(t.y<0){
+			y=0;
+		}
+		if(t.x<0){
+			x=0;
+		}
 		//go back to the old really slow way(max 70 fps on a high end card vs 200+ fps with readPixels), with loadPixels at the end of renderPickBuffer()
-		pickColor = applet.g.pixels[t.x+t.y*applet.g.width]&0x00FFFFFF;
+		pickColor = applet.g.pixels[x+y*applet.g.width]&0x00FFFFFF;
 
 		if (zonesByPickColor.containsKey(pickColor)) {
 			// if mapped it is either a Zone or null (background)
