@@ -43,6 +43,19 @@ class SMTTouchManager {
 		handleTouchesDown();
 		handleTouchesUp();
 		handleTouchesMoved();
+		
+		handleGestures();
+	}
+
+	private void handleGestures() {
+		for(Zone z : TouchClient.getActiveZones()){
+			z.gestureInvoker(translateGesture(z));
+		}
+	}
+
+	private Gesture translateGesture(Zone z) {
+		
+		return null;
 	}
 
 	/**

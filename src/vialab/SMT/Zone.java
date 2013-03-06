@@ -133,6 +133,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	
 	protected Method pressMethod = null;
 
+	protected Method gestureMethod = null;
+
 	protected String name = null;
 
 	protected String renderer = null;
@@ -344,6 +346,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		boolean warnPick = false;
 		boolean warnTouchUDM = false;
 		boolean warnPress = false;
+		boolean warnGesture = false;
 		if (this instanceof ButtonZone || this instanceof ImageZone || this instanceof TabZone
 				|| this instanceof TextZone || this instanceof SliderZone
 				|| this instanceof KeyboardZone) {
@@ -374,7 +377,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			}
 		}
 
-		loadMethods(name, warnDraw, warnTouch, warnKeys, warnPick, warnTouchUDM, warnPress);
+		loadMethods(name, warnDraw, warnTouch, warnKeys, warnPick, warnTouchUDM, warnPress, warnGesture);
 	}
 
 	/**
@@ -392,9 +395,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param warnTouchUDM
 	 *            Display a warning when the touchUp/touchDown/touchMoved
 	 *            methods don't exist
+	 * @param warnGesture 
 	 */
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
-			boolean warnPick, boolean warnTouchUDM, boolean warnPress) {
+			boolean warnPick, boolean warnTouchUDM, boolean warnPress, boolean warnGesture) {
 
 		touchUDM = SMTUtilities.checkImpl(Zone.class, "touchDown", this.getClass(), Touch.class)
 				|| SMTUtilities.checkImpl(Zone.class, "touchUp", this.getClass(), Touch.class)
@@ -426,6 +430,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			
 			pressMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "press", name, warnPress,
 					this.getClass());
+			
+			gestureMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "gesture", name, warnGesture,
+					this.getClass(), Gesture.class);
 
 			if (touchUpMethod != null || touchDownMethod != null || touchMovedMethod != null
 					|| touchUDM || press || pressMethod != null) {
@@ -2254,7 +2261,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		pressImpl();
 		SMTUtilities.invoke(pressMethod, applet, this);
 	}
+
+	public void gestureInvoker(Gesture gesture) {
+		gestureImpl(gesture);
+		SMTUtilities.invoke(gestureMethod, applet, this, gesture);
+	}
 	
+	protected void gestureImpl(Gesture gesture) {}
+
 	/**
 	 * Override to specify a default behavior for press
 	 */
