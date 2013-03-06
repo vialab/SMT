@@ -23,5 +23,9 @@ public enum TouchSource {
 	 * Use Smart SDK back end, when running on Smart hardware, such as the Smart
 	 * Table
 	 */
-	SMART;
+	SMART,
+	/**
+	 * Use Leap SDK back end, for the Leap Motion, using the finger positions
+	 */
+	LEAP;
 }

@@ -305,6 +305,10 @@ public class TouchClient {
 			TouchClient.runSmart2TuioServer();
 			tuioClient = new TuioClient(port);
 			break;
+		case LEAP:
+			TouchClient.runLeapTuioServer();
+			tuioClient = new TuioClient(port);
+			break;
 		default:
 			break;
 		}
@@ -1219,6 +1223,87 @@ public class TouchClient {
 					}
 					catch (Exception e) {
 						System.err.println("SMARTtoTUIO2.exe Server stopped!");
+					}
+				}
+			};
+			serverThread.start();
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Runs a server that sends TUIO events using Windows 7 Touch events
+	 * 
+	 * @param is64Bit
+	 *            Whether to use the 64-bit version of the exe
+	 */
+	private static void runLeapTuioServer() {
+		try {
+			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
+
+			if (!(temp.delete())) {
+				throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
+			}
+
+			if (!(temp.mkdir())) {
+				throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
+			}
+			BufferedInputStream src = new BufferedInputStream(
+					TouchClient.class.getResourceAsStream("/resources/motionLess.exe"));
+			final File exeTempFile = new File(temp.getAbsolutePath() + "\\motionLess.exe");
+			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
+			byte[] tempexe = new byte[4 * 1024];
+			int rc;
+			while ((rc = src.read(tempexe)) > 0) {
+				out.write(tempexe, 0, rc);
+			}
+			src.close();
+			out.close();
+			exeTempFile.deleteOnExit();
+
+			BufferedInputStream dllsrc = new BufferedInputStream(
+					TouchClient.class.getResourceAsStream("/resources/Leap.dll"));
+			final File dllTempFile = new File(temp.getAbsolutePath() + "\\Leap.dll");
+			BufferedOutputStream outdll = new BufferedOutputStream(
+					new FileOutputStream(dllTempFile));
+			byte[] tempdll = new byte[4 * 1024];
+			int rcdll;
+			while ((rcdll = dllsrc.read(tempdll)) > 0) {
+				outdll.write(tempdll, 0, rcdll);
+			}
+			dllsrc.close();
+			outdll.close();
+			dllTempFile.deleteOnExit();
+
+			Thread serverThread = new Thread() {
+				@Override
+				public void run() {
+					try {
+						tuioServer = Runtime.getRuntime().exec(
+								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
+						tuioServerErr = new BufferedReader(new InputStreamReader(
+								tuioServer.getErrorStream()));
+						tuioServerOut = new BufferedReader(new InputStreamReader(
+								tuioServer.getInputStream()));
+
+						while (true) {
+							if (tuioServerErr.ready()) {
+								System.err.println(tuioServerErr.readLine());
+							}
+							if (tuioServerOut.ready()) {
+								System.out.println(tuioServerOut.readLine());
+							}
+							Thread.sleep(1000);
+						}
+					}
+					catch (IOException e) {
+						System.err.println(e.getMessage());
+					}
+					catch (Exception e) {
+						System.err.println("TUIO Server stopped!");
 					}
 				}
 			};
