@@ -2,6 +2,9 @@
 SMTv3.4 Release Notes
 _____________________
 
+	API Additions:
+		-TouchSource.LEAP added, which supports the Leap Motion
+
 	API Changes:
 		-TouchClient's setDrawTouchPoints() deprecated/renamed to setTouchDraw()
 		-SMTUtilities' checkImpl() and getZoneMethod() have an additional first parameter which is the callingClass to by definition return false that an implementation exists for
