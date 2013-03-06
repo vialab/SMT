@@ -30,11 +30,11 @@ public class TabZone extends Zone {
 		}
 
 		@Override
-		public void touchUp(Touch touch) {
+		public void touchUpImpl(Touch touch) {
 			if (isButtonDown()) {
 				TabZone.this.remove(Tabs.get((Tab) this.getParent()));
 			}
-			super.touchUp(touch);
+			super.touchUpImpl(touch);
 		}
 
 		@Override
@@ -69,11 +69,11 @@ public class TabZone extends Zone {
 		}
 
 		@Override
-		public void touchDown(Touch touch) {
+		public void touchDownImpl(Touch touch) {
 			if (!isButtonDown()) {
 				tabActive(this);
 			}
-			super.touchDown(touch);
+			super.touchDownImpl(touch);
 		}
 
 		@Override

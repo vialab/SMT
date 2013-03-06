@@ -98,8 +98,8 @@ public class KeyboardZone extends Zone {
 		}
 	
 		@Override
-		public void touchDown(Touch touch) {
-			super.touchDown(touch);
+		public void touchDownImpl(Touch touch) {
+			super.touchDownImpl(touch);
 			if (!keyDown) {
 				keyDown();
 			}

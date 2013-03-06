@@ -140,7 +140,7 @@ class SMTTouchManager {
 	 */
 	private void doTouchDown(Zone zone, Touch touchPoint) {
 		if (zone != null) {
-			zone.touchDown(touchPoint);
+			zone.assign(touchPoint);
 			zone.touchDownInvoker(touchPoint);
 		}
 	}
@@ -153,7 +153,7 @@ class SMTTouchManager {
 	 */
 	private void doTouchUp(Zone zone, Touch touch) {
 		if (zone != null) {
-			zone.touchUp(touch);
+			zone.unassign(touch);
 			zone.touchUpInvoker(touch);
 		}
 	}
