@@ -613,6 +613,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		if (t != null) {
 			activeTouches.remove(sessionID);
 			t.unassignZone(this);
+			//at unassign if we have a mJoint destroy it
+			if (mJoint != null) {
+				TouchClient.world.destroyJoint(mJoint);
+				mJoint = null;
+			}
 		}
 	}
 
@@ -2007,32 +2012,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return pairs;
 	}
 
-	protected void touchDown(Touch touch) {
-		assign(touch);
-		if (mJoint == null) {
-			if (zoneBody == null && zoneFixture == null) {
-				zoneBody = TouchClient.world.createBody(zoneBodyDef);
-				zoneFixture = zoneBody.createFixture(zoneFixtureDef);
-			}
-			mJointDef = new MouseJointDef();
-			mJointDef.maxForce = 1000000.0f;
-			mJointDef.frequencyHz = applet.frameRate;
-			mJointDef.bodyA = TouchClient.groundBody;
-			mJointDef.bodyB = zoneBody;
-			mJointDef.target.set(new Vec2(zoneBody.getPosition().x, zoneBody.getPosition().y));
-			mJoint = (MouseJoint) TouchClient.world.createJoint(mJointDef);
-			zoneBody.setAwake(true);
-		}
-	}
-
-	protected void touchUp(Touch touch) {
-		unassign(touch);
-		if (mJoint != null) {
-			TouchClient.world.destroyJoint(mJoint);
-			mJoint = null;
-		}
-	}
-
 	/**
 	 * Clones the zone and all child zones
 	 */
@@ -2282,6 +2261,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override to specify a default behavior for touchDown
 	 */
 	protected void touchDownImpl(Touch touch) {
+		addPhysicsMouseJoint();
 	}
 
 	/**
@@ -2294,6 +2274,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override to specify a default behavior for touchMoved
 	 */
 	protected void touchMovedImpl(Touch touch) {
+		addPhysicsMouseJoint();
 	}
 
 	/**
@@ -2449,5 +2430,18 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	@Override
 	public void tint(int arg0) {
 		if(!pickDraw){pg.tint(arg0);}
+	}
+	
+	public void addPhysicsMouseJoint(){
+		if (mJoint == null && physics) {
+			mJointDef = new MouseJointDef();
+			mJointDef.maxForce = 1000000.0f;
+			mJointDef.frequencyHz = applet.frameRate;
+			mJointDef.bodyA = TouchClient.groundBody;
+			mJointDef.bodyB = zoneBody;
+			mJointDef.target.set(new Vec2(zoneBody.getPosition().x, zoneBody.getPosition().y));
+			mJoint = (MouseJoint) TouchClient.world.createJoint(mJointDef);
+			zoneBody.setAwake(true);
+		}
 	}
 }

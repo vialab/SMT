@@ -5,6 +5,7 @@ _____________________
 	API Changes:
 		-TouchClient's setDrawTouchPoints() deprecated/renamed to setTouchDraw()
 		-SMTUtilities' checkImpl() and getZoneMethod() have an additional first parameter which is the callingClass to by definition return false that an implementation exists for
+		-Zone.touchDown(Touch) and Zone.touchUp(Touch) have been removed, as they only mistakenly did anything more then just call assign(Touch)/unassign(Touch), either use assign/unassign directly or touchDownImpl/touchUpImpl in subclasses
 
 SMTv3.3 Release Notes
 _____________________
