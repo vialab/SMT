@@ -21,7 +21,7 @@ class BubbleZone extends Zone {
 void setup() {
   frameRate(1000);
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
+  TouchClient.init(this, TouchSource.MULTIPLE);
   TouchClient.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
 }
 

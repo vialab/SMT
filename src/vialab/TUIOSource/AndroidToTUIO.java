@@ -68,9 +68,9 @@ public class AndroidToTUIO implements OnTouchListener {
 	 * @param applet
 	 *            PApplet - Processing PApplet
 	 */
-	public AndroidToTUIO(int width, int height) {
+	public AndroidToTUIO(int width, int height, int port) {
 		super();
-		sim = new Simulation(width, height);
+		sim = new Simulation(width, height, port);
 	}
 
 	/**

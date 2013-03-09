@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -85,7 +86,7 @@ public class TouchClient {
 
 	private static int MAX_PATH_LENGTH = 50;
 
-	protected static Process tuioServer;
+	protected static LinkedList<Process> tuioServerList = new LinkedList<Process>();
 
 	/** Processing PApplet */
 	protected static PApplet parent;
@@ -94,7 +95,7 @@ public class TouchClient {
 	// private static GestureHandler handler;
 
 	/** Tuio Client that listens for Tuio Messages via port 3333 UDP */
-	protected static TuioClient tuioClient;
+	protected static LinkedList<TuioClient> tuioClientList = new LinkedList<TuioClient>();
 
 	/** The main zone list */
 	protected static CopyOnWriteArrayList<Zone> zoneList = new CopyOnWriteArrayList<Zone>();
@@ -136,9 +137,9 @@ public class TouchClient {
 	static AndroidToTUIO att = null;
 	static MouseToTUIO mtt = null;
 
-	protected static BufferedReader tuioServerErr;
+	protected static LinkedList<BufferedReader> tuioServerErrList = new LinkedList<BufferedReader>();
 
-	protected static BufferedReader tuioServerOut;
+	protected static LinkedList<BufferedReader> tuioServerOutList = new LinkedList<BufferedReader>();
 
 	static Body groundBody;
 
@@ -238,8 +239,7 @@ public class TouchClient {
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	private static void init(final PApplet parent, int port, TouchSource source,
-			Object... objects) {
+	private static void init(final PApplet parent, int port, TouchSource source, Object... objects) {
 		if (parent == null) {
 			System.err
 					.println("Null parent PApplet, pass 'this' to TouchClient.init() instead of null");
@@ -255,8 +255,8 @@ public class TouchClient {
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
-		
-		for(Object obj: objects){
+
+		for (Object obj : objects) {
 			extraObjects.add(obj);
 		}
 
@@ -277,48 +277,93 @@ public class TouchClient {
 		case ANDROID:
 			// this still uses the old method, should be re-implemented without
 			// the socket
-			att = new AndroidToTUIO(parent.width, parent.height);
+			att = new AndroidToTUIO(parent.width, parent.height, port);
 			// parent.registerMethod("touchEvent", att); //when Processing
 			// supports this
-			tuioClient = new TuioClient(port);
+			tuioClientList.add(new TuioClient(port));
 			break;
 		case MOUSE:
 			// this still uses the old method, should be re-implemented without
 			// the socket
-			mtt = new MouseToTUIO(parent.width, parent.height);
+			mtt = new MouseToTUIO(parent.width, parent.height, port);
 			parent.registerMethod("mouseEvent", mtt);
-			tuioClient = new TuioClient(port);
+			tuioClientList.add(new TuioClient(port));
 			break;
 		case TUIO_DEVICE:
-			tuioClient = new TuioClient(port);
+			tuioClientList.add(new TuioClient(port));
 			break;
 		case WM_TOUCH:
 			if (System.getProperty("os.arch").equals("x86")) {
-				TouchClient.runWinTouchTuioServer(false);
+				TouchClient.runWinTouchTuioServer(false, "127.0.0.1", port);
 			}
 			else {
-				TouchClient.runWinTouchTuioServer(true);
+				TouchClient.runWinTouchTuioServer(true, "127.0.0.1", port);
 			}
-			tuioClient = new TuioClient(port);
+			tuioClientList.add(new TuioClient(port));
 			break;
 		case SMART:
 			TouchClient.runSmart2TuioServer();
-			tuioClient = new TuioClient(port);
+			tuioClientList.add(new TuioClient(port));
 			break;
 		case LEAP:
-			TouchClient.runLeapTuioServer();
-			tuioClient = new TuioClient(port);
+			TouchClient.runLeapTuioServer(port);
+			tuioClientList.add(new TuioClient(port));
+			break;
+		case MULTIPLE:
+			listener = new SMTTuioListener();
+			manager = new SMTTouchManager(listener, picker);
+			
+			// ANDROID
+			if(System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")){
+				att = new AndroidToTUIO(parent.width, parent.height, port);
+				// parent.registerMethod("touchEvent", att); //when Processing
+				// supports this
+				tuioClientList.add(new SMTProxyTuioListener(port,listener).client);
+				break;
+			}else{
+				// WM_TOUCH:
+				if (System.getProperty("os.arch").equals("x86")) {
+					TouchClient.runWinTouchTuioServer(false, "127.0.0.1", port+1);
+				}
+				else {
+					TouchClient.runWinTouchTuioServer(true, "127.0.0.1", port+1);
+				}
+				tuioClientList.add(new SMTProxyTuioListener(port+1,listener).client);
+	
+				// SMART:
+				//TouchClient.runSmart2TuioServer();
+				//tuioClientList.add(new TuioClient(port));
+	
+				// LEAP:
+				TouchClient.runLeapTuioServer(port+2);
+				tuioClientList.add(new SMTProxyTuioListener(port+2,listener).client);
+	
+				// TUIO_DEVICE:
+				tuioClientList.add(new SMTProxyTuioListener(port,listener).client);
+	
+				// MOUSE:
+				// this still uses the old method, should be re-implemented without
+				// the socket
+				mtt = new MouseToTUIO(parent.width, parent.height, port+3);
+				parent.registerMethod("mouseEvent", mtt);
+				tuioClientList.add(new SMTProxyTuioListener(port+3,listener).client);
+			}
+			for(TuioClient tc : tuioClientList){
+				tc.connect();
+			}
 			break;
 		default:
 			break;
 		}
 
-		listener = new SMTTuioListener();
-
-		manager = new SMTTouchManager(listener, picker);
-
-		tuioClient.addTuioListener(listener);
-		tuioClient.connect();
+		if(source != TouchSource.MULTIPLE){
+			listener = new SMTTuioListener();
+			manager = new SMTTouchManager(listener, picker);
+			for(TuioClient tc : tuioClientList){
+				tc.addTuioListener(listener);
+				tc.connect();
+			}
+		}
 
 		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
 
@@ -333,11 +378,15 @@ public class TouchClient {
 				if (warnUncalledMethods) {
 					SMTUtilities.warnUncalledMethods(parent);
 				}
-				if (tuioClient.isConnected()) {
-					tuioClient.disconnect();
+				for(TuioClient t : tuioClientList){
+					if (t.isConnected()) {
+						t.disconnect();
+					}
 				}
-				if (tuioServer != null) {
-					tuioServer.destroy();
+				for(Process tuioServer : tuioServerList){
+					if (tuioServer != null) {
+						tuioServer.destroy();
+					}
 				}
 			}
 		}));
@@ -427,7 +476,7 @@ public class TouchClient {
 	public static void setDrawTouchPoints(TouchDraw drawTouchPoints, int max_path_length) {
 		setTouchDraw(drawTouchPoints, max_path_length);
 	}
-	
+
 	/**
 	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
 	 * points if flag is set to true.
@@ -812,7 +861,7 @@ public class TouchClient {
 	 * @return Vector<TuioObject>
 	 */
 	public static Vector<TuioObject> getTuioObjects() {
-		return tuioClient.getTuioObjects();
+		return new Vector<TuioObject>(listener.getTuioObjects());
 	}
 
 	/**
@@ -936,7 +985,7 @@ public class TouchClient {
 	 * @return TuioObject
 	 */
 	public static TuioObject getTuioObject(long s_id) {
-		return tuioClient.getTuioObject(s_id);
+		return listener.getTuioObject(s_id);
 	}
 
 	/**
@@ -956,7 +1005,7 @@ public class TouchClient {
 	 * @return A new Touch containing the state of the touch at path start
 	 */
 	public static Touch getPathStartTouch(long s_id) {
-		TuioCursor c = tuioClient.getTuioCursor(s_id);
+		TuioCursor c = listener.getTuioCursor(s_id);
 		Vector<TuioPoint> path = new Vector<TuioPoint>(c.getPath());
 
 		TuioPoint start = path.firstElement();
@@ -994,7 +1043,7 @@ public class TouchClient {
 	 * @return number of current touches
 	 */
 	public static int getTouchCount() {
-		return tuioClient.getTuioCursors().size();
+		return listener.getTuioCursors().size();
 	}
 
 	/**
@@ -1073,7 +1122,7 @@ public class TouchClient {
 	 * @param is64Bit
 	 *            Whether to use the 64-bit version of the exe
 	 */
-	private static void runWinTouchTuioServer(boolean is64Bit) {
+	private static void runWinTouchTuioServer(boolean is64Bit, final String address, final int port) {
 		try {
 			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
@@ -1119,13 +1168,17 @@ public class TouchClient {
 				@Override
 				public void run() {
 					try {
-						tuioServer = Runtime.getRuntime().exec(
-								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
-						tuioServerErr = new BufferedReader(new InputStreamReader(
+						Process tuioServer = Runtime.getRuntime().exec(
+								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle() + " " + address + " " + port);
+						BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
 								tuioServer.getErrorStream()));
-						tuioServerOut = new BufferedReader(new InputStreamReader(
+						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
 								tuioServer.getInputStream()));
 
+						tuioServerList.add(tuioServer);
+						tuioServerErrList.add(tuioServerErr);
+						tuioServerOutList.add(tuioServerOut);
+						
 						while (true) {
 							if (tuioServerErr.ready()) {
 								System.err.println(tuioServerErr.readLine());
@@ -1208,15 +1261,25 @@ public class TouchClient {
 				@Override
 				public void run() {
 					try {
-						tuioServer = Runtime.getRuntime().exec(exeTempFile.getAbsolutePath());
-						BufferedInputStream err = new BufferedInputStream(
-								tuioServer.getInputStream());
-						String s = "";
-						while (err.available() > 0) {
-							s += err.read();
+						Process tuioServer = Runtime.getRuntime().exec(exeTempFile.getAbsolutePath());
+						BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
+								tuioServer.getErrorStream()));
+						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
+								tuioServer.getInputStream()));
+
+						tuioServerList.add(tuioServer);
+						tuioServerErrList.add(tuioServerErr);
+						tuioServerOutList.add(tuioServerOut);
+						
+						while (true) {
+							if (tuioServerErr.ready()) {
+								System.err.println(tuioServerErr.readLine());
+							}
+							if (tuioServerOut.ready()) {
+								System.out.println(tuioServerOut.readLine());
+							}
+							Thread.sleep(1000);
 						}
-						System.out.println(s);
-						tuioServer.waitFor();
 					}
 					catch (IOException e) {
 						System.err.println(e.getMessage());
@@ -1233,14 +1296,14 @@ public class TouchClient {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Runs a server that sends TUIO events using Windows 7 Touch events
 	 * 
 	 * @param is64Bit
 	 *            Whether to use the 64-bit version of the exe
 	 */
-	private static void runLeapTuioServer() {
+	private static void runLeapTuioServer(final int port) {
 		try {
 			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
@@ -1282,19 +1345,23 @@ public class TouchClient {
 				@Override
 				public void run() {
 					try {
-						tuioServer = Runtime.getRuntime().exec(
-								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle());
-						tuioServerErr = new BufferedReader(new InputStreamReader(
+						Process tuioServer = Runtime.getRuntime().exec(
+								exeTempFile.getAbsolutePath() + " " + port);
+						BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
 								tuioServer.getErrorStream()));
-						tuioServerOut = new BufferedReader(new InputStreamReader(
+						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
 								tuioServer.getInputStream()));
 
+						tuioServerList.add(tuioServer);
+						tuioServerErrList.add(tuioServerErr);
+						tuioServerOutList.add(tuioServerOut);
+						
 						while (true) {
 							if (tuioServerErr.ready()) {
 								System.err.println(tuioServerErr.readLine());
 							}
 							if (tuioServerOut.ready()) {
-								System.out.println(tuioServerOut.readLine());
+									System.out.println(tuioServerOut.readLine());
 							}
 							Thread.sleep(1000);
 						}
@@ -1394,13 +1461,16 @@ public class TouchClient {
 	public static Zone getZone(String name) {
 		return getZone(name, Zone.class);
 	}
-	
+
 	/**
-	 * This adds objects to check for drawZoneName, touchZoneName, etc methods in, similar to PApplet
-	 * @param objects The additional objects to check in for methods
+	 * This adds objects to check for drawZoneName, touchZoneName, etc methods
+	 * in, similar to PApplet
+	 * 
+	 * @param objects
+	 *            The additional objects to check in for methods
 	 */
-	public static void addMethodObjects(Object... objects){
-		for(Object obj: objects){
+	public static void addMethodObjects(Object... objects) {
+		for (Object obj : objects) {
 			extraObjects.add(obj);
 		}
 	}

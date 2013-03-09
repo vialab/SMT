@@ -6,12 +6,12 @@
  *   Ported to SMTv3 by Zach Cook
  */
 import vialab.SMT.*;
-final static int IMAGE_COPIES=2;
+final static int IMAGE_COPIES=4;
 PImage[] img = new PImage[11];
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.WM_TOUCH);
+  TouchClient.init(this, TouchSource.MULTIPLE);
 
   for (int i=0; i<11; i++) {  
     img[i] = loadImage(i + ".jpg");
@@ -20,7 +20,11 @@ void setup() {
   for (int i=0; i<11*IMAGE_COPIES; i++) {  
     TouchClient.add(new ImageZone("ImageZone", img[i%11], 
     (int)random(0, displayWidth-400), (int)random(0, displayHeight-400), 
-    (int)random(200, 400), (int)random(200, 400)));
+    (int)random(100, 200), (int)random(100, 200)));
+  }
+  
+  for(Zone z : TouchClient.getZones()){
+    z.physics=true; 
   }
 }
 

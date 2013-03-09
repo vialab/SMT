@@ -1,6 +1,7 @@
 package vialab.SMT;
 
-import java.util.Collections;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,8 @@ class SMTTuioListener implements TuioListener {
 	//
 	// private TouchState currentTouchState = new TouchState();
 
-	private List<TuioCursor> currentTouchState = Collections.emptyList();
-	private List<TuioObject> currentObjectState = Collections.emptyList();
+	private List<TuioCursor> currentTouchState = new ArrayList<TuioCursor>();
+	private List<TuioObject> currentObjectState = new ArrayList<TuioObject>();
 
 	private Map<Long, TuioCursor> removedCursors = new HashMap<Long, TuioCursor>();
 
@@ -25,60 +26,63 @@ class SMTTuioListener implements TuioListener {
 	}
 
 	@Override
-	public void addTuioCursor(TuioCursor tcur) {
-		// TouchState state = new
-		// TouchState(TouchClient.tuioClient.getTuioCursors());
-		// publishTouchState(state);
-		currentTouchState = TouchClient.tuioClient.getTuioCursors();
-
-		// picker.pick(tcur, applet.width, applet.height);
+	public synchronized void addTuioCursor(TuioCursor tcur) {
+		currentTouchState.add(tcur);
 	}
 
 	@Override
-	public void updateTuioCursor(TuioCursor tcur) {
-		// if (tcur.isMoving()) {
-		// TouchState state = new
-		// TouchState(TouchClient.tuioClient.getTuioCursors());
-		// publishTouchState(state);
-		// // picker.pick(tcur, applet.width, applet.height);
-		// }
-		currentTouchState = TouchClient.tuioClient.getTuioCursors();
+	public synchronized void updateTuioCursor(TuioCursor tcur) {
+		TuioCursor tr = null;
+		for(TuioCursor t : currentTouchState){
+			if(t.getSessionID()==tcur.getSessionID()){
+				tr = t;
+			}
+		}
+		currentTouchState.remove(tr);
+		currentTouchState.add(tcur);
 	}
 
 	@Override
-	public void removeTuioCursor(TuioCursor tcur) {
-		// TouchState state = new
-		// TouchState(TouchClient.tuioClient.getTuioCursors());
-		// publishTouchState(state);
-		// // picker.pick(tcur, applet.width, applet.height);
-		removedCursors.put(tcur.getSessionID(), tcur);
-		currentTouchState = TouchClient.tuioClient.getTuioCursors();
+	public synchronized void removeTuioCursor(TuioCursor tcur) {
+		TuioCursor tr = null;
+		for(TuioCursor t : currentTouchState){
+			if(t.getSessionID()==tcur.getSessionID()){
+				tr = t;
+			}
+		}
+		currentTouchState.remove(tr);
 	}
 
 	@Override
-	public void addTuioObject(TuioObject tobj) {
-		// SMTUtilities.invoke(addObject, applet, tobj);
-
-		currentObjectState = TouchClient.tuioClient.getTuioObjects();
+	public synchronized void addTuioObject(TuioObject tobj) {
+		currentObjectState.add(tobj);
 	}
 
 	@Override
-	public void updateTuioObject(TuioObject tobj) {
-		// SMTUtilities.invoke(updateObject, applet, tobj);
-		currentObjectState = TouchClient.tuioClient.getTuioObjects();
+	public synchronized void updateTuioObject(TuioObject tobj) {
+		TuioObject tr = null;
+		for(TuioObject t : currentObjectState){
+			if(t.getSessionID()==tobj.getSessionID()){
+				tr = t;
+			}
+		}
+		currentObjectState.remove(tr);
+		currentObjectState.add(tobj);
 	}
 
 	@Override
-	public void removeTuioObject(TuioObject tobj) {
-		// SMTUtilities.invoke(removeObject, applet, tobj);
-		currentObjectState = TouchClient.tuioClient.getTuioObjects();
+	public synchronized void removeTuioObject(TuioObject tobj) {
+		TuioObject tr = null;
+		for(TuioObject t : currentObjectState){
+			if(t.getSessionID()==tobj.getSessionID()){
+				tr = t;
+			}
+		}
+		currentObjectState.remove(tr);
 	}
 
 	@Override
 	public void refresh(TuioTime bundleTime) {
-		// SMTUtilities.invoke(refresh, applet, bundleTime);
-		currentTouchState = TouchClient.tuioClient.getTuioCursors();
-		currentObjectState = TouchClient.tuioClient.getTuioObjects();
 	}
 
 	/**
@@ -86,7 +90,9 @@ class SMTTuioListener implements TuioListener {
 	 * no state has been removed yet, returns the empty touch state.
 	 */
 	public synchronized List<TuioCursor> getCurrentTuioState() {
-		return currentTouchState;
+		List<TuioCursor> listCopy = new ArrayList<TuioCursor>();
+		listCopy.addAll(currentTouchState);
+		return listCopy;
 	}
 
 	/**
@@ -94,10 +100,38 @@ class SMTTuioListener implements TuioListener {
 	 * no state has been removed yet, returns the empty touch state.
 	 */
 	public synchronized List<TuioObject> getCurrentObjectState() {
+		List<TuioObject> listCopy = new ArrayList<TuioObject>();
+		listCopy.addAll(currentObjectState);
+		return listCopy;
+	}
+
+	public synchronized TuioCursor getRemovedCursor(Long id) {
+		return removedCursors.get(id);
+	}
+
+	public synchronized List<TuioObject> getTuioObjects() {
 		return currentObjectState;
 	}
 
-	public TuioCursor getRemovedCursor(Long id) {
-		return removedCursors.get(id);
+	public synchronized TuioObject getTuioObject(long s_id) {
+		for(TuioObject t : currentObjectState){
+			if(t.getSessionID()==s_id){
+				return t;
+			}
+		}
+		return null;
+	}
+
+	public synchronized TuioCursor getTuioCursor(long s_id) {
+		for(TuioCursor t : currentTouchState){
+			if(t.getSessionID()==s_id){
+				return t;
+			}
+		}
+		return null;
+	}
+
+	public synchronized List<TuioCursor> getTuioCursors() {
+		return currentTouchState;
 	}
 }

@@ -4,7 +4,7 @@ Touch first=null;
 
 void setup() {
   size(800, 800, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
+  TouchClient.init(this, TouchSource.MULTIPLE);
 }
 
 void draw(){ 

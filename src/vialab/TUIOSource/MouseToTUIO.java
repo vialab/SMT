@@ -68,9 +68,9 @@ public class MouseToTUIO {
 	 * @param applet
 	 *            PApplet - Processing PApplet
 	 */
-	public MouseToTUIO(int width, int height) {
+	public MouseToTUIO(int width, int height, int port) {
 		super();
-		sim = new Simulation(width, height);
+		sim = new Simulation(width, height, port);
 	}
 
 	/**

@@ -16,7 +16,7 @@ public enum TouchSource {
 	 */
 	WM_TOUCH,
 	/**
-	 * Use Android back end, only available using processing for Android
+	 * Use Android back end, only available using processing for Android, which currently doesn't work
 	 */
 	ANDROID,
 	/**
@@ -27,5 +27,9 @@ public enum TouchSource {
 	/**
 	 * Use Leap SDK back end, for the Leap Motion, using the finger positions
 	 */
-	LEAP;
+	LEAP,
+	/**
+	 * Runs all back-ends that do not interfere with each other, which currently excludes SMART
+	 */
+	MULTIPLE;
 }

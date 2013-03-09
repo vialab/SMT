@@ -55,9 +55,6 @@ public class Simulation {
 	/** Default host. (Implements TUIO: host "127.0.0.1") */
 	static String host = "127.0.0.1";
 
-	/** Default port. (Implements TUIO: port "3333") */
-	static int port = 3333;
-
 	/** OSC Port */
 	private OSCPortOut oscPort;
 
@@ -82,7 +79,7 @@ public class Simulation {
 	 * @param port
 	 *            int Port
 	 */
-	public Simulation(int width, int height) {
+	public Simulation(int width, int height, int port) {
 		super();
 
 		this.windowWidth = width;
