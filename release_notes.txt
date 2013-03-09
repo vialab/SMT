@@ -4,6 +4,7 @@ _____________________
 
 	API Additions:
 		-TouchSource.LEAP added, which supports the Leap Motion
+		-TouchSource.MULTIPLE added, which runs multiple TouchSources at once
 
 	API Changes:
 		-TouchClient's setDrawTouchPoints() deprecated/renamed to setTouchDraw()

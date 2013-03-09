@@ -34,13 +34,13 @@ class SMTProxyTuioListener implements TuioListener {
 	@Override
 	public synchronized void updateTuioCursor(TuioCursor tcur) {
 		TuioCursor t = changedSessionIdCursor(tcur, port);
-		realListener.addTuioCursor(t);
+		realListener.updateTuioCursor(t);
 	}
 
 	@Override
 	public synchronized void removeTuioCursor(TuioCursor tcur) {
 		TuioCursor t = changedSessionIdCursor(tcur, port);
-		realListener.addTuioCursor(t);
+		realListener.removeTuioCursor(t);
 	}
 
 	@Override
