@@ -25,6 +25,7 @@ package vialab.TUIOSource;
 
 import java.awt.Point;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 
 import processing.core.PConstants;
@@ -60,6 +61,10 @@ public class MouseToTUIO {
 	 */
 	Vector<Integer> jointCursors = new Vector<Integer>();
 
+	private int width;
+
+	private int height;
+
 	/**
 	 * Sets up everything to get ready to begin converting mouse events to TUIO
 	 * messages. Sets the screen to be full-screen if the boolean/flag is set to
@@ -71,6 +76,8 @@ public class MouseToTUIO {
 	public MouseToTUIO(int width, int height, int port) {
 		super();
 		sim = new Simulation(width, height, port);
+		this.width = width;
+		this.height = height;
 	}
 
 	/**
@@ -89,12 +96,26 @@ public class MouseToTUIO {
 					int dx = pt.x - selPoint.x;
 					int dy = pt.y - selPoint.y;
 
-					for (int jointId : jointCursors) {
+					for (Iterator<Integer> jointIter = jointCursors.iterator(); jointIter.hasNext();) {
+						int jointId = jointIter.next();
 						if (jointId == selectedCursor.sessionID)
 							continue;
 						Finger joint_cursor = sim.getCursor(jointId);
 						Point joint_point = joint_cursor.getPosition();
-						sim.updateCursor(joint_cursor, joint_point.x + dx, joint_point.y + dy);
+						if ((joint_point.x + dx) < 0 || (joint_point.x + dx) > (width - 1)
+								|| (joint_point.y + dy) < 0 || (joint_point.y + dy) > (height - 1)) {
+							//remove the joint cursor if it leaves the window
+							joint_cursor.stop();
+							sim.cursorMessage(joint_cursor);
+							if (stickyCursors.contains(jointId))
+								stickyCursors.removeElement(jointId);
+							if (jointCursors.contains(jointId))
+								jointIter.remove();
+							sim.removeCursor(joint_cursor);
+						}
+						else {
+							sim.updateCursor(joint_cursor, joint_point.x + dx, joint_point.y + dy);
+						}
 					}
 					sim.updateCursor(selectedCursor, pt.x, pt.y);
 					sim.allCursorMessage();

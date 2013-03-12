@@ -127,9 +127,8 @@ public class Simulation {
 
 	private OSCMessage setMessage(Finger cursor) {
 		Point point = cursor.getPosition();
-		//make sure pixel position is valid with minMax()
-		float xpos = minMax(point.x,0,windowWidth-1) / (float) windowWidth;
-		float ypos = minMax(point.y,0,windowHeight-1) / (float) windowHeight;
+		float xpos = point.x / (float) windowWidth;
+		float ypos = point.y / (float) windowHeight;
 		OSCMessage setMessage = new OSCMessage("/tuio/2Dcur");
 		setMessage.addArgument("set");
 		setMessage.addArgument(cursor.sessionID);
@@ -139,10 +138,6 @@ public class Simulation {
 		setMessage.addArgument(cursor.ySpeed);
 		setMessage.addArgument(cursor.mAccel);
 		return setMessage;
-	}
-
-	private float minMax(int input, int min, int max) {
-		return Math.min(Math.max(min, input),max);
 	}
 
 	private OSCMessage frameMessage(int currentFrame) {
