@@ -20,7 +20,6 @@
  */
 package vialab.SMT;
 
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -49,6 +48,7 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PMatrix3D;
 import processing.core.PVector;
+import processing.event.KeyEvent;
 import processing.opengl.PGraphicsOpenGL;
 import vialab.SMT.KeyboardZone.KeyZone;
 import TUIO.TuioTime;
@@ -2195,20 +2195,32 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			this.children.add(zone);
 		}
 	}
+	
+	@Override
+	public void keyPressed(java.awt.event.KeyEvent e) {
+		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.PRESS, e.getModifiers(), e.getKeyChar(), e.getKeyCode()));
+	}
 
 	@Override
+	public void keyReleased(java.awt.event.KeyEvent e) {
+		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.RELEASE, e.getModifiers(), e.getKeyChar(), e.getKeyCode()));
+	}
+
+	@Override
+	public void keyTyped(java.awt.event.KeyEvent e) {
+		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.TYPE, e.getModifiers(), e.getKeyChar(), e.getKeyCode()));
+	}
+
 	public void keyPressed(KeyEvent e) {
 		keyPressedImpl(e);
 		SMTUtilities.invoke(keyPressedMethod, applet, this, e);
 	}
 
-	@Override
 	public void keyReleased(KeyEvent e) {
 		keyReleasedImpl(e);
 		SMTUtilities.invoke(keyReleasedMethod, applet, this, e);
 	}
 
-	@Override
 	public void keyTyped(KeyEvent e) {
 		keyTypedImpl(e);
 		SMTUtilities.invoke(keyTypedMethod, applet, this, e);
@@ -2442,6 +2454,27 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			mJointDef.target.set(new Vec2(zoneBody.getPosition().x, zoneBody.getPosition().y));
 			mJoint = (MouseJoint) TouchClient.world.createJoint(mJointDef);
 			zoneBody.setAwake(true);
+		}
+	}
+	
+	/**
+	 * This method is for use by Processing, override it to change what occurs
+	 * when a Processing KeyEvent is passed to the Zone
+	 * 
+	 * @param event
+	 *            The Processing KeyEvent that is sent to the Zone 
+	 */
+	public void keyEvent(KeyEvent event) {
+		switch (event.getAction()) {
+		case KeyEvent.RELEASE:
+			keyReleased(event);
+			break;
+		case KeyEvent.TYPE:
+			keyTyped(event);
+			break;
+		case KeyEvent.PRESS:
+			keyPressed(event);
+			break;
 		}
 	}
 }

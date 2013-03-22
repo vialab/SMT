@@ -1,8 +1,7 @@
 package vialab.SMT;
 
-import java.awt.event.KeyEvent;
-
 import processing.core.PFont;
+import processing.event.KeyEvent;
 
 /**
  * TextZone displays text, and is selectable by touch, each word is
@@ -195,30 +194,7 @@ public class TextZone extends Zone {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		this.addChar(e.getKeyChar());
+		this.addChar(e.getKey());
 		super.keyTyped(e);
-	}
-
-	/**
-	 * This method is for use by Processing, override it to change what occurs
-	 * when a Processing KeyEvent is passed to the TextZone
-	 * 
-	 * @param event
-	 *            The Processing KeyEvent that the textZone will use to change
-	 *            its state
-	 */
-	public void keyEvent(processing.event.KeyEvent event) {
-		KeyEvent nevent = (KeyEvent) event.getNative();
-		switch (nevent.getID()) {
-		case KeyEvent.KEY_RELEASED:
-			keyReleased(nevent);
-			break;
-		case KeyEvent.KEY_TYPED:
-			keyTyped(nevent);
-			break;
-		case KeyEvent.KEY_PRESSED:
-			keyPressed(nevent);
-			break;
-		}
 	}
 }
