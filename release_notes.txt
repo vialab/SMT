@@ -3,6 +3,7 @@ SMTv3.4 Release Notes
 _____________________
 
 	API Additions:
+		-the touchUp()/touchDown()/touchMoved() functions in the sketch can now have a Touch parameter
 		-TouchSource.LEAP added, which supports the Leap Motion
 		-TouchSource.MULTIPLE added, which runs multiple TouchSources at once
 

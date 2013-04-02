@@ -52,7 +52,7 @@ class SMTTouchManager {
 		for (Touch t : currentTouchState) {
 			// touchDowns only happen on new touches
 			if (!previousTouchState.contains(t.sessionID)) {
-				SMTUtilities.invoke(touchDown, applet);
+				SMTUtilities.invoke(touchDown, applet, t);
 				Zone z = picker.pick(t);
 				touchPrevZone.put(t, z);
 				doTouchDown(z, t);
@@ -67,7 +67,7 @@ class SMTTouchManager {
 		for (Touch t : previousTouchState) {
 			if (!currentTouchState.contains(t.sessionID)) {
 				// the touch existed, but no longer exists, so it went up
-				SMTUtilities.invoke(touchUp, applet);
+				SMTUtilities.invoke(touchUp, applet, t);
 				for (Zone zone : t.getAssignedZones()) {
 					if (touchPrevZone.get(t) == zone) {
 						doPress(zone, t);
@@ -86,7 +86,7 @@ class SMTTouchManager {
 	protected void handleTouchesMoved() {
 		for (Touch t : currentTouchState) {
 			if (previousTouchState.contains(t.sessionID)) {
-				SMTUtilities.invoke(touchMoved, applet);
+				SMTUtilities.invoke(touchMoved, applet, t);
 				Zone z = null;
 				if (!t.isAssigned()) {
 					z = picker.pick(t);
@@ -165,8 +165,8 @@ class SMTTouchManager {
 	}
 
 	private void retrieveMethods(PApplet parent) {
-		touchDown = SMTUtilities.getPMethod(parent, "touchDown");
-		touchMoved = SMTUtilities.getPMethod(parent, "touchMoved");
-		touchUp = SMTUtilities.getPMethod(parent, "touchUp");
+		touchDown = SMTUtilities.getAnyPMethod(parent, "touch", "Down", true, Touch.class);
+		touchMoved = SMTUtilities.getAnyPMethod(parent, "touch", "Moved", true, Touch.class);
+		touchUp = SMTUtilities.getAnyPMethod(parent, "touch", "Up", true, Touch.class);
 	}
 }
