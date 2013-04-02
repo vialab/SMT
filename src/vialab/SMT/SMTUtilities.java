@@ -39,8 +39,8 @@ public final class SMTUtilities {
 	}
 
 	public static final TuioTimeComparator tuioTimeComparator = new TuioTimeComparator();
-	private static Set<String> methodSet = new HashSet<String>();
-	private static Set<String> prefixSet = new HashSet<String>();
+	static Set<String> methodSet = new HashSet<String>();
+	static Set<String> prefixSet = new HashSet<String>();
 
 	/**
 	 * Don't let anyone instantiate this class.

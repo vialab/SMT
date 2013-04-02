@@ -168,5 +168,8 @@ class SMTTouchManager {
 		touchDown = SMTUtilities.getAnyPMethod(parent, "touch", "Down", true, Touch.class);
 		touchMoved = SMTUtilities.getAnyPMethod(parent, "touch", "Moved", true, Touch.class);
 		touchUp = SMTUtilities.getAnyPMethod(parent, "touch", "Up", true, Touch.class);
+		SMTUtilities.methodSet.add("touchDown");
+		SMTUtilities.methodSet.add("touchMoved");
+		SMTUtilities.methodSet.add("touchUp");
 	}
 }
