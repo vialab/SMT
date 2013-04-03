@@ -66,6 +66,8 @@ public class Touch extends TuioCursor {
 	 */
 	public boolean isDown;
 
+	private TuioTime prevUpdateTime;
+
 	/**
 	 * This constructor takes the attributes of the provided TuioCursor and
 	 * assigns these values to the newly created Touch.
@@ -162,6 +164,8 @@ public class Touch extends TuioCursor {
 	 *            TuioCursor, it can also take a Touch
 	 */
 	public void updateTouch(TuioCursor t) {
+		prevUpdateTime = currentTime;
+		
 		cursorId = t.getCursorID();
 		x = t.getScreenX(applet.width);
 		y = t.getScreenY(applet.height);
@@ -252,10 +256,29 @@ public class Touch extends TuioCursor {
 		return !assignedZones.isEmpty();
 	}
 
+	/**
+	 * @return All the points on the path
+	 */
 	public Point[] getPathPoints() {
 		ArrayList<Point> points = new ArrayList<Point>();
 		for (int i = 0; i < path.size(); i++) {
 			points.add(getPointOnPath(i));
+		}
+		return points.toArray(new Point[points.size()]);
+	}
+	
+	/**
+	 * @return All the points on the path since the previous update
+	 */
+	public Point[] getNewPathPoints() {
+		ArrayList<Point> points = new ArrayList<Point>();
+		for (int i = path.size()-1; i>=0; i--) {
+			TuioPoint tp = path.get(i);
+			//once the TuioTimes are greater than the prevUpdateTime we have got all of the new Points
+			if(prevUpdateTime != null && tp.getTuioTime().getTotalMilliseconds()<=prevUpdateTime.getTotalMilliseconds()){
+				break;
+			}
+			points.add(new Point(tp.getScreenX(applet.width), tp.getScreenY(applet.height)));
 		}
 		return points.toArray(new Point[points.size()]);
 	}
