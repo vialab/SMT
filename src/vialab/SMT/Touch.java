@@ -271,11 +271,22 @@ public class Touch extends TuioCursor {
 	 * @return All the points on the path since the previous update
 	 */
 	public Point[] getNewPathPoints() {
+		return getNewPathPoints(false);
+	}
+	/**
+	 * @param join Whether to start at the previous frame end point
+	 * @return All the points on the path since the previous update
+	 */
+	public Point[] getNewPathPoints(boolean join) {
 		ArrayList<Point> points = new ArrayList<Point>();
 		for (int i = path.size()-1; i>=0; i--) {
 			TuioPoint tp = path.get(i);
 			//once the TuioTimes are greater than the prevUpdateTime we have got all of the new Points
 			if(prevUpdateTime != null && tp.getTuioTime().getTotalMilliseconds()<=prevUpdateTime.getTotalMilliseconds()){
+				if(join){
+					//one further back if we want to join it up
+					points.add(new Point(tp.getScreenX(applet.width), tp.getScreenY(applet.height)));
+				}
 				break;
 			}
 			points.add(new Point(tp.getScreenX(applet.width), tp.getScreenY(applet.height)));
