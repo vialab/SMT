@@ -1,3 +1,9 @@
+/**
+ *  This sketch shows the different options for TouchDraw.
+ *  Which has a DEBUG, NONE, and SMOOTH mode, and also a max
+ *  path length to draw.
+ */
+
 import vialab.SMT.*;
 
 void setup() {

@@ -1,3 +1,11 @@
+/**
+ *  This example shows drawing of a custom shape in the pickDraw
+ *  method, which allows changing the Zone's selectable area, so
+ *  that it no longer uses the default rectangle area.
+ *  The first does this manually, and the second is a ShapeZone
+ *  that by default is only selectable where it is visibly drawn
+ */
+
 import vialab.SMT.*;
 
 void setup() {

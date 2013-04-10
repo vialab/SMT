@@ -1,8 +1,7 @@
 /**
- *   Created by Zach Cook
- *   University of Ontario Institute of Technology
- *   May 2012
- *   A test sketch using SMTv3 toolkit
+ * This example shows how to use the TouchClient.grid() function
+ * to align Zones into a grid.
+ * See http://vialab.github.io/SMT/vialab/SMT/TouchClient.html#grid(int, int, int, int, int, vialab.SMT.Zone...) 
  */
 import vialab.SMT.*;
 
@@ -30,7 +29,8 @@ void touchGrid(Zone zone){
 void drawGrid(Zone zone){
   fill(100);
   rect(0,0,zone.width,zone.height);
-  text("Allign to grid",10,10);
+  fill(0);
+  text("Align to grid",10,10);
 }
 
 void drawZone(Zone zone){

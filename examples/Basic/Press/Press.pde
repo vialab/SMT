@@ -1,3 +1,8 @@
+/**
+ *  This example shows how to use the press method, which is
+ *  called when a Touch is released from a Zone, like a button.
+ */
+
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);

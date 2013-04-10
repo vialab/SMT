@@ -1,3 +1,7 @@
+/**
+ * This examples shows use of the ImageZone to store a PImage
+ */
+
 import vialab.SMT.*;
 void setup() {
   size(800, 800, P3D);

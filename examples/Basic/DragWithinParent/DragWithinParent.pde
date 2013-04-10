@@ -1,3 +1,9 @@
+/**
+ *  This example is similar to ChildZones, except instead of using
+ *  Zone.rst() the child uses Zone.drawWithinParent(), which means
+ *  the child will not move outside of the bounds of the parent.
+ */
+
 import vialab.SMT.*;
 
 void setup() {

@@ -1,3 +1,13 @@
+/**
+ *  This example show how to define your own custom Zone. It will
+ *  draw whatever is placed in the drawCustom() method, and the
+ *  touchCustom() method defines what happens when it is touched.
+ *
+ *  These methods are based of the name given to the Zone, so
+ *  your Zone "Test123" would use the methods: drawTest123() and
+ *  touchTest123()
+ */
+
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);

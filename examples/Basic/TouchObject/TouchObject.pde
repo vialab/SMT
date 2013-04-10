@@ -1,3 +1,9 @@
+/**
+ *  This shows use of a Touch, which can be stored indefinitely
+ *  and will keep its data. This example stores the first Touch
+ *  and displays the rest when they are active.
+ */
+
 import vialab.SMT.*;
 
 Touch first=null;

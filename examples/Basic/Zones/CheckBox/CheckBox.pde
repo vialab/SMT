@@ -1,3 +1,9 @@
+/**
+ *  This examples show the use of the CheckBoxZone, and its state.
+ *  It also shows use of getZone() to do a class cast to access
+ *  the CheckBoxZone specific variable.
+ */
+
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);
@@ -6,4 +12,5 @@ void setup() {
 }
 void draw() {
   background(79, 129, 189);
+  text("Checked:"+TouchClient.getZone("Checkbox",CheckBoxZone.class).checked,50,50);
 }

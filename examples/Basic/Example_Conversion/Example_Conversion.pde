@@ -1,8 +1,10 @@
 /**
- * This Shows the to convert a Processing example into 
- * a SMT example. You can run both examples by commenting out the other
+ * This example shows how to convert a Processing example into 
+ * a SMT example. It is heavily commented to explain how it works.
+ * You can run either example by commenting out the other.
  */
 
+//ORIGINAL version
 //comment out these setup and draw methods to run SMT conversion of this processing code
 /*
 void setup() {
@@ -17,6 +19,7 @@ void draw() {
 }
 */
 
+//SMT version
 //Comment out everything past here to run just processing code
 
 import vialab.SMT.*;

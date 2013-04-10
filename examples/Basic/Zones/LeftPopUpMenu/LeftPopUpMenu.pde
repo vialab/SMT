@@ -1,3 +1,10 @@
+/**
+ *  This examples shows use of the LeftPopUpMenuZone, which is a
+ *  red arrow that when touched will toggle the display of a menu
+ *  with buttons as named in the constructor. Press methods for 
+ *  these buttons can then be used.
+ */
+
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);
