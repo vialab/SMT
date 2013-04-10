@@ -1,7 +1,5 @@
 /**
- *   Created by Zach Cook
- *   University of Ontario Institute of Technology
- *   A test sketch using simpleMultiTouch toolkit
+ * This tests the android support of SMT. Currently not working.
  */
 import vialab.SMT.*;
 

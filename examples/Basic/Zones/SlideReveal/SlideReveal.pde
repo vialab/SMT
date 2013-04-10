@@ -1,3 +1,8 @@
+/**
+ * This shows how the SlideRevealZone is used. The red arrow can
+ * be dragged to reveal the hidden text.
+ */
+
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);

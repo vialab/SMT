@@ -1,8 +1,5 @@
 /**
- *   Created by Zach Cook
- *   University of Ontario Institute of Technology
- *   May 2012
- *   A pong game using simpleMultiTouch toolkit
+ *   A pong game using SMT, the paddles are Zones that can be moved
  */
 import vialab.SMT.*;
 

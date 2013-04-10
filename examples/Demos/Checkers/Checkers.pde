@@ -1,8 +1,5 @@
 /**
- *   Created by Zach Cook
- *   University of Ontario Institute of Technology
- *   May 2012
- *   A test sketch using simpleMultiTouch toolkit
+ *  This is a simple checkers game, the pieces can be dragged around
  */
 import vialab.SMT.*;
 

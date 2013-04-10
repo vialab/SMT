@@ -1,4 +1,10 @@
+/**
+ * This shows the TabZone in use to switch between tab screens
+ * similar to a web-browser
+ */
+
 import vialab.SMT.*;
+
 void setup() {
   size(800, 800, P3D);
   TouchClient.init(this, TouchSource.MOUSE);

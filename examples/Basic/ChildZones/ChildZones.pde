@@ -1,3 +1,9 @@
+/**
+ * This shows Zones as children of other Zones by using add().
+ * This makes the Zones have a child/parent relationship that
+ * gives positional/rotational/translation inheritance.
+ */
+
 import vialab.SMT.*;
 
 void setup() {

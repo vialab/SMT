@@ -1,3 +1,8 @@
+/**
+ *  This sketch shows 3d rendering to a Zone.
+ *  Due to indirect Zones not working, it does not work as expected
+ */
+
 import vialab.SMT.*;
 
 float xmag, ymag = 0;
@@ -12,6 +17,8 @@ void setup() {
 void draw() {
   background(79, 129, 189);
 }
+
+void touchZ3D(){}
 
 void drawZ3D(Zone zone){
   fill(0);

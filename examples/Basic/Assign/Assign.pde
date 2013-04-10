@@ -1,7 +1,8 @@
 /**
- *   Created by Zach Cook
- *   University of Ontario Institute of Technology
- *   A test sketch using simpleMultiTouch toolkit
+ * This shows using Zone.assign() to allow a custom implementation
+ * of the mapping of Touches to Zones, in this case making all
+ * Touches be assigned to the Zone, instead of the default of
+ * those that are in the area of the Zone.
  */
 import vialab.SMT.*;
 

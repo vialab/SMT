@@ -1,3 +1,7 @@
+/**
+ * This shows the partial parameter matching for the touchUp method
+ */
+
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);

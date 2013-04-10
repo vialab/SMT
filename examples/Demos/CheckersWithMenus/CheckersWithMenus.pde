@@ -1,8 +1,8 @@
 /**
- *   Created by Zach Cook
- *   University of Ontario Institute of Technology
- *   May 2012
- *   A test sketch using simpleMultiTouch toolkit
+ *  This example incorporates the "Checkers" example and adds
+ *  some menus with buttons.
+ *  It also has some other Zones that really should not be there
+ *  but is good for testing that the toolkit works.
  */
 import vialab.SMT.*;
 

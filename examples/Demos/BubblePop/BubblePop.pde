@@ -1,7 +1,6 @@
 /**
- *   Created by Zach Cook
- *   University of Ontario Institute of Technology
- *   A test sketch using simpleMultiTouch toolkit
+ *  This sketch emulates coloured bubbles being popped by touch.
+ *  It shows dynamic add and remove of Zones.
  */
 import vialab.SMT.*;
 
