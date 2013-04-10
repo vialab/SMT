@@ -59,7 +59,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
 
-import android.view.*;
+//import android.view.*;
 
 import vialab.TUIOSource.*;
 
@@ -436,7 +436,7 @@ public class TouchClient {
 	 *            MotionEvent - the motion event triggered in Android
 	 * @return Should the event get consumed elsewhere or not
 	 */
-	public static boolean passAndroidTouchEvent(MotionEvent me) {
+	public static boolean passAndroidTouchEvent(Object me) {
 		return att.onTouchEvent(me);
 	}
 

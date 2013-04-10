@@ -180,7 +180,8 @@ public class AndroidToTUIO implements OnTouchListener {
 	 * @param me
 	 *            MotionEvent - The Android touch event
 	 */
-	public boolean onTouchEvent(MotionEvent me) {
+	public boolean onTouchEvent(Object me) {
+		MotionEvent ame = (MotionEvent) me;
 
 		// set up the last update time for the touch cursor
 		long timeStamp = System.currentTimeMillis() - startTime;
@@ -191,11 +192,11 @@ public class AndroidToTUIO implements OnTouchListener {
 		// gesture begins or ends,
 		// additional touches or removal of touches during these events are
 		// different events
-		if ((me.getAction() == MotionEvent.ACTION_DOWN)
-				|| (me.getAction() == MotionEvent.ACTION_UP))
+		if ((ame.getAction() == MotionEvent.ACTION_DOWN)
+				|| (ame.getAction() == MotionEvent.ACTION_UP))
 			dt = 1000;
 
-		int pointerCount = me.getPointerCount();
+		int pointerCount = ame.getPointerCount();
 
 		// limit pointerCount, but it usually would not go over that for current
 		// Android devices
@@ -203,12 +204,12 @@ public class AndroidToTUIO implements OnTouchListener {
 			pointerCount = MAX_TOUCHPOINTS;
 		}
 
-		if (me.getAction() == MotionEvent.ACTION_UP) {
+		if (ame.getAction() == MotionEvent.ACTION_UP) {
 			// this is tricky because even when there is no touch left (a total
 			// lift),
 			// this event is reported with the last touch, so pointerCount is
 			// never 0
-			if (me.getPointerCount() == 1) {
+			if (ame.getPointerCount() == 1) {
 				// means there is no touch left
 				sim.removeCursor(touchPoints.firstElement()); // touchPoints
 																// should only
@@ -225,8 +226,8 @@ public class AndroidToTUIO implements OnTouchListener {
 			for (int i = 0; i < touchPoints.size(); i++) {
 
 				boolean pointStillAlive = false;
-				for (int j = 0; j < me.getPointerCount(); j++) {
-					if (me.getPointerId(j) == touchPoints.get(i).getTouchId()) {
+				for (int j = 0; j < ame.getPointerCount(); j++) {
+					if (ame.getPointerId(j) == touchPoints.get(i).getTouchId()) {
 						pointStillAlive = true;
 						break;
 					}
@@ -241,13 +242,13 @@ public class AndroidToTUIO implements OnTouchListener {
 
 			// update existing touches or add new touches
 			for (int i = 0; i < pointerCount; i++) {
-				int id = me.getPointerId(i);
+				int id = ame.getPointerId(i);
 
 				// update if this touch already exists
 				boolean pointExists = false;
 				for (int j = 0; j < touchPoints.size(); j++) {
 					if (touchPoints.get(j).getTouchId() == id) {
-						sim.updateCursor(touchPoints.get(j), (int) me.getX(i), (int) me.getY(i));
+						sim.updateCursor(touchPoints.get(j), (int) ame.getX(i), (int) ame.getY(i));
 						sim.cursorMessage(touchPoints.get(j));
 						pointExists = true;
 						break;
@@ -256,7 +257,7 @@ public class AndroidToTUIO implements OnTouchListener {
 
 				// add if this touch is new
 				if (pointExists == false) {
-					selectedCursor = sim.addCursor((int) me.getX(i), (int) me.getY(i));
+					selectedCursor = sim.addCursor((int) ame.getX(i), (int) ame.getY(i));
 					selectedCursor.setTouchId(id);
 					touchPoints.add(selectedCursor);
 					sim.cursorMessage(selectedCursor);
