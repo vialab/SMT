@@ -141,14 +141,29 @@ public class TabZone extends Zone {
 		this.closeButtons = closeButtons;
 	}
 
+	/**
+	 * This adds the Given zone to a tab, the Tabs name will be Tab1, Tab2, etc depending on the number of current Tabs. This will fail badly when used with remove(Zone), so this method should not be used. The text displayed on the tab will be the tabname (Tab1,Tab2,etc) and the Zone's name and toString()
+	 * 
+	 * @param zone
+	 * @return Whether the zone was added
+	 */
 	@Override
 	public boolean add(Zone zone) {
-		if (zone.name == null) {
-			return this.add(zone, "Tab" + (Tabs.size() + 1), "Tab" + (Tabs.size() + 1) + ": "
-					+ zone.toString());
-		}
 		return this.add(zone, "Tab" + (Tabs.size() + 1), "Tab" + (Tabs.size() + 1) + ": "
 				+ zone.name + "::" + zone.toString());
+	}
+	
+	/**
+	 * This adds the Given zone to a tab, with the given nameText used for both reflection methods and the name displayed on the tab itself
+	 * 
+	 * @param zone
+	 * @param nameText
+	 *            The Tab name for use in reflection methods: drawNAME(),
+	 *            touchNAME(), etc if nameText="NAME", and the text that will be displayed on the Tab
+	 * @return Whether the zone was added
+	 */
+	public boolean add(Zone zone, String nameText){
+		return add(zone, nameText, nameText);
 	}
 
 	/**
