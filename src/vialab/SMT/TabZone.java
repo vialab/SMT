@@ -69,11 +69,8 @@ public class TabZone extends Zone {
 		}
 
 		@Override
-		public void touchDownImpl(Touch touch) {
-			if (!isButtonDown()) {
-				tabActive(this);
-			}
-			super.touchDownImpl(touch);
+		public void pressImpl() {
+			tabActive(this);
 		}
 
 		@Override
