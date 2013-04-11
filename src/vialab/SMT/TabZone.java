@@ -17,6 +17,9 @@ public class TabZone extends Zone {
 	private int TAB_HEIGHT;
 	private boolean closeButtons;
 	Tab currentTab;
+	
+	boolean warnDraw(){return false;}
+	boolean warnTouch(){return false;}
 
 	private class CloseButton extends ButtonZone {
 

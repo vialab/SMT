@@ -32,6 +32,8 @@ public class KeyboardZone extends Zone {
 	public boolean capsLockOn = false;
 
 	private int MODIFIERS = 0;
+	
+	boolean warnDraw(){return false;}
 
 	private Component keyboardComponent = new Component() {
 		private static final long serialVersionUID = -3237916182106172342L;

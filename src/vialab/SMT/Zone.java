@@ -164,6 +164,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	private boolean pickDraw = false;
 
 	boolean press;
+	
+	boolean warnDraw(){return true;}
+	boolean warnTouch(){return true;}
+	boolean warnKeys(){return false;}
+	boolean warnPick(){return false;}
+	boolean warnTouchUDM(){return false;}
+	boolean warnPress(){return false;}
 
 	/**
 	 * Check state of the direct flag.
@@ -338,43 +345,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            The name of the zone to load the methods from
 	 */
 	protected void loadMethods(String name) {
-		boolean warnDraw = true;
-		boolean warnTouch = true;
-		boolean warnKeys = false;
-		boolean warnPick = false;
-		boolean warnTouchUDM = false;
-		boolean warnPress = false;
-		if (this instanceof ButtonZone || this instanceof ImageZone || this instanceof TabZone
-				|| this instanceof TextZone || this instanceof SliderZone
-				|| this instanceof KeyboardZone) {
-			warnDraw = false;
-		}
-		if (this instanceof ButtonZone || this instanceof TabZone || this instanceof TextZone
-				|| this instanceof SliderZone) {
-			warnTouch = false;
-		}
-		
-		if (this instanceof ButtonZone) {
-			warnPress  = true;
-		}
-
 		if (TouchClient.warnUnimplemented != null) {
 			if (TouchClient.warnUnimplemented.booleanValue()) {
-				warnDraw = true;
-				warnTouch = true;
-				warnKeys = true;
-				warnPick = true;
-				warnTouchUDM = true;
+				loadMethods(name, true, true, true, true, true, true);
 			}
 			else {
-				warnDraw = false;
-				warnTouch = false;
-				warnKeys = false;
-				warnPick = false;
+				loadMethods(name, false, false, false, false, false, false);
 			}
+		}else{
+			loadMethods(name, warnDraw(), warnTouch(), warnKeys(), warnPick(), warnTouchUDM(), warnPress());
 		}
-
-		loadMethods(name, warnDraw, warnTouch, warnKeys, warnPick, warnTouchUDM, warnPress);
 	}
 
 	/**
@@ -1734,8 +1714,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			popStyle();
 			endTouch();
 
-			if (touchMethod == null && !(this instanceof ButtonZone) && !(this instanceof KeyZone)
-					&& !(this instanceof SliderZone) && !touchImpl && touchUpMethod == null
+			if (touchMethod == null && !touchImpl && touchUpMethod == null
 					&& touchDownMethod == null && touchMovedMethod == null && !touchUDM && !press && pressMethod == null) {
 				unassignAll();
 			}

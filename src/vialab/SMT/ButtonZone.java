@@ -36,6 +36,12 @@ public class ButtonZone extends Zone {
 	protected int deactivatedColor = 255;
 
 	protected int deactivatedTextColor = 175;
+	
+	boolean warnPress(){return true;}
+	
+	boolean warnTouch(){return false;}
+	
+	boolean warnDraw(){return false;}
 
 	public ButtonZone() {
 		this(null);

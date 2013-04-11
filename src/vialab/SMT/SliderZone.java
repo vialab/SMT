@@ -20,6 +20,9 @@ public class SliderZone extends Zone {
 	private int majorTickSpacing;
 
 	private int minorTickSpacing;
+	
+	boolean warnDraw(){return false;}
+	boolean warnTouch(){return false;}
 
 	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue) {
 		this(null, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, null);
@@ -110,7 +113,8 @@ public class SliderZone extends Zone {
 		this.minorTickSpacing = minorTickSpacing;
 	}
 
-	protected void moveKnob() {
+	@Override
+	protected void touchImpl() {
 		for (Touch t : getTouches()) {
 			// if(this.contains(t.x, t.y)){
 			PVector touchInZone = this.toZoneVector(new PVector(t.x, t.y));
@@ -125,8 +129,6 @@ public class SliderZone extends Zone {
 
 	@Override
 	protected void drawImpl() {
-		moveKnob();
-
 		fill(255);
 		rect(0, 0, width, height);
 
