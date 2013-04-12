@@ -911,7 +911,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return width int representing the width of the zone.
 	 */
 	public int getWidth() {
-		return this.width;
+		return (int) PVector.sub(fromZoneVector(new PVector(this.width, 0)), this.getOrigin()).mag();
 	}
 
 	/**
@@ -921,7 +921,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * 
 	 */
 	public int getHeight() {
-		return this.height;
+		return (int) PVector.sub(fromZoneVector(new PVector(0, this.height)), this.getOrigin()).mag();
 	}
 
 	/**
