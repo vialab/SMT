@@ -293,4 +293,14 @@ public class Touch extends TuioCursor {
 		}
 		return points.toArray(new Point[points.size()]);
 	}
+	
+	@Override
+	public float getX(){
+		return getScreenX(applet.width);
+	}
+	
+	@Override
+	public float getY(){
+		return getScreenY(applet.height);
+	}
 }
