@@ -35,6 +35,8 @@ public class PieMenuZone extends Zone {
 	
 	private int selected = -1;
 
+	private boolean visible = true;
+
 	public PieMenuZone(String name, int outerdiameter , int x, int y) {
 		this(name, outerdiameter , 50, x, y);
 	}
@@ -74,51 +76,51 @@ public class PieMenuZone extends Zone {
 	}
 	 
 	protected void drawImpl() {
-		textAlign(CENTER, CENTER);
-		imageMode(CENTER);
-		noStroke();
-		
-		float textdiam = (outerDiameter + innerDiameter)/3.65f;
-		
-		background(255);
-		
-		fill(125);
-		ellipse(width/2, height/2, outerDiameter+3, outerDiameter+3);
-		
-		float op = sliceList.size()/TWO_PI;
-		for (int i=0; i<sliceList.size(); i++) {
-			float s = (i-0.49f)/op;
-			float e = (i+0.49f)/op;
-			if (selected == i) {
-				fill(0, 0, 255);
-			} else {
-				fill(255);
+		if(isVisible()){
+			textAlign(CENTER, CENTER);
+			imageMode(CENTER);
+			noStroke();
+			
+			float textdiam = (outerDiameter + innerDiameter)/3.65f;
+			
+			fill(125);
+			ellipse(width/2, height/2, outerDiameter+3, outerDiameter+3);
+			
+			float op = sliceList.size()/TWO_PI;
+			for (int i=0; i<sliceList.size(); i++) {
+				float s = (i-0.49f)/op;
+				float e = (i+0.49f)/op;
+				if (selected == i) {
+					fill(0, 0, 255);
+				} else {
+					fill(255);
+				}
+				arc(width/2, height/2, outerDiameter, outerDiameter, s, e);
 			}
-			arc(width/2, height/2, outerDiameter, outerDiameter, s, e);
+			
+			fill(0);
+			for (int i=0; i<sliceList.size(); i++) {
+				float m = i/op;
+				int imageSize = (int) (PI*textdiam/(sliceList.size()+1));
+				if(sliceList.get(i).image != null){
+					image(sliceList.get(i).image, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam, imageSize, imageSize);
+				}else{
+					imageSize = 0;
+				}
+				if(sliceList.get(i).text !=null){
+					text(sliceList.get(i).text, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam + imageSize/2 + textAscent());
+				}
+			}
+			
+			fill(125);
+			ellipse(width/2, height/2, innerDiameter, innerDiameter);
 		}
-		
-		fill(0);
-		for (int i=0; i<sliceList.size(); i++) {
-			float m = i/op;
-			int imageSize = (int) (PI*textdiam/(sliceList.size()+1));
-			if(sliceList.get(i).image != null){
-				image(sliceList.get(i).image, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam, imageSize, imageSize);
-			}else{
-				imageSize = 0;
-			}
-			if(sliceList.get(i).text !=null){
-				text(sliceList.get(i).text, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam + imageSize/2 + textAscent());
-			}
-		}
-		
-		fill(125);
-		ellipse(width/2, height/2, innerDiameter, innerDiameter);
 	}
 	
 	@Override
 	protected void touchImpl(){
 		Touch t = getActiveTouch(0);
-		if(t != null){
+		if(t != null && isVisible()){
 			PVector touchInZone = toZoneVector(new PVector(t.x, t.y));
 			float mouseTheta = PApplet.atan2(touchInZone.y-height/2, touchInZone.x-width/2);
 			float piTheta = mouseTheta>=0?mouseTheta:mouseTheta+TWO_PI;
@@ -135,6 +137,14 @@ public class PieMenuZone extends Zone {
 		}
 	}
 	
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public void setVisble(boolean visible){
+		this.visible = visible;
+	}
+
 	@Override
 	protected void touchUpImpl(Touch t){
 		if(selected != -1){
