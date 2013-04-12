@@ -1,4 +1,4 @@
-//Original Pie Menu Implementation by amnon.owed : https://forum.processing.org/topic/pie-menu-in-processing#25080000002077693
+//Based on Pie Menu Implementation by amnon.owed : https://forum.processing.org/topic/pie-menu-in-processing#25080000002077693
 
 package vialab.SMT;
 
@@ -29,13 +29,20 @@ public class PieMenuZone extends Zone {
 	
 	private ArrayList<Slice> sliceList = new ArrayList<Slice>();
 	
-	private int diameter;
+	private int outerDiameter;
+	
+	private int innerDiameter;
 	
 	private int selected = -1;
 
-	public PieMenuZone(String name, int diameter , int x, int y) {
-		super(name, x, y, diameter, diameter);
-		this.diameter = diameter;
+	public PieMenuZone(String name, int outerdiameter , int x, int y) {
+		this(name, outerdiameter , 50, x, y);
+	}
+	
+	public PieMenuZone(String name, int outerDiameter , int innerDiameter, int x, int y) {
+		super(name, x-outerDiameter/2, y-outerDiameter/2, outerDiameter, outerDiameter);
+		this.outerDiameter = outerDiameter;
+		this.innerDiameter = innerDiameter;
 	}
 	
 	public void add(String textName){
@@ -70,12 +77,12 @@ public class PieMenuZone extends Zone {
 		textAlign(CENTER, CENTER);
 		noStroke();
 		smooth();
-		float textdiam = diameter/2.75f;
+		float textdiam = outerDiameter/2.75f;
 		
 		background(255);
 		
 		fill(125);
-		ellipse(width/2, height/2, diameter+3, diameter+3);
+		ellipse(width/2, height/2, outerDiameter+3, outerDiameter+3);
 		
 		float op = sliceList.size()/TWO_PI;
 		
@@ -87,7 +94,7 @@ public class PieMenuZone extends Zone {
 			} else {
 				fill(255);
 			}
-			arc(width/2, height/2, diameter, diameter, s, e);
+			arc(width/2, height/2, outerDiameter, outerDiameter, s, e);
 		}
 		
 		fill(0);
@@ -97,7 +104,7 @@ public class PieMenuZone extends Zone {
 		}
 		
 		fill(125);
-		ellipse(width/2, height/2, 50, 50);
+		ellipse(width/2, height/2, innerDiameter, innerDiameter);
 	}
 	
 	@Override
