@@ -296,11 +296,11 @@ public class Touch extends TuioCursor {
 	
 	@Override
 	public float getX(){
-		return getScreenX(applet.width);
+		return x;
 	}
 	
 	@Override
 	public float getY(){
-		return getScreenY(applet.height);
+		return y;
 	}
 }
