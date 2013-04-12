@@ -92,7 +92,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** The zone's inverse transformation matrix */
 	protected PMatrix3D inverse = new PMatrix3D();
 
-	public int x, y, height, width;
+	protected int x, y, height, width;
 
 	// A LinkedHashMap will allow insertion order to be maintained.
 	// A synchronised one will prevent concurrent modification (which can happen

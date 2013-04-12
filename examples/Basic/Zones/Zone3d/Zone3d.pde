@@ -22,21 +22,21 @@ void touchZ3D(){}
 
 void drawZ3D(Zone zone){
   fill(0);
-  rect(0,0,zone.width,zone.height);
+  rect(0,0,zone.getWidth(),zone.getHeight());
   lights();
-  translate(zone.width / 2, zone.height / 2);
-  rotateY(map(mouseX, 0, zone.width, 0, PI));
-  rotateZ(map(mouseY, 0, zone.height, 0, -PI));
+  translate(zone.getWidth() / 2, zone.getHeight() / 2);
+  rotateY(map(mouseX, 0, zone.getWidth(), 0, PI));
+  rotateZ(map(mouseY, 0, zone.getHeight(), 0, -PI));
   noStroke();
   fill(255, 255, 255);
   translate(0, -40, 0);
-  drawCylinder(10, 180, 200, 16); // Draw a mix between a cylinder and a cone
+  cylinder(10, 180, 200, 16); // Draw a mix between a cylinder and a cone
   //drawCylinder(70, 70, 120, 64); // Draw a cylinder
-  drawCylinder(0, 180, 200, 4); // Draw a pyramid
-  drawCube();
+  cylinder(0, 180, 200, 4); // Draw a pyramid
+  cube();
 }
 
-void drawCube(){
+void cube(){
   scale(50);
   colorMode(RGB,1);
   beginShape(QUADS);
@@ -74,7 +74,7 @@ void drawCube(){
   endShape();
 }
 
-void drawCylinder(float topRadius, float bottomRadius, float tall, int sides) {
+void cylinder(float topRadius, float bottomRadius, float tall, int sides) {
   float angle = 0;
   float angleIncrement = TWO_PI / sides;
   beginShape(QUAD_STRIP);

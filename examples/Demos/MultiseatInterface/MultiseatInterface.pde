@@ -15,12 +15,12 @@ void setup() {
   Zone z4=new Zone("UserArea",0, 0, 800, 200);
   
   //place each of the "UserArea" Zones at their own side of the screen
-  z1.translate(displayWidth/2-z1.width/2,0);
+  z1.translate(displayWidth/2-z1.getWidth()/2,0);
   z1.rotateAbout(PI,CENTER);
-  z2.translate(displayWidth/2-z2.width/2,displayHeight-z2.height);
-  z3.translate(z3.height,displayHeight/2-z3.width/2);
+  z2.translate(displayWidth/2-z2.getWidth()/2,displayHeight-z2.getHeight());
+  z3.translate(z3.getHeight(),displayHeight/2-z3.getWidth()/2);
   z3.rotateAbout(PI/2,CORNER);
-  z4.translate(displayWidth-z4.height,displayHeight/2+z4.width/2);
+  z4.translate(displayWidth-z4.getHeight(),displayHeight/2+z4.getWidth()/2);
   z4.rotateAbout(3*PI/2,CORNER);
   
   //Add a "Item" Zone to each of the "UserArea" Zones
@@ -40,20 +40,20 @@ void setup() {
 void draw() {
   //background with fps
   background(79, 129, 189);
-  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length,width/2,height/2);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length.getWidth()/2.getHeight()/2);
   fill(255);
 }
 
 void drawUserArea(Zone zone){
   //draw into the "UserArea" Zone
   fill(0,100,200);
-  rect(0, 0, zone.width, zone.height);
+  rect(0, 0, zone.getWidth(), zone.getHeight());
 }
 
 void drawItem(Zone zone){
   //draw into the "Item" Zone
   fill(255);
-  rect(0,0,zone.width,zone.height); 
+  rect(0,0,zone.getWidth(),zone.getHeight()); 
   fill(0);
   text("This zone is relative to each parent zone, without any special setup",10,10,100,100);
 }

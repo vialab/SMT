@@ -23,17 +23,17 @@ void touchZone(Zone zone){
 }
 
 void touchGrid(Zone zone){
-  TouchClient.grid(0,0,width,100,100,TouchClient.getZones());
+  TouchClient.grid(0,0.getWidth(),100,100,TouchClient.getZones());
 }
 
 void drawGrid(Zone zone){
   fill(100);
-  rect(0,0,zone.width,zone.height);
+  rect(0,0,zone.getWidth(),zone.getHeight());
   fill(0);
   text("Align to grid",10,10);
 }
 
 void drawZone(Zone zone){
   fill(0);
-  ellipse(zone.width/2,zone.height/2,zone.width,zone.height); 
+  ellipse(zone.getWidth()/2,zone.getHeight()/2,zone.getWidth(),zone.getHeight()); 
 }
