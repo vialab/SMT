@@ -75,9 +75,10 @@ public class PieMenuZone extends Zone {
 	 
 	protected void drawImpl() {
 		textAlign(CENTER, CENTER);
+		imageMode(CENTER);
 		noStroke();
-		smooth();
-		float textdiam = outerDiameter/2.75f;
+		
+		float textdiam = (outerDiameter + innerDiameter)/3.65f;
 		
 		background(255);
 		
@@ -85,10 +86,9 @@ public class PieMenuZone extends Zone {
 		ellipse(width/2, height/2, outerDiameter+3, outerDiameter+3);
 		
 		float op = sliceList.size()/TWO_PI;
-		
 		for (int i=0; i<sliceList.size(); i++) {
-			float s = i/op-PI*0.125f;
-			float e = (i+0.98f)/op-PI*0.125f;
+			float s = (i-0.49f)/op;
+			float e = (i+0.49f)/op;
 			if (selected == i) {
 				fill(0, 0, 255);
 			} else {
@@ -100,7 +100,15 @@ public class PieMenuZone extends Zone {
 		fill(0);
 		for (int i=0; i<sliceList.size(); i++) {
 			float m = i/op;
-			text(sliceList.get(i).text, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam);
+			int imageSize = (int) (PI*textdiam/(sliceList.size()+1));
+			if(sliceList.get(i).image != null){
+				image(sliceList.get(i).image, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam, imageSize, imageSize);
+			}else{
+				imageSize = 0;
+			}
+			if(sliceList.get(i).text !=null){
+				text(sliceList.get(i).text, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam + imageSize/2 + textAscent());
+			}
 		}
 		
 		fill(125);
@@ -118,9 +126,9 @@ public class PieMenuZone extends Zone {
 			
 			selected = -1;
 			for (int i=0; i<sliceList.size(); i++) {
-				float s = i/op-PI*0.125f;
-				float e = (i+0.98f)/op-PI*0.125f;
-				if (piTheta>= s && piTheta <= e) {
+				float s = (i-0.5f)/op;
+				float e = (i+0.5f)/op;
+				if (piTheta>= s && (piTheta <= e || i == 0)) {
 					selected = i;
 				}
 			}
@@ -129,7 +137,9 @@ public class PieMenuZone extends Zone {
 	
 	@Override
 	protected void touchUpImpl(Touch t){
-		sliceList.get(selected).pressInvoker();
-		selected = -1;
+		if(selected != -1){
+			sliceList.get(selected).pressInvoker();
+			selected = -1;
+		}
 	}
 }
