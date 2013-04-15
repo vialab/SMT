@@ -141,7 +141,7 @@ public class PieMenuZone extends Zone {
 		return visible;
 	}
 	
-	public void setVisble(boolean visible){
+	public void setVisible(boolean visible){
 		this.visible = visible;
 	}
 
