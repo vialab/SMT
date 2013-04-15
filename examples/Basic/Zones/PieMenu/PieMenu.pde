@@ -17,9 +17,12 @@ void draw(){
   background(125); 
 }
 
-void pressForward(){print("Forward");}
-void pressSubmenu(){print("Submenu");}
-void pressReload(){print("Reload");}
-void pressViewSource(){print("View Source");}
-void pressBack(){print("Back");}
+void pressForward(){println("Forward");}
+void pressSubmenu(){println("Submenu");}
+void pressReload(){println("Reload");}
+void pressViewSource(){println("View Source");}
+void pressBack(){println("Back");}
+void pressPieMenu(PieMenuZone m){
+  println("Pie Menu selected: "+m.getSelectedName());
+}
 

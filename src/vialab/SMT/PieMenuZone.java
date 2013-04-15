@@ -22,7 +22,6 @@ public class PieMenuZone extends Zone {
 			this.name = name;
 		}
 		
-		boolean warnPress(){return true;}
 		boolean warnDraw(){return false;}
 		boolean warnTouch(){return false;}
 	}
@@ -151,5 +150,15 @@ public class PieMenuZone extends Zone {
 			sliceList.get(selected).pressInvoker();
 			selected = -1;
 		}
+	}
+	
+	/**
+	 * @return The name of the selected slice of the PieMenuZone, or null if none are selected
+	 */
+	public String getSelectedName(){
+		try{
+			return sliceList.get(selected).name;
+		}catch(Exception e){}
+		return null;
 	}
 }
