@@ -107,6 +107,7 @@ public class PieMenuZone extends Zone {
 					imageSize = 0;
 				}
 				if(sliceList.get(i).text !=null){
+					textSize(textdiam/(sliceList.size()+1+imageSize/40));
 					text(sliceList.get(i).text, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam + imageSize/2 + textAscent());
 				}
 			}
