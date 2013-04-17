@@ -118,6 +118,11 @@ public class PieMenuZone extends Zone {
 	}
 	
 	@Override
+	protected void pickDrawImpl(){
+		ellipse(width/2, height/2, outerDiameter, outerDiameter);
+	}
+	
+	@Override
 	protected void touchImpl(){
 		Touch t = getActiveTouch(0);
 		if(t != null && isVisible()){
@@ -127,11 +132,14 @@ public class PieMenuZone extends Zone {
 			float op = sliceList.size()/TWO_PI;
 			
 			selected = -1;
-			for (int i=0; i<sliceList.size(); i++) {
-				float s = (i-0.5f)/op;
-				float e = (i+0.5f)/op;
-				if (piTheta>= s && (piTheta <= e || i == 0)) {
-					selected = i;
+			//only select past the inner diameter
+			if(touchInZone.dist(getCentre())>(innerDiameter/2)){
+				for (int i=0; i<sliceList.size(); i++) {
+					float s = (i-0.5f)/op;
+					float e = (i+0.5f)/op;
+					if (piTheta>= s && (piTheta <= e || i == 0)) {
+						selected = i;
+					}
 				}
 			}
 		}
@@ -146,10 +154,11 @@ public class PieMenuZone extends Zone {
 	}
 
 	@Override
-	protected void touchUpImpl(Touch t){
+	protected void pressImpl(){
 		if(selected != -1){
 			sliceList.get(selected).pressInvoker();
-			selected = -1;
+		}else{
+			TouchClient.remove(this);
 		}
 	}
 	
@@ -159,7 +168,8 @@ public class PieMenuZone extends Zone {
 	public String getSelectedName(){
 		try{
 			return sliceList.get(selected).name;
-		}catch(Exception e){}
-		return null;
+		}catch(Exception e){
+			return null;
+		}
 	}
 }
