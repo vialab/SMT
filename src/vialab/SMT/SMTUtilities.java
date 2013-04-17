@@ -54,10 +54,10 @@ public final class SMTUtilities {
 		}
 		catch (NoSuchMethodException e) {
 			Method m = null;
-			if (TouchClient.extraObjects != null) {
-				for (Object o : TouchClient.extraObjects) {
+			if (!TouchClient.extraClassList.isEmpty()) {
+				for (Class<?> c : TouchClient.extraClassList) {
 					try {
-						m = o.getClass().getMethod(methodName, parameterTypes);
+						m = c.getMethod(methodName, parameterTypes);
 					}
 					catch (NoSuchMethodException e1) {
 						continue;
@@ -67,7 +67,7 @@ public final class SMTUtilities {
 					}
 					if (m != null) {
 						if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
-							System.out.println(o.getClass().toString() + m.toString());
+							System.out.println(c.toString() + m.toString());
 						}
 						return m;
 					}
@@ -373,20 +373,19 @@ public final class SMTUtilities {
 					return method.invoke(parent, removeFromFront);
 				}
 				catch (Exception e) {}
-				if (TouchClient.extraObjects != null) {
-					for (Object o : TouchClient.extraObjects) {
-						try {
-							if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
-								System.out.print(o.toString() + " with params: ");
-								for (Object o2 : removeFromFront) {
-									System.out.print(o2.toString());
-								}
-								System.out.println();
+				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass()) && ((Zone)parameters[0]).getBoundObject() != null) {
+					Object o = ((Zone)parameters[0]).getBoundObject();
+					try {
+						if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+							System.out.print(o.toString() + " with params: ");
+							for (Object o2 : removeFromFront) {
+								System.out.print(o2.toString());
 							}
-							return method.invoke(o, removeFromFront);
+							System.out.println();
 						}
-						catch (Exception e) {}
+						return method.invoke(o, removeFromFront);
 					}
+					catch (Exception e) {}
 				}
 
 				// invoke with parameters removed from the back
@@ -401,20 +400,19 @@ public final class SMTUtilities {
 					return method.invoke(parent, removeFromBack);
 				}
 				catch (Exception e) {}
-				if (TouchClient.extraObjects != null) {
-					for (Object o : TouchClient.extraObjects) {
-						try {
-							if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
-								System.out.print(o.toString() + " with params: ");
-								for (Object o2 : removeFromFront) {
-									System.out.print(o2.toString());
-								}
-								System.out.println();
+				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass()) && ((Zone)parameters[0]).getBoundObject() != null) {
+					Object o = ((Zone)parameters[0]).getBoundObject();
+					try {
+						if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+							System.out.print(o.toString() + " with params: ");
+							for (Object o2 : removeFromBack) {
+								System.out.print(o2.toString());
 							}
-							return method.invoke(o, removeFromBack);
+							System.out.println();
 						}
-						catch (Exception e) {}
+						return method.invoke(o, removeFromBack);
 					}
+					catch (Exception e) {}
 				}
 
 				if (removeFromFront.length > 0 && removeFromBack.length > 0) {

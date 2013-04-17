@@ -143,7 +143,7 @@ public class TouchClient {
 
 	static Body groundBody;
 
-	protected static ArrayList<Object> extraObjects = new ArrayList<Object>();
+	protected static ArrayList<Class<?>> extraClassList = new ArrayList<Class<?>>();
 
 	/**
 	 * Prevent TouchClient instantiation with private constructor
@@ -219,8 +219,8 @@ public class TouchClient {
 	 *            definitions similar to PApplet for drawZoneName(), etc, but
 	 *            PApplet takes precedence.
 	 */
-	public static void init(PApplet parent, TouchSource source, Object... classes) {
-		init(parent, 3333, source, classes);
+	public static void init(PApplet parent, TouchSource source, Class<?>... extraClasses) {
+		init(parent, 3333, source, extraClasses);
 	}
 
 	/**
@@ -239,7 +239,7 @@ public class TouchClient {
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	private static void init(final PApplet parent, int port, TouchSource source, Object... objects) {
+	private static void init(final PApplet parent, int port, TouchSource source, Class<?>... extraClasses) {
 		if (parent == null) {
 			System.err
 					.println("Null parent PApplet, pass 'this' to TouchClient.init() instead of null");
@@ -256,9 +256,7 @@ public class TouchClient {
 
 		TouchClient.parent = parent;
 
-		for (Object obj : objects) {
-			extraObjects.add(obj);
-		}
+		addMethodClasses(extraClasses);
 
 		// set Zone.applet so that it is consistently set at this time, not
 		// after a zone is constructed
@@ -1469,9 +1467,9 @@ public class TouchClient {
 	 * @param objects
 	 *            The additional objects to check in for methods
 	 */
-	public static void addMethodObjects(Object... objects) {
-		for (Object obj : objects) {
-			extraObjects.add(obj);
+	public static void addMethodClasses(Class<?>... classes) {
+		for (Class<?> extraClass: classes) {
+			extraClassList.add(extraClass);
 		}
 	}
 }

@@ -6,11 +6,14 @@ _____________________
 		-the touchUp()/touchDown()/touchMoved() functions in the sketch can now have a Touch parameter
 		-TouchSource.LEAP added, which supports the Leap Motion
 		-TouchSource.MULTIPLE added, which runs multiple TouchSources at once
+		-Zone.setBoundObject(Object) and Zone.getBoundObject() were added to get and set the object referred to by the 'this' keyword, when in a method that isused by a Zone and defined outside of the PApplet (When classes are passed to TouchClient.init() or using TouchClient.addMethodClasses()).
 
 	API Changes:
 		-TouchClient's setDrawTouchPoints() deprecated/renamed to setTouchDraw()
 		-SMTUtilities' checkImpl() and getZoneMethod() have an additional first parameter which is the callingClass to by definition return false that an implementation exists for
 		-Zone.touchDown(Touch) and Zone.touchUp(Touch) have been removed, as they only mistakenly did anything more then just call assign(Touch)/unassign(Touch), either use assign/unassign directly or touchDownImpl/touchUpImpl in subclasses
+		-TouchClient.init() now accepts classes instead of objects.
+		-TouchClient.addMethodObjects(Object... objects) was replaced with TouchClient.addMethodClasses(Class<?>... classes), so now accepts classes.
 
 SMTv3.3 Release Notes
 _____________________

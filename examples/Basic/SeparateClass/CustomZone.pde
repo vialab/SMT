@@ -6,6 +6,7 @@ public class CustomZone{
     ellipse(100,100,100,100); 
   }
   void touchMyZone1(Zone z){
+    println("MyZone1 Bound object:"+this);
     z.rst();
   }
   void drawMyZone2(){
@@ -15,6 +16,7 @@ public class CustomZone{
     ellipse(100,100,100,100); 
   }
   void touchMyZone2(Zone z){
+    println("MyZone2 Bound object:"+this);
     z.drag();
   }
 }

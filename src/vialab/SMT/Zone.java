@@ -50,7 +50,6 @@ import processing.core.PMatrix3D;
 import processing.core.PVector;
 import processing.event.KeyEvent;
 import processing.opengl.PGraphicsOpenGL;
-import vialab.SMT.KeyboardZone.KeyZone;
 import TUIO.TuioTime;
 
 /**
@@ -164,6 +163,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	private boolean pickDraw = false;
 
 	boolean press;
+
+	private Object boundObject = null;
 	
 	boolean warnDraw(){return true;}
 	boolean warnTouch(){return true;}
@@ -2455,5 +2456,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			keyPressed(event);
 			break;
 		}
+	}
+	
+	public void setBoundObject(Object obj) {
+		this.boundObject = obj;
+	}
+	
+	public Object getBoundObject() {
+		return boundObject;
 	}
 }
