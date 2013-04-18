@@ -59,7 +59,9 @@ public class PieMenuZone extends Zone {
 	}
 	
 	public void add(String text, PImage image, String name){
-		this.sliceList.add(new Slice(text, image, name));
+		Slice s = new Slice(text, image, name);
+		s.setBoundObject(this.getBoundObject());
+		this.sliceList.add(s);
 	}
 	
 	public void remove(String textName){
@@ -174,6 +176,13 @@ public class PieMenuZone extends Zone {
 			return sliceList.get(selected).name;
 		}catch(Exception e){
 			return null;
+		}
+	}
+	
+	public void setBoundObject(Object obj){
+		super.setBoundObject(obj);
+		for(Slice s : sliceList){
+			s.setBoundObject(obj);
 		}
 	}
 }
