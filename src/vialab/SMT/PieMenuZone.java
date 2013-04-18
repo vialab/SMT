@@ -119,7 +119,9 @@ public class PieMenuZone extends Zone {
 	
 	@Override
 	protected void pickDrawImpl(){
-		ellipse(width/2, height/2, outerDiameter, outerDiameter);
+		if(isVisible()){
+			ellipse(width/2, height/2, outerDiameter, outerDiameter);
+		}
 	}
 	
 	@Override
@@ -158,7 +160,8 @@ public class PieMenuZone extends Zone {
 		if(selected != -1){
 			sliceList.get(selected).pressInvoker();
 		}else{
-			TouchClient.remove(this);
+			//pressed in the middle of the menu, so hide it.
+			this.setVisible(false);
 		}
 	}
 	
