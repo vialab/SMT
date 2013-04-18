@@ -1,4 +1,4 @@
-Version 3.4-pre
+Version 3.4
 
 Project Website: http://vialab.science.uoit.ca/portfolio/smt-toolkit
 
@@ -7,13 +7,12 @@ It provides an easy to use library for processing sketches to handle touch input
 
 SMT supports multiple input sources for Touch events: SmartSDK, Windows Touch, TUIO, Mouse Emulation, Android, and Leap Motion.
 
-Online Javadoc is available at http://vialab.github.com/SMT
+Installation Instructions:
+	1 - Install Processing 2.0+ if you do not have it already
+	2 - Processing Menu bar->sketch->Import Library->Add Library
+	3 - Search for smt, in the I/O category, click Install
 
-Steps to use with Processing IDE:
-	0. Download Processing IDE 2.0+ (http://processing.org/download/)
-	1. Download latest version of source from https://github.com/vialab/SMT/tags
-	2. Extract the zip file into the libraries folder in the sketchbook folder (File->Preferences->Sketchbook Location)
-	3. Run SMT examples (File->Examples->Contributed Libraries->SMT)
+Online Javadoc is available at http://vialab.github.com/SMT
 
 See the processing api at http://www.processing.org/reference/ for a complete list and documentation of all available processing functions
 
