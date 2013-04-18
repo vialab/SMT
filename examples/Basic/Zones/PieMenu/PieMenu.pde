@@ -4,7 +4,7 @@ import vialab.SMT.*;
 void setup(){
   size(800,800,P3D);
   TouchClient.init(this, TouchSource.MOUSE);
-  PieMenuZone menu = new PieMenuZone("PieMenu", 400, 200, 200);
+  PieMenuZone menu = new PieMenuZone("PieMenu", 400, 400, 355);
   TouchClient.add(menu);
   menu.add("Forward",loadImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE_lpEhrobnGhxrMyF6TFLUuAcVpGJixDzak4TxVQjjiDW5UjF", "png"));
   menu.add("Submenu");

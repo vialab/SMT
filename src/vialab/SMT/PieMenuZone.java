@@ -128,14 +128,15 @@ public class PieMenuZone extends Zone {
 	protected void touchImpl(){
 		Touch t = getActiveTouch(0);
 		if(t != null && isVisible()){
-			PVector touchInZone = toZoneVector(new PVector(t.x, t.y));
+			PVector touchVector = new PVector(t.x, t.y);
+			PVector touchInZone = toZoneVector(touchVector);
 			float mouseTheta = PApplet.atan2(touchInZone.y-height/2, touchInZone.x-width/2);
 			float piTheta = mouseTheta>=0?mouseTheta:mouseTheta+TWO_PI;
 			float op = sliceList.size()/TWO_PI;
 			
 			selected = -1;
 			//only select past the inner diameter
-			if(touchInZone.dist(getCentre())>(innerDiameter/2)){
+			if(touchVector.dist(getCentre())>(innerDiameter/2)){
 				for (int i=0; i<sliceList.size(); i++) {
 					float s = (i-0.5f)/op;
 					float e = (i+0.5f)/op;
