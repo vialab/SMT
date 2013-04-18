@@ -375,20 +375,25 @@ public final class SMTUtilities {
 					return method.invoke(parent, removeFromFront);
 				}
 				catch (Exception e) {}
-				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass())
-						&& ((Zone) parameters[0]).getBoundObject() != null) {
-					Object o = ((Zone) parameters[0]).getBoundObject();
-					try {
-						if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
-							System.out.print(o.toString() + " with params: ");
-							for (Object o2 : removeFromFront) {
-								System.out.print(o2.toString());
+				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass())) {
+					if (((Zone) parameters[0]).getBoundObject() != null) {
+						Object o = ((Zone) parameters[0]).getBoundObject();
+						try {
+							if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+								System.out.print(o.toString() + " with params: ");
+								for (Object o2 : removeFromFront) {
+									System.out.print(o2.toString());
+								}
+								System.out.println();
 							}
-							System.out.println();
+							return method.invoke(o, removeFromFront);
 						}
-						return method.invoke(o, removeFromFront);
+						catch (Exception e) {}
 					}
-					catch (Exception e) {}
+					else if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+						System.out.println("There was no object bound to the Zone: "
+								+ parameters[0].toString());
+					}
 				}
 
 				// invoke with parameters removed from the back
@@ -403,20 +408,25 @@ public final class SMTUtilities {
 					return method.invoke(parent, removeFromBack);
 				}
 				catch (Exception e) {}
-				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass())
-						&& ((Zone) parameters[0]).getBoundObject() != null) {
-					Object o = ((Zone) parameters[0]).getBoundObject();
-					try {
-						if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
-							System.out.print(o.toString() + " with params: ");
-							for (Object o2 : removeFromBack) {
-								System.out.print(o2.toString());
+				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass())) {
+					if (((Zone) parameters[0]).getBoundObject() != null) {
+						Object o = ((Zone) parameters[0]).getBoundObject();
+						try {
+							if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+								System.out.print(o.toString() + " with params: ");
+								for (Object o2 : removeFromBack) {
+									System.out.print(o2.toString());
+								}
+								System.out.println();
 							}
-							System.out.println();
+							return method.invoke(o, removeFromBack);
 						}
-						return method.invoke(o, removeFromBack);
+						catch (Exception e) {}
 					}
-					catch (Exception e) {}
+					else if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+						System.out.println("There was no object bound to the Zone: "
+								+ parameters[0].toString());
+					}
 				}
 
 				if (removeFromFront.length > 0 && removeFromBack.length > 0) {
