@@ -20,9 +20,14 @@ public class SliderZone extends Zone {
 	private int majorTickSpacing;
 
 	private int minorTickSpacing;
-	
-	boolean warnDraw(){return false;}
-	boolean warnTouch(){return false;}
+
+	boolean warnDraw() {
+		return false;
+	}
+
+	boolean warnTouch() {
+		return false;
+	}
 
 	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue) {
 		this(null, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, null);

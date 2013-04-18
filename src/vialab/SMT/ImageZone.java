@@ -44,8 +44,10 @@ public class ImageZone extends Zone {
 	 * Default tint colour of image is opaque white, as to not change appearance
 	 */
 	public int tintColour = 0xFFFFFFFF;
-	
-	boolean warnDraw(){return false;}
+
+	boolean warnDraw() {
+		return false;
+	}
 
 	/**
 	 * ImageZone constructor, creates a rectangular zone and draws a PImage to

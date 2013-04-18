@@ -39,9 +39,9 @@ public class SlideRevealZone extends Zone {
 	protected void drawImpl() {
 		fill(255);
 		rect(0, 0, width, height);
-		
+
 		drawHiddenText();
-		
+
 		drawCoverRect();
 	}
 

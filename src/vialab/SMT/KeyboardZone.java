@@ -16,24 +16,26 @@ import processing.core.PVector;
  * keyboard
  */
 public class KeyboardZone extends Zone {
-	
+
 	public int keyColor = 200;
-	
+
 	public int keyPressedColor = 150;
-	
+
 	public int backgroundColor = 0;
-	
+
 	public int textColor = 0;
-	
+
 	public int linkColor = 0x96FFFFFF;
-	
+
 	public int alpha = 255;
-	
+
 	public boolean capsLockOn = false;
 
 	private int MODIFIERS = 0;
-	
-	boolean warnDraw(){return false;}
+
+	boolean warnDraw() {
+		return false;
+	}
 
 	private Component keyboardComponent = new Component() {
 		private static final long serialVersionUID = -3237916182106172342L;
@@ -47,12 +49,12 @@ public class KeyboardZone extends Zone {
 	class KeyZone extends ButtonZone {
 		private Keys key;
 		private boolean keyDown;
-	
+
 		public KeyZone(int x, int y, int width, int height, Keys key, int fontSize) {
 			super(null, x, y, width, height, key.text, fontSize);
 			this.key = key;
 		}
-	
+
 		@Override
 		public void drawImpl() {
 			if (deactivated) {
@@ -66,24 +68,25 @@ public class KeyboardZone extends Zone {
 					drawImpl(color(keyColor, alpha), color(textColor, alpha));
 				}
 			}
-			
-			//drawCapsLock state
-			if(key.keyCode ==KeyEvent.VK_CAPS_LOCK){
-				if(capsLockOn){
-					text("On",width/2, height*3/4);
-				}else{
-					text("Off",width/2, height*3/4);
+
+			// drawCapsLock state
+			if (key.keyCode == KeyEvent.VK_CAPS_LOCK) {
+				if (capsLockOn) {
+					text("On", width / 2, height * 3 / 4);
+				}
+				else {
+					text("Off", width / 2, height * 3 / 4);
 				}
 			}
 		}
-		
+
 		protected void drawImpl(int buttonColor, int textColor) {
 			stroke(borderColor);
 			strokeWeight(borderWeight);
 			fill(buttonColor);
 			rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
 					cornerRadius);
-	
+
 			if (text != null) {
 				if (font != null) {
 					textFont(font);
@@ -91,14 +94,16 @@ public class KeyboardZone extends Zone {
 				textAlign(CENTER, CENTER);
 				textSize(fontSize);
 				fill(textColor);
-				if(((!capsLockOn&&isModifierDown(KeyEvent.VK_SHIFT))||(capsLockOn&&!isModifierDown(KeyEvent.VK_SHIFT))) && key.text.length()==1){
+				if (((!capsLockOn && isModifierDown(KeyEvent.VK_SHIFT)) || (capsLockOn && !isModifierDown(KeyEvent.VK_SHIFT)))
+						&& key.text.length() == 1) {
 					text(text.toUpperCase(), width / 2 - borderWeight, height / 2 - borderWeight);
-				}else{
+				}
+				else {
 					text(text, width / 2 - borderWeight, height / 2 - borderWeight);
 				}
 			}
 		}
-	
+
 		@Override
 		public void touchDownImpl(Touch touch) {
 			super.touchDownImpl(touch);
@@ -106,19 +111,20 @@ public class KeyboardZone extends Zone {
 				keyDown();
 			}
 		}
-	
+
 		@Override
 		public void touchMovedImpl(Touch touch) {
 			if (!keyDown) {
 				keyDown();
 			}
 		}
-	
+
 		private void keyDown() {
 			keyDown = true;
 			char k = key.keyChar;
 			// if not undefined char and shift is on, set to upper case
-			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && ((((MODIFIERS >> 6) % 2 == 1)&&!capsLockOn)||(((MODIFIERS >> 6) % 2 == 0)&&capsLockOn))) {
+			if (key.keyChar != KeyEvent.CHAR_UNDEFINED
+					&& ((((MODIFIERS >> 6) % 2 == 1) && !capsLockOn) || (((MODIFIERS >> 6) % 2 == 0) && capsLockOn))) {
 				k = Character.toUpperCase(key.keyChar);
 				// if key has a different value for when shift is down, set it
 				// to that
@@ -132,25 +138,26 @@ public class KeyboardZone extends Zone {
 						.currentTimeMillis(), MODIFIERS, key.keyCode, k));
 			}
 		}
-	
+
 		@Override
 		protected void pressImpl() {
-			//toggle Caps Lock
-			if(key.keyCode ==KeyEvent.VK_CAPS_LOCK){
+			// toggle Caps Lock
+			if (key.keyCode == KeyEvent.VK_CAPS_LOCK) {
 				capsLockOn = !capsLockOn;
 			}
-			else{
+			else {
 				if (keyDown) {
 					keyUp();
 				}
 			}
 		}
-	
+
 		private void keyUp() {
 			keyDown = false;
 			char k = key.keyChar;
 			// if not undefined char and shift is on, set to upper case
-			if (key.keyChar != KeyEvent.CHAR_UNDEFINED && ((((MODIFIERS >> 6) % 2 == 1)&&!capsLockOn)||(((MODIFIERS >> 6) % 2 == 0)&&capsLockOn))) {
+			if (key.keyChar != KeyEvent.CHAR_UNDEFINED
+					&& ((((MODIFIERS >> 6) % 2 == 1) && !capsLockOn) || (((MODIFIERS >> 6) % 2 == 0) && capsLockOn))) {
 				k = Character.toUpperCase(key.keyChar);
 				// if key has a different value for when shift is down, set it
 				// to that
@@ -202,8 +209,8 @@ public class KeyboardZone extends Zone {
 				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true, "Control", 1.5f), KEY_ALT_LEFT(
 				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_SPACE(' ',
 				KeyEvent.VK_SPACE, false, "Space", 9.6f), KEY_ALT_RIGHT(KeyEvent.CHAR_UNDEFINED,
-				KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_CTRL_RIGHT(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true, "Control", 1.5f);
+				KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_CTRL_RIGHT(KeyEvent.CHAR_UNDEFINED,
+				KeyEvent.VK_CONTROL, true, "Control", 1.5f);
 
 		// KEY_DELETE('\u007F', KeyEvent.VK_DELETE, false, "Delete");
 
@@ -307,25 +314,28 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(String name, int x, int y, int width, int height, int alpha) {
 		this(name, x, y, width, height, true, alpha);
 	}
-	
+
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
 			int alpha) {
 		this(name, x, y, width, height, keysSentToApplet, alpha, 0, 200, 150, 0, 0x96FFFFFF);
 	}
 
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
-			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor, int linkColor) {
+			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor,
+			int linkColor) {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
-		int DEFAULT_KEY_WIDTH = (width*9/10) / KEYS_PER_ROW;
+		int DEFAULT_KEY_WIDTH = (width * 9 / 10) / KEYS_PER_ROW;
 
 		for (Keys k : Keys.values()) {
-			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH), (this.height*9/10)
-					/ NUM_KEYBOARD_ROWS, k, (this.height / NUM_KEYBOARD_ROWS)*16/50));
+			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH),
+					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k,
+					(this.height / NUM_KEYBOARD_ROWS) * 16 / 50));
 		}
 
-		TouchClient.grid(width/20, height/20, (width*9/10), 0, 0, this.children.toArray(new Zone[children.size()]));
+		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+				this.children.toArray(new Zone[children.size()]));
 
 		for (Zone zone : this.children) {
 			zone.setDirect(true);
@@ -348,28 +358,30 @@ public class KeyboardZone extends Zone {
 	public void setSize(int w, int h) {
 		super.setSize(w, h);
 		int KEYS_PER_ROW = 15;
-		int DEFAULT_KEY_WIDTH = (width*9/10) / KEYS_PER_ROW;
+		int DEFAULT_KEY_WIDTH = (width * 9 / 10) / KEYS_PER_ROW;
 		for (Zone child : this.children) {
 			if (child instanceof KeyZone) {
 				KeyZone keyZone = (KeyZone) child;
-				keyZone.setSize((int) (keyZone.key.keyWidthRatio * DEFAULT_KEY_WIDTH), (this.height*9/10)
-						/ NUM_KEYBOARD_ROWS);
-				keyZone.fontSize = ((this.height*9/10) / NUM_KEYBOARD_ROWS)*16/50;
+				keyZone.setSize((int) (keyZone.key.keyWidthRatio * DEFAULT_KEY_WIDTH),
+						(this.height * 9 / 10) / NUM_KEYBOARD_ROWS);
+				keyZone.fontSize = ((this.height * 9 / 10) / NUM_KEYBOARD_ROWS) * 16 / 50;
 			}
 		}
-		TouchClient.grid(width/20, height/20, (width*9/10), 0, 0, this.children.toArray(new Zone[children.size()]));
+		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+				this.children.toArray(new Zone[children.size()]));
 	}
 
 	@Override
 	protected void init() {
 		super.init();
-		TouchClient.grid(width/20, height/20, (width*9/10), 0, 0, this.children.toArray(new Zone[children.size()]));
+		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+				this.children.toArray(new Zone[children.size()]));
 	}
 
 	@Override
 	public void drawImpl() {
 		drawKeyLinstenerLink();
-		
+
 		fill(backgroundColor, alpha);
 		rect(0, 0, width, height);
 
@@ -377,12 +389,12 @@ public class KeyboardZone extends Zone {
 	}
 
 	protected void drawKeyLinstenerLink() {
-		for(KeyListener listener : keyListeners){
-			if(listener instanceof Zone){
+		for (KeyListener listener : keyListeners) {
+			if (listener instanceof Zone) {
 				Zone zone = (Zone) listener;
 				PVector relativeZoneCentre = this.toZoneVector(zone.getCentre());
 				stroke(linkColor);
-				line(width/2, height/2, relativeZoneCentre.x, relativeZoneCentre.y);
+				line(width / 2, height / 2, relativeZoneCentre.x, relativeZoneCentre.y);
 			}
 		}
 	}
@@ -577,7 +589,7 @@ public class KeyboardZone extends Zone {
 	public void setAlpha(int alpha) {
 		this.alpha = alpha;
 	}
-	
+
 	public boolean isModifierDown(int keyCode) {
 		switch (keyCode) {
 		case KeyEvent.VK_SHIFT:
@@ -598,7 +610,7 @@ public class KeyboardZone extends Zone {
 		default:
 			break;
 		}
-		
+
 		return false;
 	}
 }

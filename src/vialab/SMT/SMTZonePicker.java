@@ -87,57 +87,55 @@ class SMTZonePicker {
 
 	public Zone pick(Touch t) {
 		int pickColor = -1;
-		//this doesnt work as of 2.0b8
+		// this doesnt work as of 2.0b8
 		/*
-		PGL pgl = applet.g.beginPGL();
+		 * PGL pgl = applet.g.beginPGL();
+		 * 
+		 * if (pgl == null || System.getProperty("os.name").equals("Mac OS X"))
+		 * { // Fall back to the working but slow method of getting the pixel //
+		 * color on Mac pickColor = applet.g.get(t.x, t.y); } else { ByteBuffer
+		 * buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT);
+		 * 
+		 * pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1,
+		 * GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, buffer);
+		 * 
+		 * // get the first three bytes int r = buffer.get() & 0xFF; int g =
+		 * buffer.get() & 0xFF; int b = buffer.get() & 0xFF; pickColor = (r <<
+		 * 16) + (g << 8) + (b);
+		 * 
+		 * buffer.clear(); }
+		 * 
+		 * applet.g.endPGL();
+		 */
 
-		if (pgl == null || System.getProperty("os.name").equals("Mac OS X")) {
-			// Fall back to the working but slow method of getting the pixel
-			// color on Mac
-			pickColor = applet.g.get(t.x, t.y);
+		// prevent ArrayOutOfBoundsException, although maybe this should be done
+		// in Touch itself
+		int x = t.x;
+		int y = t.y;
+		if (t.y >= applet.g.height) {
+			y = applet.g.height - 1;
 		}
-		else {
-			ByteBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT);
-
-			pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA,
-					GL.GL_UNSIGNED_BYTE, buffer);
-
-			// get the first three bytes
-			int r = buffer.get() & 0xFF;
-			int g = buffer.get() & 0xFF;
-			int b = buffer.get() & 0xFF;
-			pickColor = (r << 16) + (g << 8) + (b);
-
-			buffer.clear();
+		if (t.x >= applet.g.width) {
+			x = applet.g.width - 1;
 		}
-
-		applet.g.endPGL();
-		*/
-		
-		//prevent ArrayOutOfBoundsException, although maybe this should be done in Touch itself
-		int x=t.x;
-		int y=t.y;
-		if(t.y>=applet.g.height){
-			y=applet.g.height-1;
+		if (t.y < 0) {
+			y = 0;
 		}
-		if(t.x>=applet.g.width){
-			x=applet.g.width-1;
+		if (t.x < 0) {
+			x = 0;
 		}
-		if(t.y<0){
-			y=0;
-		}
-		if(t.x<0){
-			x=0;
-		}
-		//go back to the old really slow way(max 70 fps on a high end card vs 200+ fps with readPixels), with loadPixels at the end of renderPickBuffer()
-		pickColor = applet.g.pixels[x+y*applet.g.width]&0x00FFFFFF;
+		// go back to the old really slow way(max 70 fps on a high end card vs
+		// 200+ fps with readPixels), with loadPixels at the end of
+		// renderPickBuffer()
+		pickColor = applet.g.pixels[x + y * applet.g.width] & 0x00FFFFFF;
 
 		if (zonesByPickColor.containsKey(pickColor)) {
 			// if mapped it is either a Zone or null (background)
 			return zonesByPickColor.get(pickColor);
 		}
 		else {
-			//only show error in debug mode, since it is much to prevalent still to always show
+			// only show error in debug mode, since it is much to prevalent
+			// still to always show
 			if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
 				// not mapped means a bug in the pickDrawn colors, or maybe that
 				// BG_PICK_COLOR or a Zone got unmapped when it should'nt have

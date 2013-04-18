@@ -36,12 +36,18 @@ public class ButtonZone extends Zone {
 	protected int deactivatedColor = 255;
 
 	protected int deactivatedTextColor = 175;
-	
-	boolean warnPress(){return true;}
-	
-	boolean warnTouch(){return false;}
-	
-	boolean warnDraw(){return false;}
+
+	boolean warnPress() {
+		return true;
+	}
+
+	boolean warnTouch() {
+		return false;
+	}
+
+	boolean warnDraw() {
+		return false;
+	}
 
 	public ButtonZone() {
 		this(null);
@@ -149,7 +155,7 @@ public class ButtonZone extends Zone {
 	 * @return Whether the button is currently pushed down
 	 */
 	public boolean isButtonDown() {
-		return (this.getNumTouches()>0);
+		return (this.getNumTouches() > 0);
 	}
 
 	protected void drawImpl(int buttonColor, int textColor) {

@@ -1,6 +1,5 @@
 package vialab.SMT;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +32,8 @@ class SMTTuioListener implements TuioListener {
 	@Override
 	public synchronized void updateTuioCursor(TuioCursor tcur) {
 		TuioCursor tr = null;
-		for(TuioCursor t : currentTouchState){
-			if(t.getSessionID()==tcur.getSessionID()){
+		for (TuioCursor t : currentTouchState) {
+			if (t.getSessionID() == tcur.getSessionID()) {
 				tr = t;
 			}
 		}
@@ -45,8 +44,8 @@ class SMTTuioListener implements TuioListener {
 	@Override
 	public synchronized void removeTuioCursor(TuioCursor tcur) {
 		TuioCursor tr = null;
-		for(TuioCursor t : currentTouchState){
-			if(t.getSessionID()==tcur.getSessionID()){
+		for (TuioCursor t : currentTouchState) {
+			if (t.getSessionID() == tcur.getSessionID()) {
 				tr = t;
 			}
 		}
@@ -61,8 +60,8 @@ class SMTTuioListener implements TuioListener {
 	@Override
 	public synchronized void updateTuioObject(TuioObject tobj) {
 		TuioObject tr = null;
-		for(TuioObject t : currentObjectState){
-			if(t.getSessionID()==tobj.getSessionID()){
+		for (TuioObject t : currentObjectState) {
+			if (t.getSessionID() == tobj.getSessionID()) {
 				tr = t;
 			}
 		}
@@ -73,8 +72,8 @@ class SMTTuioListener implements TuioListener {
 	@Override
 	public synchronized void removeTuioObject(TuioObject tobj) {
 		TuioObject tr = null;
-		for(TuioObject t : currentObjectState){
-			if(t.getSessionID()==tobj.getSessionID()){
+		for (TuioObject t : currentObjectState) {
+			if (t.getSessionID() == tobj.getSessionID()) {
 				tr = t;
 			}
 		}
@@ -114,8 +113,8 @@ class SMTTuioListener implements TuioListener {
 	}
 
 	public synchronized TuioObject getTuioObject(long s_id) {
-		for(TuioObject t : currentObjectState){
-			if(t.getSessionID()==s_id){
+		for (TuioObject t : currentObjectState) {
+			if (t.getSessionID() == s_id) {
 				return t;
 			}
 		}
@@ -123,8 +122,8 @@ class SMTTuioListener implements TuioListener {
 	}
 
 	public synchronized TuioCursor getTuioCursor(long s_id) {
-		for(TuioCursor t : currentTouchState){
-			if(t.getSessionID()==s_id){
+		for (TuioCursor t : currentTouchState) {
+			if (t.getSessionID() == s_id) {
 				return t;
 			}
 		}

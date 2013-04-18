@@ -99,12 +99,14 @@ class SMTTouchManager {
 				else {
 					boolean first = true;
 					for (Zone zone : t.getAssignedZones()) {
-						if (zone.press || zone.pressMethod != null){
+						if (zone.press || zone.pressMethod != null) {
 							// if the zone defines a press method, make sure to
-							// unassign when we no longer pick to the Zone, meaning
-							// that the touchUp can rely on the previous pick of the
+							// unassign when we no longer pick to the Zone,
+							// meaning
+							// that the touchUp can rely on the previous pick of
+							// the
 							// Touch to determine if the zone was pressed
-							if (first){
+							if (first) {
 								z = picker.pick(t);
 								first = false;
 							}

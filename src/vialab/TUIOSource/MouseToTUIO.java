@@ -104,7 +104,7 @@ public class MouseToTUIO {
 						Point joint_point = joint_cursor.getPosition();
 						if ((joint_point.x + dx) < 0 || (joint_point.x + dx) > (width - 1)
 								|| (joint_point.y + dy) < 0 || (joint_point.y + dy) > (height - 1)) {
-							//remove the joint cursor if it leaves the window
+							// remove the joint cursor if it leaves the window
 							joint_cursor.stop();
 							sim.cursorMessage(joint_cursor);
 							if (stickyCursors.contains(jointId))

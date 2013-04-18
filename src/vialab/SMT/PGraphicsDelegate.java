@@ -22,10 +22,10 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 	// PGraphicsDelegate(PGraphics g) {
 	// this.pg = g;
 	// }
-	
-	//public final float alpha(int arg0) {
-	//	return pg.alpha(arg0);
-	//}
+
+	// public final float alpha(int arg0) {
+	// return pg.alpha(arg0);
+	// }
 
 	public void ambient(float arg0, float arg1, float arg2) {
 		pg.ambient(arg0, arg1, arg2);
@@ -163,9 +163,9 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 		pg.blend(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
 	}
 
-	//public final float blue(int arg0) {
-	//	return pg.blue(arg0);
-	//}
+	// public final float blue(int arg0) {
+	// return pg.blue(arg0);
+	// }
 
 	public void box(float arg0, float arg1, float arg2) {
 		pg.box(arg0, arg1, arg2);
@@ -175,9 +175,9 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 		pg.box(arg0);
 	}
 
-	//public final float brightness(int arg0) {
-	//	return pg.brightness(arg0);
-	//}
+	// public final float brightness(int arg0) {
+	// return pg.brightness(arg0);
+	// }
 
 	public void camera() {
 		pg.camera();
@@ -192,41 +192,41 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 		return pg.canDraw();
 	}
 
-	//public final int color(float arg0, float arg1, float arg2, float arg3) {
-	//	return pg.color(arg0, arg1, arg2, arg3);
-	//}
+	// public final int color(float arg0, float arg1, float arg2, float arg3) {
+	// return pg.color(arg0, arg1, arg2, arg3);
+	// }
 
-	//public final int color(float arg0, float arg1, float arg2) {
-	//	return pg.color(arg0, arg1, arg2);
-	//}
+	// public final int color(float arg0, float arg1, float arg2) {
+	// return pg.color(arg0, arg1, arg2);
+	// }
 
-	//public final int color(float arg0, float arg1) {
-	//	return pg.color(arg0, arg1);
-	//}
+	// public final int color(float arg0, float arg1) {
+	// return pg.color(arg0, arg1);
+	// }
 
-	//public final int color(float arg0) {
-	//	return pg.color(arg0);
-	//}
+	// public final int color(float arg0) {
+	// return pg.color(arg0);
+	// }
 
-	//public final int color(int arg0, float arg1) {
-	//	return pg.color(arg0, arg1);
-	//}
+	// public final int color(int arg0, float arg1) {
+	// return pg.color(arg0, arg1);
+	// }
 
-	//public final int color(int arg0, int arg1, int arg2, int arg3) {
-	//	return pg.color(arg0, arg1, arg2, arg3);
-	//}
+	// public final int color(int arg0, int arg1, int arg2, int arg3) {
+	// return pg.color(arg0, arg1, arg2, arg3);
+	// }
 
-	//public final int color(int arg0, int arg1, int arg2) {
-	//	return pg.color(arg0, arg1, arg2);
-	//}
+	// public final int color(int arg0, int arg1, int arg2) {
+	// return pg.color(arg0, arg1, arg2);
+	// }
 
-	//public final int color(int arg0, int arg1) {
-	//	return pg.color(arg0, arg1);
-	//}
+	// public final int color(int arg0, int arg1) {
+	// return pg.color(arg0, arg1);
+	// }
 
-	//public final int color(int arg0) {
-	//	return pg.color(arg0);
-	//}
+	// public final int color(int arg0) {
+	// return pg.color(arg0);
+	// }
 
 	public void colorMode(int arg0, float arg1, float arg2, float arg3, float arg4) {
 		pg.colorMode(arg0, arg1, arg2, arg3, arg4);
@@ -420,17 +420,17 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 		return pg.getStyle(arg0);
 	}
 
-	//public final float green(int arg0) {
-	//	return pg.green(arg0);
-	//}
+	// public final float green(int arg0) {
+	// return pg.green(arg0);
+	// }
 
 	public void hint(int arg0) {
 		pg.hint(arg0);
 	}
 
-	//public final float hue(int arg0) {
-	//	return pg.hue(arg0);
-	//}
+	// public final float hue(int arg0) {
+	// return pg.hue(arg0);
+	// }
 
 	public void image(PImage arg0, float arg1, float arg2, float arg3, float arg4, int arg5,
 			int arg6, int arg7, int arg8) {
@@ -618,9 +618,9 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 		pg.rectMode(arg0);
 	}
 
-	//public final float red(int arg0) {
-	//	return pg.red(arg0);
-	//}
+	// public final float red(int arg0) {
+	// return pg.red(arg0);
+	// }
 
 	public void removeCache(PGraphics arg0) {
 		pg.removeCache(arg0);
@@ -654,9 +654,9 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 		pg.rotateZ(arg0);
 	}
 
-	//public final float saturation(int arg0) {
-	//	return pg.saturation(arg0);
-	//}
+	// public final float saturation(int arg0) {
+	// return pg.saturation(arg0);
+	// }
 
 	public boolean save(String arg0) {
 		return pg.save(arg0);

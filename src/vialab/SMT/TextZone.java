@@ -91,9 +91,14 @@ public class TextZone extends Zone {
 	private boolean keysFromApplet = false;
 
 	private float fontSize = 16;
-	
-	boolean warnDraw(){return false;}
-	boolean warnTouch(){return false;}
+
+	boolean warnDraw() {
+		return false;
+	}
+
+	boolean warnTouch() {
+		return false;
+	}
 
 	public TextZone(TextZone original) {
 		super(original.name, original.x, original.y, original.width, original.height);

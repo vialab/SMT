@@ -129,7 +129,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected Method touchDownMethod = null;
 
 	protected Method touchMovedMethod = null;
-	
+
 	protected Method pressMethod = null;
 
 	protected String name = null;
@@ -165,13 +165,30 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	boolean press;
 
 	private Object boundObject = null;
-	
-	boolean warnDraw(){return true;}
-	boolean warnTouch(){return true;}
-	boolean warnKeys(){return false;}
-	boolean warnPick(){return false;}
-	boolean warnTouchUDM(){return false;}
-	boolean warnPress(){return false;}
+
+	boolean warnDraw() {
+		return true;
+	}
+
+	boolean warnTouch() {
+		return true;
+	}
+
+	boolean warnKeys() {
+		return false;
+	}
+
+	boolean warnPick() {
+		return false;
+	}
+
+	boolean warnTouchUDM() {
+		return false;
+	}
+
+	boolean warnPress() {
+		return false;
+	}
 
 	/**
 	 * Check state of the direct flag.
@@ -353,8 +370,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			else {
 				loadMethods(name, false, false, false, false, false, false);
 			}
-		}else{
-			loadMethods(name, warnDraw(), warnTouch(), warnKeys(), warnPick(), warnTouchUDM(), warnPress());
+		}
+		else {
+			loadMethods(name, warnDraw(), warnTouch(), warnKeys(), warnPick(), warnTouchUDM(),
+					warnPress());
 		}
 	}
 
@@ -380,31 +399,31 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		touchUDM = SMTUtilities.checkImpl(Zone.class, "touchDown", this.getClass(), Touch.class)
 				|| SMTUtilities.checkImpl(Zone.class, "touchUp", this.getClass(), Touch.class)
 				|| SMTUtilities.checkImpl(Zone.class, "touchMoved", this.getClass(), Touch.class);
-		
+
 		press = SMTUtilities.checkImpl(Zone.class, "press", this.getClass());
 
 		if (name != null) {
-			drawMethod = SMTUtilities
-					.getZoneMethod(Zone.class, applet, "draw", name, warnDraw, this.getClass());
-
-			pickDrawMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "pickDraw", name, warnPick,
+			drawMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "draw", name, warnDraw,
 					this.getClass());
 
-			keyPressedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyPressed", name, warnKeys,
-					this.getClass(), KeyEvent.class);
-			keyReleasedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyReleased", name, warnKeys,
-					this.getClass(), KeyEvent.class);
-			keyTypedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyTyped", name, warnKeys,
-					this.getClass(), KeyEvent.class);
-			touchUpMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchUp", name, warnTouchUDM,
-					this.getClass(), Touch.class);
+			pickDrawMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "pickDraw", name,
+					warnPick, this.getClass());
 
-			touchDownMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchDown", name, warnTouchUDM,
-					this.getClass(), Touch.class);
+			keyPressedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyPressed", name,
+					warnKeys, this.getClass(), KeyEvent.class);
+			keyReleasedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyReleased", name,
+					warnKeys, this.getClass(), KeyEvent.class);
+			keyTypedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyTyped", name,
+					warnKeys, this.getClass(), KeyEvent.class);
+			touchUpMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchUp", name,
+					warnTouchUDM, this.getClass(), Touch.class);
 
-			touchMovedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchMoved", name, warnTouchUDM,
-					this.getClass(), Touch.class);
-			
+			touchDownMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchDown", name,
+					warnTouchUDM, this.getClass(), Touch.class);
+
+			touchMovedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchMoved", name,
+					warnTouchUDM, this.getClass(), Touch.class);
+
 			pressMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "press", name, warnPress,
 					this.getClass());
 
@@ -594,7 +613,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		if (t != null) {
 			activeTouches.remove(sessionID);
 			t.unassignZone(this);
-			//at unassign if we have a mJoint destroy it
+			// at unassign if we have a mJoint destroy it
 			if (mJoint != null) {
 				TouchClient.world.destroyJoint(mJoint);
 				mJoint = null;
@@ -670,20 +689,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		noTint();
 		noStroke();
 
-		//make sure the colorMode makes sense for the components given to it
+		// make sure the colorMode makes sense for the components given to it
 		colorMode(RGB, 255);
-		//extract the components using bitshifts with bitwise AND, to get RGB values 0-255
-		fill((pickColor&0x00FF0000)>>16, (pickColor&0x0000FF00)>>8, pickColor&0x000000FF);
-		
-		pickDraw=true;
+		// extract the components using bitshifts with bitwise AND, to get RGB
+		// values 0-255
+		fill((pickColor & 0x00FF0000) >> 16, (pickColor & 0x0000FF00) >> 8, pickColor & 0x000000FF);
+
+		pickDraw = true;
 	}
 
 	/**
 	 * Override this if something needs to occur after pickdrawing commands
 	 */
 	protected void endPickDraw() {
-		pickDraw=false;
-		
+		pickDraw = false;
+
 		if (!direct) {
 			super.endDraw();
 		}
@@ -912,7 +932,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return width int representing the width of the zone.
 	 */
 	public int getWidth() {
-		return (int) PVector.sub(fromZoneVector(new PVector(this.width, 0)), this.getOrigin()).mag();
+		return (int) PVector.sub(fromZoneVector(new PVector(this.width, 0)), this.getOrigin())
+				.mag();
 	}
 
 	/**
@@ -922,7 +943,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * 
 	 */
 	public int getHeight() {
-		return (int) PVector.sub(fromZoneVector(new PVector(0, this.height)), this.getOrigin()).mag();
+		return (int) PVector.sub(fromZoneVector(new PVector(0, this.height)), this.getOrigin())
+				.mag();
 	}
 
 	/**
@@ -1716,7 +1738,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			endTouch();
 
 			if (touchMethod == null && !touchImpl && touchUpMethod == null
-					&& touchDownMethod == null && touchMovedMethod == null && !touchUDM && !press && pressMethod == null) {
+					&& touchDownMethod == null && touchMovedMethod == null && !touchUDM && !press
+					&& pressMethod == null) {
 				unassignAll();
 			}
 
@@ -2175,20 +2198,23 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			this.children.add(zone);
 		}
 	}
-	
+
 	@Override
 	public void keyPressed(java.awt.event.KeyEvent e) {
-		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.PRESS, e.getModifiers(), e.getKeyChar(), e.getKeyCode()));
+		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.PRESS, e.getModifiers(), e.getKeyChar(),
+				e.getKeyCode()));
 	}
 
 	@Override
 	public void keyReleased(java.awt.event.KeyEvent e) {
-		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.RELEASE, e.getModifiers(), e.getKeyChar(), e.getKeyCode()));
+		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.RELEASE, e.getModifiers(), e.getKeyChar(),
+				e.getKeyCode()));
 	}
 
 	@Override
 	public void keyTyped(java.awt.event.KeyEvent e) {
-		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.TYPE, e.getModifiers(), e.getKeyChar(), e.getKeyCode()));
+		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.TYPE, e.getModifiers(), e.getKeyChar(),
+				e.getKeyCode()));
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -2220,16 +2246,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		touchMovedImpl(touch);
 		SMTUtilities.invoke(touchMovedMethod, applet, this, touch);
 	}
-	
+
 	protected void pressInvoker() {
 		pressImpl();
 		SMTUtilities.invoke(pressMethod, applet, this);
 	}
-	
+
 	/**
 	 * Override to specify a default behavior for press
 	 */
-	protected void pressImpl() {}
+	protected void pressImpl() {
+	}
 
 	/**
 	 * Override to specify a default behavior for draw
@@ -2326,105 +2353,142 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 					* TouchClient.box2dScale));
 		}
 	}
-	
-	public void dragWithinParent(){
+
+	public void dragWithinParent() {
 		Zone parent = getParent();
-		if(parent != null){
-			drag(true, true, parent.getX(), parent.getX()+parent.width, parent.getY(), parent.getY()+parent.height);
+		if (parent != null) {
+			drag(true, true, parent.getX(), parent.getX() + parent.width, parent.getY(),
+					parent.getY() + parent.height);
 		}
 	}
-	
+
 	@Override
 	public void fill(float arg0, float arg1, float arg2, float arg3) {
-		if(!pickDraw){pg.fill(arg0, arg1, arg2, arg3);}
+		if (!pickDraw) {
+			pg.fill(arg0, arg1, arg2, arg3);
+		}
 	}
 
 	@Override
 	public void fill(float arg0, float arg1, float arg2) {
-		if(!pickDraw){pg.fill(arg0, arg1, arg2);}
+		if (!pickDraw) {
+			pg.fill(arg0, arg1, arg2);
+		}
 	}
 
 	@Override
 	public void fill(float arg0, float arg1) {
-		if(!pickDraw){pg.fill(arg0, arg1);}
+		if (!pickDraw) {
+			pg.fill(arg0, arg1);
+		}
 	}
 
 	@Override
 	public void fill(float arg0) {
-		if(!pickDraw){pg.fill(arg0);}
+		if (!pickDraw) {
+			pg.fill(arg0);
+		}
 	}
 
 	@Override
 	public void fill(int arg0, float arg1) {
-		if(!pickDraw){pg.fill(arg0, arg1);}
+		if (!pickDraw) {
+			pg.fill(arg0, arg1);
+		}
 	}
 
 	@Override
 	public void fill(int arg0) {
-		if(!pickDraw){pg.fill(arg0);}
+		if (!pickDraw) {
+			pg.fill(arg0);
+		}
 	}
-	
+
 	@Override
 	public void stroke(float arg0, float arg1, float arg2, float arg3) {
-		if(!pickDraw){pg.stroke(arg0, arg1, arg2, arg3);}
+		if (!pickDraw) {
+			pg.stroke(arg0, arg1, arg2, arg3);
+		}
 	}
 
 	@Override
 	public void stroke(float arg0, float arg1, float arg2) {
-		if(!pickDraw){pg.stroke(arg0, arg1, arg2);}
+		if (!pickDraw) {
+			pg.stroke(arg0, arg1, arg2);
+		}
 	}
 
 	@Override
 	public void stroke(float arg0, float arg1) {
-		if(!pickDraw){pg.stroke(arg0, arg1);}
+		if (!pickDraw) {
+			pg.stroke(arg0, arg1);
+		}
 	}
 
 	@Override
 	public void stroke(float arg0) {
-		if(!pickDraw){pg.stroke(arg0);}
+		if (!pickDraw) {
+			pg.stroke(arg0);
+		}
 	}
 
 	@Override
 	public void stroke(int arg0, float arg1) {
-		if(!pickDraw){pg.stroke(arg0, arg1);}
+		if (!pickDraw) {
+			pg.stroke(arg0, arg1);
+		}
 	}
 
 	@Override
 	public void stroke(int arg0) {
-		if(!pickDraw){pg.stroke(arg0);}
+		if (!pickDraw) {
+			pg.stroke(arg0);
+		}
 	}
 
 	@Override
 	public void tint(float arg0, float arg1, float arg2, float arg3) {
-		if(!pickDraw){pg.tint(arg0, arg1, arg2, arg3);}
+		if (!pickDraw) {
+			pg.tint(arg0, arg1, arg2, arg3);
+		}
 	}
 
 	@Override
 	public void tint(float arg0, float arg1, float arg2) {
-		if(!pickDraw){pg.tint(arg0, arg1, arg2);}
+		if (!pickDraw) {
+			pg.tint(arg0, arg1, arg2);
+		}
 	}
 
 	@Override
 	public void tint(float arg0, float arg1) {
-		if(!pickDraw){pg.tint(arg0, arg1);}
+		if (!pickDraw) {
+			pg.tint(arg0, arg1);
+		}
 	}
 
 	@Override
 	public void tint(float arg0) {
-		if(!pickDraw){pg.tint(arg0);}
+		if (!pickDraw) {
+			pg.tint(arg0);
+		}
 	}
 
 	@Override
 	public void tint(int arg0, float arg1) {
-		if(!pickDraw){pg.tint(arg0, arg1);}
+		if (!pickDraw) {
+			pg.tint(arg0, arg1);
+		}
 	}
 
 	@Override
 	public void tint(int arg0) {
-		if(!pickDraw){pg.tint(arg0);}
+		if (!pickDraw) {
+			pg.tint(arg0);
+		}
 	}
-	
-	public void addPhysicsMouseJoint(){
+
+	public void addPhysicsMouseJoint() {
 		if (mJoint == null && physics) {
 			mJointDef = new MouseJointDef();
 			mJointDef.maxForce = 1000000.0f;
@@ -2436,13 +2500,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			zoneBody.setAwake(true);
 		}
 	}
-	
+
 	/**
 	 * This method is for use by Processing, override it to change what occurs
 	 * when a Processing KeyEvent is passed to the Zone
 	 * 
 	 * @param event
-	 *            The Processing KeyEvent that is sent to the Zone 
+	 *            The Processing KeyEvent that is sent to the Zone
 	 */
 	public void keyEvent(KeyEvent event) {
 		switch (event.getAction()) {
@@ -2457,11 +2521,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			break;
 		}
 	}
-	
+
+	/**
+	 * Make sure that if a hidden sub-Zone is given a name that the outer-Zone
+	 * overrides this method to pass through the set to those Zones too,
+	 * otherwise the methods on these sub-Zones will never be called
+	 * 
+	 * @param obj
+	 *            The object to bind to the Zone
+	 */
 	public void setBoundObject(Object obj) {
 		this.boundObject = obj;
 	}
-	
+
 	public Object getBoundObject() {
 		return boundObject;
 	}

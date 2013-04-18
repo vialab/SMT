@@ -239,7 +239,8 @@ public class TouchClient {
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	private static void init(final PApplet parent, int port, TouchSource source, Class<?>... extraClasses) {
+	private static void init(final PApplet parent, int port, TouchSource source,
+			Class<?>... extraClasses) {
 		if (parent == null) {
 			System.err
 					.println("Null parent PApplet, pass 'this' to TouchClient.init() instead of null");
@@ -310,43 +311,45 @@ public class TouchClient {
 		case MULTIPLE:
 			listener = new SMTTuioListener();
 			manager = new SMTTouchManager(listener, picker);
-			
+
 			// ANDROID
-			if(System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")){
+			if (System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")) {
 				att = new AndroidToTUIO(parent.width, parent.height, port);
 				// parent.registerMethod("touchEvent", att); //when Processing
 				// supports this
-				tuioClientList.add(new SMTProxyTuioListener(port,listener).client);
+				tuioClientList.add(new SMTProxyTuioListener(port, listener).client);
 				break;
-			}else{
+			}
+			else {
 				// WM_TOUCH:
 				if (System.getProperty("os.arch").equals("x86")) {
-					TouchClient.runWinTouchTuioServer(false, "127.0.0.1", port+1);
+					TouchClient.runWinTouchTuioServer(false, "127.0.0.1", port + 1);
 				}
 				else {
-					TouchClient.runWinTouchTuioServer(true, "127.0.0.1", port+1);
+					TouchClient.runWinTouchTuioServer(true, "127.0.0.1", port + 1);
 				}
-				tuioClientList.add(new SMTProxyTuioListener(port+1,listener).client);
-	
+				tuioClientList.add(new SMTProxyTuioListener(port + 1, listener).client);
+
 				// SMART:
-				//TouchClient.runSmart2TuioServer();
-				//tuioClientList.add(new TuioClient(port));
-	
+				// TouchClient.runSmart2TuioServer();
+				// tuioClientList.add(new TuioClient(port));
+
 				// LEAP:
-				TouchClient.runLeapTuioServer(port+2);
-				tuioClientList.add(new SMTProxyTuioListener(port+2,listener).client);
-	
+				TouchClient.runLeapTuioServer(port + 2);
+				tuioClientList.add(new SMTProxyTuioListener(port + 2, listener).client);
+
 				// TUIO_DEVICE:
-				tuioClientList.add(new SMTProxyTuioListener(port,listener).client);
-	
+				tuioClientList.add(new SMTProxyTuioListener(port, listener).client);
+
 				// MOUSE:
-				// this still uses the old method, should be re-implemented without
+				// this still uses the old method, should be re-implemented
+				// without
 				// the socket
-				mtt = new MouseToTUIO(parent.width, parent.height, port+3);
+				mtt = new MouseToTUIO(parent.width, parent.height, port + 3);
 				parent.registerMethod("mouseEvent", mtt);
-				tuioClientList.add(new SMTProxyTuioListener(port+3,listener).client);
+				tuioClientList.add(new SMTProxyTuioListener(port + 3, listener).client);
 			}
-			for(TuioClient tc : tuioClientList){
+			for (TuioClient tc : tuioClientList) {
 				tc.connect();
 			}
 			break;
@@ -354,10 +357,10 @@ public class TouchClient {
 			break;
 		}
 
-		if(source != TouchSource.MULTIPLE){
+		if (source != TouchSource.MULTIPLE) {
 			listener = new SMTTuioListener();
 			manager = new SMTTouchManager(listener, picker);
-			for(TuioClient tc : tuioClientList){
+			for (TuioClient tc : tuioClientList) {
 				tc.addTuioListener(listener);
 				tc.connect();
 			}
@@ -376,12 +379,12 @@ public class TouchClient {
 				if (warnUncalledMethods) {
 					SMTUtilities.warnUncalledMethods(parent);
 				}
-				for(TuioClient t : tuioClientList){
+				for (TuioClient t : tuioClientList) {
 					if (t.isConnected()) {
 						t.disconnect();
 					}
 				}
-				for(Process tuioServer : tuioServerList){
+				for (Process tuioServer : tuioServerList) {
 					if (tuioServer != null) {
 						tuioServer.destroy();
 					}
@@ -1167,7 +1170,8 @@ public class TouchClient {
 				public void run() {
 					try {
 						Process tuioServer = Runtime.getRuntime().exec(
-								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle() + " " + address + " " + port);
+								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle() + " "
+										+ address + " " + port);
 						BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
 								tuioServer.getErrorStream()));
 						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
@@ -1176,7 +1180,7 @@ public class TouchClient {
 						tuioServerList.add(tuioServer);
 						tuioServerErrList.add(tuioServerErr);
 						tuioServerOutList.add(tuioServerOut);
-						
+
 						while (true) {
 							if (tuioServerErr.ready()) {
 								System.err.println(tuioServerErr.readLine());
@@ -1259,7 +1263,8 @@ public class TouchClient {
 				@Override
 				public void run() {
 					try {
-						Process tuioServer = Runtime.getRuntime().exec(exeTempFile.getAbsolutePath());
+						Process tuioServer = Runtime.getRuntime().exec(
+								exeTempFile.getAbsolutePath());
 						BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
 								tuioServer.getErrorStream()));
 						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
@@ -1268,7 +1273,7 @@ public class TouchClient {
 						tuioServerList.add(tuioServer);
 						tuioServerErrList.add(tuioServerErr);
 						tuioServerOutList.add(tuioServerOut);
-						
+
 						while (true) {
 							if (tuioServerErr.ready()) {
 								System.err.println(tuioServerErr.readLine());
@@ -1353,13 +1358,13 @@ public class TouchClient {
 						tuioServerList.add(tuioServer);
 						tuioServerErrList.add(tuioServerErr);
 						tuioServerOutList.add(tuioServerOut);
-						
+
 						while (true) {
 							if (tuioServerErr.ready()) {
 								System.err.println(tuioServerErr.readLine());
 							}
 							if (tuioServerOut.ready()) {
-									System.out.println(tuioServerOut.readLine());
+								System.out.println(tuioServerOut.readLine());
 							}
 							Thread.sleep(1000);
 						}
@@ -1468,7 +1473,7 @@ public class TouchClient {
 	 *            The additional objects to check in for methods
 	 */
 	public static void addMethodClasses(Class<?>... classes) {
-		for (Class<?> extraClass: classes) {
+		for (Class<?> extraClass : classes) {
 			extraClassList.add(extraClass);
 		}
 	}

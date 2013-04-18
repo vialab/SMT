@@ -35,9 +35,9 @@ public class ShapeZone extends Zone {
 		super(name, x, y, width, height, renderer);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
-	public void pickDrawImpl(){
+	public void pickDrawImpl() {
 		drawImpl();
 		SMTUtilities.invoke(drawMethod, applet, this);
 	}

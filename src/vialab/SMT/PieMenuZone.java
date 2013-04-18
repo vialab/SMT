@@ -9,179 +9,191 @@ import processing.core.PImage;
 import processing.core.PVector;
 
 public class PieMenuZone extends Zone {
-	
-	private class Slice extends Zone{
+
+	private class Slice extends Zone {
 		private String text;
 		private PImage image;
 		private String name;
 
-		Slice(String text, PImage image, String name){
+		Slice(String text, PImage image, String name) {
 			super(name);
 			this.text = text;
 			this.image = image;
 			this.name = name;
 		}
-		
-		boolean warnDraw(){return false;}
-		boolean warnTouch(){return false;}
+
+		boolean warnDraw() {
+			return false;
+		}
+
+		boolean warnTouch() {
+			return false;
+		}
 	}
-	
+
 	private ArrayList<Slice> sliceList = new ArrayList<Slice>();
-	
+
 	private int outerDiameter;
-	
+
 	private int innerDiameter;
-	
+
 	private int selected = -1;
 
 	private boolean visible = true;
 
-	public PieMenuZone(String name, int outerdiameter , int x, int y) {
-		this(name, outerdiameter , 50, x, y);
+	public PieMenuZone(String name, int outerdiameter, int x, int y) {
+		this(name, outerdiameter, 50, x, y);
 	}
-	
-	public PieMenuZone(String name, int outerDiameter , int innerDiameter, int x, int y) {
-		super(name, x-outerDiameter/2, y-outerDiameter/2, outerDiameter, outerDiameter);
+
+	public PieMenuZone(String name, int outerDiameter, int innerDiameter, int x, int y) {
+		super(name, x - outerDiameter / 2, y - outerDiameter / 2, outerDiameter, outerDiameter);
 		this.outerDiameter = outerDiameter;
 		this.innerDiameter = innerDiameter;
 	}
-	
-	public void add(String textName){
+
+	public void add(String textName) {
 		add(textName, (PImage) null);
 	}
-	
-	public void add(String text, String name){
+
+	public void add(String text, String name) {
 		add(text, null, name);
 	}
-	
-	public void add(String textName, PImage image){
+
+	public void add(String textName, PImage image) {
 		add(textName, image, textName.replaceAll("\\s", ""));
 	}
-	
-	public void add(String text, PImage image, String name){
+
+	public void add(String text, PImage image, String name) {
 		Slice s = new Slice(text, image, name);
 		s.setBoundObject(this.getBoundObject());
 		this.sliceList.add(s);
 	}
-	
-	public void remove(String textName){
-		for(Slice s : sliceList){
-			if(s.name.equalsIgnoreCase(textName.replaceAll("\\s", ""))){
+
+	public void remove(String textName) {
+		for (Slice s : sliceList) {
+			if (s.name.equalsIgnoreCase(textName.replaceAll("\\s", ""))) {
 				this.sliceList.remove(s);
 			}
 		}
 	}
-	
-	public int getDiameter(){
-		return (int) (2*PVector.sub(getOrigin(),getCentre()).mag());
+
+	public int getDiameter() {
+		return (int) (2 * PVector.sub(getOrigin(), getCentre()).mag());
 	}
-	 
+
 	protected void drawImpl() {
-		if(isVisible()){
+		if (isVisible()) {
 			textAlign(CENTER, CENTER);
 			imageMode(CENTER);
 			noStroke();
-			
-			float textdiam = (outerDiameter + innerDiameter)/3.65f;
-			
+
+			float textdiam = (outerDiameter + innerDiameter) / 3.65f;
+
 			fill(125);
-			ellipse(width/2, height/2, outerDiameter+3, outerDiameter+3);
-			
-			float op = sliceList.size()/TWO_PI;
-			for (int i=0; i<sliceList.size(); i++) {
-				float s = (i-0.49f)/op;
-				float e = (i+0.49f)/op;
+			ellipse(width / 2, height / 2, outerDiameter + 3, outerDiameter + 3);
+
+			float op = sliceList.size() / TWO_PI;
+			for (int i = 0; i < sliceList.size(); i++) {
+				float s = (i - 0.49f) / op;
+				float e = (i + 0.49f) / op;
 				if (selected == i) {
 					fill(0, 0, 255);
-				} else {
+				}
+				else {
 					fill(255);
 				}
-				arc(width/2, height/2, outerDiameter, outerDiameter, s, e);
+				arc(width / 2, height / 2, outerDiameter, outerDiameter, s, e);
 			}
-			
+
 			fill(0);
-			for (int i=0; i<sliceList.size(); i++) {
-				float m = i/op;
-				int imageSize = (int) (PI*textdiam/(sliceList.size()+1));
-				if(sliceList.get(i).image != null){
-					image(sliceList.get(i).image, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam, imageSize, imageSize);
-				}else{
+			for (int i = 0; i < sliceList.size(); i++) {
+				float m = i / op;
+				int imageSize = (int) (PI * textdiam / (sliceList.size() + 1));
+				if (sliceList.get(i).image != null) {
+					image(sliceList.get(i).image, width / 2 + PApplet.cos(m) * textdiam, height / 2
+							+ PApplet.sin(m) * textdiam, imageSize, imageSize);
+				}
+				else {
 					imageSize = 0;
 				}
-				if(sliceList.get(i).text !=null){
-					textSize(textdiam/(sliceList.size()+1+imageSize/40));
-					text(sliceList.get(i).text, width/2+PApplet.cos(m)*textdiam, height/2+PApplet.sin(m)*textdiam + imageSize/2 + textAscent());
+				if (sliceList.get(i).text != null) {
+					textSize(textdiam / (sliceList.size() + 1 + imageSize / 40));
+					text(sliceList.get(i).text, width / 2 + PApplet.cos(m) * textdiam, height / 2
+							+ PApplet.sin(m) * textdiam + imageSize / 2 + textAscent());
 				}
 			}
-			
+
 			fill(125);
-			ellipse(width/2, height/2, innerDiameter, innerDiameter);
+			ellipse(width / 2, height / 2, innerDiameter, innerDiameter);
 		}
 	}
-	
+
 	@Override
-	protected void pickDrawImpl(){
-		if(isVisible()){
-			ellipse(width/2, height/2, outerDiameter, outerDiameter);
+	protected void pickDrawImpl() {
+		if (isVisible()) {
+			ellipse(width / 2, height / 2, outerDiameter, outerDiameter);
 		}
 	}
-	
+
 	@Override
-	protected void touchImpl(){
+	protected void touchImpl() {
 		Touch t = getActiveTouch(0);
-		if(t != null && isVisible()){
+		if (t != null && isVisible()) {
 			PVector touchVector = new PVector(t.x, t.y);
 			PVector touchInZone = toZoneVector(touchVector);
-			float mouseTheta = PApplet.atan2(touchInZone.y-height/2, touchInZone.x-width/2);
-			float piTheta = mouseTheta>=0?mouseTheta:mouseTheta+TWO_PI;
-			float op = sliceList.size()/TWO_PI;
-			
+			float mouseTheta = PApplet.atan2(touchInZone.y - height / 2, touchInZone.x - width / 2);
+			float piTheta = mouseTheta >= 0 ? mouseTheta : mouseTheta + TWO_PI;
+			float op = sliceList.size() / TWO_PI;
+
 			selected = -1;
-			//only select past the inner diameter
-			if(touchVector.dist(getCentre())>(innerDiameter/2)){
-				for (int i=0; i<sliceList.size(); i++) {
-					float s = (i-0.5f)/op;
-					float e = (i+0.5f)/op;
-					if (piTheta>= s && (piTheta <= e || i == 0)) {
+			// only select past the inner diameter
+			if (touchVector.dist(getCentre()) > (innerDiameter / 2)) {
+				for (int i = 0; i < sliceList.size(); i++) {
+					float s = (i - 0.5f) / op;
+					float e = (i + 0.5f) / op;
+					if (piTheta >= s && (piTheta <= e || i == 0)) {
 						selected = i;
 					}
 				}
 			}
 		}
 	}
-	
+
 	public boolean isVisible() {
 		return visible;
 	}
-	
-	public void setVisible(boolean visible){
+
+	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
 
 	@Override
-	protected void pressImpl(){
-		if(selected != -1){
+	protected void pressImpl() {
+		if (selected != -1) {
 			sliceList.get(selected).pressInvoker();
-		}else{
-			//pressed in the middle of the menu, so hide it.
+		}
+		else {
+			// pressed in the middle of the menu, so hide it.
 			this.setVisible(false);
 		}
 	}
-	
+
 	/**
-	 * @return The name of the selected slice of the PieMenuZone, or null if none are selected
+	 * @return The name of the selected slice of the PieMenuZone, or null if
+	 *         none are selected
 	 */
-	public String getSelectedName(){
-		try{
+	public String getSelectedName() {
+		try {
 			return sliceList.get(selected).name;
-		}catch(Exception e){
+		}
+		catch (Exception e) {
 			return null;
 		}
 	}
-	
-	public void setBoundObject(Object obj){
+
+	public void setBoundObject(Object obj) {
 		super.setBoundObject(obj);
-		for(Slice s : sliceList){
+		for (Slice s : sliceList) {
 			s.setBoundObject(obj);
 		}
 	}

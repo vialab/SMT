@@ -17,9 +17,14 @@ public class TabZone extends Zone {
 	private int TAB_HEIGHT;
 	private boolean closeButtons;
 	Tab currentTab;
-	
-	boolean warnDraw(){return false;}
-	boolean warnTouch(){return false;}
+
+	boolean warnDraw() {
+		return false;
+	}
+
+	boolean warnTouch() {
+		return false;
+	}
 
 	private class CloseButton extends ButtonZone {
 
@@ -145,7 +150,11 @@ public class TabZone extends Zone {
 	}
 
 	/**
-	 * This adds the Given zone to a tab, the Tabs name will be Tab1, Tab2, etc depending on the number of current Tabs. This will fail badly when used with remove(Zone), so this method should not be used. The text displayed on the tab will be the tabname (Tab1,Tab2,etc) and the Zone's name and toString()
+	 * This adds the Given zone to a tab, the Tabs name will be Tab1, Tab2, etc
+	 * depending on the number of current Tabs. This will fail badly when used
+	 * with remove(Zone), so this method should not be used. The text displayed
+	 * on the tab will be the tabname (Tab1,Tab2,etc) and the Zone's name and
+	 * toString()
 	 * 
 	 * @param zone
 	 * @return Whether the zone was added
@@ -155,17 +164,19 @@ public class TabZone extends Zone {
 		return this.add(zone, "Tab" + (Tabs.size() + 1), "Tab" + (Tabs.size() + 1) + ": "
 				+ zone.name + "::" + zone.toString());
 	}
-	
+
 	/**
-	 * This adds the Given zone to a tab, with the given nameText used for both reflection methods and the name displayed on the tab itself
+	 * This adds the Given zone to a tab, with the given nameText used for both
+	 * reflection methods and the name displayed on the tab itself
 	 * 
 	 * @param zone
 	 * @param nameText
 	 *            The Tab name for use in reflection methods: drawNAME(),
-	 *            touchNAME(), etc if nameText="NAME", and the text that will be displayed on the Tab
+	 *            touchNAME(), etc if nameText="NAME", and the text that will be
+	 *            displayed on the Tab
 	 * @return Whether the zone was added
 	 */
-	public boolean add(Zone zone, String nameText){
+	public boolean add(Zone zone, String nameText) {
 		return add(zone, nameText, nameText);
 	}
 

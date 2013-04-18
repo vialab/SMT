@@ -15,7 +15,7 @@ class SMTProxyTuioListener implements TuioListener {
 	int port;
 
 	TuioListener realListener;
-	
+
 	TuioClient client;
 
 	public SMTProxyTuioListener(int port, TuioListener realListener) {

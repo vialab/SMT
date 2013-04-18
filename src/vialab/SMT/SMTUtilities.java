@@ -145,9 +145,10 @@ public final class SMTUtilities {
 	 *            given Zone
 	 * @return A Method, which can be called by invoke(Method, Zone)
 	 */
-	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone, boolean warnMissing) {
-		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name, warnMissing,
-				zone.getClass());
+	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone,
+			boolean warnMissing) {
+		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name,
+				warnMissing, zone.getClass());
 	}
 
 	/**
@@ -167,14 +168,14 @@ public final class SMTUtilities {
 	 * 
 	 * @return A Method, which can be called by invoke(Method, parameters... )
 	 */
-	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone, boolean warnMissing,
-			Class<?>... parameters) {
-		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name, warnMissing,
-				parameters);
+	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone,
+			boolean warnMissing, Class<?>... parameters) {
+		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name,
+				warnMissing, parameters);
 	}
 
-	static Method getZoneMethod(Class<?> callingClass, PApplet parent, String methodPrefix, String name,
-			boolean warnMissing, Class<?>... parameters) {
+	static Method getZoneMethod(Class<?> callingClass, PApplet parent, String methodPrefix,
+			String name, boolean warnMissing, Class<?>... parameters) {
 		// uppercase the first letter of the name so that we have consistent
 		// naming warnings
 		name = name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -189,7 +190,7 @@ public final class SMTUtilities {
 			// and the methodPrefix+Impl method is not provided by the class
 			// itself
 			if (warnMissing && !methodSet.contains(methodPrefix + name)
-					&& !checkImpl(callingClass,methodPrefix, parameters)) {
+					&& !checkImpl(callingClass, methodPrefix, parameters)) {
 				if (!warned) {
 					System.err
 							.println("\nCall TouchClient.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
@@ -228,13 +229,14 @@ public final class SMTUtilities {
 	 *            methodPrefix, the first of this array should be the Zone class
 	 * @return Whether the given class has a method with the given Prefix
 	 */
-	public static boolean checkImpl(Class<?> callingClass, String methodPrefix, Class<?>... parameters) {
+	public static boolean checkImpl(Class<?> callingClass, String methodPrefix,
+			Class<?>... parameters) {
 		if (parameters[0] == null) {
 			System.err.println("Error: CheckImpl() first class parameter was null.");
 			return false;
 		}
-		
-		if (parameters[0]==callingClass){
+
+		if (parameters[0] == callingClass) {
 			return false;
 		}
 
@@ -286,7 +288,7 @@ public final class SMTUtilities {
 			Class<?>[] firstSupered = new Class<?>[parameters.length];
 			System.arraycopy(parameters, 0, firstSupered, 0, parameters.length);
 			firstSupered[0] = superClass;
-			if (checkImpl(callingClass,methodPrefix, firstSupered)) {
+			if (checkImpl(callingClass, methodPrefix, firstSupered)) {
 				return true;
 			}
 		}
@@ -373,8 +375,9 @@ public final class SMTUtilities {
 					return method.invoke(parent, removeFromFront);
 				}
 				catch (Exception e) {}
-				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass()) && ((Zone)parameters[0]).getBoundObject() != null) {
-					Object o = ((Zone)parameters[0]).getBoundObject();
+				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass())
+						&& ((Zone) parameters[0]).getBoundObject() != null) {
+					Object o = ((Zone) parameters[0]).getBoundObject();
 					try {
 						if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
 							System.out.print(o.toString() + " with params: ");
@@ -400,8 +403,9 @@ public final class SMTUtilities {
 					return method.invoke(parent, removeFromBack);
 				}
 				catch (Exception e) {}
-				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass()) && ((Zone)parameters[0]).getBoundObject() != null) {
-					Object o = ((Zone)parameters[0]).getBoundObject();
+				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass())
+						&& ((Zone) parameters[0]).getBoundObject() != null) {
+					Object o = ((Zone) parameters[0]).getBoundObject();
 					try {
 						if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
 							System.out.print(o.toString() + " with params: ");
