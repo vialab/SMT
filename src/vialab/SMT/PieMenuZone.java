@@ -16,7 +16,7 @@ public class PieMenuZone extends Zone {
 		private PImage image;
 		private String name;
 		private Slice parent;
-        private ArrayList<Slice> children;
+		private ArrayList<Slice> children;
 
 		Slice(String text, PImage image, String name, Slice parent) {
 			super(name);
@@ -24,7 +24,8 @@ public class PieMenuZone extends Zone {
 			this.image = image;
 			this.name = name;
 			this.parent = parent;
-		    this.children = new ArrayList<Slice>();
+			this.children = new ArrayList<Slice>();
+			sliceList.add(this);
 		}
 
 		boolean warnDraw() {
@@ -34,17 +35,11 @@ public class PieMenuZone extends Zone {
 		boolean warnTouch() {
 			return false;
 		}
-	    
-	    public void add(Slice child){
-	    	this.children.add(child);
-	    }
-	    
-	    public void remove(Slice child){
-	    	children.remove(child);
-	    }
 	}
 
-	private Slice sliceRoot = new Slice(null,null,null,null);
+	private ArrayList<Slice> sliceList = new ArrayList<Slice>();
+
+	private Slice sliceRoot = new Slice(null, null, null, null);
 
 	private int outerDiameter;
 
@@ -77,18 +72,35 @@ public class PieMenuZone extends Zone {
 	}
 
 	public void add(String text, PImage image, String name) {
-		Slice s = new Slice(text, image, name,sliceRoot);
+		Slice s = new Slice(text, image, name, sliceRoot);
 		s.setBoundObject(this.getBoundObject());
-		this.sliceRoot.add(s);
+		this.sliceRoot.children.add(s);
 	}
 
 	public void remove(String textName) {
-		Iterator<Slice> i = sliceRoot.children.iterator();
-		while(i.hasNext()) {
-			if (i.next().name.equalsIgnoreCase(textName.replaceAll("\\s", ""))) {
-				i.remove();
+		if(textName != null){
+			sliceRoot.children.remove(getSliceFromName(textName));
+		}
+	}
+
+	public void changeRoot(String newRoot) {
+		if (getSliceFromName(newRoot) != null) {
+			this.sliceRoot = getSliceFromName(newRoot);
+		}
+		else {
+			System.err.println("PieMenuZone.changeRoot: No slice named: " + newRoot
+					+ " was found, changeRoot failed");
+		}
+	}
+
+	private Slice getSliceFromName(String name) {
+		for (Slice s : sliceList) {
+			if ((s.name == null && name == null)
+					|| (s.name != null && s.name.equalsIgnoreCase(name.replaceAll("\\s", "")))) {
+				return s;
 			}
 		}
+		return null;
 	}
 
 	public int getDiameter() {
@@ -124,16 +136,16 @@ public class PieMenuZone extends Zone {
 				float m = i / op;
 				int imageSize = (int) (PI * textdiam / (sliceRoot.children.size() + 1));
 				if (sliceRoot.children.get(i).image != null) {
-					image(sliceRoot.children.get(i).image, width / 2 + PApplet.cos(m) * textdiam, height / 2
-							+ PApplet.sin(m) * textdiam, imageSize, imageSize);
+					image(sliceRoot.children.get(i).image, width / 2 + PApplet.cos(m) * textdiam,
+							height / 2 + PApplet.sin(m) * textdiam, imageSize, imageSize);
 				}
 				else {
 					imageSize = 0;
 				}
 				if (sliceRoot.children.get(i).text != null) {
 					textSize(textdiam / (sliceRoot.children.size() + 1 + imageSize / 40));
-					text(sliceRoot.children.get(i).text, width / 2 + PApplet.cos(m) * textdiam, height / 2
-							+ PApplet.sin(m) * textdiam + imageSize / 2 + textAscent());
+					text(sliceRoot.children.get(i).text, width / 2 + PApplet.cos(m) * textdiam,
+							height / 2 + PApplet.sin(m) * textdiam + imageSize / 2 + textAscent());
 				}
 			}
 
@@ -184,11 +196,22 @@ public class PieMenuZone extends Zone {
 	@Override
 	protected void pressImpl() {
 		if (selected != -1) {
-			sliceRoot.children.get(selected).pressInvoker();
+			Slice s = sliceRoot.children.get(selected);
+			s.pressInvoker();
+			if (!s.children.isEmpty()) {
+				//make the selected Slice the root of the tree if it has children, for a submenu.
+				sliceRoot = s;
+			}
 		}
 		else {
-			// pressed in the middle of the menu, so hide it.
-			this.setVisible(false);
+			if (sliceRoot.parent == null) {
+				// pressed in the middle of the menu, so hide it.
+				this.setVisible(false);
+			}
+			else {
+				// pressed in middle of a submenu, so go back
+				sliceRoot = sliceRoot.parent;
+			}
 		}
 	}
 

@@ -2,9 +2,15 @@
  *  This example shows PieMenuZone functionality. It adds options
  *  to the pie menu, sometimes with an image, and uses press
  *  on both the PieMenuZone itself, and on each option.
- *  Each option when pressed will print it's name, and then be 
- *  removed, as the PieMenuZone is also pressed, and it calls
- *  remove() on the option. 
+ *
+ *  Each option when pressed will print it's name, and as the
+ *  PieMenuZone is also pressed, it will print the name too.
+ *
+ *  Remove Self is as advertised, removing itself from the menu.
+ *
+ *  Submenus are shown in use, created using changeRoot() to set
+ *  the root for options that are add()'ed after it. Then we
+ *  changeRoot(null) to get back to the top root menu.
  */
 
 import vialab.TUIOSource.*;
@@ -19,19 +25,24 @@ void setup(){
   menu.add("Submenu");
   menu.add("Reload");
   menu.add("View Source");
-  menu.add("Back");
+  menu.add("Remove Self");
+  menu.changeRoot("Submenu");
+  menu.add("Option1");
+  menu.add("Option2");
+  menu.add("Option3");
+  menu.changeRoot(null);
 }
 
 void draw(){
-  background(125);
+  background(0);
 }
 
 void pressForward(){println("Forward");}
 void pressSubmenu(){println("Submenu");}
 void pressReload(){println("Reload");}
 void pressViewSource(){println("View Source");}
-void pressBack(){println("Back");}
+void pressRemoveSelf(){println("Remove Self");TouchClient.getZone("PieMenu",PieMenuZone.class).remove("RemoveSelf");}
 void pressPieMenu(PieMenuZone m){
-  TouchClient.getZone("PieMenu",PieMenuZone.class).remove(m.getSelectedName());
+  println("Selected: "+m.getSelectedName());
 }
 
