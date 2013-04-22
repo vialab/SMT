@@ -1,3 +1,12 @@
+/**
+ *  This example shows PieMenuZone functionality. It adds options
+ *  to the pie menu, sometimes with an image, and uses press
+ *  on both the PieMenuZone itself, and on each option.
+ *  Each option when pressed will print it's name, and then be 
+ *  removed, as the PieMenuZone is also pressed, and it calls
+ *  remove() on the option. 
+ */
+
 import vialab.TUIOSource.*;
 import vialab.SMT.*;
 
@@ -14,7 +23,7 @@ void setup(){
 }
 
 void draw(){
-  background(125); 
+  background(125);
 }
 
 void pressForward(){println("Forward");}
@@ -23,6 +32,6 @@ void pressReload(){println("Reload");}
 void pressViewSource(){println("View Source");}
 void pressBack(){println("Back");}
 void pressPieMenu(PieMenuZone m){
-  println("Pie Menu selected: "+m.getSelectedName());
+  TouchClient.getZone("PieMenu",PieMenuZone.class).remove(m.getSelectedName());
 }
 
