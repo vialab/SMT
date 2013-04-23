@@ -27,12 +27,10 @@ void setup(){
   menu.add("View Source");
   menu.setDisabled("View Source",true);
   menu.add("Remove Self");
-  menu.changeRoot("Submenu");
   //menu.setDisabled("Submenu",true);
-  menu.add("Option1");
-  menu.add("Option2");
-  menu.add("Option3");
-  menu.changeRoot(null);
+  menu.addSubmenu("Submenu","Option1");
+  menu.addSubmenu("Submenu","Option2");
+  menu.addSubmenu("Submenu","Option3");
 }
 
 void draw(){

@@ -77,20 +77,36 @@ public class PieMenuZone extends Zone {
 		s.setBoundObject(this.getBoundObject());
 		this.sliceRoot.children.add(s);
 	}
+	
+	public void addSubmenu(String parent, String textName) {
+		addSubmenu(parent, textName, (PImage) null);
+	}
+
+	public void addSubmenu(String parent, String text, String name) {
+		addSubmenu(text, null, name);
+	}
+
+	public void addSubmenu(String parent, String textName, PImage image) {
+		addSubmenu(parent, textName, image, textName.replaceAll("\\s", ""));
+	}
+
+	public void addSubmenu(String parent, String text, PImage image, String name) {
+		Slice backupRoot = sliceRoot;
+		if (getSliceFromName(parent) != null) {
+			this.sliceRoot = getSliceFromName(parent);
+			add(text, image, name);
+		}else{
+			System.err.println("PieMenuZone.addSubmenu: No slice named: " + parent
+					+ " was found, addSubmenu failed");
+		}
+		sliceRoot = backupRoot;
+	}
 
 	public void remove(String textName) {
 		if (textName != null) {
-			sliceRoot.children.remove(getSliceFromName(textName));
-		}
-	}
-
-	public void changeRoot(String newRoot) {
-		if (getSliceFromName(newRoot) != null) {
-			this.sliceRoot = getSliceFromName(newRoot);
-		}
-		else {
-			System.err.println("PieMenuZone.changeRoot: No slice named: " + newRoot
-					+ " was found, changeRoot failed");
+			Slice s = getSliceFromName(textName);
+			sliceList.remove(s);
+			s.parent.children.remove(s);
 		}
 	}
 	
