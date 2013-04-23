@@ -17,6 +17,7 @@ public class PieMenuZone extends Zone {
 		private String name;
 		private Slice parent;
 		private ArrayList<Slice> children;
+		public boolean disabled = false;
 
 		Slice(String text, PImage image, String name, Slice parent) {
 			super(name);
@@ -92,6 +93,13 @@ public class PieMenuZone extends Zone {
 					+ " was found, changeRoot failed");
 		}
 	}
+	
+	public void setDisabled(String name, boolean disabled){
+		Slice s = this.getSliceFromName(name);
+		if(s != null){
+			s.disabled = disabled;
+		}
+	}
 
 	private Slice getSliceFromName(String name) {
 		for (Slice s : sliceList) {
@@ -128,7 +136,34 @@ public class PieMenuZone extends Zone {
 				else {
 					fill(255);
 				}
-				arc(width / 2, height / 2, outerDiameter, outerDiameter, s, e);
+				if(sliceRoot.children.get(i).disabled){
+					fill(200);
+				}
+				if(!sliceRoot.children.get(i).children.isEmpty()){
+					fill(200);
+					if(sliceRoot.children.get(i).disabled){
+						fill(150);
+					}
+					arc(width / 2, height / 2, outerDiameter, outerDiameter, s, e);
+					fill(255,0,0);
+					if(sliceRoot.children.get(i).disabled){
+						fill(200);
+					}
+					triangle(width / 2 +PApplet.cos((i-0.05f)/op)*(outerDiameter/2)*0.9f, height / 2+PApplet.sin((i-0.05f)/op)*(outerDiameter/2)*0.9f,width / 2 +PApplet.cos(i/op)*(outerDiameter/2)*0.95f, height / 2+PApplet.sin(i/op)*(outerDiameter/2)*0.95f,width / 2 +PApplet.cos((i+0.05f)/op)*(outerDiameter/2)*0.9f, height / 2+PApplet.sin((i+0.05f)/op)*(outerDiameter/2)*0.9f);
+					
+					if (selected == i) {
+						fill(0, 0, 255);
+					}
+					else {
+						fill(255);
+					}
+					if(sliceRoot.children.get(i).disabled){
+						fill(200);
+					}
+					arc(width / 2, height / 2, outerDiameter*0.85f, outerDiameter*0.85f, s, e);
+				}else{
+					arc(width / 2, height / 2, outerDiameter, outerDiameter, s, e);
+				}
 			}
 
 			fill(0);
@@ -177,6 +212,19 @@ public class PieMenuZone extends Zone {
 				selected = (int) ((piTheta + sliceSize / 2) / sliceSize)
 						% sliceRoot.children.size();
 			}
+			
+			if(selected == -1){
+				if(sliceRoot.parent != null){
+					sliceRoot = sliceRoot.parent;
+				}
+			}else{
+				if(sliceRoot.children.get(selected).disabled){
+					selected = -2;
+				}
+				else if(!sliceRoot.children.get(selected).children.isEmpty()&&touchVector.dist(getCentre()) > (outerDiameter/2)*0.85f){
+					sliceRoot = sliceRoot.children.get(selected);
+				}
+			}
 		}
 	}
 
@@ -190,16 +238,19 @@ public class PieMenuZone extends Zone {
 
 	@Override
 	protected void pressImpl() {
-		if (selected != -1) {
+		if (selected >= 0) {
 			Slice s = sliceRoot.children.get(selected);
-			s.pressInvoker();
-			if (!s.children.isEmpty()) {
-				// make the selected Slice the root of the tree if it has
-				// children, for a submenu.
-				sliceRoot = s;
+			if(!s.disabled){
+				s.pressInvoker();
+				if (!s.children.isEmpty()) {
+					// make the selected Slice the root of the tree if it has
+					// children, for a submenu.
+					sliceRoot = s;
+					selected = -1;
+				}
 			}
 		}
-		else {
+		else if(selected == -1){
 			if (sliceRoot.parent == null) {
 				// pressed in the middle of the menu, so hide it.
 				this.setVisible(false);
@@ -208,6 +259,8 @@ public class PieMenuZone extends Zone {
 				// pressed in middle of a submenu, so go back
 				sliceRoot = sliceRoot.parent;
 			}
+		}else{
+			//disabled, do nothing
 		}
 	}
 
