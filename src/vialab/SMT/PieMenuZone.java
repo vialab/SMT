@@ -178,6 +178,11 @@ public class PieMenuZone extends Zone {
 					imageSize = 0;
 				}
 				if (sliceRoot.children.get(i).text != null) {
+					if(sliceRoot.children.get(i).disabled){
+						fill(150);
+					}else{
+						fill(0);
+					}
 					textSize(textdiam / (sliceRoot.children.size() + 1 + imageSize / 40));
 					text(sliceRoot.children.get(i).text, width / 2 + PApplet.cos(m) * textdiam,
 							height / 2 + PApplet.sin(m) * textdiam + imageSize / 2 + textAscent());
