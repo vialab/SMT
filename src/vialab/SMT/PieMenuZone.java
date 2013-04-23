@@ -78,7 +78,7 @@ public class PieMenuZone extends Zone {
 	}
 
 	public void remove(String textName) {
-		if(textName != null){
+		if (textName != null) {
 			sliceRoot.children.remove(getSliceFromName(textName));
 		}
 	}
@@ -169,18 +169,13 @@ public class PieMenuZone extends Zone {
 			PVector touchInZone = toZoneVector(touchVector);
 			float mouseTheta = PApplet.atan2(touchInZone.y - height / 2, touchInZone.x - width / 2);
 			float piTheta = mouseTheta >= 0 ? mouseTheta : mouseTheta + TWO_PI;
-			float op = sliceRoot.children.size() / TWO_PI;
+			float sliceSize = TWO_PI / sliceRoot.children.size();
 
 			selected = -1;
 			// only select past the inner diameter
 			if (touchVector.dist(getCentre()) > (innerDiameter / 2)) {
-				for (int i = 0; i < sliceRoot.children.size(); i++) {
-					float s = (i - 0.5f) / op;
-					float e = (i + 0.5f) / op;
-					if (piTheta >= s && (piTheta <= e || i == 0)) {
-						selected = i;
-					}
-				}
+				selected = (int) ((piTheta + sliceSize / 2) / sliceSize)
+						% sliceRoot.children.size();
 			}
 		}
 	}
@@ -199,7 +194,8 @@ public class PieMenuZone extends Zone {
 			Slice s = sliceRoot.children.get(selected);
 			s.pressInvoker();
 			if (!s.children.isEmpty()) {
-				//make the selected Slice the root of the tree if it has children, for a submenu.
+				// make the selected Slice the root of the tree if it has
+				// children, for a submenu.
 				sliceRoot = s;
 			}
 		}
