@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
+import processing.core.PFont;
 import processing.core.PVector;
 
 /**
@@ -50,8 +51,8 @@ public class KeyboardZone extends Zone {
 		private Keys key;
 		private boolean keyDown;
 
-		public KeyZone(int x, int y, int width, int height, Keys key, int fontSize) {
-			super(null, x, y, width, height, key.text, fontSize);
+		public KeyZone(int x, int y, int width, int height, Keys key, int fontSize, PFont font) {
+			super(null, x, y, width, height, key.text, fontSize, font);
 			this.key = key;
 		}
 
@@ -323,15 +324,27 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
 			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor,
 			int linkColor) {
+		this(name, x, y, width, height, keysSentToApplet, alpha, backgroundColor, keyColor,
+				keyPressedColor, textColor, linkColor, true);
+	}
+
+	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
+			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor,
+			int linkColor, boolean exactFonts) {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
 		int DEFAULT_KEY_WIDTH = (width * 9 / 10) / KEYS_PER_ROW;
+		int fontSize = (this.height / NUM_KEYBOARD_ROWS) * 16 / 50;
+		PFont font = this.textFont;
+		if(!exactFonts){
+			font = applet.createFont("SansSerif", fontSize);
+		}
 
 		for (Keys k : Keys.values()) {
 			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH),
 					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k,
-					(this.height / NUM_KEYBOARD_ROWS) * 16 / 50));
+					fontSize, font));
 		}
 
 		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
