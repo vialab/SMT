@@ -255,6 +255,9 @@ public class PieMenuZone extends Zone {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+		if(!visible){
+			reset();
+		}
 	}
 
 	@Override
@@ -303,5 +306,9 @@ public class PieMenuZone extends Zone {
 		for (Slice s : sliceRoot.children) {
 			s.setBoundObject(obj);
 		}
+	}
+	
+	public void reset(){
+		sliceRoot = getSliceFromName(null);
 	}
 }
