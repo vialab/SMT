@@ -261,7 +261,7 @@ public class PieMenuZone extends Zone {
 	}
 
 	@Override
-	protected void pressImpl() {
+	protected void touchUpImpl(Touch t) {
 		if (selected >= 0) {
 			Slice s = sliceRoot.children.get(selected);
 			if(!s.disabled){

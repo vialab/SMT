@@ -1,10 +1,10 @@
 /**
  *  This example shows PieMenuZone functionality. It adds options
- *  to the pie menu, sometimes with an image, and uses press
+ *  to the pie menu, sometimes with an image, and uses touchUp
  *  on both the PieMenuZone itself, and on each option.
  *
- *  Each option when pressed will print it's name, and as the
- *  PieMenuZone is also pressed, it will print the name too.
+ *  Each option when touchUped will print it's name, and as the
+ *  PieMenuZone is also touchUped, it will print the name too.
  *
  *  Remove Self is as advertised, removing itself from the menu.
  *
@@ -37,12 +37,12 @@ void draw(){
   background(0);
 }
 
-void pressForward(){println("Forward");}
-void pressSubmenu(){println("Submenu");}
-void pressReload(){println("Reload");}
-void pressViewSource(){println("View Source");}
-void pressRemoveSelf(){println("Remove Self");TouchClient.getZone("PieMenu",PieMenuZone.class).remove("RemoveSelf");}
-void pressPieMenu(PieMenuZone m){
+void touchUpForward(){println("Forward");}
+void touchUpSubmenu(){println("Submenu");}
+void touchUpReload(){println("Reload");}
+void touchUpViewSource(){println("View Source");}
+void touchUpRemoveSelf(){println("Remove Self");TouchClient.getZone("PieMenu",PieMenuZone.class).remove("RemoveSelf");}
+void touchUpPieMenu(PieMenuZone m){
   println("Selected: "+m.getSelectedName());
 }
 
