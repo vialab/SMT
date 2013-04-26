@@ -344,7 +344,7 @@ public class PieMenuZone extends Zone {
 
 	@Override
 	protected void touchUpImpl(Touch t) {
-		if (selected >= 0) {
+		if (selected >= 0 && selected < sliceRoot.children.size()) {
 			Slice s = sliceRoot.children.get(selected);
 			if (!s.disabled) {
 				//invoke both touchUp and press methods for the Slice zones, as either can be used
