@@ -121,8 +121,8 @@ void touchKeyboard(Zone zone){
 void draw() {
   background(79, 129, 189);
   fill(255);
-  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length.getWidth()/2,10);
-  text("typed text: "+t.getWidth()/10,50);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length, width/2,10);
+  text("typed text: "+t,width/10,50);
 }
 
 void drawBoard(Zone zone){
@@ -145,8 +145,8 @@ void drawTitle(){
   textSize(100);
   text("Checkers",displayWidth/2-textWidth("Checkers")/2,displayHeight/2.8);
   textSize(16);
-  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length.getWidth()/2,20);
-  text("typed text: "+t.getWidth()/2,50);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length,width/2,20);
+  text("typed text: "+t,width/2,50);
 }
 
 void drawOptions(Zone zone){

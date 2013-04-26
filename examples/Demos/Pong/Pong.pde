@@ -92,7 +92,7 @@ void draw() {
     NUM_BALLS=balls.size();
   }
   fill(255);
-  text(frameRate+" fps".getWidth()/2,10);
+  text(frameRate+" fps",width/2,10);
 }
 
 void checkBallOffdisplay(Ball b) {
@@ -137,8 +137,8 @@ void drawPaddle(reflectZone z){
 
 class reflectZone extends Zone {
   PVector normalDir=new PVector();
-  reflectZone(String name, int x, int y, int.getWidth(), int.getHeight(), PVector normalDir) {
-    super(name,x, y,.getWidth(),.getHeight());
+  reflectZone(String name, int x, int y, int width, int height, PVector normalDir) {
+    super(name,x, y, width, height);
     this.normalDir=normalDir;
   }
   PVector reflectionDirection(Ball b) {

@@ -40,7 +40,7 @@ void setup() {
 void draw() {
   //background with fps
   background(79, 129, 189);
-  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length.getWidth()/2.getHeight()/2);
+  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length, width/2, height/2);
   fill(255);
 }
 

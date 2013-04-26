@@ -23,7 +23,7 @@ void touchZone(Zone zone){
 }
 
 void touchGrid(Zone zone){
-  TouchClient.grid(0,0.getWidth(),100,100,TouchClient.getZones());
+  TouchClient.grid(0,0,width,100,100,TouchClient.getZones());
 }
 
 void drawGrid(Zone zone){
