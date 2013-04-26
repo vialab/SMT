@@ -9,7 +9,9 @@ import processing.core.PMatrix2D;
 import processing.core.PMatrix3D;
 import processing.core.PShape;
 import processing.core.PStyle;
+import processing.opengl.PGL;
 import processing.opengl.PGraphicsOpenGL;
+import processing.opengl.PShader;
 
 /**
  * PGraphicsDelegate wraps the Processing functions for use by Zone.
@@ -17,15 +19,203 @@ import processing.opengl.PGraphicsOpenGL;
  * @see <a href="http://processing.org/reference">Processing Documentation</a>
  */
 public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
+
 	protected PGraphicsOpenGL pg;
 
-	// PGraphicsDelegate(PGraphics g) {
-	// this.pg = g;
-	// }
+	@Override
+	public void beginContour() {
+		pg.beginContour();
+	}
 
-	// public final float alpha(int arg0) {
-	// return pg.alpha(arg0);
-	// }
+	@Override
+	public PGL beginPGL() {
+		return pg.beginPGL();
+	}
+
+	@Override
+	public void blendMode(int mode) {
+		pg.blendMode(mode);
+	}
+
+	@Override
+	public void endContour() {
+		pg.endContour();
+	}
+
+	@Override
+	public void endPGL() {
+		pg.endPGL();
+	}
+
+	@Override
+	public void filter(PShader shader) {
+		pg.filter(shader);
+	}
+
+	@Override
+	public Object initCache(PImage img) {
+		return pg.initCache(img);
+	}
+
+	@Override
+	public boolean isGL() {
+		return pg.isGL();
+	}
+
+	@Override
+	public PShader loadShader(String fragFilename, String vertFilename) {
+		return pg.loadShader(fragFilename, vertFilename);
+	}
+
+	@Override
+	public PShader loadShader(String fragFilename) {
+		return pg.loadShader(fragFilename);
+	}
+
+	@Override
+	public PShape loadShape(String filename) {
+		return pg.loadShape(filename);
+	}
+
+	@Override
+	public void noClip() {
+		pg.noClip();
+	}
+
+	@Override
+	public void ortho(float left, float right, float bottom, float top) {
+		pg.ortho(left, right, bottom, top);
+	}
+
+	@Override
+	public void quadraticVertex(float cx, float cy, float cz, float x3, float y3, float z3) {
+		pg.quadraticVertex(cx, cy, cz, x3, y3, z3);
+	}
+
+	@Override
+	public void quadraticVertex(float cx, float cy, float x3, float y3) {
+		pg.quadraticVertex(cx, cy, x3, y3);
+	}
+
+	@Override
+	public void requestDraw() {
+		pg.requestDraw();
+	}
+
+	@Override
+	public void resetShader() {
+		pg.resetShader();
+	}
+
+	@Override
+	public void resetShader(int kind) {
+		pg.resetShader(kind);
+	}
+
+	@Override
+	public void setFrameRate(float frameRate) {
+		pg.setFrameRate(frameRate);
+	}
+
+	@Override
+	public void shader(PShader shader, int kind) {
+		pg.shader(shader, kind);
+	}
+
+	@Override
+	public void shader(PShader shader) {
+		pg.shader(shader);
+	}
+
+	@Override
+	public void shearX(float angle) {
+		pg.shearX(angle);
+	}
+
+	@Override
+	public void shearY(float angle) {
+		pg.shearY(angle);
+	}
+
+	@Override
+	public void smooth(int level) {
+		pg.smooth(level);
+	}
+
+	@Override
+	public void textureWrap(int wrap) {
+		pg.textureWrap(wrap);
+	}
+
+	@Override
+	public void arc(float a, float b, float c, float d, float start, float stop, int mode) {
+		pg.arc(a, b, c, d, start, stop, mode);
+	}
+
+	@Override
+	public void clear() {
+		pg.clear();
+	}
+
+	@Override
+	public void clip(float a, float b, float c, float d) {
+		pg.clip(a, b, c, d);
+	}
+
+	@Override
+	public PShape createShape() {
+		return pg.createShape();
+	}
+
+	@Override
+	public PShape createShape(int kind, float... p) {
+		return pg.createShape(kind, p);
+	}
+
+	@Override
+	public PShape createShape(int type) {
+		return pg.createShape(type);
+	}
+
+	@Override
+	public PShape createShape(PShape source) {
+		return pg.createShape(source);
+	}
+
+	@Override
+	public Object getCache(PImage image) {
+		return pg.getCache(image);
+	}
+
+	@Override
+	public PGraphics getRaw() {
+		return pg.getRaw();
+	}
+
+	@Override
+	public boolean haveRaw() {
+		return pg.haveRaw();
+	}
+
+	@Override
+	public PShape loadShape(String filename, String options) {
+		return pg.loadShape(filename, options);
+	}
+
+	@Override
+	public void noTexture() {
+		pg.noTexture();
+	}
+
+	@Override
+	public void removeCache(PImage image) {
+		pg.removeCache(image);
+	}
+
+	@Override
+	public void setCache(PImage image, Object storage) {
+		pg.setCache(image, storage);
+	}
 
 	public void ambient(float arg0, float arg1, float arg2) {
 		pg.ambient(arg0, arg1, arg2);
