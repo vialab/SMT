@@ -123,6 +123,12 @@ void draw() {
   fill(255);
   text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length, width/2,10);
   text("typed text: "+t,width/10,50);
+  c1.c=color(s[0].getCurrentValue(),s[1].getCurrentValue(),s[2].getCurrentValue());
+  c2.c=color(s[3].getCurrentValue(),s[4].getCurrentValue(),s[5].getCurrentValue());
+  for(int i=0; i<PIECES_PER_PLAYER; i++){
+    p1[i].c=c1.c;
+    p2[i].c=c2.c;
+  }
 }
 
 void drawBoard(Zone zone){
@@ -157,28 +163,11 @@ void drawOptions(Zone zone){
   text("Options",displayWidth/2-200,displayHeight/3);
 }
 
-void drawCheckerExample1(CheckerZone zone){
-  zone.c=color(s[0].getCurrentValue(),s[1].getCurrentValue(),s[2].getCurrentValue());
-  fill(zone.c);
-  ellipse(50,50,100,100);
-}
-
-void drawCheckerExample2(CheckerZone zone){
-  zone.c=color(s[3].getCurrentValue(),s[4].getCurrentValue(),s[5].getCurrentValue());
-  fill(zone.c);
-  ellipse(50,50,100,100);
-}
-
 void keyTyped(){
   t+=key;
 }
 
 void placePieces(){
-  for(int i=0; i<PIECES_PER_PLAYER; i++){
-    p1[i].c=c1.c;
-    p2[i].c=c2.c;
-  }
-  
   int c1=0,c2=0;
   for(int i=0; i<8; i++){
     for(int j=0; j<8; j++){
