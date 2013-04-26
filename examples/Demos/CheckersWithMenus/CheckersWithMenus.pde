@@ -92,23 +92,24 @@ void setup() {
   }
   placePieces();
   
-  KeyboardZone k = new KeyboardZone("Keyboard");
-  KeyboardZone k2 = new KeyboardZone(1150,0);
-  TextZone t= new TextZone(300,300,200,200);
-  TextZone t2= new TextZone(1350,300,200,200);
-  title.add(k);
-  title.add(k2);
-  title.add(t);
-  title.add(t2);/*
+  //KeyboardZone k = new KeyboardZone("Keyboard");
+  //KeyboardZone k2 = new KeyboardZone(1150,0);
+  //TextZone t= new TextZone(300,300,200,200);
+  //TextZone t2= new TextZone(1350,300,200,200);
+  //title.add(k);
+  //title.add(k2);
+  //title.add(t);
+  //title.add(t2);
+  /*
   TabZone tabs = new TabZone(true);
   title.add(tabs);
   tabs.add(k);
   tabs.add(k2);
   tabs.add(t);
   tabs.add(t2);*/
-  k.addKeyListener(t);
-  k2.addKeyListener(t2);
-  k.setSize(800,300);
+  //k.addKeyListener(t);
+  //k2.addKeyListener(t2);
+  //k.setSize(800,300);
   
   //call this to show warnings for methods that seem to be meant for use by a zone, but a zone matching the name does not exist, useful for debugging
   //client.warnUncalled();
