@@ -2,7 +2,6 @@
 
 package vialab.SMT;
 
-import java.awt.Container;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
