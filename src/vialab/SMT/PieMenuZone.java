@@ -2,8 +2,8 @@
 
 package vialab.SMT;
 
+import java.awt.Container;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -18,6 +18,8 @@ public class PieMenuZone extends Zone {
 		private Slice parent;
 		private ArrayList<Slice> children;
 		public boolean disabled = false;
+		public Long removalTime;
+		public long addTime;
 
 		Slice(String text, PImage image, String name, Slice parent) {
 			super(name);
@@ -36,7 +38,22 @@ public class PieMenuZone extends Zone {
 		boolean warnTouch() {
 			return false;
 		}
+
+		public float animationPercentage(long currentTime) {
+			if (removalTime != null) {
+				return 1 - (currentTime - removalTime) / animationTime;
+			}
+			else if (currentTime - addTime < animationTime) {
+				return (currentTime - addTime) / animationTime;
+			}
+			else {
+				return 1;
+			}
+		}
 	}
+	private long currentTime;
+
+	private float animationTime = 500;
 
 	private ArrayList<Slice> sliceList = new ArrayList<Slice>();
 
@@ -76,8 +93,9 @@ public class PieMenuZone extends Zone {
 		Slice s = new Slice(text, image, name, sliceRoot);
 		s.setBoundObject(this.getBoundObject());
 		this.sliceRoot.children.add(s);
+		s.addTime = System.currentTimeMillis();
 	}
-	
+
 	public void addSubmenu(String parent, String textName) {
 		addSubmenu(parent, textName, (PImage) null);
 	}
@@ -95,7 +113,8 @@ public class PieMenuZone extends Zone {
 		if (getSliceFromName(parent) != null) {
 			this.sliceRoot = getSliceFromName(parent);
 			add(text, image, name);
-		}else{
+		}
+		else {
 			System.err.println("PieMenuZone.addSubmenu: No slice named: " + parent
 					+ " was found, addSubmenu failed");
 		}
@@ -105,14 +124,25 @@ public class PieMenuZone extends Zone {
 	public void remove(String textName) {
 		if (textName != null) {
 			Slice s = getSliceFromName(textName);
-			sliceList.remove(s);
-			s.parent.children.remove(s);
+			// only set removal time, instead of actually removing the slice, as
+			// the animation for slice removal still needs to occur
+			s.removalTime = System.currentTimeMillis();
 		}
 	}
-	
-	public void setDisabled(String name, boolean disabled){
+
+	private void actualRemove(Slice s) {
+		if (sliceRoot.children.get(selected).equals(s)) {
+			selected = -1;
+		}
+		// this actually removes the slice by taking away the reference from it
+		// parent
+		s.parent.children.remove(s);
+		sliceList.remove(s);
+	}
+
+	public void setDisabled(String name, boolean disabled) {
 		Slice s = this.getSliceFromName(name);
-		if(s != null){
+		if (s != null) {
 			s.disabled = disabled;
 		}
 	}
@@ -142,67 +172,88 @@ public class PieMenuZone extends Zone {
 			fill(125);
 			ellipse(width / 2, height / 2, outerDiameter + 3, outerDiameter + 3);
 
+			float sliceTotal = 0;
+			for (Slice s : sliceRoot.children) {
+				sliceTotal += s.animationPercentage(currentTime);
+			}
+
 			float op = sliceRoot.children.size() / TWO_PI;
+			float ss = TWO_PI / sliceTotal;
+			float c = 0;
+
 			for (int i = 0; i < sliceRoot.children.size(); i++) {
-				float s = (i - 0.49f) / op;
-				float e = (i + 0.49f) / op;
+				Slice sl = sliceRoot.children.get(i);
+				float sizeFactor = sl.animationPercentage(currentTime);
+				float s = c;
+				float e = s + sizeFactor * ss;
+				float m = (s + e) / 2;
+
 				if (selected == i) {
 					fill(0, 0, 255);
+				}
+				else if (sl.disabled) {
+					fill(200);
 				}
 				else {
 					fill(255);
 				}
-				if(sliceRoot.children.get(i).disabled){
+
+				if (!sl.children.isEmpty()) {
 					fill(200);
-				}
-				if(!sliceRoot.children.get(i).children.isEmpty()){
-					fill(200);
-					if(sliceRoot.children.get(i).disabled){
+					if (sl.disabled) {
 						fill(150);
 					}
-					arc(width / 2, height / 2, outerDiameter, outerDiameter, s, e);
-					fill(255,0,0);
-					if(sliceRoot.children.get(i).disabled){
+					arc(width / 2, height / 2, outerDiameter, outerDiameter, s + 0.01f / op, e
+							- 0.01f / op);
+					fill(255, 0, 0);
+					if (sl.disabled) {
 						fill(200);
 					}
-					triangle(width / 2 +PApplet.cos((i-0.05f)/op)*(outerDiameter/2)*0.9f, height / 2+PApplet.sin((i-0.05f)/op)*(outerDiameter/2)*0.9f,width / 2 +PApplet.cos(i/op)*(outerDiameter/2)*0.95f, height / 2+PApplet.sin(i/op)*(outerDiameter/2)*0.95f,width / 2 +PApplet.cos((i+0.05f)/op)*(outerDiameter/2)*0.9f, height / 2+PApplet.sin((i+0.05f)/op)*(outerDiameter/2)*0.9f);
-					
+					triangle(width / 2 + PApplet.cos(m + (-0.05f / op)) * (outerDiameter / 2)
+							* 0.9f, height / 2 + PApplet.sin(m + ((-0.05f) / op))
+							* (outerDiameter / 2) * 0.9f, width / 2 + PApplet.cos(m)
+							* (outerDiameter / 2) * 0.95f, height / 2 + PApplet.sin(m)
+							* (outerDiameter / 2) * 0.95f,
+							width / 2 + PApplet.cos(m + (0.05f / op)) * (outerDiameter / 2) * 0.9f,
+							height / 2 + PApplet.sin(m + (0.05f / op)) * (outerDiameter / 2) * 0.9f);
+
 					if (selected == i) {
 						fill(0, 0, 255);
 					}
 					else {
 						fill(255);
 					}
-					if(sliceRoot.children.get(i).disabled){
+					if (sl.disabled) {
 						fill(200);
 					}
-					arc(width / 2, height / 2, outerDiameter*0.85f, outerDiameter*0.85f, s, e);
-				}else{
-					arc(width / 2, height / 2, outerDiameter, outerDiameter, s, e);
+					arc(width / 2, height / 2, outerDiameter * 0.85f, outerDiameter * 0.85f, s
+							+ 0.01f / op, e - 0.01f / op);
 				}
-			}
-
-			fill(0);
-			for (int i = 0; i < sliceRoot.children.size(); i++) {
-				float m = i / op;
-				int imageSize = (int) (PI * textdiam / (sliceRoot.children.size() + 1));
-				if (sliceRoot.children.get(i).image != null) {
-					image(sliceRoot.children.get(i).image, width / 2 + PApplet.cos(m) * textdiam,
+				else {
+					arc(width / 2, height / 2, outerDiameter, outerDiameter, s + 0.01f / op, e
+							- 0.01f / op);
+				}
+				
+				int imageSize = (int) (sizeFactor * ss * textdiam * 0.4f);
+				if (sl.image != null) {
+					image(sl.image, width / 2 + PApplet.cos(m) * textdiam,
 							height / 2 + PApplet.sin(m) * textdiam, imageSize, imageSize);
 				}
 				else {
 					imageSize = 0;
 				}
-				if (sliceRoot.children.get(i).text != null) {
-					if(sliceRoot.children.get(i).disabled){
+				if (sl.text != null) {
+					if (sl.disabled) {
 						fill(150);
-					}else{
+					}
+					else {
 						fill(0);
 					}
-					textSize(textdiam / (sliceRoot.children.size() + 1 + imageSize / 40));
-					text(sliceRoot.children.get(i).text, width / 2 + PApplet.cos(m) * textdiam,
+					textSize((sizeFactor * ss * textdiam - imageSize / 2) / 7);
+					text(sl.text, width / 2 + PApplet.cos(m) * textdiam,
 							height / 2 + PApplet.sin(m) * textdiam + imageSize / 2 + textAscent());
 				}
+				c += sizeFactor * ss;
 			}
 
 			fill(125);
@@ -212,6 +263,20 @@ public class PieMenuZone extends Zone {
 
 	@Override
 	protected void pickDrawImpl() {
+		//current time is incremented once per frame at the start of pickDraw to be consistent
+		currentTime = System.currentTimeMillis();
+		ArrayList<Slice> toRemove = new ArrayList<Slice>();
+		// before drawing, we should make sure to remove Slices that are past
+		// their expiration time, as we have no timer to do so
+		for (Slice s : sliceList) {
+			if (s.removalTime != null && currentTime - s.removalTime > animationTime) {
+				toRemove.add(s);
+			}
+		}
+		for (Slice s : toRemove) {
+			this.actualRemove(s);
+		}
+		
 		if (isVisible()) {
 			ellipse(width / 2, height / 2, outerDiameter, outerDiameter);
 		}
@@ -225,24 +290,41 @@ public class PieMenuZone extends Zone {
 			PVector touchInZone = toZoneVector(touchVector);
 			float mouseTheta = PApplet.atan2(touchInZone.y - height / 2, touchInZone.x - width / 2);
 			float piTheta = mouseTheta >= 0 ? mouseTheta : mouseTheta + TWO_PI;
-			float sliceSize = TWO_PI / sliceRoot.children.size();
 
 			selected = -1;
-			// only select past the inner diameter
-			if (touchVector.dist(getCentre()) > (innerDiameter / 2)) {
-				selected = (int) ((piTheta + sliceSize / 2) / sliceSize)
-						% sliceRoot.children.size();
-			}
 			
-			if(selected == -1){
-				if(sliceRoot.parent != null){
+			float sliceTotal = 0;
+			for (Slice s : sliceRoot.children) {
+				sliceTotal += s.animationPercentage(currentTime);
+			}
+			float ss = TWO_PI / sliceTotal;
+			float c = 0;
+
+			for (int i = 0; i < sliceRoot.children.size(); i++) {
+				Slice sl = sliceRoot.children.get(i);
+				float sizeFactor = sl.animationPercentage(currentTime);
+				float s = c;
+				float e = s + sizeFactor * ss;
+				// only select past the inner diameter
+				if (touchVector.dist(getCentre()) > (innerDiameter / 2)) {
+					if(piTheta>=s&&piTheta<e){
+						selected = i;
+					}
+				}
+				c+=sizeFactor * ss;
+			}
+
+			if (selected == -1) {
+				if (sliceRoot.parent != null) {
 					sliceRoot = sliceRoot.parent;
 				}
-			}else{
-				if(sliceRoot.children.get(selected).disabled){
+			}
+			else {
+				if (sliceRoot.children.get(selected).disabled) {
 					selected = -2;
 				}
-				else if(!sliceRoot.children.get(selected).children.isEmpty()&&touchVector.dist(getCentre()) > (outerDiameter/2)*0.85f){
+				else if (!sliceRoot.children.get(selected).children.isEmpty()
+						&& touchVector.dist(getCentre()) > (outerDiameter / 2) * 0.85f) {
 					sliceRoot = sliceRoot.children.get(selected);
 				}
 			}
@@ -255,7 +337,7 @@ public class PieMenuZone extends Zone {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
-		if(!visible){
+		if (!visible) {
 			reset();
 		}
 	}
@@ -264,8 +346,10 @@ public class PieMenuZone extends Zone {
 	protected void touchUpImpl(Touch t) {
 		if (selected >= 0) {
 			Slice s = sliceRoot.children.get(selected);
-			if(!s.disabled){
+			if (!s.disabled) {
+				//invoke both touchUp and press methods for the Slice zones, as either can be used
 				s.pressInvoker();
+				s.touchUpInvoker(t);
 				if (!s.children.isEmpty()) {
 					// make the selected Slice the root of the tree if it has
 					// children, for a submenu.
@@ -274,7 +358,7 @@ public class PieMenuZone extends Zone {
 				}
 			}
 		}
-		else if(selected == -1){
+		else if (selected == -1) {
 			if (sliceRoot.parent == null) {
 				// pressed in the middle of the menu, so hide it.
 				this.setVisible(false);
@@ -283,8 +367,9 @@ public class PieMenuZone extends Zone {
 				// pressed in middle of a submenu, so go back
 				sliceRoot = sliceRoot.parent;
 			}
-		}else{
-			//disabled, do nothing
+		}
+		else {
+			// disabled, do nothing
 		}
 	}
 
@@ -307,9 +392,8 @@ public class PieMenuZone extends Zone {
 			s.setBoundObject(obj);
 		}
 	}
-	
-	public void reset(){
+
+	public void reset() {
 		sliceRoot = getSliceFromName(null);
-		selected = -1;
 	}
 }

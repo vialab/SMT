@@ -23,7 +23,7 @@ void setup(){
   TouchClient.add(menu);
   menu.add("Forward",loadImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE_lpEhrobnGhxrMyF6TFLUuAcVpGJixDzak4TxVQjjiDW5UjF", "png"));
   menu.add("Submenu");
-  menu.add("Reload");
+  menu.add("Add");
   menu.add("View Source");
   menu.setDisabled("View Source",true);
   menu.add("Remove Self");
@@ -39,7 +39,7 @@ void draw(){
 
 void touchUpForward(){println("Forward");}
 void touchUpSubmenu(){println("Submenu");}
-void touchUpReload(){println("Reload");}
+void touchUpAdd(){println("Add");TouchClient.getZone("PieMenu",PieMenuZone.class).add("Remove Self");}
 void touchUpViewSource(){println("View Source");}
 void touchUpRemoveSelf(){println("Remove Self");TouchClient.getZone("PieMenu",PieMenuZone.class).remove("RemoveSelf");}
 void touchUpPieMenu(PieMenuZone m){
