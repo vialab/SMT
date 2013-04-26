@@ -337,14 +337,13 @@ public class KeyboardZone extends Zone {
 		int DEFAULT_KEY_WIDTH = (width * 9 / 10) / KEYS_PER_ROW;
 		int fontSize = (this.height / NUM_KEYBOARD_ROWS) * 16 / 50;
 		PFont font = this.textFont;
-		if(!exactFonts){
+		if (!exactFonts) {
 			font = applet.createFont("SansSerif", fontSize);
 		}
 
 		for (Keys k : Keys.values()) {
 			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH),
-					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k,
-					fontSize, font));
+					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k, fontSize, font));
 		}
 
 		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,

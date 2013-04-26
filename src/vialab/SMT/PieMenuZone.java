@@ -357,7 +357,7 @@ public class PieMenuZone extends Zone {
 			// slices
 			s.addTime = currentTime;
 			s.removalTime = null;
-			if(!currentSlices.contains(s)){
+			if (!currentSlices.contains(s)) {
 				currentSlices.add(s);
 			}
 		}
