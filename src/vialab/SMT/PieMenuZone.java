@@ -131,7 +131,7 @@ public class PieMenuZone extends Zone {
 	}
 
 	private void actualRemove(Slice s) {
-		if (sliceRoot.children.get(selected).equals(s)) {
+		if (selected >=0 && sliceRoot.children.get(selected).equals(s)) {
 			selected = -1;
 		}
 		// this actually removes the slice by taking away the reference from it
