@@ -396,10 +396,6 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 		return pg.get(arg0, arg1);
 	}
 
-	public Object getCache(PGraphics arg0) {
-		return pg.getCache(arg0);
-	}
-
 	public PMatrix getMatrix() {
 		return pg.getMatrix();
 	}
@@ -618,14 +614,6 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 		pg.rectMode(arg0);
 	}
 
-	// public final float red(int arg0) {
-	// return pg.red(arg0);
-	// }
-
-	public void removeCache(PGraphics arg0) {
-		pg.removeCache(arg0);
-	}
-
 	public void resetMatrix() {
 		pg.resetMatrix();
 	}
@@ -700,10 +688,6 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 
 	public void set(int arg0, int arg1, PImage arg2) {
 		pg.set(arg0, arg1, arg2);
-	}
-
-	public void setCache(PGraphics arg0, Object arg1) {
-		pg.setCache(arg0, arg1);
 	}
 
 	public void setMatrix(PMatrix arg0) {
