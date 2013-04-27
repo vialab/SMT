@@ -350,7 +350,9 @@ public final class SMTUtilities {
 	 * @param method
 	 * @param parent
 	 * @param parameters
-	 * @return
+	 * @return The return of the invoked method, if no method was invoked it
+	 *         will be null, the opposite is not true, as the return of an
+	 *         invoked method can be null also
 	 */
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
 		if (method != null) {

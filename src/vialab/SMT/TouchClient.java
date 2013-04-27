@@ -214,7 +214,7 @@ public class TouchClient {
 	 *            enum TouchSource - The source of touch events to listen to.
 	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
-	 * @param classes
+	 * @param extraClasses
 	 *            Class<?> - Classes that should be checked for method
 	 *            definitions similar to PApplet for drawZoneName(), etc, but
 	 *            PApplet takes precedence.
@@ -1469,7 +1469,7 @@ public class TouchClient {
 	 * This adds objects to check for drawZoneName, touchZoneName, etc methods
 	 * in, similar to PApplet
 	 * 
-	 * @param objects
+	 * @param classes
 	 *            The additional objects to check in for methods
 	 */
 	public static void addMethodClasses(Class<?>... classes) {

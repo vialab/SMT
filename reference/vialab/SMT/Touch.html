@@ -339,6 +339,14 @@ extends TUIO.TuioCursor</pre>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getMotionSpeed()">getMotionSpeed</a></strong>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>java.awt.Point[]</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getNewPathPoints()">getNewPathPoints</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.awt.Point[]</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getNewPathPoints(boolean)">getNewPathPoints</a></strong>(boolean&nbsp;join)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>java.util.Vector&lt;TUIO.TuioPoint&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getPath()">getPath</a></strong>()</code>&nbsp;</td>
 </tr>
@@ -366,7 +374,15 @@ extends TUIO.TuioCursor</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>float</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getX()">getX</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getXSpeed()">getXSpeed</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>float</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getY()">getY</a></strong>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>float</code></td>
@@ -436,7 +452,7 @@ extends TUIO.TuioCursor</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;TUIO.TuioPoint</h3>
-<code>getAngle, getAngle, getAngleDegrees, getAngleDegrees, getDistance, getDistance, getScreenX, getScreenY, getStartTime, getTuioTime, getX, getY, update, update</code></li>
+<code>getAngle, getAngle, getAngleDegrees, getAngleDegrees, getDistance, getDistance, getScreenX, getScreenY, getStartTime, getTuioTime, update, update</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
@@ -840,6 +856,54 @@ extends TUIO.TuioCursor</pre>
 <li class="blockList">
 <h4>getPathPoints</h4>
 <pre>public&nbsp;java.awt.Point[]&nbsp;getPathPoints()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>All the points on the path</dd></dl>
+</li>
+</ul>
+<a name="getNewPathPoints()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getNewPathPoints</h4>
+<pre>public&nbsp;java.awt.Point[]&nbsp;getNewPathPoints()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>All the points on the path since the previous update</dd></dl>
+</li>
+</ul>
+<a name="getNewPathPoints(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getNewPathPoints</h4>
+<pre>public&nbsp;java.awt.Point[]&nbsp;getNewPathPoints(boolean&nbsp;join)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>join</code> - Whether to start at the previous frame end point</dd>
+<dt><span class="strong">Returns:</span></dt><dd>All the points on the path since the previous update</dd></dl>
+</li>
+</ul>
+<a name="getX()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getX</h4>
+<pre>public&nbsp;float&nbsp;getX()</pre>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>getX</code>&nbsp;in class&nbsp;<code>TUIO.TuioPoint</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getY()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getY</h4>
+<pre>public&nbsp;float&nbsp;getY()</pre>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>getY</code>&nbsp;in class&nbsp;<code>TUIO.TuioPoint</code></dd>
+</dl>
 </li>
 </ul>
 <a name="update(TUIO.TuioTime, float, float)">

@@ -64,8 +64,6 @@
 </a>
 <h2 class="title">S</h2>
 <dl>
-<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#saturation(int)">saturation(int)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#save(java.lang.String)">save(String)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#scale(float, float, float)">scale(float, float, float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
@@ -99,9 +97,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/Zone.html#setBodyFromMatrix()">setBodyFromMatrix()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/ButtonZone.html#setButtonDown()">setButtonDown()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/ButtonZone.html" title="class in vialab.SMT">ButtonZone</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/PieMenuZone.html#setBoundObject(java.lang.Object)">setBoundObject(Object)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PieMenuZone.html" title="class in vialab.SMT">PieMenuZone</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#setCache(processing.core.PGraphics, java.lang.Object)">setCache(PGraphics, Object)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#setBoundObject(java.lang.Object)">setBoundObject(Object)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dd>
+<div class="block">Make sure that if a hidden sub-Zone is given a name that the outer-Zone
+ overrides this method to pass through the set to those Zones too,
+ otherwise the methods on these sub-Zones will never be called</div>
+</dd>
+<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#setCache(processing.core.PImage, java.lang.Object)">setCache(PImage, Object)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/SliderZone.html#setCurrentValue(int)">setCurrentValue(int)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/SliderZone.html" title="class in vialab.SMT">SliderZone</a></dt>
 <dd>&nbsp;</dd>
@@ -113,17 +117,21 @@
 <dd>
 <div class="block">Change state of the direct flag.</div>
 </dd>
+<dt><span class="strong"><a href="../vialab/SMT/PieMenuZone.html#setDisabled(java.lang.String, boolean)">setDisabled(String, boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PieMenuZone.html" title="class in vialab.SMT">PieMenuZone</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#setDrawTouchPoints(vialab.SMT.TouchDraw)">setDrawTouchPoints(TouchDraw)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
 <dd>
-<div class="block">Sets the flag for drawing touch points in the PApplet.</div>
+<div class="block"><span class="strong">Deprecated.</span>&nbsp;</div>
 </dd>
 <dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#setDrawTouchPoints(vialab.SMT.TouchDraw, int)">setDrawTouchPoints(TouchDraw, int)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
 <dd>
-<div class="block">Sets the flag for drawing touch points in the PApplet.</div>
+<div class="block"><span class="strong">Deprecated.</span>&nbsp;</div>
 </dd>
 <dt><span class="strong"><a href="../vialab/SMT/ButtonZone.html#setFont(processing.core.PFont)">setFont(PFont)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/ButtonZone.html" title="class in vialab.SMT">ButtonZone</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/ButtonZone.html#setFontSize(int)">setFontSize(int)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/ButtonZone.html" title="class in vialab.SMT">ButtonZone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#setFrameRate(float)">setFrameRate(float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/SliderZone.html#setLabel(java.lang.String)">setLabel(String)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/SliderZone.html" title="class in vialab.SMT">SliderZone</a></dt>
 <dd>&nbsp;</dd>
@@ -151,13 +159,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#setModified(boolean)">setModified(boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/ButtonZone.html#setName(java.lang.String)">setName(String)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/ButtonZone.html" title="class in vialab.SMT">ButtonZone</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/ButtonZone.html#setName(java.lang.String, boolean)">setName(String, boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/ButtonZone.html" title="class in vialab.SMT">ButtonZone</a></dt>
-<dd>
-<div class="block">Overide setName(String name) with the preferred call to this method, to
- change warning behavior of classes that extend this.</div>
-</dd>
 <dt><span class="strong"><a href="../vialab/SMT/Zone.html#setName(java.lang.String)">setName(String)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#setParent(processing.core.PApplet)">setParent(PApplet)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
@@ -180,11 +181,25 @@
 </dd>
 <dt><span class="strong"><a href="../vialab/SMT/ButtonZone.html#setText(java.lang.String)">setText(String)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/ButtonZone.html" title="class in vialab.SMT">ButtonZone</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#setTouchDraw(vialab.SMT.TouchDraw)">setTouchDraw(TouchDraw)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
+<dd>
+<div class="block">Sets the flag for drawing touch points in the PApplet.</div>
+</dd>
+<dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#setTouchDraw(vialab.SMT.TouchDraw, int)">setTouchDraw(TouchDraw, int)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
+<dd>
+<div class="block">Sets the flag for drawing touch points in the PApplet.</div>
+</dd>
+<dt><span class="strong"><a href="../vialab/SMT/PieMenuZone.html#setVisible(boolean)">setVisible(boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PieMenuZone.html" title="class in vialab.SMT">PieMenuZone</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#setWarnUnimplemented(boolean)">setWarnUnimplemented(boolean)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
 <dd>
 <div class="block">Calling this function overrides the default behavior of showing select
  unimplemented based on defaults for each zone specified in loadMethods()</div>
 </dd>
+<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#shader(processing.opengl.PShader, int)">shader(PShader, int)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#shader(processing.opengl.PShader)">shader(PShader)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#shape(processing.core.PShape, float, float, float, float)">shape(PShape, float, float, float, float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#shape(processing.core.PShape, float, float)">shape(PShape, float, float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
@@ -192,6 +207,26 @@
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#shape(processing.core.PShape)">shape(PShape)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#shapeMode(int)">shapeMode(int)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="../vialab/SMT/ShapeZone.html" title="class in vialab.SMT"><span class="strong">ShapeZone</span></a> - Class in <a href="../vialab/SMT/package-summary.html">vialab.SMT</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/ShapeZone.html#ShapeZone()">ShapeZone()</a></span> - Constructor for class vialab.SMT.<a href="../vialab/SMT/ShapeZone.html" title="class in vialab.SMT">ShapeZone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/ShapeZone.html#ShapeZone(java.lang.String)">ShapeZone(String)</a></span> - Constructor for class vialab.SMT.<a href="../vialab/SMT/ShapeZone.html" title="class in vialab.SMT">ShapeZone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/ShapeZone.html#ShapeZone(java.lang.String, java.lang.String)">ShapeZone(String, String)</a></span> - Constructor for class vialab.SMT.<a href="../vialab/SMT/ShapeZone.html" title="class in vialab.SMT">ShapeZone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/ShapeZone.html#ShapeZone(int, int, int, int)">ShapeZone(int, int, int, int)</a></span> - Constructor for class vialab.SMT.<a href="../vialab/SMT/ShapeZone.html" title="class in vialab.SMT">ShapeZone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/ShapeZone.html#ShapeZone(int, int, int, int, java.lang.String)">ShapeZone(int, int, int, int, String)</a></span> - Constructor for class vialab.SMT.<a href="../vialab/SMT/ShapeZone.html" title="class in vialab.SMT">ShapeZone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/ShapeZone.html#ShapeZone(java.lang.String, int, int, int, int)">ShapeZone(String, int, int, int, int)</a></span> - Constructor for class vialab.SMT.<a href="../vialab/SMT/ShapeZone.html" title="class in vialab.SMT">ShapeZone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/ShapeZone.html#ShapeZone(java.lang.String, int, int, int, int, java.lang.String)">ShapeZone(String, int, int, int, int, String)</a></span> - Constructor for class vialab.SMT.<a href="../vialab/SMT/ShapeZone.html" title="class in vialab.SMT">ShapeZone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#shearX(float)">shearX(float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#shearY(float)">shearY(float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#shininess(float)">shininess(float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
@@ -212,6 +247,8 @@
 <dt><span class="strong"><a href="../vialab/SMT/SliderZone.html#SliderZone(java.lang.String, int, int, int, int, int, int, java.lang.String)">SliderZone(String, int, int, int, int, int, int, String)</a></span> - Constructor for class vialab.SMT.<a href="../vialab/SMT/SliderZone.html" title="class in vialab.SMT">SliderZone</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/SliderZone.html#SliderZone(java.lang.String, int, int, int, int, int, int, int, int, int, java.lang.String)">SliderZone(String, int, int, int, int, int, int, int, int, int, String)</a></span> - Constructor for class vialab.SMT.<a href="../vialab/SMT/SliderZone.html" title="class in vialab.SMT">SliderZone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#smooth(int)">smooth(int)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#smooth()">smooth()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
@@ -257,6 +294,18 @@
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#stroke(int, float)">stroke(int, float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#stroke(int)">stroke(int)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#stroke(float, float, float, float)">stroke(float, float, float, float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#stroke(float, float, float)">stroke(float, float, float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#stroke(float, float)">stroke(float, float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#stroke(float)">stroke(float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#stroke(int, float)">stroke(int, float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#stroke(int)">stroke(int)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#strokeCap(int)">strokeCap(int)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>

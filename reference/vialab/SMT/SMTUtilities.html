@@ -160,7 +160,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/SMTUtilities.html#checkImpl(java.lang.String, java.lang.Class...)">checkImpl</a></strong>(java.lang.String&nbsp;methodPrefix,
+<td class="colLast"><code><strong><a href="../../vialab/SMT/SMTUtilities.html#checkImpl(java.lang.Class, java.lang.String, java.lang.Class...)">checkImpl</a></strong>(java.lang.Class&lt;?&gt;&nbsp;callingClass,
+         java.lang.String&nbsp;methodPrefix,
          java.lang.Class&lt;?&gt;...&nbsp;parameters)</code>
 <div class="block">This checks whether a method that has the given methodPrefix exists in
  the parameter given with the assumed suffix of 'Impl'.</div>
@@ -175,7 +176,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static java.lang.reflect.Method</code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/SMTUtilities.html#getZoneMethod(java.lang.String, vialab.SMT.Zone, boolean)">getZoneMethod</a></strong>(java.lang.String&nbsp;methodPrefix,
+<td class="colLast"><code><strong><a href="../../vialab/SMT/SMTUtilities.html#getZoneMethod(java.lang.Class, java.lang.String, vialab.SMT.Zone, boolean)">getZoneMethod</a></strong>(java.lang.Class&lt;?&gt;&nbsp;callingClass,
+             java.lang.String&nbsp;methodPrefix,
              <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone,
              boolean&nbsp;warnMissing)</code>
 <div class="block">Use this method when creating Classes extending Zone, to acquires a
@@ -184,7 +186,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static java.lang.reflect.Method</code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/SMTUtilities.html#getZoneMethod(java.lang.String, vialab.SMT.Zone, boolean, java.lang.Class...)">getZoneMethod</a></strong>(java.lang.String&nbsp;methodPrefix,
+<td class="colLast"><code><strong><a href="../../vialab/SMT/SMTUtilities.html#getZoneMethod(java.lang.Class, java.lang.String, vialab.SMT.Zone, boolean, java.lang.Class...)">getZoneMethod</a></strong>(java.lang.Class&lt;?&gt;&nbsp;callingClass,
+             java.lang.String&nbsp;methodPrefix,
              <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone,
              boolean&nbsp;warnMissing,
              java.lang.Class&lt;?&gt;...&nbsp;parameters)</code>
@@ -244,13 +247,14 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getZoneMethod(java.lang.String, vialab.SMT.Zone, boolean)">
+<a name="getZoneMethod(java.lang.Class, java.lang.String, vialab.SMT.Zone, boolean)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getZoneMethod</h4>
-<pre>public static&nbsp;java.lang.reflect.Method&nbsp;getZoneMethod(java.lang.String&nbsp;methodPrefix,
+<pre>public static&nbsp;java.lang.reflect.Method&nbsp;getZoneMethod(java.lang.Class&lt;?&gt;&nbsp;callingClass,
+                                     java.lang.String&nbsp;methodPrefix,
                                      <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone,
                                      boolean&nbsp;warnMissing)</pre>
 <div class="block">Use this method when creating Classes extending Zone, to acquires a
@@ -260,13 +264,14 @@ extends java.lang.Object</pre>
 <dt><span class="strong">Returns:</span></dt><dd>A Method, which can be called by invoke(Method, Zone)</dd></dl>
 </li>
 </ul>
-<a name="getZoneMethod(java.lang.String, vialab.SMT.Zone, boolean, java.lang.Class...)">
+<a name="getZoneMethod(java.lang.Class, java.lang.String, vialab.SMT.Zone, boolean, java.lang.Class...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getZoneMethod</h4>
-<pre>public static&nbsp;java.lang.reflect.Method&nbsp;getZoneMethod(java.lang.String&nbsp;methodPrefix,
+<pre>public static&nbsp;java.lang.reflect.Method&nbsp;getZoneMethod(java.lang.Class&lt;?&gt;&nbsp;callingClass,
+                                     java.lang.String&nbsp;methodPrefix,
                                      <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone,
                                      boolean&nbsp;warnMissing,
                                      java.lang.Class&lt;?&gt;...&nbsp;parameters)</pre>
@@ -278,19 +283,24 @@ extends java.lang.Object</pre>
 <dt><span class="strong">Returns:</span></dt><dd>A Method, which can be called by invoke(Method, parameters... )</dd></dl>
 </li>
 </ul>
-<a name="checkImpl(java.lang.String, java.lang.Class...)">
+<a name="checkImpl(java.lang.Class, java.lang.String, java.lang.Class...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>checkImpl</h4>
-<pre>public static&nbsp;boolean&nbsp;checkImpl(java.lang.String&nbsp;methodPrefix,
+<pre>public static&nbsp;boolean&nbsp;checkImpl(java.lang.Class&lt;?&gt;&nbsp;callingClass,
+                java.lang.String&nbsp;methodPrefix,
                 java.lang.Class&lt;?&gt;...&nbsp;parameters)</pre>
 <div class="block">This checks whether a method that has the given methodPrefix exists in
  the parameter given with the assumed suffix of 'Impl'. For example the
  prefix 'draw' would mean this method checks for the method drawImpl()
- existing in the given class.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>methodPrefix</code> - The prefix to check for on methods in the given Class</dd><dd><code>parameters</code> - The Class to check for having a method with the given
+ existing in the given class. The first parameter should be the calling
+ object that by definition this method will return false for. This means
+ we can have the method declared so that its subclasses can override it,
+ but it will not count as having our own implementation, so that
+ checkImpl() tells us when we have a real implementation of the method.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>callingClass</code> - The calling object, which will by definition return false</dd><dd><code>methodPrefix</code> - The prefix to check for on methods in the given Class</dd><dd><code>parameters</code> - The Class to check for having a method with the given
             methodPrefix, the first of this array should be the Zone class</dd>
 <dt><span class="strong">Returns:</span></dt><dd>Whether the given class has a method with the given Prefix</dd></dl>
 </li>

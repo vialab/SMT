@@ -123,13 +123,25 @@ extends java.lang.Enum&lt;<a href="../../vialab/SMT/TouchSource.html" title="enu
 </tr>
 <tr class="altColor">
 <td class="colOne"><code><strong><a href="../../vialab/SMT/TouchSource.html#ANDROID">ANDROID</a></strong></code>
-<div class="block">Use Android back end, only available using processing for Android</div>
+<div class="block">Use Android back end, only available using processing for Android, which
+ currently doesn't work</div>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><code><strong><a href="../../vialab/SMT/TouchSource.html#LEAP">LEAP</a></strong></code>
+<div class="block">Use Leap SDK back end, for the Leap Motion, using the finger positions</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><code><strong><a href="../../vialab/SMT/TouchSource.html#MOUSE">MOUSE</a></strong></code>
 <div class="block">Use a mouse to emulate multi-touch, left click is a touch, right click a
  hold, and right click the held cursor again to remove</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><strong><a href="../../vialab/SMT/TouchSource.html#MULTIPLE">MULTIPLE</a></strong></code>
+<div class="block">Runs all back-ends that do not interfere with each other, which currently
+ excludes SMART</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -245,18 +257,40 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>ANDROID</h4>
 <pre>public static final&nbsp;<a href="../../vialab/SMT/TouchSource.html" title="enum in vialab.SMT">TouchSource</a> ANDROID</pre>
-<div class="block">Use Android back end, only available using processing for Android</div>
+<div class="block">Use Android back end, only available using processing for Android, which
+ currently doesn't work</div>
 </li>
 </ul>
 <a name="SMART">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>SMART</h4>
 <pre>public static final&nbsp;<a href="../../vialab/SMT/TouchSource.html" title="enum in vialab.SMT">TouchSource</a> SMART</pre>
 <div class="block">Use Smart SDK back end, when running on Smart hardware, such as the Smart
  Table</div>
+</li>
+</ul>
+<a name="LEAP">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>LEAP</h4>
+<pre>public static final&nbsp;<a href="../../vialab/SMT/TouchSource.html" title="enum in vialab.SMT">TouchSource</a> LEAP</pre>
+<div class="block">Use Leap SDK back end, for the Leap Motion, using the finger positions</div>
+</li>
+</ul>
+<a name="MULTIPLE">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>MULTIPLE</h4>
+<pre>public static final&nbsp;<a href="../../vialab/SMT/TouchSource.html" title="enum in vialab.SMT">TouchSource</a> MULTIPLE</pre>
+<div class="block">Runs all back-ends that do not interfere with each other, which currently
+ excludes SMART</div>
 </li>
 </ul>
 </li>
