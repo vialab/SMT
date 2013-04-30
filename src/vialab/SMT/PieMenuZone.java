@@ -428,6 +428,7 @@ public class PieMenuZone extends Zone {
 
 	public void reset() {
 		sliceRoot = topRoot;
+		transitionToSliceRoot();
 		selected = -1;
 	}
 }
