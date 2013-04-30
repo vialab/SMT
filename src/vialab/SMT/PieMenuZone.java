@@ -335,7 +335,7 @@ public class PieMenuZone extends Zone {
 				else if (currentSlices.get(selected).removalTime != null) {
 					// removalTime is set, therefore it is in the process of
 					// being removed, so do not allow selection
-					selected = -1;
+					selected = -3;
 				}
 				else if (!currentSlices.get(selected).children.isEmpty()
 						&& touchVector.dist(getCentre()) > (outerDiameter / 2) * 0.85f) {
@@ -387,6 +387,7 @@ public class PieMenuZone extends Zone {
 					// make the selected Slice the root of the tree if it has
 					// children, for a submenu.
 					sliceRoot = s;
+					transitionToSliceRoot();
 					selected = -1;
 				}
 			}
@@ -399,6 +400,7 @@ public class PieMenuZone extends Zone {
 			else {
 				// pressed in middle of a submenu, so go back
 				sliceRoot = sliceRoot.parent;
+				transitionToSliceRoot();
 			}
 		}
 		else {
@@ -408,7 +410,7 @@ public class PieMenuZone extends Zone {
 
 	/**
 	 * @return The name of the selected slice of the PieMenuZone, or null if
-	 *         none are selected
+	 *         none are selected, which also occurs whenever a submenu transition takes place
 	 */
 	public String getSelectedName() {
 		try {
