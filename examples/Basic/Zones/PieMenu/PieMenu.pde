@@ -31,6 +31,14 @@ void setup(){
   menu.addSubmenu("Submenu","Option1");
   menu.addSubmenu("Submenu","Option2");
   menu.addSubmenu("Submenu","Option3");
+  ButtonZone b = new ButtonZone("ShowHide","Show / Hide Pie Menu");
+  //b.deactivated = true;
+  TouchClient.add(b);
+}
+
+void pressShowHide(){
+  PieMenuZone m = TouchClient.getZone("PieMenu",PieMenuZone.class);
+  m.setVisible(!m.isVisible());
 }
 
 void draw(){

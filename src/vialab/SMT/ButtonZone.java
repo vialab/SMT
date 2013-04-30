@@ -183,4 +183,12 @@ public class ButtonZone extends Zone {
 	public void setFontSize(int fontSize) {
 		this.fontSize = fontSize;
 	}
+	
+	@Override
+	protected void pressInvoker(){
+		if(!deactivated){
+			//only allow press if we are not deactivated
+			super.pressInvoker();
+		}
+	}
 }
