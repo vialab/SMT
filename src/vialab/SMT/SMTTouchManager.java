@@ -69,10 +69,10 @@ class SMTTouchManager {
 				// the touch existed, but no longer exists, so it went up
 				SMTUtilities.invoke(touchUp, applet, t);
 				for (Zone zone : t.getAssignedZones()) {
+					doTouchUp(zone, t);
 					if (touchPrevZone.get(t) == zone) {
 						doPress(zone, t);
 					}
-					doTouchUp(zone, t);
 				}
 				touchPrevZone.remove(t);
 			}
