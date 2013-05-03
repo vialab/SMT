@@ -887,12 +887,20 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param y
 	 */
 	public void setLocation(int x, int y) {
-		PVector c = this.getOrigin();
-		this.translate(-c.x,-c.y);
-		PVector n = this.fromZoneVector(new PVector(x,y));
-		this.translate(n.x, n.y);
-		this.x = x;
-		this.y = y;
+		if (getParent() == null) {
+			this.x = x;
+			this.y = y;
+			resetMatrix();
+		}
+		else {
+			PVector c = this.getOrigin();
+			this.translate(-c.x, -c.y);
+			PVector n = getParent().fromZoneVector(new PVector(x, y));
+			this.translate(n.x, n.y);
+			this.x = x;
+			this.y = y;
+		}
+
 	}
 
 	/**
