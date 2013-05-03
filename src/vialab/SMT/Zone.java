@@ -965,11 +965,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Tests to see if the x and y coordinates are in the zone. If the zone's
-	 * matrix has been changed, reset its inverse matrix. This method is also
-	 * used to place the x and y coordinate in the zone's matrix space and saves
-	 * it to localX and localY.
-	 * 
+	 * Tests to see if the x and y coordinates are in the zone.
 	 * 
 	 * @param x
 	 *            float - X-coordinate to test
