@@ -8,9 +8,13 @@
  *
  *  Remove Self is as advertised, removing itself from the menu.
  *
- *  Submenus are shown in use, created using changeRoot() to set
- *  the root for options that are add()'ed after it. Then we
- *  changeRoot(null) to get back to the top root menu.
+ *  Submenus are shown in use, created using addSubMenu(), and
+ *  accessed by clicking on the parent menu item, or by moving
+ *  over the edge. Going back to the parent requires moving over
+ *  the centre and not releasing.
+ *
+ *  The Show/Hide button will toggle visibility of the PieMenu,
+ *  and by doing so reset its state too.
  */
 
 import vialab.TUIOSource.*;
