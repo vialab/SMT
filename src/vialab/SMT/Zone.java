@@ -896,8 +896,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			this.x = (int) x;
 			this.y = (int) y;
 			this.matrix.reset();
-			this.matrix.translate(x,y);
-			this.matrix.preApply(getParent().matrix);
+			this.matrix.translate(x, y);
+			// If we are in our own touch (which we can tell by if backupMatrix
+			// is set), we need to apply our parents matrix too after the reset
+			if (backupMatrix != null) {
+				this.matrix.preApply(getParent().matrix);
+			}
 		}
 	}
 
@@ -2562,13 +2566,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public Object getBoundObject() {
 		return boundObject;
 	}
-	
+
 	/**
 	 * @return The angle of the Zone in global coordinates
 	 */
-	public float getRotationAngle(){
+	public float getRotationAngle() {
 		PMatrix3D g = getGlobalMatrix();
 		float angle = PApplet.atan2(g.m10, g.m00);
-		return angle>=0 ? angle : angle + 2*PI;
+		return angle >= 0 ? angle : angle + 2 * PI;
 	}
 }
