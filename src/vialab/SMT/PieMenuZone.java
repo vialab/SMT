@@ -130,11 +130,21 @@ public class PieMenuZone extends Zone {
 	public void remove(String textName) {
 		if (textName != null) {
 			Slice s = getSliceFromName(textName);
+			remove(s);
+		}
+	}
+	
+	@Override
+	public boolean remove(Zone z){
+		if(z instanceof Slice){
+			Slice s = (Slice) z;
 			// only set removal time, instead of actually removing the slice, as
 			// the animation for slice removal still needs to occur
 			s.removalTime = System.currentTimeMillis();
 			s.parent.children.remove(s);
-			sliceList.remove(s);
+			return sliceList.remove(s);
+		}else{
+			return super.remove(z);
 		}
 	}
 
@@ -410,7 +420,8 @@ public class PieMenuZone extends Zone {
 
 	/**
 	 * @return The name of the selected slice of the PieMenuZone, or null if
-	 *         none are selected, which also occurs whenever a submenu transition takes place
+	 *         none are selected, which also occurs whenever a submenu
+	 *         transition takes place
 	 */
 	public String getSelectedName() {
 		try {
