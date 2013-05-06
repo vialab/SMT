@@ -2347,9 +2347,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// get origin position
 		PVector o = fromZoneVector(new PVector(width / 2, height / 2));
 		// height-y to account for difference in co-ordinates
-		float angle = PApplet.atan2(g.m10, g.m00);
 		zoneBody.setTransform(new Vec2(o.x * TouchClient.box2dScale, (applet.height - o.y)
-				* TouchClient.box2dScale), angle);
+				* TouchClient.box2dScale), getRotationAngle());
 	}
 
 	public void setMatrixFromBody() {
@@ -2562,5 +2561,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	public Object getBoundObject() {
 		return boundObject;
+	}
+	
+	/**
+	 * @return The angle of the Zone in global coordinates
+	 */
+	public float getRotationAngle(){
+		PMatrix3D g = getGlobalMatrix();
+		float angle = PApplet.atan2(g.m10, g.m00);
+		return angle>=0 ? angle : angle + 2*PI;
 	}
 }
