@@ -22,11 +22,11 @@ void touchZ3D(){}
 
 void drawZ3D(Zone zone){
   fill(0);
-  rect(0,0,zone.getWidth(),zone.getHeight());
+  rect(0,0,zone.width,zone.height);
   lights();
-  translate(zone.getWidth() / 2, zone.getHeight() / 2);
-  rotateY(map(mouseX, 0, zone.getWidth(), 0, PI));
-  rotateZ(map(mouseY, 0, zone.getHeight(), 0, -PI));
+  translate(zone.width / 2, zone.height / 2);
+  rotateY(map(mouseX, 0, zone.width, 0, PI));
+  rotateZ(map(mouseY, 0, zone.height, 0, -PI));
   noStroke();
   fill(255, 255, 255);
   translate(0, -40, 0);

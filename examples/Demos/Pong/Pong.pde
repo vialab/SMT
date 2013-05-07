@@ -124,14 +124,14 @@ void checkBallOffdisplay(Ball b) {
 
 void drawPaddle(reflectZone z){
   fill(0,255,0);
-  rect(0,0,z.getWidth(),z.getHeight());
+  rect(0,0,z.width,z.height);
   stroke(0);
   strokeWeight(5);
   if (z.normalDir.x>0) {
-    line(0+z.getWidth(), 0, 0+z.getWidth(), 0+z.getHeight());
+    line(0+z.width, 0, 0+z.width, 0+z.height);
   }
   else if (z.normalDir.x<0) {
-    line(0, 0,0, 0+z.getHeight());
+    line(0, 0,0, 0+z.height);
   }
 }
 

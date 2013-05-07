@@ -28,12 +28,12 @@ void touchGrid(Zone zone){
 
 void drawGrid(Zone zone){
   fill(100);
-  rect(0,0,zone.getWidth(),zone.getHeight());
+  rect(0,0,zone.width,zone.height);
   fill(0);
   text("Align to grid",10,10);
 }
 
 void drawZone(Zone zone){
   fill(0);
-  ellipse(zone.getWidth()/2,zone.getHeight()/2,zone.getWidth(),zone.getHeight()); 
+  ellipse(zone.width/2,zone.height/2,zone.width,zone.height); 
 }

@@ -24,7 +24,7 @@ void touchParent(Zone z) {
 
 void drawParent(Zone z) {
   fill(0, 255, 0);
-  rect(0, 0, z.getWidth(), z.getHeight());
+  rect(0, 0, z.width, z.height);
 }
 
 void touchChild(Zone z) {
@@ -33,5 +33,5 @@ void touchChild(Zone z) {
 
 void drawChild(Zone z) {
   fill(255, 0, 0);
-  rect(0, 0, z.getWidth(), z.getHeight());
+  rect(0, 0, z.width, z.height);
 }
