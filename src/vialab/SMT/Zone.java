@@ -2348,11 +2348,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void setBodyFromMatrix() {
-		// get global matrix for rotation
-		PMatrix3D g = getGlobalMatrix();
 		// get origin position
 		PVector o = fromZoneVector(new PVector(width / 2, height / 2));
-		// height-y to account for difference in co-ordinates
+		// height-y to account for difference in coordinates
 		zoneBody.setTransform(new Vec2(o.x * TouchClient.box2dScale, (applet.height - o.y)
 				* TouchClient.box2dScale), getRotationAngle());
 	}
@@ -2361,7 +2359,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// set global matrix from zoneBody, then get local matrix from global
 		// matrix
 		PMatrix3D ng = new PMatrix3D();
-		// height-y to account for difference in co-ordinates
+		// height-y to account for difference in coordinates
 		ng.translate(zoneBody.getPosition().x / TouchClient.box2dScale,
 				(applet.height - zoneBody.getPosition().y / TouchClient.box2dScale));
 		ng.rotate(zoneBody.getAngle());

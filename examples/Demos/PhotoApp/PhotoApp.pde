@@ -6,13 +6,14 @@
  *  collide, bounce, etc.
  */
 import vialab.SMT.*;
-final static int IMAGE_FILES=5;
-final static int IMAGE_COPIES=4;
-PImage[] img = new PImage[IMAGE_FILES];
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MULTIPLE);
+
+  final int IMAGE_FILES=5;
+  final int IMAGE_COPIES=4;
+  PImage[] img = new PImage[IMAGE_FILES];
 
   for (int i=0; i<IMAGE_FILES; i++) {  
     img[i] = loadImage(i + ".jpg");
