@@ -19,6 +19,7 @@ public class PieMenuZone extends Zone {
 		public boolean disabled = false;
 		public Long removalTime;
 		public long addTime;
+		float textSize;
 
 		Slice(String text, PImage image, String name, Slice parent) {
 			super(name);
@@ -30,8 +31,28 @@ public class PieMenuZone extends Zone {
 			sliceList.add(this);
 		}
 
-		boolean warnDraw() {
-			return false;
+		protected void drawImpl() {
+			if(isVisible()){
+				textAlign(CENTER, CENTER);
+				imageMode(CENTER);
+				int imageSize = (width + height) / 2;
+				if (image != null) {
+					image(image, x, y, width, height);
+				}
+				else {
+					imageSize = 0;
+				}
+				if (text != null) {
+					if (disabled) {
+						fill(150);
+					}
+					else {
+						fill(0);
+					}
+					textSize(textSize);
+					text(text, x, y + imageSize / 2 + textAscent());
+				}
+			}
 		}
 
 		boolean warnTouch() {
@@ -99,6 +120,7 @@ public class PieMenuZone extends Zone {
 		this.topRoot.children.add(s);
 		s.addTime = System.currentTimeMillis();
 		this.currentSlices.add(s);
+		this.add(s);
 	}
 
 	public void addSubmenu(String parent, String textName) {
@@ -120,6 +142,7 @@ public class PieMenuZone extends Zone {
 			s.setBoundObject(this.getBoundObject());
 			p.children.add(s);
 			s.addTime = System.currentTimeMillis();
+			p.add(s);
 		}
 		else {
 			System.err.println("PieMenuZone.addSubmenu: No slice named: " + parent
@@ -133,19 +156,18 @@ public class PieMenuZone extends Zone {
 			remove(s);
 		}
 	}
-	
+
 	@Override
-	public boolean remove(Zone z){
-		if(z instanceof Slice){
+	public boolean remove(Zone z) {
+		if (z instanceof Slice) {
 			Slice s = (Slice) z;
 			// only set removal time, instead of actually removing the slice, as
 			// the animation for slice removal still needs to occur
 			s.removalTime = System.currentTimeMillis();
 			s.parent.children.remove(s);
 			return sliceList.remove(s);
-		}else{
-			return super.remove(z);
 		}
+		return super.remove(z);
 	}
 
 	private void finishRemove(Slice s) {
@@ -179,8 +201,6 @@ public class PieMenuZone extends Zone {
 
 	protected void drawImpl() {
 		if (isVisible()) {
-			textAlign(CENTER, CENTER);
-			imageMode(CENTER);
 			noStroke();
 
 			float textdiam = (outerDiameter + innerDiameter) / 3.65f;
@@ -251,24 +271,11 @@ public class PieMenuZone extends Zone {
 				}
 
 				int imageSize = (int) (sizeFactor * ss * textdiam * 0.4f);
-				if (sl.image != null) {
-					image(sl.image, width / 2 + PApplet.cos(m) * textdiam,
-							height / 2 + PApplet.sin(m) * textdiam, imageSize, imageSize);
-				}
-				else {
-					imageSize = 0;
-				}
-				if (sl.text != null) {
-					if (sl.disabled) {
-						fill(150);
-					}
-					else {
-						fill(0);
-					}
-					textSize((sizeFactor * ss * textdiam - imageSize / 2) / 7);
-					text(sl.text, width / 2 + PApplet.cos(m) * textdiam,
-							height / 2 + PApplet.sin(m) * textdiam + imageSize / 2 + textAscent());
-				}
+				sl.x = (int) (width / 2 + PApplet.cos(m) * textdiam);
+				sl.y = (int) (height / 2 + PApplet.sin(m) * textdiam);
+				sl.width = imageSize;
+				sl.height = imageSize;
+				sl.textSize = (sizeFactor * ss * textdiam - imageSize / 2) / 7;
 				c += sizeFactor * ss;
 			}
 
