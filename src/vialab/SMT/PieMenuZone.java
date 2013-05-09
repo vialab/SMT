@@ -397,12 +397,13 @@ public class PieMenuZone extends Zone {
 		this.visible = visible;
 		if (!visible) {
 			reset();
-			//dont leave any child draws behind when hiding
+			// dont leave any child draws behind when hiding
 			for (Slice s : currentSlices) {
 				super.remove(s);
 			}
-		}else{
-			//make sure to restore child draws when making visible
+		}
+		else {
+			// make sure to restore child draws when making visible
 			for (Slice s : currentSlices) {
 				super.add(s);
 			}
