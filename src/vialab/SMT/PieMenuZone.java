@@ -31,15 +31,21 @@ public class PieMenuZone extends Zone {
 			sliceList.add(this);
 		}
 
+		@Override
+		protected void pickDrawImpl() {
+			// make sure we do not pickDraw, as we leave that to the PieMenuZone
+		}
+
+		@Override
 		protected void drawImpl() {
-			if(isVisible()){
-				textAlign(CENTER, CENTER);
-				imageMode(CENTER);
+			if (isVisible()) {
 				int imageSize = (width + height) / 2;
 				if (image != null) {
-					image(image, x, y, width, height);
+					image(image, 0, 0, width, height);
 				}
-				else {
+				else if (drawMethod == null) {
+					// only assume no image if both our own PImage is null and
+					// drawMethod is not implemented
 					imageSize = 0;
 				}
 				if (text != null) {
@@ -49,8 +55,9 @@ public class PieMenuZone extends Zone {
 					else {
 						fill(0);
 					}
+					textAlign(CENTER);
 					textSize(textSize);
-					text(text, x, y + imageSize / 2 + textAscent());
+					text(text, width / 2, height / 2 + imageSize / 2 + textAscent() + 1);
 				}
 			}
 		}
@@ -120,7 +127,7 @@ public class PieMenuZone extends Zone {
 		this.topRoot.children.add(s);
 		s.addTime = System.currentTimeMillis();
 		this.currentSlices.add(s);
-		this.add(s);
+		super.add(s);
 	}
 
 	public void addSubmenu(String parent, String textName) {
@@ -142,7 +149,6 @@ public class PieMenuZone extends Zone {
 			s.setBoundObject(this.getBoundObject());
 			p.children.add(s);
 			s.addTime = System.currentTimeMillis();
-			p.add(s);
 		}
 		else {
 			System.err.println("PieMenuZone.addSubmenu: No slice named: " + parent
@@ -176,6 +182,8 @@ public class PieMenuZone extends Zone {
 			selected = -1;
 		}
 		currentSlices.remove(s);
+		// remove from Zone children
+		super.remove(s);
 	}
 
 	public void setDisabled(String name, boolean disabled) {
@@ -271,8 +279,8 @@ public class PieMenuZone extends Zone {
 				}
 
 				int imageSize = (int) (sizeFactor * ss * textdiam * 0.4f);
-				sl.x = (int) (width / 2 + PApplet.cos(m) * textdiam);
-				sl.y = (int) (height / 2 + PApplet.sin(m) * textdiam);
+				sl.setLocation(width / 2 - sl.width / 2 + PApplet.cos(m) * textdiam, height / 2
+						- sl.height / 2 + PApplet.sin(m) * textdiam);
 				sl.width = imageSize;
 				sl.height = imageSize;
 				sl.textSize = (sizeFactor * ss * textdiam - imageSize / 2) / 7;
@@ -376,6 +384,7 @@ public class PieMenuZone extends Zone {
 			s.removalTime = null;
 			if (!currentSlices.contains(s)) {
 				currentSlices.add(s);
+				super.add(s);
 			}
 		}
 	}
@@ -388,6 +397,15 @@ public class PieMenuZone extends Zone {
 		this.visible = visible;
 		if (!visible) {
 			reset();
+			//dont leave any child draws behind when hiding
+			for (Slice s : currentSlices) {
+				super.remove(s);
+			}
+		}else{
+			//make sure to restore child draws when making visible
+			for (Slice s : currentSlices) {
+				super.add(s);
+			}
 		}
 	}
 
