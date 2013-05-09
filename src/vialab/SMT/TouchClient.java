@@ -815,13 +815,17 @@ public class TouchClient {
 	 * the matrix, and when at the end of the list, it draws the touch points.
 	 */
 	public static void draw() {
+		ArrayList<Zone> toDraw = new ArrayList<Zone>();
 		for (Zone zone : zoneList) {
-			if (zone.getParent() != null) {
-				// the parent should handle the drawing
-				continue;
+			if (zone.getParent() == null) {
+				toDraw.add(zone);
 			}
+		}
+		// first extract order of all Zones to be drawn, then actually draw
+		// them, so that re-parenting, etc can occur in a draw, and we do not
+		// get ConcurrentModificationException
+		for (Zone zone : toDraw) {
 			zone.draw();
-			// zone.drawForPickBuffer(parent.g);
 		}
 		switch (drawTouchPoints) {
 		case DEBUG:
@@ -1424,8 +1428,6 @@ public class TouchClient {
 			}
 			zoneList.remove(zone);
 			zoneList.add(zone);
-			// change order of pickBuffer too
-			picker.putZoneOnTop(zone);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package vialab.SMT;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -152,24 +153,19 @@ class SMTZonePicker {
 		// make sure colorMode is correct for the pickBuffer
 		applet.g.colorMode(PConstants.RGB, 255);
 		applet.g.background(BG_PICK_COLOR, 255);
-		for (Zone zone : zonesByPickColor.values()) {
-			// zone will be null once in this loop as the BG_PICK_COLOR is
-			// mapped to null
-			if (zone != null) {
-				if (zone.getParent() != null) {
-					// the parent should handle the drawing
-					continue;
-				}
-				// zone does the matrix manipulation to place it self properly
-				zone.drawForPickBuffer();
+		ArrayList<Zone> toDraw = new ArrayList<Zone>();
+		for (Zone zone : TouchClient.zoneList) {
+			if (zone.getParent() == null) {
+				toDraw.add(zone);
 			}
+		}
+		// first extract order of all Zones to be drawn, then actually draw
+		// them, so that re-parenting, etc can occur in a draw, and we do not
+		// get ConcurrentModificationException
+		for (Zone zone : toDraw) {
+			zone.drawForPickBuffer();
 		}
 		applet.g.flush();
 		applet.g.loadPixels();
-	}
-
-	public void putZoneOnTop(Zone zone) {
-		zonesByPickColor.remove(zone.getPickColor());
-		zonesByPickColor.put(zone.getPickColor(), zone);
 	}
 }
