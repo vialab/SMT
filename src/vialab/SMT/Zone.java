@@ -2240,13 +2240,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	@Override
 	public void keyReleased(java.awt.event.KeyEvent e) {
-		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.RELEASE, e.getModifiers(), e.getKeyChar(),
+		keyReleased(new KeyEvent(e, e.getWhen(), KeyEvent.RELEASE, e.getModifiers(), e.getKeyChar(),
 				e.getKeyCode()));
 	}
 
 	@Override
 	public void keyTyped(java.awt.event.KeyEvent e) {
-		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.TYPE, e.getModifiers(), e.getKeyChar(),
+		keyTyped(new KeyEvent(e, e.getWhen(), KeyEvent.TYPE, e.getModifiers(), e.getKeyChar(),
 				e.getKeyCode()));
 	}
 

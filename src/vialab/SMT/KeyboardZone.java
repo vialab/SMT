@@ -465,16 +465,6 @@ public class KeyboardZone extends Zone {
 	}
 
 	/**
-	 * This is a convenience method, which only adds Zone's as KeyListener
-	 * 
-	 * @param zone
-	 *            The Zone to add to this keyboard as a KeyListener
-	 */
-	public void addZoneKeyListener(Zone zone) {
-		this.addKeyListener(zone);
-	}
-
-	/**
 	 * This adds a KeyListener to listen to this keyboard implementation. Since
 	 * Zone implements the KeyListener interface, Zone can be passed to this
 	 * method
