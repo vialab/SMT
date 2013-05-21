@@ -62,3 +62,5 @@ void touchItem(Zone zone){
   //configure the "Item" Zone to Rotate Scale and Translate (rst)
   zone.rst(); 
 }
+
+void touchUserArea(){}
