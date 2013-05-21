@@ -85,8 +85,7 @@ public class KeyboardZone extends Zone {
 			stroke(borderColor);
 			strokeWeight(borderWeight);
 			fill(buttonColor);
-			rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight,
-					cornerRadius);
+			rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight);
 
 			if (text != null) {
 				if (font != null) {
