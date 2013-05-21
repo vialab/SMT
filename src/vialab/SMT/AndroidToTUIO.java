@@ -44,7 +44,7 @@ import android.view.View.OnTouchListener;
  * @date September, 2012
  * @version 1.0
  */
-class AndroidToTUIO implements OnTouchListener {
+public class AndroidToTUIO implements OnTouchListener {
 
 	private static final int MAX_TOUCHPOINTS = 10;
 	private static final int FRAME_RATE = 40;
