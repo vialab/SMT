@@ -146,9 +146,10 @@ public class SliderZone extends Zone {
 
 	protected void drawMinMaxCur() {
 		fill(0);
-		text(currentValue, width / 2 - 10, 15);
-		text(minValue, 0, height);
-		text(maxValue, width - 30, height);
+		textAlign(CENTER);
+		text(currentValue, width / 2, height*2/10);
+		text(minValue, width/10, height*9/10);
+		text(maxValue, width*9/10, height*9/10);
 	}
 
 	protected void drawTicks() {
@@ -171,8 +172,8 @@ public class SliderZone extends Zone {
 
 	protected void drawKnob() {
 		// draw something for the slider knob
-		ellipseMode(CORNER);
-		ellipse((((currentValue - minValue) / (float) maxValue) * width * (float) 8 / 10)
+		fill(150,100);
+		rect((((currentValue - minValue) / (float) maxValue) * width * (float) 8 / 10)
 				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
 	}
 }
