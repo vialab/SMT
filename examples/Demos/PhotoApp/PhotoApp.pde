@@ -1,41 +1,35 @@
 /**
  *  A photo album sketch!
- *  This sketch loads a few images, makes a few copies, and
+ *  This sketch loads a few images, and
  *  puts them in randomly sized ImageZones. The ImageZones are
- *  configured to be tossed using the physics engine, and can
- *  collide, bounce, etc.
+ *  configured to rotated, scaled, and translated, and to also
+ *  be brought to the top layer when touched
  */
 import vialab.SMT.*;
 
 void setup() {
+  //make a fullscreen sketch and start the touchclient with the
+  //multiple backend, to use any device detected
   size(displayWidth, displayHeight, P3D);
   TouchClient.init(this, TouchSource.MULTIPLE);
 
-  final int IMAGE_FILES=5;
-  final int IMAGE_COPIES=4;
-  PImage[] img = new PImage[IMAGE_FILES];
-
-  for (int i=0; i<IMAGE_FILES; i++) {  
-    img[i] = loadImage(i + ".jpg");
-  }
-
-  for (int i=0; i<IMAGE_FILES*IMAGE_COPIES; i++) {  
-    TouchClient.add(new ImageZone("ImageZone", img[i%IMAGE_FILES], 
-    (int)random(0, displayWidth-400), (int)random(0, displayHeight-400), 
+  //load 5 image zones with random size + position
+  for (int i=0; i<5; i++) {  
+    TouchClient.add(new ImageZone("ImageZone", loadImage(i + ".jpg"), 
+    (int)random(0, displayWidth-200), (int)random(0, displayHeight-200), 
     (int)random(100, 200), (int)random(100, 200)));
-  }
-  
-  for(Zone z : TouchClient.getZones()){
-    z.physics=true; 
   }
 }
 
 void touchImageZone(Zone z) {
+  //tell image zones to be put on the top when touched, and to
+  //rotate scale and tranlate
   TouchClient.putZoneOnTop(z);
-  z.toss();
+  z.rst();
 }
 
 void draw() {
+  //draw the background and fps
   background(79, 129, 189);
   text(round(frameRate)+" fps", width/2, 10);
 }
