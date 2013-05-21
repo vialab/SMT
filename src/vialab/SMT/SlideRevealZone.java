@@ -10,7 +10,7 @@ public class SlideRevealZone extends Zone {
 		}
 
 		protected void touchImpl() {
-			hSwipe((int) getParent().getX(), (int) getParent().getX() + getParent().width);
+			hSwipe(0, getParent().width);
 			xPosSlider = (int) (getParent().toZoneVector(getOrigin()).x);
 		}
 
