@@ -24,7 +24,7 @@ public class PatternUnlockZone extends Zone {
 
 		protected void drawImpl() {
 			fill(255);
-			ellipse(width / 2, height / 2, width, height);
+			ellipse(width / 2, height / 2, width*7/10, height*7/10);
 			if (touched) {
 				fill(0, 255, 0);
 				ellipse(width / 2, height / 2, width / 2, height / 2);
@@ -41,6 +41,7 @@ public class PatternUnlockZone extends Zone {
 		}
 	}
 
+	public String passcode = "67412";
 	public boolean accepted = false;
 	private ArrayList<Integer> code = new ArrayList<Integer>();
 	private CircleZone[] pattern = new CircleZone[9];
@@ -48,8 +49,8 @@ public class PatternUnlockZone extends Zone {
 	public PatternUnlockZone(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		for (int i = 0; i < 9; i++) {
-			pattern[i] = new CircleZone(width / 24 + (i % 3) * width / 3, width / 24 + (i / 3)
-					* width / 3, width / 4, width / 4, i);
+			pattern[i] = new CircleZone((i % 3) * width / 3, (i / 3) * width / 3, width / 3,
+					width / 3, i);
 			add(pattern[i]);
 		}
 	}
@@ -67,15 +68,22 @@ public class PatternUnlockZone extends Zone {
 			pass += i;
 		}
 		fill(0);
-		text(pass, 400, 400);
+		textAlign(RIGHT);
+		text(pass, width, height);
 		if (pass.length() >= 5) {
-			if ((pass.equals("67412") || pass.equals("21476")) && !accepted) {
+			if ((pass.equals(passcode) || pass.equals(new StringBuilder(passcode).reverse().toString())) && !accepted) {
 				System.out.println("passcode accepted");
 				accepted = true;
 			}
 		}
 	}
+	
+	@Override
+	protected void touchImpl() {
+		unassignAll();
+	}
 
+	@Override
 	protected void touchUpImpl(Touch t) {
 		code.clear();
 		for (int i = 0; i < 9; i++) {
