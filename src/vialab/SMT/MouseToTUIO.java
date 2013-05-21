@@ -21,7 +21,7 @@
  * this library; if not, write to the Free Software Foundation, Inc., 59 Temple
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package vialab.TUIOSource;
+package vialab.SMT;
 
 import java.awt.Point;
 import java.util.Enumeration;
@@ -45,7 +45,7 @@ import processing.event.MouseEvent;
  * @date September, 2012
  * @version 2.0
  */
-public class MouseToTUIO {
+class MouseToTUIO {
 
 	private static Simulation sim;
 

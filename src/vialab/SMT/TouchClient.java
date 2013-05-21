@@ -61,8 +61,6 @@ import processing.core.PImage;
 
 //import android.view.*;
 
-import vialab.TUIOSource.*;
-
 import TUIO.*;
 
 /**

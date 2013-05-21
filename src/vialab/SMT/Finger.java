@@ -23,7 +23,7 @@
   Free Software Foundation, Inc., 59 Temple Place, Suite 330,
   Boston, MA  02111-1307  USA
  */
-package vialab.TUIOSource;
+package vialab.SMT;
 
 import java.awt.Point;
 import java.util.Vector;
@@ -42,7 +42,7 @@ import java.util.Vector;
  * @date July, 2011
  * @version 1.0
  */
-public class Finger {
+class Finger {
 	/** Touch Cursor's Session ID */
 	protected int sessionID;
 	/** Touch Cursor's speed in the x-direction */

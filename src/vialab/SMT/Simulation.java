@@ -23,7 +23,7 @@
   Free Software Foundation, Inc., 59 Temple Place, Suite 330,
   Boston, MA  02111-1307  USA
  */
-package vialab.TUIOSource;
+package vialab.SMT;
 
 import java.awt.Point;
 import java.net.SocketException;
@@ -50,7 +50,7 @@ import com.illposed.osc.OSCPortOut;
  * @date September, 2012
  * @version 2.0
  */
-public class Simulation {
+class Simulation {
 
 	/** Default host. (Implements TUIO: host "127.0.0.1") */
 	static String host = "127.0.0.1";

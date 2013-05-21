@@ -21,7 +21,7 @@
  * this library; if not, write to the Free Software Foundation, Inc., 59 Temple
  * Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package vialab.TUIOSource;
+package vialab.SMT;
 
 import java.util.Vector;
 
@@ -44,7 +44,7 @@ import android.view.View.OnTouchListener;
  * @date September, 2012
  * @version 1.0
  */
-public class AndroidToTUIO implements OnTouchListener {
+class AndroidToTUIO implements OnTouchListener {
 
 	private static final int MAX_TOUCHPOINTS = 10;
 	private static final int FRAME_RATE = 40;
