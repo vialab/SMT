@@ -156,3 +156,9 @@ class reflectZone extends Zone {
   }
 }
 
+void pressScore(){
+  //reset the score
+  p1score=0;
+  p2score=0;
+}
+
