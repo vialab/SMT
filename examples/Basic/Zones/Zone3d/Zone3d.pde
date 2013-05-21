@@ -6,7 +6,8 @@
 import vialab.SMT.*;
 
 float xmag, ymag = 0;
-float newXmag, newYmag = 0; 
+float newXmag, newYmag = 0;
+int x, y;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
@@ -21,12 +22,17 @@ void draw() {
 void touchZ3D(){}
 
 void drawZ3D(Zone zone){
+  if(zone.getTouches().length>0){
+    Touch t = zone.getTouches()[0];
+    x=t.x;
+    y=t.y;
+  }
   fill(0);
   rect(0,0,zone.width,zone.height);
   lights();
   translate(zone.width / 2, zone.height / 2);
-  rotateY(map(mouseX, 0, zone.width, 0, PI));
-  rotateZ(map(mouseY, 0, zone.height, 0, -PI));
+  rotateY(map(x, 0, zone.width, 0, PI));
+  rotateZ(map(y, 0, zone.height, 0, -PI));
   noStroke();
   fill(255, 255, 255);
   translate(0, -40, 0);
