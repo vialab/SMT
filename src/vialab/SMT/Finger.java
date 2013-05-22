@@ -42,7 +42,7 @@ import java.util.Vector;
  * @date July, 2011
  * @version 1.0
  */
-class Finger {
+public class Finger {
 	/** Touch Cursor's Session ID */
 	protected int sessionID;
 	/** Touch Cursor's speed in the x-direction */
