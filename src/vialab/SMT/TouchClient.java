@@ -1096,7 +1096,9 @@ public class TouchClient {
 		}
 
 		parent.g.flush();
-		SMTUtilities.invoke(touch, parent);
+		if(getTouches().length>0){
+			SMTUtilities.invoke(touch, parent);
+		}
 		for (Zone zone : zoneList) {
 			if (zone.getParent() != null) {
 				// the parent should handle the touch calling
