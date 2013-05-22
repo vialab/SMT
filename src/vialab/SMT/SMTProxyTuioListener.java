@@ -16,13 +16,9 @@ class SMTProxyTuioListener implements TuioListener {
 
 	TuioListener realListener;
 
-	TuioClient client;
-
 	public SMTProxyTuioListener(int port, TuioListener realListener) {
 		this.port = port;
 		this.realListener = realListener;
-		this.client = new TuioClient(port);
-		this.client.addTuioListener(this);
 	}
 
 	@Override
