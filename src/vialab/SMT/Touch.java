@@ -308,4 +308,12 @@ public class Touch extends TuioCursor {
 	public float getY() {
 		return y;
 	}
+	
+	/**
+	 * @param t Touch to calculate distance from 
+	 * @return	The distance between this and the given Touch
+	 */
+	float distance(Touch t){
+		return (float) getCurrentPoint().distance(t.getCurrentPoint());
+	}
 }
