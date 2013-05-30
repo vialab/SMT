@@ -143,10 +143,17 @@ public class TouchClient {
 
 	protected static ArrayList<Class<?>> extraClassList = new ArrayList<Class<?>>();
 
+	//TODO: default to true after 2.0b10 is released
+	static boolean fastPicking = false;
+
 	/**
 	 * Prevent TouchClient instantiation with private constructor
 	 */
 	private TouchClient() {
+	}
+	
+	public static void setFastPicking(boolean fastPicking){
+		TouchClient.fastPicking = fastPicking;
 	}
 
 	/**
