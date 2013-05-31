@@ -1,4 +1,4 @@
-Version 3.4.2
+Version 3.4.3
 
 Project Website: http://vialab.science.uoit.ca/portfolio/smt-toolkit
 
