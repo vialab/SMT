@@ -108,7 +108,7 @@ class SMTZonePicker {
 
 		PGL pgl = applet.g.beginPGL();
 		// force fallback until 2.0b10
-		if (!TouchClient.fastPicking || pgl == null || System.getProperty("os.name").equals("Mac OS X")) {
+		if (!TouchClient.fastPicking || pgl == null) {
 			// really slow way(max 70 fps on a high end card vs 200+ fps with
 			// readPixels), with loadPixels at the end of renderPickBuffer()
 			pickColor = applet.g.pixels[x + y * applet.g.width] & 0x00FFFFFF;
@@ -170,7 +170,7 @@ class SMTZonePicker {
 		// really slow way(max 70 fps on a high end card vs 200+ fps with
 		// readPixels), with loadPixels at the end of renderPickBuffer()
 		PGL pgl = applet.g.beginPGL();
-		if (!TouchClient.fastPicking || pgl == null || System.getProperty("os.name").equals("Mac OS X")) {
+		if (!TouchClient.fastPicking || pgl == null) {
 			applet.g.loadPixels();
 		}
 		applet.g.endPGL();

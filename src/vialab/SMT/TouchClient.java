@@ -143,7 +143,7 @@ public class TouchClient {
 
 	protected static ArrayList<Class<?>> extraClassList = new ArrayList<Class<?>>();
 
-	//TODO: default to true after 2.0b10 is released
+	// TODO: default to true after 2.0b10 is released
 	static boolean fastPicking = false;
 
 	/**
@@ -151,8 +151,8 @@ public class TouchClient {
 	 */
 	private TouchClient() {
 	}
-	
-	public static void setFastPicking(boolean fastPicking){
+
+	public static void setFastPicking(boolean fastPicking) {
 		TouchClient.fastPicking = fastPicking;
 	}
 
@@ -258,6 +258,12 @@ public class TouchClient {
 					.println("SMT only supports using OpenGL renderers, please use either OPENGL, P2D, or P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
 		}
 
+		if (System.getProperty("os.name").equals("Mac OS X")) {
+			TouchClient.fastPicking = false;
+			System.out
+					.println("Defaulting to slow picking on OS X, if calling TouchClient.setFastPicking(true); after TouchClient.init() increases performance and doesn't cause bugs, please contact SMT's developers.");
+		}
+
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
@@ -276,20 +282,20 @@ public class TouchClient {
 		picker = new SMTZonePicker();
 
 		defaultRenderer = parent.g.getClass().getName();
-		
+
 		listener = new SMTTuioListener();
 		manager = new SMTTouchManager(listener, picker);
-		
+
 		TuioClient c = new TuioClient(port);
 		c.connect();
-		while(!c.isConnected()){
+		while (!c.isConnected()) {
 			c = new TuioClient(++port);
 			c.connect();
 		}
 		c.addTuioListener(listener);
 		tuioClientList.add(c);
-		
-		System.out.println("TuioClient listening on port: "+port);
+
+		System.out.println("TuioClient listening on port: " + port);
 
 		switch (source) {
 		case ANDROID:
@@ -331,18 +337,18 @@ public class TouchClient {
 			}
 			else {
 				// TUIO_DEVICE:
-				//covered already by c
-				
+				// covered already by c
+
 				// WM_TOUCH:
 				TuioClient c2 = new TuioClient(++port);
 				c2.connect();
-				while(!c2.isConnected()){
+				while (!c2.isConnected()) {
 					c2 = new TuioClient(++port);
 					c2.connect();
 				}
-				c2.addTuioListener(new SMTProxyTuioListener(port,listener));
-				System.out.println("TuioClient listening on port: "+port);
-				
+				c2.addTuioListener(new SMTProxyTuioListener(port, listener));
+				System.out.println("TuioClient listening on port: " + port);
+
 				if (System.getProperty("os.arch").equals("x86")) {
 					TouchClient.runWinTouchTuioServer(false, "127.0.0.1", port);
 				}
@@ -351,43 +357,42 @@ public class TouchClient {
 				}
 
 				// SMART:
-				/*TuioClient c2 = new TuioClient(port);
-				c2.connect();
-				while(!c2.isConnected()){
-					c2 = new TuioClient(++port);
-					c2.connect();
-				}
-				c2.addTuioListener(new SMTProxyTuioListener(port,listener));*/
+				/*
+				 * TuioClient c2 = new TuioClient(port); c2.connect();
+				 * while(!c2.isConnected()){ c2 = new TuioClient(++port);
+				 * c2.connect(); } c2.addTuioListener(new
+				 * SMTProxyTuioListener(port,listener));
+				 */
 				// TouchClient.runSmart2TuioServer();
 				// tuioClientList.add(new TuioClient(port));
 
 				// LEAP:
 				TuioClient c3 = new TuioClient(++port);
 				c3.connect();
-				while(!c3.isConnected()){
+				while (!c3.isConnected()) {
 					c3 = new TuioClient(++port);
 					c3.connect();
 				}
-				c3.addTuioListener(new SMTProxyTuioListener(port,listener));
-				System.out.println("TuioClient listening on port: "+port);
+				c3.addTuioListener(new SMTProxyTuioListener(port, listener));
+				System.out.println("TuioClient listening on port: " + port);
 				TouchClient.runLeapTuioServer(port);
 
 				// MOUSE:
 				TuioClient c4 = new TuioClient(++port);
 				c4.connect();
-				while(!c4.isConnected()){
+				while (!c4.isConnected()) {
 					c4 = new TuioClient(++port);
 					c4.connect();
 				}
-				c4.addTuioListener(new SMTProxyTuioListener(port,listener));
-				System.out.println("TuioClient listening on port: "+port);
-				
+				c4.addTuioListener(new SMTProxyTuioListener(port, listener));
+				System.out.println("TuioClient listening on port: " + port);
+
 				// this still uses the old method, should be re-implemented
 				// without
 				// the socket
 				mtt = new MouseToTUIO(parent.width, parent.height, port);
 				parent.registerMethod("mouseEvent", mtt);
-				
+
 				tuioClientList.add(c2);
 				tuioClientList.add(c3);
 				tuioClientList.add(c4);
@@ -1103,7 +1108,7 @@ public class TouchClient {
 		}
 
 		parent.g.flush();
-		if(getTouches().length>0){
+		if (getTouches().length > 0) {
 			SMTUtilities.invoke(touch, parent);
 		}
 		for (Zone zone : zoneList) {
@@ -1220,10 +1225,10 @@ public class TouchClient {
 
 						while (true) {
 							if (tuioServerErr.ready()) {
-								System.err.println("WM_TOUCH: "+tuioServerErr.readLine());
+								System.err.println("WM_TOUCH: " + tuioServerErr.readLine());
 							}
 							if (tuioServerOut.ready()) {
-								System.out.println("WM_TOUCH: "+tuioServerOut.readLine());
+								System.out.println("WM_TOUCH: " + tuioServerOut.readLine());
 							}
 							Thread.sleep(1000);
 						}
@@ -1313,10 +1318,10 @@ public class TouchClient {
 
 						while (true) {
 							if (tuioServerErr.ready()) {
-								System.err.println("SMART: "+tuioServerErr.readLine());
+								System.err.println("SMART: " + tuioServerErr.readLine());
 							}
 							if (tuioServerOut.ready()) {
-								System.out.println("SMART: "+tuioServerOut.readLine());
+								System.out.println("SMART: " + tuioServerOut.readLine());
 							}
 							Thread.sleep(1000);
 						}
@@ -1398,10 +1403,10 @@ public class TouchClient {
 
 						while (true) {
 							if (tuioServerErr.ready()) {
-								System.err.println("LEAP: "+tuioServerErr.readLine());
+								System.err.println("LEAP: " + tuioServerErr.readLine());
 							}
 							if (tuioServerOut.ready()) {
-								System.out.println("LEAP: "+tuioServerOut.readLine());
+								System.out.println("LEAP: " + tuioServerOut.readLine());
 							}
 							Thread.sleep(1000);
 						}
@@ -1445,10 +1450,10 @@ public class TouchClient {
 
 						while (true) {
 							if (tuioServerErr.ready()) {
-								System.err.println(path+": "+tuioServerErr.readLine());
+								System.err.println(path + ": " + tuioServerErr.readLine());
 							}
 							if (tuioServerOut.ready()) {
-								System.out.println(path+": "+tuioServerOut.readLine());
+								System.out.println(path + ": " + tuioServerOut.readLine());
 							}
 							Thread.sleep(1000);
 						}
