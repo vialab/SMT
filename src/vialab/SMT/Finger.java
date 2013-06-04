@@ -39,10 +39,9 @@ import java.util.Vector;
  * <P>
  * 
  * @author Erik Paluka
- * @date July, 2011
  * @version 1.0
  */
-public class Finger {
+class Finger {
 	/** Touch Cursor's Session ID */
 	protected int sessionID;
 	/** Touch Cursor's speed in the x-direction */

@@ -150,7 +150,7 @@ extends processing.core.PGraphics</pre>
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;processing.core.PImage</h3>
-<code>ALPHA_MASK, BLUE_MASK, format, GREEN_MASK, height, modified, mx1, mx2, my1, my2, parent, pixels, RED_MASK, saveImageFormats, width</code></li>
+<code>ALPHA_MASK, BLUE_MASK, format, GREEN_MASK, height, loaded, modified, mx1, mx2, my1, my2, parent, pixels, RED_MASK, saveImageFormats, width</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="fields_inherited_from_class_processing.core.PConstants">
@@ -823,55 +823,51 @@ extends processing.core.PGraphics</pre>
     int&nbsp;arg2)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>java.lang.Object</code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#initCache(processing.core.PImage)">initCache</a></strong>(processing.core.PImage&nbsp;img)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#is2D()">is2D</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#is3D()">is3D</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#isGL()">isGL</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#isModified()">isModified</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#lerpColor(int, int, float)">lerpColor</a></strong>(int&nbsp;arg0,
          int&nbsp;arg1,
          float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#lightFalloff(float, float, float)">lightFalloff</a></strong>(float&nbsp;arg0,
             float&nbsp;arg1,
             float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#lights()">lights</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#lightSpecular(float, float, float)">lightSpecular</a></strong>(float&nbsp;arg0,
              float&nbsp;arg1,
              float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#line(float, float, float, float)">line</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2,
     float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#line(float, float, float, float, float, float)">line</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
@@ -880,102 +876,102 @@ extends processing.core.PGraphics</pre>
     float&nbsp;arg4,
     float&nbsp;arg5)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#loadPixels()">loadPixels</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>processing.opengl.PShader</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#loadShader(java.lang.String)">loadShader</a></strong>(java.lang.String&nbsp;fragFilename)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>processing.opengl.PShader</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#loadShader(java.lang.String, java.lang.String)">loadShader</a></strong>(java.lang.String&nbsp;fragFilename,
           java.lang.String&nbsp;vertFilename)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>processing.core.PShape</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#loadShape(java.lang.String)">loadShape</a></strong>(java.lang.String&nbsp;filename)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>processing.core.PShape</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#loadShape(java.lang.String, java.lang.String)">loadShape</a></strong>(java.lang.String&nbsp;filename,
          java.lang.String&nbsp;options)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#mask(int[])">mask</a></strong>(int[]&nbsp;arg0)</code>
 <div class="block"><strong>Deprecated.</strong>&nbsp;&nbsp;</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#mask(processing.core.PImage)">mask</a></strong>(processing.core.PImage&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#modelX(float, float, float)">modelX</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#modelY(float, float, float)">modelY</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#modelZ(float, float, float)">modelZ</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#noClip()">noClip</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#noFill()">noFill</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#noLights()">noLights</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#normal(float, float, float)">normal</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#noSmooth()">noSmooth</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#noStroke()">noStroke</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#noTexture()">noTexture</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#noTint()">noTint</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#ortho()">ortho</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#ortho(float, float, float, float)">ortho</a></strong>(float&nbsp;left,
      float&nbsp;right,
      float&nbsp;bottom,
      float&nbsp;top)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#ortho(float, float, float, float, float, float)">ortho</a></strong>(float&nbsp;arg0,
      float&nbsp;arg1,
@@ -984,29 +980,29 @@ extends processing.core.PGraphics</pre>
      float&nbsp;arg4,
      float&nbsp;arg5)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#perspective()">perspective</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#perspective(float, float, float, float)">perspective</a></strong>(float&nbsp;arg0,
            float&nbsp;arg1,
            float&nbsp;arg2,
            float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#point(float, float)">point</a></strong>(float&nbsp;arg0,
      float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#point(float, float, float)">point</a></strong>(float&nbsp;arg0,
      float&nbsp;arg1,
      float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#pointLight(float, float, float, float, float, float)">pointLight</a></strong>(float&nbsp;arg0,
           float&nbsp;arg1,
@@ -1015,35 +1011,35 @@ extends processing.core.PGraphics</pre>
           float&nbsp;arg4,
           float&nbsp;arg5)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#popMatrix()">popMatrix</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#popStyle()">popStyle</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#printCamera()">printCamera</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#printMatrix()">printMatrix</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#printProjection()">printProjection</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#pushMatrix()">pushMatrix</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#pushStyle()">pushStyle</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#quad(float, float, float, float, float, float, float, float)">quad</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
@@ -1054,14 +1050,14 @@ extends processing.core.PGraphics</pre>
     float&nbsp;arg6,
     float&nbsp;arg7)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#quadraticVertex(float, float, float, float)">quadraticVertex</a></strong>(float&nbsp;cx,
                float&nbsp;cy,
                float&nbsp;x3,
                float&nbsp;y3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#quadraticVertex(float, float, float, float, float, float)">quadraticVertex</a></strong>(float&nbsp;cx,
                float&nbsp;cy,
@@ -1070,14 +1066,14 @@ extends processing.core.PGraphics</pre>
                float&nbsp;y3,
                float&nbsp;z3)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#rect(float, float, float, float)">rect</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2,
     float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#rect(float, float, float, float, float)">rect</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
@@ -1085,7 +1081,7 @@ extends processing.core.PGraphics</pre>
     float&nbsp;arg3,
     float&nbsp;arg4)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#rect(float, float, float, float, float, float, float, float)">rect</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
@@ -1096,183 +1092,183 @@ extends processing.core.PGraphics</pre>
     float&nbsp;arg6,
     float&nbsp;arg7)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#rectMode(int)">rectMode</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#removeCache(processing.core.PImage)">removeCache</a></strong>(processing.core.PImage&nbsp;image)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#requestDraw()">requestDraw</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#resetMatrix()">resetMatrix</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#resetShader()">resetShader</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#resetShader(int)">resetShader</a></strong>(int&nbsp;kind)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#resize(int, int)">resize</a></strong>(int&nbsp;arg0,
       int&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#rotate(float)">rotate</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#rotate(float, float, float, float)">rotate</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2,
       float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#rotateX(float)">rotateX</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#rotateY(float)">rotateY</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#rotateZ(float)">rotateZ</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#save(java.lang.String)">save</a></strong>(java.lang.String&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#scale(float)">scale</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#scale(float, float)">scale</a></strong>(float&nbsp;arg0,
      float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#scale(float, float, float)">scale</a></strong>(float&nbsp;arg0,
      float&nbsp;arg1,
      float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#screenX(float, float)">screenX</a></strong>(float&nbsp;arg0,
        float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#screenX(float, float, float)">screenX</a></strong>(float&nbsp;arg0,
        float&nbsp;arg1,
        float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#screenY(float, float)">screenY</a></strong>(float&nbsp;arg0,
        float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#screenY(float, float, float)">screenY</a></strong>(float&nbsp;arg0,
        float&nbsp;arg1,
        float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#screenZ(float, float, float)">screenZ</a></strong>(float&nbsp;arg0,
        float&nbsp;arg1,
        float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#set(int, int, int)">set</a></strong>(int&nbsp;arg0,
    int&nbsp;arg1,
    int&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#set(int, int, processing.core.PImage)">set</a></strong>(int&nbsp;arg0,
    int&nbsp;arg1,
    processing.core.PImage&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setCache(processing.core.PImage, java.lang.Object)">setCache</a></strong>(processing.core.PImage&nbsp;image,
         java.lang.Object&nbsp;storage)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setFrameRate(float)">setFrameRate</a></strong>(float&nbsp;frameRate)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setMatrix(processing.core.PMatrix)">setMatrix</a></strong>(processing.core.PMatrix&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setMatrix(processing.core.PMatrix2D)">setMatrix</a></strong>(processing.core.PMatrix2D&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setMatrix(processing.core.PMatrix3D)">setMatrix</a></strong>(processing.core.PMatrix3D&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setModified()">setModified</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setModified(boolean)">setModified</a></strong>(boolean&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setParent(processing.core.PApplet)">setParent</a></strong>(processing.core.PApplet&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setPath(java.lang.String)">setPath</a></strong>(java.lang.String&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setPrimary(boolean)">setPrimary</a></strong>(boolean&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#setSize(int, int)">setSize</a></strong>(int&nbsp;arg0,
        int&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#shader(processing.opengl.PShader)">shader</a></strong>(processing.opengl.PShader&nbsp;shader)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#shader(processing.opengl.PShader, int)">shader</a></strong>(processing.opengl.PShader&nbsp;shader,
       int&nbsp;kind)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#shape(processing.core.PShape)">shape</a></strong>(processing.core.PShape&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#shape(processing.core.PShape, float, float)">shape</a></strong>(processing.core.PShape&nbsp;arg0,
      float&nbsp;arg1,
      float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#shape(processing.core.PShape, float, float, float, float)">shape</a></strong>(processing.core.PShape&nbsp;arg0,
      float&nbsp;arg1,
@@ -1280,58 +1276,58 @@ extends processing.core.PGraphics</pre>
      float&nbsp;arg3,
      float&nbsp;arg4)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#shapeMode(int)">shapeMode</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#shearX(float)">shearX</a></strong>(float&nbsp;angle)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#shearY(float)">shearY</a></strong>(float&nbsp;angle)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#shininess(float)">shininess</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#smooth()">smooth</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#smooth(int)">smooth</a></strong>(int&nbsp;level)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#specular(float)">specular</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#specular(float, float, float)">specular</a></strong>(float&nbsp;arg0,
         float&nbsp;arg1,
         float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#specular(int)">specular</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#sphere(float)">sphere</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#sphereDetail(int)">sphereDetail</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#sphereDetail(int, int)">sphereDetail</a></strong>(int&nbsp;arg0,
             int&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#spotLight(float, float, float, float, float, float, float, float, float, float, float)">spotLight</a></strong>(float&nbsp;arg0,
          float&nbsp;arg1,
@@ -1345,54 +1341,54 @@ extends processing.core.PGraphics</pre>
          float&nbsp;arg9,
          float&nbsp;arg10)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#stroke(float)">stroke</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#stroke(float, float)">stroke</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#stroke(float, float, float)">stroke</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#stroke(float, float, float, float)">stroke</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2,
       float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#stroke(int)">stroke</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#stroke(int, float)">stroke</a></strong>(int&nbsp;arg0,
       float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#strokeCap(int)">strokeCap</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#strokeJoin(int)">strokeJoin</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#strokeWeight(float)">strokeWeight</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#style(processing.core.PStyle)">style</a></strong>(processing.core.PStyle&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(char[], int, int, float, float)">text</a></strong>(char[]&nbsp;arg0,
     int&nbsp;arg1,
@@ -1400,7 +1396,7 @@ extends processing.core.PGraphics</pre>
     float&nbsp;arg3,
     float&nbsp;arg4)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(char[], int, int, float, float, float)">text</a></strong>(char[]&nbsp;arg0,
     int&nbsp;arg1,
@@ -1409,59 +1405,59 @@ extends processing.core.PGraphics</pre>
     float&nbsp;arg4,
     float&nbsp;arg5)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(char, float, float)">text</a></strong>(char&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(char, float, float, float)">text</a></strong>(char&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2,
     float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(float, float, float)">text</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(float, float, float, float)">text</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2,
     float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(int, float, float)">text</a></strong>(int&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(int, float, float, float)">text</a></strong>(int&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2,
     float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(java.lang.String, float, float)">text</a></strong>(java.lang.String&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(java.lang.String, float, float, float)">text</a></strong>(java.lang.String&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2,
     float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#text(java.lang.String, float, float, float, float)">text</a></strong>(java.lang.String&nbsp;arg0,
     float&nbsp;arg1,
@@ -1469,113 +1465,113 @@ extends processing.core.PGraphics</pre>
     float&nbsp;arg3,
     float&nbsp;arg4)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textAlign(int)">textAlign</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textAlign(int, int)">textAlign</a></strong>(int&nbsp;arg0,
          int&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textAscent()">textAscent</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textDescent()">textDescent</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textFont(processing.core.PFont)">textFont</a></strong>(processing.core.PFont&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textFont(processing.core.PFont, float)">textFont</a></strong>(processing.core.PFont&nbsp;arg0,
         float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textLeading(float)">textLeading</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textMode(int)">textMode</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textSize(float)">textSize</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#texture(processing.core.PImage)">texture</a></strong>(processing.core.PImage&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textureMode(int)">textureMode</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textureWrap(int)">textureWrap</a></strong>(int&nbsp;wrap)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textWidth(char)">textWidth</a></strong>(char&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textWidth(char[], int, int)">textWidth</a></strong>(char[]&nbsp;arg0,
          int&nbsp;arg1,
          int&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#textWidth(java.lang.String)">textWidth</a></strong>(java.lang.String&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#tint(float)">tint</a></strong>(float&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#tint(float, float)">tint</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#tint(float, float, float)">tint</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#tint(float, float, float, float)">tint</a></strong>(float&nbsp;arg0,
     float&nbsp;arg1,
     float&nbsp;arg2,
     float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#tint(int)">tint</a></strong>(int&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#tint(int, float)">tint</a></strong>(int&nbsp;arg0,
     float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#translate(float, float)">translate</a></strong>(float&nbsp;arg0,
          float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#translate(float, float, float)">translate</a></strong>(float&nbsp;arg0,
          float&nbsp;arg1,
          float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#triangle(float, float, float, float, float, float)">triangle</a></strong>(float&nbsp;arg0,
         float&nbsp;arg1,
@@ -1584,40 +1580,40 @@ extends processing.core.PGraphics</pre>
         float&nbsp;arg4,
         float&nbsp;arg5)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#updatePixels()">updatePixels</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#updatePixels(int, int, int, int)">updatePixels</a></strong>(int&nbsp;arg0,
             int&nbsp;arg1,
             int&nbsp;arg2,
             int&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#vertex(float[])">vertex</a></strong>(float[]&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#vertex(float, float)">vertex</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#vertex(float, float, float)">vertex</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#vertex(float, float, float, float)">vertex</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2,
       float&nbsp;arg3)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/PGraphicsDelegate.html#vertex(float, float, float, float, float)">vertex</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
@@ -1631,14 +1627,14 @@ extends processing.core.PGraphics</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;processing.core.PGraphics</h3>
-<code>allocate, alpha, ambientFromCalc, arcImpl, backgroundFromCalc, backgroundImpl, backgroundImpl, bezierInit, bezierInitCheck, bezierVertexCheck, bezierVertexCheck, blue, brightness, checkSettings, clipImpl, color, color, color, color, color, color, color, color, color, colorCalc, colorCalc, colorCalc, colorCalc, colorCalc, colorCalc, colorCalcARGB, curveInit, curveInitCheck, curveVertexCheck, curveVertexCheck, curveVertexSegment, curveVertexSegment, defaultFontOrDeath, defaultFontOrDeath, defaultSettings, ellipseImpl, emissiveFromCalc, fillFromCalc, green, hue, imageImpl, lerpColor, reapplySettings, rectImpl, rectImpl, red, saturation, shape, shape, showDepthWarning, showDepthWarningXYZ, showException, showMethodWarning, showMissingWarning, showVariationWarning, showWarning, showWarning, specularFromCalc, splineForward, strokeFromCalc, textCharImpl, textCharModelImpl, textCharScreenImpl, textLineAlignImpl, textLineImpl, textModeCheck, textSentence, textSentenceBreak, textWidthImpl, tintFromCalc, vertexCheck, vertexTexture</code></li>
+<code>allocate, alpha, ambientFromCalc, arcImpl, backgroundFromCalc, backgroundImpl, backgroundImpl, bezierInit, bezierInitCheck, bezierVertexCheck, bezierVertexCheck, blue, brightness, checkSettings, clipImpl, color, color, color, color, color, color, color, color, color, colorCalc, colorCalc, colorCalc, colorCalc, colorCalc, colorCalc, colorCalcARGB, curveInit, curveInitCheck, curveVertexCheck, curveVertexCheck, curveVertexSegment, curveVertexSegment, defaultFontOrDeath, defaultFontOrDeath, defaultSettings, ellipseImpl, emissiveFromCalc, fillFromCalc, green, hue, imageImpl, lerpColor, reapplySettings, rectImpl, rectImpl, red, requestFocus, saturation, shape, shape, showDepthWarning, showDepthWarningXYZ, showException, showMethodWarning, showMissingWarning, showVariationWarning, showWarning, showWarning, specularFromCalc, splineForward, strokeFromCalc, textCharImpl, textCharModelImpl, textCharScreenImpl, textLineAlignImpl, textLineImpl, textModeCheck, textSentence, textSentenceBreak, textWidthImpl, tintFromCalc, vertexCheck, vertexTexture</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_processing.core.PImage">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;processing.core.PImage</h3>
-<code>blendColor, blurAlpha, blurARGB, blurRGB, buildBlurKernel, checkAlpha, clone, dilate, getImage, getImpl, getModifiedX1, getModifiedX2, getModifiedY1, getModifiedY2, getNative, loadTIFF, saveImageIO, saveTGA, saveTIFF, setImpl, updatePixelsImpl</code></li>
+<code>blendColor, blurAlpha, blurARGB, blurRGB, buildBlurKernel, checkAlpha, clone, dilate, getImage, getImpl, getModifiedX1, getModifiedX2, getModifiedY1, getModifiedY2, getNative, isLoaded, loadTIFF, saveImageIO, saveTGA, saveTIFF, setImpl, setLoaded, setLoaded</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
@@ -1770,19 +1766,6 @@ extends processing.core.PGraphics</pre>
 <dl>
 <dt><strong>Overrides:</strong></dt>
 <dd><code>filter</code>&nbsp;in class&nbsp;<code>processing.core.PGraphics</code></dd>
-</dl>
-</li>
-</ul>
-<a name="initCache(processing.core.PImage)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>initCache</h4>
-<pre>public&nbsp;java.lang.Object&nbsp;initCache(processing.core.PImage&nbsp;img)</pre>
-<dl>
-<dt><strong>Overrides:</strong></dt>
-<dd><code>initCache</code>&nbsp;in class&nbsp;<code>processing.core.PGraphics</code></dd>
 </dl>
 </li>
 </ul>

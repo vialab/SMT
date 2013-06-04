@@ -41,10 +41,9 @@ import android.view.View.OnTouchListener;
  * 
  * @author Victor Cheung
  * @author Zach Cook
- * @date September, 2012
  * @version 1.0
  */
-public class AndroidToTUIO implements OnTouchListener {
+class AndroidToTUIO implements OnTouchListener {
 
 	private static final int MAX_TOUCHPOINTS = 10;
 	private static final int FRAME_RATE = 40;
@@ -65,8 +64,12 @@ public class AndroidToTUIO implements OnTouchListener {
 	 * to TUIO messages. Sets the screen to be full-screen if the boolean/flag
 	 * is set to true.
 	 * 
-	 * @param applet
-	 *            PApplet - Processing PApplet
+	 * @param width
+	 *            int - width of the screen
+	 * @param height
+	 *            int - height of the screen
+	 * @param port
+	 *            int - port to connect to
 	 */
 	public AndroidToTUIO(int width, int height, int port) {
 		super();

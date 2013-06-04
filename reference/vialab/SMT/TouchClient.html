@@ -467,18 +467,22 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setFastPicking(boolean)">setFastPicking</a></strong>(boolean&nbsp;fastPicking)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setTouchDraw(vialab.SMT.TouchDraw)">setTouchDraw</a></strong>(<a href="../../vialab/SMT/TouchDraw.html" title="enum in vialab.SMT">TouchDraw</a>&nbsp;drawTouchPoints)</code>
 <div class="block">Sets the flag for drawing touch points in the PApplet.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setTouchDraw(vialab.SMT.TouchDraw, int)">setTouchDraw</a></strong>(<a href="../../vialab/SMT/TouchDraw.html" title="enum in vialab.SMT">TouchDraw</a>&nbsp;drawTouchPoints,
             int&nbsp;max_path_length)</code>
 <div class="block">Sets the flag for drawing touch points in the PApplet.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setWarnUnimplemented(boolean)">setWarnUnimplemented</a></strong>(boolean&nbsp;warn)</code>
 <div class="block">Calling this function overrides the default behavior of showing select
@@ -664,6 +668,15 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="setFastPicking(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setFastPicking</h4>
+<pre>public static&nbsp;void&nbsp;setFastPicking(boolean&nbsp;fastPicking)</pre>
+</li>
+</ul>
 <a name="setWarnUnimplemented(boolean)">
 <!--   -->
 </a>
@@ -732,7 +745,7 @@ extends java.lang.Object</pre>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>parent</code> - PApplet - The Processing PApplet, usually just 'this' when
             using the Processing IDE</dd><dd><code>source</code> - enum TouchSource - The source of touch events to listen to.
             One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
-            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART</dd><dd><code>classes</code> - Class<?> - Classes that should be checked for method
+            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART</dd><dd><code>extraClasses</code> - Class<?> - Classes that should be checked for method
             definitions similar to PApplet for drawZoneName(), etc, but
             PApplet takes precedence.</dd></dl>
 </li>
@@ -1186,7 +1199,7 @@ extends java.lang.Object</pre>
 <pre>public static&nbsp;void&nbsp;addMethodClasses(java.lang.Class&lt;?&gt;...&nbsp;classes)</pre>
 <div class="block">This adds objects to check for drawZoneName, touchZoneName, etc methods
  in, similar to PApplet</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>objects</code> - The additional objects to check in for methods</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>classes</code> - The additional objects to check in for methods</dd></dl>
 </li>
 </ul>
 </li>

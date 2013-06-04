@@ -47,10 +47,9 @@ import com.illposed.osc.OSCPortOut;
  * 
  * @author Erik Paluka
  * @author Zach Cook
- * @date September, 2012
  * @version 2.0
  */
-public class Simulation {
+class Simulation {
 
 	/** Default host. (Implements TUIO: host "127.0.0.1") */
 	static String host = "127.0.0.1";
@@ -74,10 +73,12 @@ public class Simulation {
 	 * Constructor, resets the simulator and create a table the size of the
 	 * PApplet
 	 * 
-	 * @param host
-	 *            String Host
+	 * @param width
+	 *            int - width of the screen
+	 * @param height
+	 *            int - height of the screen
 	 * @param port
-	 *            int Port
+	 *            int - port to connect to
 	 */
 	public Simulation(int width, int height, int port) {
 		super();
@@ -225,8 +226,6 @@ public class Simulation {
 	/**
 	 * Adds a touch cursor to the hash table
 	 * 
-	 * @param sID
-	 *            int - Session ID
 	 * @param x
 	 *            int - The x-coordinate of the touch cursor
 	 * @param y

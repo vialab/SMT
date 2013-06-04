@@ -42,7 +42,6 @@ import processing.event.MouseEvent;
  * 
  * @author Erik Paluka
  * @author Zach Cook
- * @date September, 2012
  * @version 2.0
  */
 public class MouseToTUIO {
@@ -70,8 +69,12 @@ public class MouseToTUIO {
 	 * messages. Sets the screen to be full-screen if the boolean/flag is set to
 	 * true.
 	 * 
-	 * @param applet
-	 *            PApplet - Processing PApplet
+	 * @param width
+	 *            int - width of the screen
+	 * @param height
+	 *            int - height of the screen
+	 * @param port
+	 *            int - port to connect to
 	 */
 	public MouseToTUIO(int width, int height, int port) {
 		super();
