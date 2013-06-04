@@ -53,11 +53,6 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL {
 	}
 
 	@Override
-	public Object initCache(PImage img) {
-		return pg.initCache(img);
-	}
-
-	@Override
 	public boolean isGL() {
 		return pg.isGL();
 	}
