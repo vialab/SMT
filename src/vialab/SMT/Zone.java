@@ -91,7 +91,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** The zone's inverse transformation matrix */
 	protected PMatrix3D inverse = new PMatrix3D();
 
-	protected int x, y;
+	public int x, y;
 
 	public int height, width;
 
