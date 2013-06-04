@@ -1,3 +1,10 @@
+SMTv3.5 Release Notes
+_____________________
+
+	Bug Fixes:
+		-Made compatible with Processing 2.0
+		-Fast picking bug is fixed with Processing 2.0, and we now default to fast picking again. 
+
 
 SMTv3.4 Release Notes
 _____________________
