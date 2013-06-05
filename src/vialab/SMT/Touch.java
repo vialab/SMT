@@ -10,7 +10,7 @@ import TUIO.*;
 
 /**
  * Touch has some state information and extends TuioCursor
- * @see <a href=http://www.tuio.org/api/java/TUIO/TuioCursor.html</a>
+ * @see <a href=http://www.tuio.org/api/java/TUIO/TuioCursor.html></a>
  */
 public class Touch extends TuioCursor {
 
