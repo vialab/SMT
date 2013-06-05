@@ -820,6 +820,9 @@ public class TouchClient {
 	public static boolean remove(Zone zone) {
 		if (zone != null) {
 			picker.remove(zone);
+			for (Touch touch : zone.getTouches()) {
+				touch.unassignZone(zone);
+			}
 			return removeFromZoneList(zone);
 		}
 		else {
