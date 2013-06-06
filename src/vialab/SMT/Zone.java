@@ -168,6 +168,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	private Object boundObject = null;
 
+	private List<Touch> touchDownList = new ArrayList<Touch>();
+
+	private List<Touch> touchUpList = new ArrayList<Touch>();
+
+	private List<Touch> touchMovedList = new ArrayList<Touch>();
+
 	boolean warnDraw() {
 		return true;
 	}
@@ -516,7 +522,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return Whether the zone has touches currently on it
 	 */
 	public boolean isActive() {
-		return !activeTouches.isEmpty();
+		return !activeTouches.isEmpty() || !touchUpList.isEmpty() || !touchDownList.isEmpty() || !touchMovedList.isEmpty();
 	}
 
 	/**
@@ -900,7 +906,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			this.matrix.reset();
 			this.matrix.translate(x, y);
 			// If we are in our own touch (which we can tell by if backupMatrix
-			// is set), we need to apply our parents matrix too after the reset
+			// is set), we need to apply our parents matrix too after the reset,
+			// since it was applied before and will be inverted.
 			if (backupMatrix != null) {
 				this.matrix.preApply(getParent().matrix);
 			}
@@ -1759,14 +1766,34 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void touch(boolean touchChildren, boolean isChild) {
-		if (isActive()) {
+		if (!touchUpList.isEmpty() || !touchDownList.isEmpty() || !touchMovedList.isEmpty()) {
 			PGraphics temp = applet.g;
 			applet.g = pg;
 
 			beginTouch();
 			pushStyle();
-			touchImpl();
-			SMTUtilities.invoke(touchMethod, applet, this);
+			
+			for(Touch t: touchUpList){
+				touchUpInvoker(t);
+			}
+			
+			for(Touch t: touchDownList){
+				touchDownInvoker(t);
+			}
+			
+			for(Touch t: touchMovedList){
+				touchMovedInvoker(t);
+			}
+			
+			if(!touchMovedList.isEmpty()){
+				touchImpl();
+				SMTUtilities.invoke(touchMethod, applet, this);
+			}
+			
+			touchUpList.clear();
+			touchDownList.clear();
+			touchMovedList.clear();
+			
 			popStyle();
 			endTouch();
 
@@ -2574,5 +2601,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		PMatrix3D g = getGlobalMatrix();
 		float angle = PApplet.atan2(g.m10, g.m00);
 		return angle >= 0 ? angle : angle + 2 * PI;
+	}
+
+	public void touchDownRegister(Touch touch) {
+		touchDownList.add(touch);
+	}
+
+	public void touchUpRegister(Touch touch) {
+		touchUpList.add(touch);
+	}
+
+	public void touchMovedRegister(Touch touch) {
+		touchMovedList.add(touch);
 	}
 }
