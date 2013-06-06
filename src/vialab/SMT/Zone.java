@@ -167,6 +167,24 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	boolean press;
 
 	private Object boundObject = null;
+	
+	protected int maxWidth, maxHeight;
+	
+	protected int minWidth, minHeight;
+	
+	protected boolean scalingLimit = false;
+	
+	public void enableScalingLimit(int maxW, int maxH, int minW, int minH) {
+		this.scalingLimit = true;
+		this.maxWidth = maxW;
+		this.maxHeight = maxH;
+		this.minWidth = minW;
+		this.minHeight = minH;
+	}
+
+	public void disableScalingLimit() {
+		this.scalingLimit = false;
+	}
 
 	private List<Touch> touchDownList = new ArrayList<Touch>();
 
@@ -1456,7 +1474,24 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 					rotate(angle, cross.x, cross.y, cross.z);
 				}
 				if (scale) {
-					scale(toDist / fromDist);
+					float ratio = toDist/fromDist;
+					if (this.scalingLimit) {
+						// Limits have to be consistent; i.e. it should be possible
+				    	// to maintain aspect ratio while fulfilling all requirements
+				    	float w = this.getWidth();
+				    	float h = this.getHeight();
+				    	if (w*ratio > this.maxWidth) {
+				    		ratio = this.maxWidth/w;
+				    	} else if (w*ratio < this.minWidth) {
+				    		ratio = this.minWidth/w;
+				    	}
+				    	if (h*ratio > this.maxHeight) {
+				    		ratio = this.maxHeight/h;
+				    	} else if (h*ratio < this.minHeight) {
+				    		ratio = this.minHeight/h;
+				    	}
+				    }
+					scale(ratio);
 				}
 			}
 		}
