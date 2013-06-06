@@ -3,7 +3,6 @@
  *  below can be dragged 
  */
 
-import vialab.TUIOSource.*;
 import vialab.SMT.*;
 
 PImage img;

@@ -5,7 +5,7 @@ import vialab.SMT.*;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.ANDROID);
+  //TouchClient.init(this, TouchSource.ANDROID);
 }
 
 void draw() {

@@ -17,7 +17,6 @@
  *  and by doing so reset its state too.
  */
 
-import vialab.TUIOSource.*;
 import vialab.SMT.*;
 
 void setup(){
