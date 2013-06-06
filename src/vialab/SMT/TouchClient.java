@@ -402,7 +402,7 @@ public class TouchClient {
 		}
 
 		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
-		
+
 		/**
 		 * Disconnects the TuioClient when the PApplet is stopped. Shuts down
 		 * any threads, disconnect from the net, unload memory, etc.
@@ -818,9 +818,6 @@ public class TouchClient {
 	public static boolean remove(Zone zone) {
 		if (zone != null) {
 			picker.remove(zone);
-			for (Touch touch : zone.getTouches()) {
-				touch.unassignZone(zone);
-			}
 			return removeFromZoneList(zone);
 		}
 		else {
@@ -833,6 +830,11 @@ public class TouchClient {
 		for (Zone child : zone.children) {
 			removeFromZoneList(child);
 		}
+
+		// clear the touches from the Zone, so that it doesn't get pulled in by
+		// the touches such as when putZoneOnTop() is called
+		zone.unassignAll();
+
 		// destroy the Zones Body, so it does not collide with other Zones any
 		// more
 		if (zone.zoneBody != null) {
