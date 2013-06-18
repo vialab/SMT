@@ -668,6 +668,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			background(0, 0, 0, 0);
 		}
 		pg.pushStyle();
+		noLights();
 	}
 
 	/**
