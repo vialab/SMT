@@ -103,6 +103,9 @@ public class ButtonZone extends Zone {
 		this.text = text;
 		this.fontSize = fontSize;
 		this.font = font;
+		if(this.font == null){
+			this.font = applet.createFont("Lucida Sans", fontSize);
+		}
 		setAngle(angle);
 	}
 
@@ -164,7 +167,7 @@ public class ButtonZone extends Zone {
 
 		if (text != null) {
 			if (font != null) {
-				textFont(font);
+				textFont(font, fontSize);
 			}
 			textAlign(CENTER, CENTER);
 			textSize(fontSize);
