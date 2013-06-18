@@ -26,8 +26,6 @@ public class KeyboardZone extends Zone {
 
 	public int textColor = 0;
 
-	public int linkColor = 0x96FFFFFF;
-
 	public int alpha = 255;
 
 	public boolean capsLockOn = false;
@@ -81,6 +79,7 @@ public class KeyboardZone extends Zone {
 			}
 		}
 
+		@Override
 		protected void drawImpl(int buttonColor, int textColor) {
 			stroke(borderColor);
 			strokeWeight(borderWeight);
@@ -323,26 +322,15 @@ public class KeyboardZone extends Zone {
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
 			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor,
 			int linkColor) {
-		this(name, x, y, width, height, keysSentToApplet, alpha, backgroundColor, keyColor,
-				keyPressedColor, textColor, linkColor, true);
-	}
-
-	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
-			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor,
-			int linkColor, boolean exactFonts) {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
 		int DEFAULT_KEY_WIDTH = (width * 9 / 10) / KEYS_PER_ROW;
 		int fontSize = (this.height / NUM_KEYBOARD_ROWS) * 16 / 50;
-		PFont font = this.textFont;
-		if (!exactFonts) {
-			font = applet.createFont("SansSerif", fontSize);
-		}
 
 		for (Keys k : Keys.values()) {
 			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH),
-					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k, fontSize, font));
+					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k, fontSize, null));
 		}
 
 		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
@@ -362,7 +350,6 @@ public class KeyboardZone extends Zone {
 		this.keyColor = keyColor;
 		this.keyPressedColor = keyPressedColor;
 		this.textColor = textColor;
-		this.linkColor = linkColor;
 	}
 
 	@Override
@@ -391,23 +378,10 @@ public class KeyboardZone extends Zone {
 
 	@Override
 	public void drawImpl() {
-		drawKeyLinstenerLink();
-
 		fill(backgroundColor, alpha);
 		rect(0, 0, width, height);
 
 		updateModifiersFromKeys();
-	}
-
-	protected void drawKeyLinstenerLink() {
-		for (KeyListener listener : keyListeners) {
-			if (listener instanceof Zone) {
-				Zone zone = (Zone) listener;
-				PVector relativeZoneCentre = this.toZoneVector(zone.getCentre());
-				stroke(linkColor);
-				line(width / 2, height / 2, relativeZoneCentre.x, relativeZoneCentre.y);
-			}
-		}
 	}
 
 	protected void updateModifiersFromKeys() {
@@ -463,6 +437,22 @@ public class KeyboardZone extends Zone {
 			modifierUp(KeyEvent.VK_META);
 		}
 	}
+	
+	@Override
+	public boolean add(Zone z){
+		if(!(z instanceof KeyZone)){
+			this.addKeyListener(z);
+		}
+		return super.add(z);
+	}
+	
+	@Override
+	public boolean remove(Zone z){
+		if(!(z instanceof KeyZone)){
+			this.removeKeyListener(z);
+		}
+		return super.remove(z);
+	}
 
 	/**
 	 * This adds a KeyListener to listen to this keyboard implementation. Since
@@ -475,17 +465,6 @@ public class KeyboardZone extends Zone {
 	 */
 	public void addKeyListener(KeyListener listener) {
 		this.keyListeners.add(listener);
-	}
-
-	/**
-	 * This is a convenience method, which only removes a Zone from being a
-	 * KeyListener on this keyboard
-	 * 
-	 * @param zone
-	 *            The Zone to remove from being a KeyListener on this keyboard
-	 */
-	public void removeZoneKeyListener(Zone zone) {
-		this.removeKeyListener(zone);
 	}
 
 	/**
