@@ -1124,6 +1124,9 @@ public class TouchClient {
 		}
 
 		updateStep();
+		
+		//clear the background to get rid of anything from pre-draw
+		parent.g.background(255);
 	}
 
 	/**
