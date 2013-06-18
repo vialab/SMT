@@ -35,6 +35,10 @@ public class KeyboardZone extends Zone {
 	boolean warnDraw() {
 		return false;
 	}
+	
+	boolean warnTouch(){
+		return false;
+	}
 
 	private Component keyboardComponent = new Component() {
 		private static final long serialVersionUID = -3237916182106172342L;
