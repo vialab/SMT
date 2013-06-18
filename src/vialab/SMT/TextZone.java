@@ -124,9 +124,14 @@ public class TextZone extends Zone {
 	public TextZone(String name, int x, int y, int width, int height, float fontSize) {
 		this(name, x, y, width, height, null, false, false, false, fontSize);
 	}
-
+	
 	public TextZone(String name, int x, int y, int width, int height, String inputText,
 			boolean selectable, boolean blur, boolean keysRecievedFromApplet, float fontSize) {
+		this(name, x, y, width, height, inputText, selectable, blur, keysRecievedFromApplet, fontSize, null);
+	}
+
+	public TextZone(String name, int x, int y, int width, int height, String inputText,
+			boolean selectable, boolean blur, boolean keysRecievedFromApplet, float fontSize, PFont font) {
 		super(name, x, y, width, height);
 		this.currentWordZone = new WordZone(5, 5, 0, 20);
 		this.keysFromApplet = keysRecievedFromApplet;
@@ -136,8 +141,10 @@ public class TextZone extends Zone {
 		this.selectable = selectable;
 		this.blur = blur;
 		this.fontSize = fontSize;
-
-		font = applet.createFont("Lucida Sans", fontSize);
+		this.font = font;
+		if(this.font == null){
+			this.font = applet.createFont("Lucida Sans", fontSize);
+		}
 		sFont = applet.createFont("Lucida Sans", 3.0f);
 
 		if (inputText != null) {

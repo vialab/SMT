@@ -318,10 +318,16 @@ public class KeyboardZone extends Zone {
 			int alpha) {
 		this(name, x, y, width, height, keysSentToApplet, alpha, 0, 200, 150, 0, 0x96FFFFFF);
 	}
-
+	
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
 			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor,
 			int linkColor) {
+		this(name, x, y, width, height, keysSentToApplet, alpha, backgroundColor, keyColor, keyPressedColor, textColor, linkColor, null);
+	}
+
+	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
+			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor,
+			int linkColor, PFont font) {
 		super(name, x, y, width, height);
 
 		int KEYS_PER_ROW = 15;
@@ -330,7 +336,7 @@ public class KeyboardZone extends Zone {
 
 		for (Keys k : Keys.values()) {
 			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH),
-					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k, fontSize, null));
+					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k, fontSize, font));
 		}
 
 		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
