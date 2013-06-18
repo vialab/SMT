@@ -48,6 +48,7 @@ public class TextZone extends Zone {
 
 		@Override
 		public void drawImpl() {
+			textFont(font);
 			textSize(fontSize);
 			fill(255);
 			if (blur) {
@@ -111,7 +112,7 @@ public class TextZone extends Zone {
 		}
 		this.fontSize = original.fontSize;
 		if (this.fontSize != 16) {
-			this.font = applet.createFont("SansSerif", fontSize);
+			this.font = applet.createFont("Lucida Sans", fontSize);
 		}
 	}
 
@@ -119,11 +120,15 @@ public class TextZone extends Zone {
 			boolean blur, boolean keysRecievedFromApplet) {
 		this(null, x, y, width, height, inputText, selectable, blur, keysRecievedFromApplet, 16);
 	}
+	
+	public TextZone(String name, int x, int y, int width, int height, float fontSize) {
+		this(name, x, y, width, height, null, false, false, false, fontSize);
+	}
 
 	public TextZone(String name, int x, int y, int width, int height, String inputText,
 			boolean selectable, boolean blur, boolean keysRecievedFromApplet, float fontSize) {
 		super(name, x, y, width, height);
-		this.currentWordZone = new WordZone(0, 0, 0, 20);
+		this.currentWordZone = new WordZone(5, 5, 0, 20);
 		this.keysFromApplet = keysRecievedFromApplet;
 		if (keysRecievedFromApplet) {
 			applet.registerMethod("keyEvent", this);
@@ -132,8 +137,8 @@ public class TextZone extends Zone {
 		this.blur = blur;
 		this.fontSize = fontSize;
 
-		font = applet.createFont("SansSerif", fontSize);
-		sFont = applet.createFont("SansSerif", 3.0f);
+		font = applet.createFont("Lucida Sans", fontSize);
+		sFont = applet.createFont("Lucida Sans", 3.0f);
 
 		if (inputText != null) {
 			for (char c : inputText.toCharArray()) {
@@ -161,7 +166,6 @@ public class TextZone extends Zone {
 	@Override
 	public void drawImpl() {
 		fill(255);
-		noStroke();
 		rect(0, 0, width, height);
 	}
 
