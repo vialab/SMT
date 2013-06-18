@@ -380,8 +380,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            The new name of the zone
 	 */
 	public void setName(String name) {
-		loadMethods(name);
-		this.name = name;
+		this.name = name == null ? this.getClass().getSimpleName() : name;
+		loadMethods(this.name);
 	}
 
 	/**
