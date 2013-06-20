@@ -347,23 +347,17 @@ public class TouchClient {
 				}
 				c2.addTuioListener(new SMTProxyTuioListener(port, listener));
 				System.out.println("TuioClient listening on port: " + port);
-
-				if (System.getProperty("os.arch").equals("x86")) {
+				// SMART:
+				if(System.getProperty("os.name").startsWith("Windows") && System.getProperty("os.version").equals("6.2")){
+					TouchClient.runSmart2TuioServer();
+					System.out.println("Falling back to Smart2Tuio backend for WM_TOUCH, ignore missing Smart SDK warning");
+				}
+				else if (System.getProperty("os.arch").equals("x86")) {
 					TouchClient.runWinTouchTuioServer(false, "127.0.0.1", port);
 				}
 				else {
 					TouchClient.runWinTouchTuioServer(true, "127.0.0.1", port);
 				}
-
-				// SMART:
-				/*
-				 * TuioClient c2 = new TuioClient(port); c2.connect();
-				 * while(!c2.isConnected()){ c2 = new TuioClient(++port);
-				 * c2.connect(); } c2.addTuioListener(new
-				 * SMTProxyTuioListener(port,listener));
-				 */
-				// TouchClient.runSmart2TuioServer();
-				// tuioClientList.add(new TuioClient(port));
 
 				// LEAP:
 				TuioClient c3 = new TuioClient(++port);
@@ -1235,7 +1229,15 @@ public class TouchClient {
 							if (tuioServerOut.ready()) {
 								System.out.println("WM_TOUCH: " + tuioServerOut.readLine());
 							}
-							Thread.sleep(1000);
+							
+							try{
+								tuioServer.exitValue();
+								System.err.println("WM_TOUCH Process died, is Visual C++ Redistributable for Visual Studio 2012 installed?");
+								break;
+							}catch(IllegalThreadStateException e){
+								//still running... sleep time
+								Thread.sleep(1000);
+							}
 						}
 					}
 					catch (IOException e) {
@@ -1328,7 +1330,15 @@ public class TouchClient {
 							if (tuioServerOut.ready()) {
 								System.out.println("SMART: " + tuioServerOut.readLine());
 							}
-							Thread.sleep(1000);
+							
+							try{
+								tuioServer.exitValue();
+								System.err.println("SMART Process died");
+								break;
+							}catch(IllegalThreadStateException e){
+								//still running... sleep time
+								Thread.sleep(1000);
+							}
 						}
 					}
 					catch (IOException e) {
@@ -1413,7 +1423,15 @@ public class TouchClient {
 							if (tuioServerOut.ready()) {
 								System.out.println("LEAP: " + tuioServerOut.readLine());
 							}
-							Thread.sleep(1000);
+							
+							try{
+								tuioServer.exitValue();
+								System.err.println("LEAP Process died, is Visual C++ 2010 Redistributable (x86) installed?");
+								break;
+							}catch(IllegalThreadStateException e){
+								//still running... sleep time
+								Thread.sleep(1000);
+							}
 						}
 					}
 					catch (IOException e) {
