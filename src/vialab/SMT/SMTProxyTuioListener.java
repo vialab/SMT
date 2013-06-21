@@ -1,6 +1,5 @@
 package vialab.SMT;
 
-import TUIO.TuioClient;
 import TUIO.TuioCursor;
 import TUIO.TuioListener;
 import TUIO.TuioObject;

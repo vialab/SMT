@@ -9,7 +9,6 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import processing.core.PFont;
-import processing.core.PVector;
 
 /**
  * KeyboardZone is an implementation of an on-screen keyboard, use this zones
