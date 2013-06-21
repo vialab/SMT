@@ -35,6 +35,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -144,6 +146,9 @@ public class TouchClient {
 	protected static ArrayList<Class<?>> extraClassList = new ArrayList<Class<?>>();
 
 	static boolean fastPicking = true;
+
+	static Map<Integer, TouchSource> deviceMap = Collections
+			.synchronizedMap(new LinkedHashMap<Integer, TouchSource>());
 
 	/**
 	 * Prevent TouchClient instantiation with private constructor
@@ -301,6 +306,7 @@ public class TouchClient {
 			// this still uses the old method, should be re-implemented without
 			// the socket
 			att = new AndroidToTUIO(parent.width, parent.height, port);
+			deviceMap.put(port, source);
 			// parent.registerMethod("touchEvent", att); //when Processing
 			// supports this
 			break;
@@ -308,6 +314,7 @@ public class TouchClient {
 			// this still uses the old method, should be re-implemented without
 			// the socket
 			mtt = new MouseToTUIO(parent.width, parent.height, port);
+			deviceMap.put(port, source);
 			parent.registerMethod("mouseEvent", mtt);
 			break;
 		case TUIO_DEVICE:
@@ -319,17 +326,21 @@ public class TouchClient {
 			else {
 				TouchClient.runWinTouchTuioServer(true, "127.0.0.1", port);
 			}
+			deviceMap.put(port, source);
 			break;
 		case SMART:
 			TouchClient.runSmart2TuioServer();
+			deviceMap.put(port, source);
 			break;
 		case LEAP:
 			TouchClient.runLeapTuioServer(port);
+			deviceMap.put(port, source);
 			break;
 		case MULTIPLE:
 			// ANDROID
 			if (System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")) {
 				att = new AndroidToTUIO(parent.width, parent.height, port);
+				deviceMap.put(port, TouchSource.ANDROID);
 				// parent.registerMethod("touchEvent", att); //when Processing
 				// supports this
 				break;
@@ -337,6 +348,7 @@ public class TouchClient {
 			else {
 				// TUIO_DEVICE:
 				// covered already by c
+				deviceMap.put(port, TouchSource.TUIO_DEVICE);
 
 				// WM_TOUCH:
 				TuioClient c2 = new TuioClient(++port);
@@ -350,13 +362,16 @@ public class TouchClient {
 				// SMART:
 				if(System.getProperty("os.name").startsWith("Windows") && System.getProperty("os.version").equals("6.2")){
 					TouchClient.runSmart2TuioServer();
-					System.out.println("Falling back to Smart2Tuio backend for WM_TOUCH, ignore missing Smart SDK warning");
+					deviceMap.put(3333, TouchSource.SMART);
+					System.out.println("Falling back to Smart2Tuio backend for WM_TOUCH, ignore missing Smart SDK warning, also might fail if port 3333 unavailable");
 				}
 				else if (System.getProperty("os.arch").equals("x86")) {
 					TouchClient.runWinTouchTuioServer(false, "127.0.0.1", port);
+					deviceMap.put(port, TouchSource.WM_TOUCH);
 				}
 				else {
 					TouchClient.runWinTouchTuioServer(true, "127.0.0.1", port);
+					deviceMap.put(port, TouchSource.WM_TOUCH);
 				}
 
 				// LEAP:
@@ -369,6 +384,7 @@ public class TouchClient {
 				c3.addTuioListener(new SMTProxyTuioListener(port, listener));
 				System.out.println("TuioClient listening on port: " + port);
 				TouchClient.runLeapTuioServer(port);
+				deviceMap.put(port, TouchSource.LEAP);
 
 				// MOUSE:
 				TuioClient c4 = new TuioClient(++port);
@@ -384,6 +400,7 @@ public class TouchClient {
 				// without
 				// the socket
 				mtt = new MouseToTUIO(parent.width, parent.height, port);
+				deviceMap.put(port, TouchSource.MOUSE);
 				parent.registerMethod("mouseEvent", mtt);
 
 				tuioClientList.add(c2);

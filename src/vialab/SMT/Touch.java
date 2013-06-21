@@ -317,4 +317,11 @@ public class Touch extends TuioCursor {
 	float distance(Touch t){
 		return (float) getCurrentPoint().distance(t.getCurrentPoint());
 	}
+	
+	public TouchSource getTouchSource(){
+		if(sessionID<10000){
+			return TouchClient.deviceMap.get(3333);
+		}
+		return TouchClient.deviceMap.get((int) (sessionID/10000));
+	}
 }

@@ -30,7 +30,7 @@ void draw(){
   text("All Touches: ",100,150);
   int c=0;
   for(Touch t : TouchClient.getTouches()){
-    text("Touch ID#"+t.sessionID+"x:"+t.x+"\ty:"+t.y,100,170+c*20);
+    text("Touch ID#"+t.sessionID+"x:"+t.x+"\ty:"+t.y+"Source: "+t.getTouchSource(),100,170+c*20);
     c++;
   }
 }
