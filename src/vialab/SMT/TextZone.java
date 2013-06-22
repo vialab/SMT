@@ -4,9 +4,9 @@ import processing.core.PFont;
 import processing.event.KeyEvent;
 
 /**
- * TextZone displays text, and is selectable by touch, each word is
- * independently highlighted by touch, toggled whenever a TouchDown occurs on
- * the word
+ * TextZone displays text which is selectable by touch. Each word is
+ * independently highlighted when touched. The highlighting is toggled 
+ * whenever a TouchDown occurs on the word
  */
 public class TextZone extends Zone {
 

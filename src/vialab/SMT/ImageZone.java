@@ -26,12 +26,7 @@ package vialab.SMT;
 import processing.core.PImage;
 
 /**
- * This is a rectangular zone which displays an image.
- * <P>
- * 
- * University of Ontario Institute of Technology. Summer Research Assistant with
- * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
- * <P>
+ * This is a rectangular zone that displays the image given to it.
  * 
  * @author Erik Paluka
  * @version 1.0

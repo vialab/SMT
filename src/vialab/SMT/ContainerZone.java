@@ -1,9 +1,9 @@
 package vialab.SMT;
 
 /**
- * ContainerZone should allow easy ordering of Zones like any other, but does
- * not draw or pickDraw anything, and so should not have an effect on Zone
- * selection or drawing
+ * ContainerZone is used to order and hold/contain zones. Drawing within it,
+ * as well as pickDraw are disabled. Therefore, ContainerZone does not effect 
+ * drawing or selecting the zones within it.
  */
 public class ContainerZone extends Zone {
 

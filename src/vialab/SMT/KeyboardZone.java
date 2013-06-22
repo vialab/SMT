@@ -1,6 +1,3 @@
-/**
- * 
- */
 package vialab.SMT;
 
 import java.awt.Component;
@@ -11,9 +8,9 @@ import java.util.ArrayList;
 import processing.core.PFont;
 
 /**
- * KeyboardZone is an implementation of an on-screen keyboard, use this zones
- * addKeyListener(Zone) method to add zones such as TextZone to listen to this
- * keyboard
+ * KeyboardZone is an implementation of an on-screen keyboard. Use its
+ * addKeyListener(Zone) method to allow other zones, such as TextZone, to
+ * listen/receive the keyboard input.
  */
 public class KeyboardZone extends Zone {
 

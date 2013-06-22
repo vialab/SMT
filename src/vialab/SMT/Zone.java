@@ -1,5 +1,5 @@
 /*
- * Simple Multitouch Library Copyright 2011 Erik Paluka, Christopher Collins -
+ * Simple Multi-Touch Library Copyright 2011 Erik Paluka, Christopher Collins -
  * University of Ontario Institute of Technology Mark Hancock - University of
  * Waterloo
  * 
@@ -54,14 +54,8 @@ import TUIO.TuioTime;
 
 /**
  * This is the main zone class which all other Zones extend. It holds the zone's
- * coordinates, size, matrices, etc.. It was done with help from the tuioZones
- * library.
- * <P>
- * 
- * University of Ontario Institute of Technology. Erik Paluka, Summer Research
- * Assistant (Summer 2011). Zach Cook, SurfNet Intern (2012-2013). With Dr.
- * Christopher Collins collaborating with Dr. Mark Hancock.
- * <P>
+ * coordinates, size, matrices, etc.. Zones are used to draw and interact with
+ * the sketch/application.
  * 
  * @author Erik Paluka, Zach Cook
  * @version 1.0

@@ -8,6 +8,11 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 
+/**
+ * Pie menu user interface widget. 
+ * Creates a pie menu GUI element.
+ *
+ */
 public class PieMenuZone extends Zone {
 
 	private class Slice extends Zone {

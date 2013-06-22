@@ -2,6 +2,14 @@ package vialab.SMT;
 
 import java.util.ArrayList;
 
+/**
+ * Creates a 'lock' that is unlocked when a
+ * specified pattern is inputted by the user.
+ * Can be used to perform an action when
+ * the user inputs the specified pattern.
+ * Similar to the Android screen lock.
+ *
+ */
 public class PatternUnlockZone extends Zone {
 	private class CircleZone extends Zone {
 		public boolean touched = false;

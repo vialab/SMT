@@ -1,11 +1,24 @@
 package vialab.SMT;
 
+
+/**
+ *  Creates a check box and will display a check mark
+ *  within it depending on the value given to the 
+ *  setChecked() function.
+ *
+ **/
+ 
 public class CheckBoxZone extends Zone {
+
+    public boolean checked = false;
+    
 	public CheckBoxZone(String name, int x, int y, int width, int height) {
 		super(name, x, y, width, height);
 	}
 
-	public boolean checked = false;
+	public void setChecked(boolean checked){
+        this.checked = checked;
+    }
 
 	protected void drawImpl() {
 		fill(255);

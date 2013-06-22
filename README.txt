@@ -2,7 +2,7 @@ Version 3.5.4
 
 Project Website: http://vialab.science.uoit.ca/portfolio/smt-toolkit
 
-SMT (Simple MultiTouch Toolkit) is a project to support the learning of HCI concepts.
+SMT (Simple Multi-Touch Toolkit) is a project to support the learning of HCI concepts.
 It provides an easy to use library for processing sketches to handle touch input and associated matrix and drawing functions, to allow quick development of the desired application.
 
 SMT supports multiple input sources for Touch events: SmartSDK, Windows Touch (requires http://www.microsoft.com/en-au/download/details.aspx?id=30679), TUIO, Mouse Emulation, Android, and Leap Motion.
@@ -20,4 +20,4 @@ If you have problems running SMT, first test that the Processing examples work (
 
 If you still have problems, please open an Issue (https://github.com/vialab/SMT/issues) to report the problems you are having, and we will try our best to fix them promptly.
 
-Authors: Zach Cook, Erik Paluka, Dr. Christopher Collins, Dr. Mark Hancock
+Authors: Erik Paluka, Zach Cook, Dr. Mark Hancock, Dr. Christopher Collins

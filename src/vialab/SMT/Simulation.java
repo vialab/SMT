@@ -39,11 +39,7 @@ import com.illposed.osc.OSCPortOut;
 /**
  * This class is the parent class of MouseToTUIO etc to allow easy formation of
  * TUIO messages in response to events.
- * <P>
  * 
- * University of Ontario Institute of Technology. Summer Research Assistant with
- * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
- * <P>
  * 
  * @author Erik Paluka
  * @author Zach Cook

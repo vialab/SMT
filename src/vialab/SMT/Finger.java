@@ -32,11 +32,6 @@ import java.util.Vector;
  * This class holds touch event information associated with the same session ID
  * (e.g.all the information associated with someone placing their finger on the
  * screen, dragging it, then removing it.)
- * <P>
- * 
- * University of Ontario Institute of Technology. Summer Research Assistant with
- * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
- * <P>
  * 
  * @author Erik Paluka
  * @version 1.0

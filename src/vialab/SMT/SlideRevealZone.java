@@ -1,5 +1,12 @@
 package vialab.SMT;
 
+/**
+ *  
+ * When a sliding gesture is performed
+ * on this zone, the specified action is executed.
+ * Similar to the Apple screen unlock.
+ *
+ */
 public class SlideRevealZone extends Zone {
 	private String revealText;
 	private int xPosSlider = 0;

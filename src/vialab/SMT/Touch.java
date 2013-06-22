@@ -9,7 +9,7 @@ import processing.core.PApplet;
 import TUIO.*;
 
 /**
- * Touch has some state information and extends TuioCursor
+ * Touch has state information of one touch and extends TuioCursor.
  * @see <a href=http://www.tuio.org/api/java/TUIO/TuioCursor.html>TuioCursor Javadoc</a>
  */
 public class Touch extends TuioCursor {

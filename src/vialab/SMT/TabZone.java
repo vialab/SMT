@@ -7,10 +7,9 @@ import java.util.Map;
 
 /**
  * TabZone is a container for other Zones, it has tabs along its top, allowing
- * easy switching between different views. Optionally has close buttons on tabs.
+ * easy switching between different views. It optionally has close buttons on the tabs.
  * Currently, each zone added to TabZone becomes its own Tab, and so to have
- * multiple Zones, use another zone as a container (no draw/touch etc method,
- * but has children) and add that zone to TabZone.
+ * multiple Zones within a tab, use another zone as a container and add that zone to TabZone.
  */
 public class TabZone extends Zone {
 

@@ -3,7 +3,7 @@ package vialab.SMT;
 import processing.core.PVector;
 
 /**
- * SliderZone provides a simple GUI Slider that is designed for touch
+ * SliderZone provides a simple GUI Slider that is designed for touch.
  * 
  * @author Zach
  */

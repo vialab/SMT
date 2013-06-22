@@ -34,11 +34,6 @@ import processing.event.MouseEvent;
 
 /**
  * This class responds to mouse events by sending a corresponding TUIO message.
- * <P>
- * 
- * University of Ontario Institute of Technology. Summer Research Assistant with
- * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
- * <P>
  * 
  * @author Erik Paluka
  * @author Zach Cook
