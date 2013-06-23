@@ -101,6 +101,20 @@ public class TextZone extends Zone {
 		return false;
 	}
 
+    /**
+	 * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+     * @param inputText  - String: The text that will be displayed in the Text Zone
+     * @param selectable  - boolean:
+     * @param blur  - boolean:
+     * @param keysRecievedFromApplet  - boolean:
+     * @param fontSize  - float: Sets the size of the font used to display the text in this zone
+     * @param font  - PFont: Sets the font used to display the text in this zone
+     *
+     */
 	public TextZone(TextZone original) {
 		super(original.name, original.x, original.y, original.width, original.height);
 		this.currentWordZone = (WordZone) original.currentWordZone.clone();

@@ -258,6 +258,21 @@ public class KeyboardZone extends Zone {
 
 	private ArrayList<KeyListener> keyListeners = new ArrayList<KeyListener>();
 
+    /**
+     * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+     * @param keysSentToApplet  - boolean: Sets if the key input is sent to Applet
+     * @param alpha   - int: Transparency level for keyboard
+     * @param backgroundColor   - int: Background colour of the keyboard
+     * @param keyColor   - int: Colour of the keyboard keys
+     * @param keyPressedColor   - int: Colour of the keyboard keys when they are pressed down
+     * @param textColor   - int: Colour of the text in the keyboard keys
+     * @param linkColor   - int:
+     * @param font        - PFont: Font used to display text in the keyboard keys
+     */
 	public KeyboardZone() {
 		this(null, true);
 	}

@@ -54,6 +54,14 @@ public class PatternUnlockZone extends Zone {
 	private ArrayList<Integer> code = new ArrayList<Integer>();
 	private CircleZone[] pattern = new CircleZone[9];
 
+    /**
+	 * ImageZone constructor, creates a rectangular zone and draws a PImage to it.
+	 * 
+	 * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 */
 	public PatternUnlockZone(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		for (int i = 0; i < 9; i++) {

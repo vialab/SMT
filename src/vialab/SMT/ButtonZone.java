@@ -46,11 +46,23 @@ public class ButtonZone extends Zone {
 	boolean warnDraw() {
 		return false;
 	}
-
+    
+    /**
+     *
+     * @param name      - String: Name of the Zone
+     * @param text      - String: Text displayed within the zone
+     * @param font      - PFont: The font used to display the text
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     * @param fontSize  - int: Size of the font
+     * @param angle     - float: Angle of text
+     */
 	public ButtonZone() {
 		this(null);
 	}
-
+    
 	public ButtonZone(String name) {
 		this(name, null);
 	}
@@ -85,7 +97,7 @@ public class ButtonZone extends Zone {
 
 	public ButtonZone(String name, int x, int y, int width, int height, String text, PFont font,
 			float angle) {
-		this(name, x, y, width, height, text, 16, font, 0);
+		this(name, x, y, width, height, text, 16, font, angle);
 	}
 
 	public ButtonZone(String name, int x, int y, int width, int height, String text, int fontSize) {
@@ -109,26 +121,47 @@ public class ButtonZone extends Zone {
 		setAngle(angle);
 	}
 
+    /**
+     * Gets the zone's text.
+     */
 	public String getText() {
 		return text;
 	}
 
+    /**
+     * Sets the zone's text
+     * @param text      - String: The zone's text for displaying.
+     */
 	public void setText(String text) {
 		this.text = text;
 	}
-
+    
+    /**
+     * Gets the zone's font
+     */
 	public PFont getFont() {
 		return font;
 	}
-
+    
+    /**
+     * Sets the zone's font
+     * @param font      - PFont: The font used to display the zone's text.
+     */
 	public void setFont(PFont font) {
 		this.font = font;
 	}
 
+    /**
+     * Gets the angle used to display the zone's text.
+     */
 	public float getAngle() {
 		return angle;
 	}
 
+    /**
+     * Sets the zone's angle that is used to display the zone's text.
+     * @param angle      - float: The angle
+     */
 	public void setAngle(float angle) {
 		this.angle = angle;
 
@@ -137,7 +170,10 @@ public class ButtonZone extends Zone {
 		endTouch();
 	}
 
-	@Override
+    /**
+     * Used to override what is drawn in the zone.
+     */
+    @Override
 	public void drawImpl() {
 		if (deactivated) {
 			drawImpl(deactivatedColor, deactivatedTextColor);
@@ -153,6 +189,8 @@ public class ButtonZone extends Zone {
 	}
 
 	/**
+     * Used to determine if the button is currently being pushed down.
+     * Returns true if it is.
 	 * @return Whether the button is currently pushed down
 	 */
 	public boolean isButtonDown() {
@@ -176,10 +214,17 @@ public class ButtonZone extends Zone {
 		}
 	}
 
+    /**
+     * Gets the font size that is used to display the zone's text
+     */
 	public int getFontSize() {
 		return fontSize;
 	}
 
+    /**
+     * Sets the font size that is used to display the zone's text
+     * @param fontSize      - int: The font size
+     */
 	public void setFontSize(int fontSize) {
 		this.fontSize = fontSize;
 	}

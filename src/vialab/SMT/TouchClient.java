@@ -168,12 +168,23 @@ public class TouchClient {
 		TouchClient.warnUnimplemented = warn;
 	}
 
-	/**
+	/*
 	 * Initializes the TouchClient, begins listening to a TUIO source on the
 	 * default port of 3333
+	 */
+
+    /** 
 	 * 
-	 * @param parent
-	 *            PApplet - The Processing PApplet
+	 * Allows you to select the TouchSource backend from which to get
+	 * multi-touch events from
+	 * 
+	 * @param parent  - PApplet: The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * 
+	 * @param port    - int: The port to listen on
+	 * 
+	 * @param source  -int: The source of touch events to listen to. One of:
+	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
+	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
 	public static void init(PApplet parent) {
 		init(parent, 3333);
@@ -644,11 +655,9 @@ public class TouchClient {
 	}
 
 	/**
-	 * Adds a zone to the zone list. When a student creates a zone, they must
-	 * add it to this list.
+	 * Adds a zone(s) to the sketch/application.
 	 * 
-	 * @param zones
-	 *            Zone - The zones to add to the list.
+	 * @param zones  - Zone: The zones to add to the sketch/application
 	 */
 	public static void add(Zone... zones) {
 		for (Zone zone : zones) {

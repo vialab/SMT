@@ -29,6 +29,19 @@ public class SliderZone extends Zone {
 		return false;
 	}
 
+    /**
+	 * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 * @param currentValue - int: Current value of the slider
+	 * @param minValue  - int: Minimum value of the slider
+	 * @param maxValue  - int: Maximum value of the slider
+	 * @param minorTickSpacing - int: Spacing between the minor ticks of the slider
+	 * @param majorTickSpacing - int: Spacing between the major ticks of the slider
+	 * @param label   - String: Text label of the zone
+	 */
 	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue) {
 		this(null, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, null);
 	}
@@ -55,8 +68,8 @@ public class SliderZone extends Zone {
 	 * @param currentValue
 	 * @param minValue
 	 * @param maxValue
-	 * @param majorTickSpacing
 	 * @param minorTickSpacing
+	 * @param majorTickSpacing
 	 * @param label
 	 */
 	public SliderZone(String name, int x, int y, int width, int height, int currentValue,

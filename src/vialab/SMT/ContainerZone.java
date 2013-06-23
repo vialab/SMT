@@ -7,6 +7,14 @@ package vialab.SMT;
  */
 public class ContainerZone extends Zone {
 
+    /**
+     * @param name     - String: The name of the zone
+     * @param x        - int: X-coordinate of the upper left corner of the zone
+	 * @param y        - int: Y-coordinate of the upper left corner of the zone
+     * @param width    - int: Width of the zone
+     * @param height   - int: Height of the zone
+     * @param renderer - String: The renderer of the zone
+     */
 	public ContainerZone() {
 		super();
 	}

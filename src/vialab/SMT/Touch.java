@@ -73,12 +73,16 @@ public class Touch extends TuioCursor {
 	 * This constructor takes the attributes of the provided TuioCursor and
 	 * assigns these values to the newly created Touch.
 	 * 
-	 * @param t
-	 *            - TuioCursor
+	 * @param tuioCursor - TuioCursor:
+     * @param ttime      - TuioTime: TuioTime
+	 * @param sessionID  - long: Session ID
+	 * @param cursorID   - int: Cursor ID
+	 * @param xCoord     - float: X Coordinate
+	 * @param yCoord     - float: Y Coordinate
 	 */
-	public Touch(TuioCursor t) {
-		super(t);
-		this.updateTouch(t);
+	public Touch(TuioCursor tuioCursor) {
+		super(tuioCursor);
+		this.updateTouch(tuioCursor);
 		this.startTimeMillis = System.currentTimeMillis();
 		this.originalTimeMillis = this.startTimeMillis;
 	}
@@ -87,18 +91,14 @@ public class Touch extends TuioCursor {
 	 * This constructor takes the provided Session ID, Cursor ID, X and Y
 	 * coordinate and assigns these values to the newly created Touch.
 	 * 
-	 * @param si
-	 *            - Session ID
-	 * @param ci
-	 *            - Cursor ID
-	 * @param xp
-	 *            - X Coordinate
-	 * @param yp
-	 *            - Y Coordinate
+	 * @param sessionID  - long: Session ID
+	 * @param cursorID   - int: Cursor ID
+	 * @param xCoord     - float: X Coordinate
+	 * @param yCoord     - float: Y Coordinate
 	 */
-	public Touch(long si, int ci, float xp, float yp) {
-		super(si, ci, xp, yp);
-		cursorId = getCursorID();
+	public Touch(long sessionID, int cursorID, float xCoord, float yCoord) {
+		super(sessionID, cursorID, xCoord, yCoord);
+		this.cursorId = getCursorID();
 		x = getScreenX(applet.width);
 		y = getScreenY(applet.height);
 		startTime = getStartTime();
@@ -108,7 +108,7 @@ public class Touch extends TuioCursor {
 		motionSpeed = getMotionSpeed();
 		motionAcceleration = getMotionAccel();
 		path = getPath();
-		sessionID = getSessionID();
+		this.sessionID = getSessionID();
 		state = getTuioState();
 	}
 
@@ -117,20 +117,15 @@ public class Touch extends TuioCursor {
 	 * provided Session ID, Cursor ID, X and Y coordinate to the newly created
 	 * Touch.
 	 * 
-	 * @param ttime
-	 *            - TuioTime
-	 * @param si
-	 *            - Session ID
-	 * @param ci
-	 *            - Cursor ID
-	 * @param xp
-	 *            - X Coordinate
-	 * @param yp
-	 *            - Y Coordinate
+	 * @param ttime      - TuioTime: TuioTime
+	 * @param sessionID  - long: Session ID
+	 * @param cursorID   - int: Cursor ID
+	 * @param xCoord     - float: X Coordinate
+	 * @param yCoord     - float: Y Coordinate
 	 */
-	public Touch(TuioTime ttime, long si, int ci, float xp, float yp) {
-		super(ttime, si, ci, xp, yp);
-		cursorId = getCursorID();
+	public Touch(TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
+		super(ttime, sessionID, cursorID, xCoord, yCoord);
+		this.cursorId = getCursorID();
 		x = getScreenX(applet.width);
 		y = getScreenY(applet.height);
 		startTime = getStartTime();
@@ -140,7 +135,7 @@ public class Touch extends TuioCursor {
 		motionSpeed = getMotionSpeed();
 		motionAcceleration = getMotionAccel();
 		path = getPath();
-		sessionID = getSessionID();
+		this.sessionID = getSessionID();
 		state = getTuioState();
 	}
 

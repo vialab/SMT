@@ -104,6 +104,14 @@ public class PieMenuZone extends Zone {
 
 	private boolean visible = true;
 
+    /**
+     * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
+     * @param outerdiameter      - int: Inner diameter of the Pie Menu
+     * @param innerDiameter      - int: Outer diameter of the Pie Menu
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+     *
+     */
 	public PieMenuZone(String name, int outerdiameter, int x, int y) {
 		this(name, outerdiameter, 50, x, y);
 	}

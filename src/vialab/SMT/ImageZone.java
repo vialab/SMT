@@ -1,5 +1,5 @@
 /*
-  Simple Multitouch Library
+  Simple Multi-Touch Library
   Copyright 2011
   Erik Paluka, Christopher Collins - University of Ontario Institute of Technology
   Mark Hancock - University of Waterloo
@@ -45,24 +45,15 @@ public class ImageZone extends Zone {
 	}
 
 	/**
-	 * ImageZone constructor, creates a rectangular zone and draws a PImage to
-	 * it.
+	 * ImageZone constructor, creates a rectangular zone and draws a PImage to it.
 	 * 
-	 * @param name
-	 *            The name of the zone, used for the drawZoneName() and
-	 *            touchZoneName(), etc methods
-	 * 
-	 * @param img
-	 *            PImage - The PImage that will be drawn to the zone's
-	 *            coordinates.
-	 * @param x
-	 *            int - X-coordinate of the upper left corner of the zone
-	 * @param y
-	 *            int - Y-coordinate of the upper left corner of the zone
-	 * @param width
-	 *            int - Width of the zone
-	 * @param height
-	 *            int - Height of the zone
+	 * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
+	 * @param img     - PImage: The PImage that will be drawn to the zone's coordinates.
+	 * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+     * @param tintColour - int: The image will be tinted by this colour
 	 */
 	public ImageZone(String name, PImage img, int x, int y, int width, int height) {
 		super(name, x, y, width, height);
@@ -137,6 +128,9 @@ public class ImageZone extends Zone {
 		this(imgZone.name, imgZone.img, imgZone.x, imgZone.y, imgZone.width, imgZone.height);
 	}
 
+    /**
+     * Used to override what is drawn into the zone
+     */
 	@Override
 	public void drawImpl() {
 		tint(tintColour);

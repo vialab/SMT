@@ -34,6 +34,13 @@ public class SlideRevealZone extends Zone {
 		}
 	}
 
+    /**
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+     * @param text    - String: The text displayed in the zone
+     */
 	public SlideRevealZone(int x, int y, int width, int height, String text) {
 		super(x, y, width, height);
 		add(new Slider(0, 0, height, height));
@@ -71,26 +78,44 @@ public class SlideRevealZone extends Zone {
 		}
 	}
 
+    /**
+     * The current x position of the slider
+     */
 	public int getCurrentX() {
 		return xPosSlider;
 	}
 
+    /**
+     * Returns true if the slider has been moved
+     */
 	public boolean hasStarted() {
 		return (xPosSlider > 0);
 	}
 
+    /**
+     * Returns true if the slider has moved all the way
+     */
 	public boolean hasFinished() {
 		return (xPosSlider >= (width - height));
 	}
 
+    /**
+     * Returns the maximum length of the slider
+     */
 	public int getMaxX() {
 		return width - height;
 	}
 
+    /**
+     * Returns the minimum length of the slider
+     */
 	public int getMinX() {
 		return 0;
 	}
 
+    /**
+     * Resets the zone
+     */
 	public void reset() {
 		getChild(0).setLocation(0, 0);
 		xPosSlider = 0;

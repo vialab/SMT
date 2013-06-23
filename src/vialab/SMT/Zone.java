@@ -244,7 +244,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are
 	 * 1
-	 */
+	 *
+     * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+     * @param renderer - String: The renderer used to draw this zone
+     */
 	public Zone() {
 		this(null);
 	}

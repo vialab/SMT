@@ -12,10 +12,24 @@ public class CheckBoxZone extends Zone {
 
     public boolean checked = false;
     
+    /**
+     * @param name     - String: The name of the zone
+     * @param x        - int: X-coordinate of the upper left corner of the zone
+	 * @param y        - int: Y-coordinate of the upper left corner of the zone
+     * @param width    - int: Width of the zone
+     * @param height   - int: Height of the zone
+     *
+     */
 	public CheckBoxZone(String name, int x, int y, int width, int height) {
 		super(name, x, y, width, height);
 	}
 
+    /**
+     * Sets the state of the check mark. Passing true
+     * into this function displays a check mark.
+     *
+     * @param checked   - boolean: State of the check mark
+     */
 	public void setChecked(boolean checked){
         this.checked = checked;
     }

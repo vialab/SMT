@@ -3,21 +3,30 @@ package vialab.SMT;
 public class LeftPopUpMenuZone extends Zone {
 	private MenuZone menu;
 
-	public LeftPopUpMenuZone(int x, int y, int width, int height, int mwidth, int mheight,
+    /**
+	 * @param x               - int: X-coordinate of the upper left corner of the zone
+	 * @param y               - int: Y-coordinate of the upper left corner of the zone
+	 * @param width           - int: Width of the zone
+	 * @param height          - int: Height of the zone
+     * @param mWidth          - int: Width of the menu
+	 * @param mHeight         - int: Height of the menu
+     * @param menuButtonNames - String...: The names of the menu buttons
+     */
+	public LeftPopUpMenuZone(int x, int y, int width, int height, int mWidth, int mHeight,
 			String... menuButtonNames) {
 		super(x, y, width, height);
-		menu = new MenuZone(-mwidth, (-mheight / 2) + height / 2, mwidth, mheight);
+		menu = new MenuZone(-mWidth, (-mHeight / 2) + height / 2, mWidth, mHeight);
 		int i = 0;
 		for (String name : menuButtonNames) {
-			int yButton = mheight / 20 + i * ((mheight * 9 / 10) / menuButtonNames.length);
+			int yButton = mHeight / 20 + i * ((mHeight * 9 / 10) / menuButtonNames.length);
 			if (i != 0) {
-				yButton += ((mheight / 10) / menuButtonNames.length - 1);
+				yButton += ((mHeight / 10) / menuButtonNames.length - 1);
 			}
 			if (menuButtonNames.length == 1) {
-				yButton += mheight / 20;
+				yButton += mHeight / 20;
 			}
-			int hButton = (mheight * 8 / 10) / menuButtonNames.length;
-			menu.add(new ButtonZone(name.replace(" ", ""), mwidth / 20, yButton, mwidth * 9 / 10,
+			int hButton = (mHeight * 8 / 10) / menuButtonNames.length;
+			menu.add(new ButtonZone(name.replace(" ", ""), mWidth / 20, yButton, mWidth * 9 / 10,
 					hButton, name, hButton / 3 + 10));
 			i++;
 		}

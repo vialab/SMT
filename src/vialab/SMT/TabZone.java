@@ -101,7 +101,19 @@ public class TabZone extends Zone {
 
 	private Map<Tab, Zone> Tabs = Collections.synchronizedMap(new LinkedHashMap<Tab, Zone>());
 
-	public TabZone() {
+	
+    
+    /**
+	 * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 * @param tabHeight - int: The height of the tab
+     * @param closeButtons - boolean: Display close/exit buttons for tabs
+     *
+     */
+    public TabZone() {
 		this(false);
 	}
 
@@ -153,9 +165,11 @@ public class TabZone extends Zone {
 	 * depending on the number of current Tabs. This will fail badly when used
 	 * with remove(Zone), so this method should not be used. The text displayed
 	 * on the tab will be the tabname (Tab1,Tab2,etc) and the Zone's name and
-	 * toString()
+	 * toString().
 	 * 
-	 * @param zone
+	 * @param zone     - Zone: Zone to add to the TabZone
+	 * @param tabName  - String: The Tab name for use in reflection methods: drawTabName(), touchTabName(), etc
+	 * @param tabText - String: The text to display on the Tab
 	 * @return Whether the zone was added
 	 */
 	@Override
@@ -166,17 +180,15 @@ public class TabZone extends Zone {
 
 	/**
 	 * This adds the Given zone to a tab, with the given nameText used for both
-	 * reflection methods and the name displayed on the tab itself
+	 * reflection methods and the name displayed on the tab itself.
 	 * 
-	 * @param zone
-	 * @param nameText
-	 *            The Tab name for use in reflection methods: drawNAME(),
-	 *            touchNAME(), etc if nameText="NAME", and the text that will be
-	 *            displayed on the Tab
+	 * @param zone  - Zone: Zone to add to the TabZone
+	 * @param tabName - String: The Tab name for use in reflection methods: drawNAME(), 
+     *               touchNAME(), etc, if tabName="NAME". This name will be displayed on the Tab
 	 * @return Whether the zone was added
 	 */
-	public boolean add(Zone zone, String nameText) {
-		return add(zone, nameText, nameText);
+	public boolean add(Zone zone, String tabName) {
+		return add(zone, tabName, tabName);
 	}
 
 	/**
@@ -204,6 +216,11 @@ public class TabZone extends Zone {
 		return result;
 	}
 
+    /**
+     * Used to remove a tab from the TabZone.
+     * 
+     * @param zone  - Zone: The zone to remove
+     */
 	@Override
 	public boolean remove(Zone zone) {
 		// if there is a tab for this zone remove it
@@ -238,6 +255,9 @@ public class TabZone extends Zone {
 		return result;
 	}
 
+    /**
+     * Used to override what is drawn into this zone
+     */
 	@Override
 	public void drawImpl() {
 		fill(125);
