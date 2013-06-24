@@ -830,17 +830,23 @@ public class TouchClient {
 	 * 
 	 * @param zone
 	 *            The zone to remove
-	 * @return Whether the zone was removed
+	 * @return Whether all of the zones were removed successfully
 	 */
-	public static boolean remove(Zone zone) {
-		if (zone != null) {
-			picker.remove(zone);
-			return removeFromZoneList(zone);
+	public static boolean remove(Zone... zones) {
+		boolean r = true;
+		for (Zone zone : zones) {
+			if (zone != null) {
+				picker.remove(zone);
+				if(!removeFromZoneList(zone)){
+					r = false;
+				}
+			}
+			else {
+				r = false;
+				System.err.println("Error: Removed a null Zone");
+			}
 		}
-		else {
-			System.err.println("Error: Removed a null Zone");
-		}
-		return false;
+		return r;
 	}
 
 	private static boolean removeFromZoneList(Zone zone) {
