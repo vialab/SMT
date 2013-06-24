@@ -52,7 +52,7 @@ void touchUpForward(){println("Forward");}
 void touchUpSubmenu(){println("Submenu");}
 void touchUpAdd(){println("Add");TouchClient.get("PieMenu",PieMenuZone.class).add("Remove Self");}
 void touchUpViewSource(){println("View Source");}
-void touchUpRemoveSelf(Zone self){println("Remove Self");TouchClient.get("PieMenu").remove(self);}
+void touchUpRemoveSelf(){println("Remove Self");TouchClient.remove("PieMenu");}
 void touchUpPieMenu(PieMenuZone m){
   println("Selected: "+m.getSelectedName());
 }

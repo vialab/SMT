@@ -68,8 +68,8 @@ import TUIO.*;
 /**
  * The Core SMT class, it provides the TUIO/Touch Processing client
  * implementation, specifies the back-end source of Touches via TouchSource, and
- * SMT cannot be used without it. Use TouchClient to initialize SMT, and add/remove
- * zones from the sketch/application.
+ * SMT cannot be used without it. Use TouchClient to initialize SMT, and
+ * add/remove zones from the sketch/application.
  * 
  * @author Erik Paluka
  * @author Zach Cook
@@ -175,16 +175,20 @@ public class TouchClient {
 	 * default port of 3333
 	 */
 
-    /** 
+	/**
 	 * 
 	 * Allows you to select the TouchSource backend from which to get
 	 * multi-touch events from
 	 * 
-	 * @param parent  - PApplet: The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param parent
+	 *            - PApplet: The Processing PApplet, usually just 'this' when
+	 *            using the Processing IDE
 	 * 
-	 * @param port    - int: The port to listen on
+	 * @param port
+	 *            - int: The port to listen on
 	 * 
-	 * @param source  -int: The source of touch events to listen to. One of:
+	 * @param source
+	 *            -int: The source of touch events to listen to. One of:
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
@@ -310,7 +314,7 @@ public class TouchClient {
 		tuioClientList.add(c);
 
 		System.out.println("TuioClient listening on port: " + port);
-		mainListenerPort=port;
+		mainListenerPort = port;
 
 		switch (source) {
 		case ANDROID:
@@ -371,10 +375,12 @@ public class TouchClient {
 				c2.addTuioListener(new SMTProxyTuioListener(port, listener));
 				System.out.println("TuioClient listening on port: " + port);
 				// SMART:
-				if(System.getProperty("os.name").startsWith("Windows") && System.getProperty("os.version").equals("6.2")){
+				if (System.getProperty("os.name").startsWith("Windows")
+						&& System.getProperty("os.version").equals("6.2")) {
 					TouchClient.runSmart2TuioServer();
 					deviceMap.put(3333, TouchSource.SMART);
-					System.out.println("Falling back to Smart2Tuio backend for WM_TOUCH, ignore missing Smart SDK warning, also might fail if port 3333 unavailable");
+					System.out
+							.println("Falling back to Smart2Tuio backend for WM_TOUCH, ignore missing Smart SDK warning, also might fail if port 3333 unavailable");
 				}
 				else if (System.getProperty("os.arch").equals("x86")) {
 					TouchClient.runWinTouchTuioServer(false, "127.0.0.1", port);
@@ -660,7 +666,8 @@ public class TouchClient {
 	/**
 	 * Adds a zone(s) to the sketch/application.
 	 * 
-	 * @param zones  - Zone: The zones to add to the sketch/application
+	 * @param zones
+	 *            - Zone: The zones to add to the sketch/application
 	 */
 	public static void add(Zone... zones) {
 		for (Zone zone : zones) {
@@ -831,6 +838,19 @@ public class TouchClient {
 	 * drawn anymore or be assigned touches, but can be added back with a call
 	 * to add(zone);
 	 * 
+	 * @param name
+	 *            The name of the zone to remove
+	 * @return Whether all of the zones were removed successfully
+	 */
+	public static boolean remove(String name) {
+		return remove(get(name));
+	}
+
+	/**
+	 * This removes the zone given from the TouchClient, meaning it will not be
+	 * drawn anymore or be assigned touches, but can be added back with a call
+	 * to add(zone);
+	 * 
 	 * @param zone
 	 *            The zone to remove
 	 * @return Whether all of the zones were removed successfully
@@ -840,7 +860,7 @@ public class TouchClient {
 		for (Zone zone : zones) {
 			if (zone != null) {
 				picker.remove(zone);
-				if(!removeFromZoneList(zone)){
+				if (!removeFromZoneList(zone)) {
 					r = false;
 				}
 			}
@@ -1150,8 +1170,8 @@ public class TouchClient {
 		}
 
 		updateStep();
-		
-		//clear the background to get rid of anything from pre-draw
+
+		// clear the background to get rid of anything from pre-draw
 		parent.g.background(255);
 	}
 
@@ -1261,13 +1281,15 @@ public class TouchClient {
 							if (tuioServerOut.ready()) {
 								System.out.println("WM_TOUCH: " + tuioServerOut.readLine());
 							}
-							
-							try{
+
+							try {
 								tuioServer.exitValue();
-								System.err.println("WM_TOUCH Process died, is Visual C++ Redistributable for Visual Studio 2012 installed?");
+								System.err
+										.println("WM_TOUCH Process died, is Visual C++ Redistributable for Visual Studio 2012 installed?");
 								break;
-							}catch(IllegalThreadStateException e){
-								//still running... sleep time
+							}
+							catch (IllegalThreadStateException e) {
+								// still running... sleep time
 								Thread.sleep(1000);
 							}
 						}
@@ -1362,13 +1384,14 @@ public class TouchClient {
 							if (tuioServerOut.ready()) {
 								System.out.println("SMART: " + tuioServerOut.readLine());
 							}
-							
-							try{
+
+							try {
 								tuioServer.exitValue();
 								System.err.println("SMART Process died");
 								break;
-							}catch(IllegalThreadStateException e){
-								//still running... sleep time
+							}
+							catch (IllegalThreadStateException e) {
+								// still running... sleep time
 								Thread.sleep(1000);
 							}
 						}
@@ -1455,13 +1478,15 @@ public class TouchClient {
 							if (tuioServerOut.ready()) {
 								System.out.println("LEAP: " + tuioServerOut.readLine());
 							}
-							
-							try{
+
+							try {
 								tuioServer.exitValue();
-								System.err.println("LEAP Process died, is Visual C++ 2010 Redistributable (x86) installed?");
+								System.err
+										.println("LEAP Process died, is Visual C++ 2010 Redistributable (x86) installed?");
 								break;
-							}catch(IllegalThreadStateException e){
-								//still running... sleep time
+							}
+							catch (IllegalThreadStateException e) {
+								// still running... sleep time
 								Thread.sleep(1000);
 							}
 						}
