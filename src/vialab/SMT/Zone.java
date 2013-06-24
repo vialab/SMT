@@ -2195,29 +2195,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return A PVector relative to the zone's coordinate space
 	 */
 	public PVector toZoneVector(PVector global) {
-		PMatrix3D temp = new PMatrix3D();
-		// list ancestors in order from most distant to closest, in order to
-		// apply their matrix's in order
-		LinkedList<Zone> ancestors = new LinkedList<Zone>();
-		Zone zone = this;
-		while (zone.getParent() != null) {
-			zone = zone.getParent();
-			ancestors.addFirst(zone);
-		}
-		// apply ancestors matrix's in proper order to make sure image is
-		// correctly oriented, but not when backupMatrix is set, as then it
-		// already has its parents applied to it.
-		if (backupMatrix == null) {
-			for (Zone i : ancestors) {
-				temp.apply(i.matrix);
-			}
-		}
-		temp.apply(matrix);
-
+		PMatrix3D temp = getGlobalMatrix();
 		temp.invert();
-		PVector out = new PVector();
-		temp.mult(global, out);
-		return out;
+		return temp.mult(global, null);
 	}
 
 	/**
@@ -2229,28 +2209,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return A PVector relative to the global coordinate space
 	 */
 	public PVector fromZoneVector(PVector local) {
-		PMatrix3D temp = new PMatrix3D();
-		// list ancestors in order from most distant to closest, in order to
-		// apply their matrix's in order
-		LinkedList<Zone> ancestors = new LinkedList<Zone>();
-		Zone zone = this;
-		while (zone.getParent() != null) {
-			zone = zone.getParent();
-			ancestors.addFirst(zone);
-		}
-		// apply ancestors matrix's in proper order to make sure image is
-		// correctly oriented, but not when backupMatrix is set, as then it
-		// already has its parents applied to it.
-		if (backupMatrix == null) {
-			for (Zone i : ancestors) {
-				temp.apply(i.matrix);
-			}
-		}
-		temp.apply(matrix);
-
-		PVector out = new PVector();
-		temp.mult(local, out);
-		return out;
+		return getGlobalMatrix().mult(local, null);
 	}
 
 	/**
