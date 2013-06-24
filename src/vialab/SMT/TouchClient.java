@@ -662,7 +662,7 @@ public class TouchClient {
 		}
 		parent.popStyle();
 	}
-
+	
 	/**
 	 * Adds a zone(s) to the sketch/application.
 	 * 
@@ -734,6 +734,59 @@ public class TouchClient {
 			e.printStackTrace();
 		}
 		return zoneList.toArray(new Zone[zoneList.size()]);
+	}
+	
+	/**
+	 * This adds a set of zones to a parent Zone
+	 * @param parent The Zone to add the given zones to
+	 * @param zones The zones to add to the parent as children
+	 */
+	public static void addChild(Zone parent, Zone... zones){
+		for(Zone z : zones){
+			if(parent != null){
+				parent.add(z);
+			}
+		}
+	}
+	
+	/**
+	 * This adds a set of zones to a parent Zone
+	 * @param parentName The name of the Zone to add the given zones to
+	 * @param zones The zones to add to the parent as children
+	 */
+	public static void addChild(String parentName, Zone... zones){
+		for(Zone z : zones){
+			if(get(parentName) != null){
+				get(parentName).add(z);
+			}
+		}
+	}
+	
+
+	/**
+	 * This removes a set of zones to a parent Zone
+	 * @param parent The Zone to add the given zones to
+	 * @param zones The zones to add to the parent as children
+	 */
+	public static void removeChild(Zone parent, Zone... zones){
+		for(Zone z : zones){
+			if(parent != null){
+				parent.remove(z);
+			}
+		}
+	}
+	
+	/**
+	 * This removes a set of zones to a parent Zone
+	 * @param parentName The name of the Zone to add the given zones to
+	 * @param zones The zones to add to the parent as children
+	 */
+	public static void removeChild(String parentName, Zone... zones){
+		for(Zone z : zones){
+			if(get(parentName) != null){
+				get(parentName).remove(z);
+			}
+		}
 	}
 
 	/**
