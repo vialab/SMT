@@ -7,8 +7,9 @@ import TUIO.TuioTime;
 
 /**
  * This class exists to all multiple tuio streams to be merged into one, by
- * being a proxy listener, and changing sessionId/cursorId/symbolId to
- * (port*10000+prevId) to give each of them their own space for 10000 ids
+ * being a proxy listener, and changing sessionId to
+ * (port<<48+0x0000ffffffffffffl&sessionId) to give each of them their own space
+ * for 2^48 ids
  */
 class SMTProxyTuioListener implements TuioListener {
 	int port;
@@ -62,13 +63,11 @@ class SMTProxyTuioListener implements TuioListener {
 	}
 
 	private TuioCursor changedSessionIdCursor(TuioCursor tcur, int port) {
-		return new TouchCursor(port * 10000 + tcur.getSessionID(), port * 10000
-				+ tcur.getCursorID(), tcur);
+		return new TouchCursor((((long) port)<<48) + (0x0000ffffffffffffl&tcur.getSessionID()), tcur.getCursorID(), tcur);
 	}
 
 	private TuioObject changedSessionIdObject(TuioObject tobj, int port) {
-		return new TouchObject(port * 10000 + tobj.getSessionID(), port * 10000
-				+ tobj.getSymbolID(), tobj);
+		return new TouchObject((((long) port)<<48) + (0x0000ffffffffffffl&tobj.getSessionID()), tobj.getSymbolID(), tobj);
 	}
 
 	private class TouchObject extends TuioObject {

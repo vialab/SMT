@@ -10,7 +10,9 @@ import TUIO.*;
 
 /**
  * Touch has state information of one touch and extends TuioCursor.
- * @see <a href=http://www.tuio.org/api/java/TUIO/TuioCursor.html>TuioCursor Javadoc</a>
+ * 
+ * @see <a href=http://www.tuio.org/api/java/TUIO/TuioCursor.html>TuioCursor
+ *      Javadoc</a>
  */
 public class Touch extends TuioCursor {
 
@@ -25,7 +27,7 @@ public class Touch extends TuioCursor {
 	/** Processing PApplet */
 	static PApplet applet = TouchClient.parent;
 	/** The individual cursor ID number that is assigned to each TuioCursor. */
-	public int cursorId;
+	public int cursorID;
 	/** Reflects the current state of the TuioComponent. */
 	public int state;
 	/**
@@ -73,12 +75,18 @@ public class Touch extends TuioCursor {
 	 * This constructor takes the attributes of the provided TuioCursor and
 	 * assigns these values to the newly created Touch.
 	 * 
-	 * @param tuioCursor - TuioCursor:
-     * @param ttime      - TuioTime: TuioTime
-	 * @param sessionID  - long: Session ID
-	 * @param cursorID   - int: Cursor ID
-	 * @param xCoord     - float: X Coordinate
-	 * @param yCoord     - float: Y Coordinate
+	 * @param tuioCursor
+	 *            - TuioCursor:
+	 * @param ttime
+	 *            - TuioTime: TuioTime
+	 * @param sessionID
+	 *            - long: Session ID
+	 * @param cursorID
+	 *            - int: Cursor ID
+	 * @param xCoord
+	 *            - float: X Coordinate
+	 * @param yCoord
+	 *            - float: Y Coordinate
 	 */
 	public Touch(TuioCursor tuioCursor) {
 		super(tuioCursor);
@@ -91,14 +99,18 @@ public class Touch extends TuioCursor {
 	 * This constructor takes the provided Session ID, Cursor ID, X and Y
 	 * coordinate and assigns these values to the newly created Touch.
 	 * 
-	 * @param sessionID  - long: Session ID
-	 * @param cursorID   - int: Cursor ID
-	 * @param xCoord     - float: X Coordinate
-	 * @param yCoord     - float: Y Coordinate
+	 * @param sessionID
+	 *            - long: Session ID
+	 * @param cursorID
+	 *            - int: Cursor ID
+	 * @param xCoord
+	 *            - float: X Coordinate
+	 * @param yCoord
+	 *            - float: Y Coordinate
 	 */
 	public Touch(long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(sessionID, cursorID, xCoord, yCoord);
-		this.cursorId = getCursorID();
+		this.cursorID = getCursorID();
 		x = getScreenX(applet.width);
 		y = getScreenY(applet.height);
 		startTime = getStartTime();
@@ -117,15 +129,20 @@ public class Touch extends TuioCursor {
 	 * provided Session ID, Cursor ID, X and Y coordinate to the newly created
 	 * Touch.
 	 * 
-	 * @param ttime      - TuioTime: TuioTime
-	 * @param sessionID  - long: Session ID
-	 * @param cursorID   - int: Cursor ID
-	 * @param xCoord     - float: X Coordinate
-	 * @param yCoord     - float: Y Coordinate
+	 * @param ttime
+	 *            - TuioTime: TuioTime
+	 * @param sessionID
+	 *            - long: Session ID
+	 * @param cursorID
+	 *            - int: Cursor ID
+	 * @param xCoord
+	 *            - float: X Coordinate
+	 * @param yCoord
+	 *            - float: Y Coordinate
 	 */
 	public Touch(TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(ttime, sessionID, cursorID, xCoord, yCoord);
-		this.cursorId = getCursorID();
+		this.cursorID = getCursorID();
 		x = getScreenX(applet.width);
 		y = getScreenY(applet.height);
 		startTime = getStartTime();
@@ -162,7 +179,7 @@ public class Touch extends TuioCursor {
 	public void updateTouch(TuioCursor t) {
 		prevUpdateTime = currentTime;
 
-		cursorId = t.getCursorID();
+		cursorID = t.getCursorID();
 		x = t.getScreenX(applet.width);
 		y = t.getScreenY(applet.height);
 
@@ -304,19 +321,25 @@ public class Touch extends TuioCursor {
 	public float getY() {
 		return y;
 	}
-	
+
 	/**
-	 * @param t Touch to calculate distance from 
-	 * @return	The distance between this and the given Touch
+	 * @param t
+	 *            Touch to calculate distance from
+	 * @return The distance between this and the given Touch
 	 */
-	float distance(Touch t){
+	float distance(Touch t) {
 		return (float) getCurrentPoint().distance(t.getCurrentPoint());
 	}
-	
-	public TouchSource getTouchSource(){
-		if(sessionID<10000){
-			return TouchClient.deviceMap.get(3333);
+
+	public TouchSource getTouchSource() {
+		// bottom 48 bits of sessionID are used for actual IDs, top 16 bits for
+		// partitioning by port, 0th partition/non partitioned will be used only
+		// by the main tuiolistener, all others use the port number for the
+		// partition index, and so can be used to find the port, and so the
+		// device it came from
+		if (sessionID >> 48 == 0) {
+			return TouchClient.deviceMap.get(TouchClient.mainListenerPort);
 		}
-		return TouchClient.deviceMap.get((int) (sessionID/10000));
+		return TouchClient.deviceMap.get((int) (sessionID >> 48));
 	}
 }

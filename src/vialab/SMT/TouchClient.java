@@ -147,6 +147,8 @@ public class TouchClient {
 	static Map<Integer, TouchSource> deviceMap = Collections
 			.synchronizedMap(new LinkedHashMap<Integer, TouchSource>());
 
+	static int mainListenerPort;
+
 	/**
 	 * Prevent TouchClient instantiation with private constructor
 	 */
@@ -308,6 +310,7 @@ public class TouchClient {
 		tuioClientList.add(c);
 
 		System.out.println("TuioClient listening on port: " + port);
+		mainListenerPort=port;
 
 		switch (source) {
 		case ANDROID:
