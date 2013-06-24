@@ -11,7 +11,7 @@ void setup() {
 }
 void draw() {
   background(79, 129, 189);
-  println(TouchClient.getZone("RotatingZone").getRotationAngle()*180/PI);
+  println(TouchClient.get("RotatingZone").getRotationAngle()*180/PI);
 }
 void drawRotatingZone(){
   fill(255);

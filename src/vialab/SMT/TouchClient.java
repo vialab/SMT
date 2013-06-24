@@ -502,7 +502,7 @@ public class TouchClient {
 	 * @return zoneList
 	 */
 	public static Zone[] getZones() {
-		return zoneList.toArray(new Zone[0]);
+		return zoneList.toArray(new Zone[zoneList.size()]);
 	}
 
 	/**
@@ -1556,7 +1556,7 @@ public class TouchClient {
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Zone> T getZone(String name, Class<T> type) {
+	public static <T extends Zone> T get(String name, Class<T> type) {
 		for (Zone z : zoneList) {
 			if (z.name != null && z.name.equals(name)) {
 				return (T) z;
@@ -1573,8 +1573,8 @@ public class TouchClient {
 	 *            The name of the zone to find
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
-	public static Zone getZone(String name) {
-		return getZone(name, Zone.class);
+	public static Zone get(String name) {
+		return get(name, Zone.class);
 	}
 
 	/**

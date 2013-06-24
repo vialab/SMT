@@ -40,7 +40,7 @@ void setup(){
 }
 
 void pressShowHide(){
-  PieMenuZone m = TouchClient.getZone("PieMenu",PieMenuZone.class);
+  PieMenuZone m = TouchClient.get("PieMenu",PieMenuZone.class);
   m.setVisible(!m.isVisible());
 }
 
@@ -50,9 +50,9 @@ void draw(){
 
 void touchUpForward(){println("Forward");}
 void touchUpSubmenu(){println("Submenu");}
-void touchUpAdd(){println("Add");TouchClient.getZone("PieMenu",PieMenuZone.class).add("Remove Self");}
+void touchUpAdd(){println("Add");TouchClient.get("PieMenu",PieMenuZone.class).add("Remove Self");}
 void touchUpViewSource(){println("View Source");}
-void touchUpRemoveSelf(Zone self){println("Remove Self");TouchClient.getZone("PieMenu").remove(self);}
+void touchUpRemoveSelf(Zone self){println("Remove Self");TouchClient.get("PieMenu").remove(self);}
 void touchUpPieMenu(PieMenuZone m){
   println("Selected: "+m.getSelectedName());
 }

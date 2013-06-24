@@ -24,8 +24,8 @@ void setup() {
   TouchClient.add(new Zone("MyZone2",200,0,200,200));
   CustomZone z = new CustomZone();
   CustomZone z2 = new CustomZone();
-  TouchClient.getZone("MyZone1").setBoundObject(z);
-  TouchClient.getZone("MyZone2").setBoundObject(z2);
+  TouchClient.get("MyZone1").setBoundObject(z);
+  TouchClient.get("MyZone2").setBoundObject(z2);
 }
 void draw() {
   background(79, 129, 189);

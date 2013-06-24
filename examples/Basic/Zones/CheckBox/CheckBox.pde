@@ -12,5 +12,5 @@ void setup() {
 }
 void draw() {
   background(79, 129, 189);
-  text("Checked:"+TouchClient.getZone("Checkbox",CheckBoxZone.class).checked,50,50);
+  text("Checked:"+TouchClient.get("Checkbox",CheckBoxZone.class).checked,50,50);
 }
