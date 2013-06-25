@@ -1,3 +1,10 @@
+SMTv3.6 Release Notes
+_____________________
+
+	Bug Fixes:
+		-Made WM_TOUCH back-end compatible with Windows 8
+
+
 SMTv3.5 Release Notes
 _____________________
 
