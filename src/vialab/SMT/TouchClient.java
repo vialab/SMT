@@ -28,10 +28,12 @@ import java.awt.Point;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -138,6 +140,8 @@ public class TouchClient {
 
 	protected static LinkedList<BufferedReader> tuioServerOutList = new LinkedList<BufferedReader>();
 
+	protected static LinkedList<BufferedWriter> tuioServerInList = new LinkedList<BufferedWriter>();
+
 	static Body groundBody;
 
 	protected static ArrayList<Class<?>> extraClassList = new ArrayList<Class<?>>();
@@ -148,6 +152,8 @@ public class TouchClient {
 			.synchronizedMap(new LinkedHashMap<Integer, TouchSource>());
 
 	static int mainListenerPort;
+
+	protected static boolean inShutdown = false;
 
 	/**
 	 * Prevent TouchClient instantiation with private constructor
@@ -437,6 +443,7 @@ public class TouchClient {
 		 */
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
+				TouchClient.inShutdown  = true;
 				if (warnUncalledMethods) {
 					SMTUtilities.warnUncalledMethods(parent);
 				}
@@ -445,6 +452,19 @@ public class TouchClient {
 						t.disconnect();
 					}
 				}
+				for (BufferedWriter w : tuioServerInList) {
+					try {
+						w.newLine();
+						w.flush();
+					}
+					catch (IOException e) {}
+				}
+				
+				try {
+					Thread.sleep(500);
+				}
+				catch (InterruptedException e) {}
+
 				for (Process tuioServer : tuioServerList) {
 					if (tuioServer != null) {
 						tuioServer.destroy();
@@ -662,7 +682,7 @@ public class TouchClient {
 		}
 		parent.popStyle();
 	}
-	
+
 	/**
 	 * Adds a zone(s) to the sketch/application.
 	 * 
@@ -735,55 +755,66 @@ public class TouchClient {
 		}
 		return zoneList.toArray(new Zone[zoneList.size()]);
 	}
-	
+
 	/**
 	 * This adds a set of zones to a parent Zone
-	 * @param parent The Zone to add the given zones to
-	 * @param zones The zones to add to the parent as children
+	 * 
+	 * @param parent
+	 *            The Zone to add the given zones to
+	 * @param zones
+	 *            The zones to add to the parent as children
 	 */
-	public static void addChild(Zone parent, Zone... zones){
-		for(Zone z : zones){
-			if(parent != null){
+	public static void addChild(Zone parent, Zone... zones) {
+		for (Zone z : zones) {
+			if (parent != null) {
 				parent.add(z);
 			}
 		}
 	}
-	
+
 	/**
 	 * This adds a set of zones to a parent Zone
-	 * @param parentName The name of the Zone to add the given zones to
-	 * @param zones The zones to add to the parent as children
+	 * 
+	 * @param parentName
+	 *            The name of the Zone to add the given zones to
+	 * @param zones
+	 *            The zones to add to the parent as children
 	 */
-	public static void addChild(String parentName, Zone... zones){
-		for(Zone z : zones){
-			if(get(parentName) != null){
+	public static void addChild(String parentName, Zone... zones) {
+		for (Zone z : zones) {
+			if (get(parentName) != null) {
 				get(parentName).add(z);
 			}
 		}
 	}
-	
 
 	/**
 	 * This removes a set of zones to a parent Zone
-	 * @param parent The Zone to add the given zones to
-	 * @param zones The zones to add to the parent as children
+	 * 
+	 * @param parent
+	 *            The Zone to add the given zones to
+	 * @param zones
+	 *            The zones to add to the parent as children
 	 */
-	public static void removeChild(Zone parent, Zone... zones){
-		for(Zone z : zones){
-			if(parent != null){
+	public static void removeChild(Zone parent, Zone... zones) {
+		for (Zone z : zones) {
+			if (parent != null) {
 				parent.remove(z);
 			}
 		}
 	}
-	
+
 	/**
 	 * This removes a set of zones to a parent Zone
-	 * @param parentName The name of the Zone to add the given zones to
-	 * @param zones The zones to add to the parent as children
+	 * 
+	 * @param parentName
+	 *            The name of the Zone to add the given zones to
+	 * @param zones
+	 *            The zones to add to the parent as children
 	 */
-	public static void removeChild(String parentName, Zone... zones){
-		for(Zone z : zones){
-			if(get(parentName) != null){
+	public static void removeChild(String parentName, Zone... zones) {
+		for (Zone z : zones) {
+			if (get(parentName) != null) {
 				get(parentName).remove(z);
 			}
 		}
@@ -1322,10 +1353,13 @@ public class TouchClient {
 								tuioServer.getErrorStream()));
 						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
 								tuioServer.getInputStream()));
+						BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
+								tuioServer.getOutputStream()));
 
 						tuioServerList.add(tuioServer);
 						tuioServerErrList.add(tuioServerErr);
 						tuioServerOutList.add(tuioServerOut);
+						tuioServerInList.add(tuioServerIn);
 
 						while (true) {
 							if (tuioServerErr.ready()) {
@@ -1337,13 +1371,15 @@ public class TouchClient {
 
 							try {
 								tuioServer.exitValue();
-								System.err
-										.println("WM_TOUCH Process died, is Visual C++ Redistributable for Visual Studio 2012 installed?");
-								break;
+								if(!TouchClient.inShutdown){
+									System.err
+											.println("WM_TOUCH Process died, is Visual C++ Redistributable for Visual Studio 2012 installed?");
+									break;
+								}
 							}
 							catch (IllegalThreadStateException e) {
 								// still running... sleep time
-								Thread.sleep(1000);
+								Thread.sleep(100);
 							}
 						}
 					}
@@ -1425,10 +1461,13 @@ public class TouchClient {
 								tuioServer.getErrorStream()));
 						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
 								tuioServer.getInputStream()));
+						BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
+								tuioServer.getOutputStream()));
 
 						tuioServerList.add(tuioServer);
 						tuioServerErrList.add(tuioServerErr);
 						tuioServerOutList.add(tuioServerOut);
+						tuioServerInList.add(tuioServerIn);
 
 						while (true) {
 							if (tuioServerErr.ready()) {
@@ -1440,8 +1479,10 @@ public class TouchClient {
 
 							try {
 								tuioServer.exitValue();
-								System.err.println("SMART Process died");
-								break;
+								if(!TouchClient.inShutdown){
+									System.err.println("SMART Process died");
+									break;
+								}
 							}
 							catch (IllegalThreadStateException e) {
 								// still running... sleep time
@@ -1519,10 +1560,13 @@ public class TouchClient {
 								tuioServer.getErrorStream()));
 						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
 								tuioServer.getInputStream()));
+						BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
+								tuioServer.getOutputStream()));
 
 						tuioServerList.add(tuioServer);
 						tuioServerErrList.add(tuioServerErr);
 						tuioServerOutList.add(tuioServerOut);
+						tuioServerInList.add(tuioServerIn);
 
 						while (true) {
 							if (tuioServerErr.ready()) {
@@ -1534,9 +1578,11 @@ public class TouchClient {
 
 							try {
 								tuioServer.exitValue();
-								System.err
-										.println("LEAP Process died, is Visual C++ 2010 Redistributable (x86) installed?");
-								break;
+								if(!TouchClient.inShutdown){
+									System.err
+											.println("LEAP Process died, is Visual C++ 2010 Redistributable (x86) installed?");
+									break;
+								}
 							}
 							catch (IllegalThreadStateException e) {
 								// still running... sleep time
@@ -1576,10 +1622,13 @@ public class TouchClient {
 								tuioServer.getErrorStream()));
 						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
 								tuioServer.getInputStream()));
+						BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
+								tuioServer.getOutputStream()));
 
 						tuioServerList.add(tuioServer);
 						tuioServerErrList.add(tuioServerErr);
 						tuioServerOutList.add(tuioServerOut);
+						tuioServerInList.add(tuioServerIn);
 
 						while (true) {
 							if (tuioServerErr.ready()) {
