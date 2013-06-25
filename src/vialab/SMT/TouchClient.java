@@ -380,15 +380,7 @@ public class TouchClient {
 				}
 				c2.addTuioListener(new SMTProxyTuioListener(port, listener));
 				System.out.println("TuioClient listening on port: " + port);
-				// SMART:
-				if (System.getProperty("os.name").startsWith("Windows")
-						&& System.getProperty("os.version").equals("6.2")) {
-					TouchClient.runSmart2TuioServer();
-					deviceMap.put(3333, TouchSource.SMART);
-					System.out
-							.println("Falling back to Smart2Tuio backend for WM_TOUCH, ignore missing Smart SDK warning, also might fail if port 3333 unavailable");
-				}
-				else if (System.getProperty("os.arch").equals("x86")) {
+				if (System.getProperty("os.arch").equals("x86")) {
 					TouchClient.runWinTouchTuioServer(false, "127.0.0.1", port);
 					deviceMap.put(port, TouchSource.WM_TOUCH);
 				}
