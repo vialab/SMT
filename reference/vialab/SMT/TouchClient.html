@@ -96,12 +96,9 @@
 <pre>public class <span class="strong">TouchClient</span>
 extends java.lang.Object</pre>
 <div class="block">The Core SMT class, it provides the TUIO/Touch Processing client
- implementation, Specifies the back-end source of Touches via TouchSource, and
- SMT cannot be used without it.
- 
- University of Ontario Institute of Technology. Summer Research Assistant with
- Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
- <P></div>
+ implementation, specifies the back-end source of Touches via TouchSource, and
+ SMT cannot be used without it. Use TouchClient to initialize SMT, and
+ add/remove zones from the sketch/application.</div>
 <dl><dt><span class="strong">Version:</span></dt>
   <dd>1.0</dd>
 <dt><span class="strong">Author:</span></dt>
@@ -143,24 +140,32 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#extraClassList">extraClassList</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected static boolean</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#inShutdown">inShutdown</a></strong></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected static vialab.SMT.SMTTuioListener</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#listener">listener</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static vialab.SMT.SMTTouchManager</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#manager">manager</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected static processing.core.PApplet</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#parent">parent</a></strong></code>
 <div class="block">Processing PApplet</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static vialab.SMT.SMTZonePicker</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#picker">picker</a></strong></code>
 <div class="block">Matrix used to test if the zone has gone off the screen</div>
 </td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static processing.core.PGraphics</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#sketch">sketch</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected static java.lang.reflect.Method</code></td>
@@ -177,14 +182,18 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#tuioServerErrList">tuioServerErrList</a></strong></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>protected static java.util.LinkedList&lt;java.io.BufferedWriter&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#tuioServerInList">tuioServerInList</a></strong></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected static java.util.LinkedList&lt;java.lang.Process&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#tuioServerList">tuioServerList</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected static java.util.LinkedList&lt;java.io.BufferedReader&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#tuioServerOutList">tuioServerOutList</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#warnUncalledMethods">warnUncalledMethods</a></strong></code>
 <div class="block">This controls whether we give a warning for uncalled methods which use
@@ -193,11 +202,11 @@ extends java.lang.Object</pre>
  prefix).</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected static java.lang.Boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#warnUnimplemented">warnUnimplemented</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static java.util.concurrent.CopyOnWriteArrayList&lt;<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#zoneList">zoneList</a></strong></code>
 <div class="block">The main zone list</div>
@@ -229,7 +238,21 @@ extends java.lang.Object</pre>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#add(vialab.SMT.Zone...)">add</a></strong>(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
-<div class="block">Adds a zone to the zone list.</div>
+<div class="block">Adds a zone(s) to the sketch/application.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#addChild(java.lang.String, vialab.SMT.Zone...)">addChild</a></strong>(java.lang.String&nbsp;parentName,
+        <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
+<div class="block">This adds a set of zones to a parent Zone</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#addChild(vialab.SMT.Zone, vialab.SMT.Zone...)">addChild</a></strong>(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;parent,
+        <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
+<div class="block">This adds a set of zones to a parent Zone</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -281,6 +304,21 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#drawSmoothTouchPoints()">drawSmoothTouchPoints</a></strong>()</code>
 <div class="block">Draws the touch points in the PApplet if flag is set to true.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#get(java.lang.String)">get</a></strong>(java.lang.String&nbsp;name)</code>
+<div class="block">This finds a zone by its name, returning the first zone with the given
+ name or null</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static &lt;T extends <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&gt;&nbsp;<br>T</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#get(java.lang.String, java.lang.Class)">get</a></strong>(java.lang.String&nbsp;name,
+   java.lang.Class&lt;T&gt;&nbsp;type)</code>
+<div class="block">This finds a zone by its name, returning the first zone with the given
+ name or null.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -354,21 +392,6 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#getUnassignedTouches()">getUnassignedTouches</a></strong>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>static <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#getZone(java.lang.String)">getZone</a></strong>(java.lang.String&nbsp;name)</code>
-<div class="block">This finds a zone by its name, returning the first zone with the given
- name or null</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static &lt;T extends <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&gt;&nbsp;<br>T</code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#getZone(java.lang.String, java.lang.Class)">getZone</a></strong>(java.lang.String&nbsp;name,
-       java.lang.Class&lt;T&gt;&nbsp;type)</code>
-<div class="block">This finds a zone by its name, returning the first zone with the given
- name or null.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>[]</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#getZones()">getZones</a></strong>()</code>
 <div class="block">Returns the list of zones.</div>
@@ -389,8 +412,8 @@ extends java.lang.Object</pre>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#init(processing.core.PApplet)">init</a></strong>(processing.core.PApplet&nbsp;parent)</code>
-<div class="block">Initializes the TouchClient, begins listening to a TUIO source on the
- default port of 3333</div>
+<div class="block">Allows you to select the TouchSource backend from which to get
+ multi-touch events from</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -439,50 +462,72 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#remove(vialab.SMT.Zone)">remove</a></strong>(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone)</code>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#remove(java.lang.String)">remove</a></strong>(java.lang.String&nbsp;name)</code>
 <div class="block">This removes the zone given from the TouchClient, meaning it will not be
  drawn anymore or be assigned touches, but can be added back with a call
  to add(zone);</div>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#remove(vialab.SMT.Zone...)">remove</a></strong>(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
+<div class="block">This removes the zone given from the TouchClient, meaning it will not be
+ drawn anymore or be assigned touches, but can be added back with a call
+ to add(zone);</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#removeChild(java.lang.String, vialab.SMT.Zone...)">removeChild</a></strong>(java.lang.String&nbsp;parentName,
+           <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
+<div class="block">This removes a set of zones to a parent Zone</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#removeChild(vialab.SMT.Zone, vialab.SMT.Zone...)">removeChild</a></strong>(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;parent,
+           <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
+<div class="block">This removes a set of zones to a parent Zone</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#runExe(java.lang.String)">runExe</a></strong>(java.lang.String&nbsp;path)</code>
 <div class="block">Runs an exe from a path, presumably for translating native events to tuio
  events</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setDrawTouchPoints(vialab.SMT.TouchDraw)">setDrawTouchPoints</a></strong>(<a href="../../vialab/SMT/TouchDraw.html" title="enum in vialab.SMT">TouchDraw</a>&nbsp;drawTouchPoints)</code>
 <div class="block"><strong>Deprecated.</strong>&nbsp;&nbsp;</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setDrawTouchPoints(vialab.SMT.TouchDraw, int)">setDrawTouchPoints</a></strong>(<a href="../../vialab/SMT/TouchDraw.html" title="enum in vialab.SMT">TouchDraw</a>&nbsp;drawTouchPoints,
                   int&nbsp;max_path_length)</code>
 <div class="block"><strong>Deprecated.</strong>&nbsp;&nbsp;</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setFastPicking(boolean)">setFastPicking</a></strong>(boolean&nbsp;fastPicking)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setTouchDraw(vialab.SMT.TouchDraw)">setTouchDraw</a></strong>(<a href="../../vialab/SMT/TouchDraw.html" title="enum in vialab.SMT">TouchDraw</a>&nbsp;drawTouchPoints)</code>
 <div class="block">Sets the flag for drawing touch points in the PApplet.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setTouchDraw(vialab.SMT.TouchDraw, int)">setTouchDraw</a></strong>(<a href="../../vialab/SMT/TouchDraw.html" title="enum in vialab.SMT">TouchDraw</a>&nbsp;drawTouchPoints,
             int&nbsp;max_path_length)</code>
 <div class="block">Sets the flag for drawing touch points in the PApplet.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/TouchClient.html#setWarnUnimplemented(boolean)">setWarnUnimplemented</a></strong>(boolean&nbsp;warn)</code>
 <div class="block">Calling this function overrides the default behavior of showing select
@@ -528,6 +573,15 @@ extends java.lang.Object</pre>
 <h4>parent</h4>
 <pre>protected static&nbsp;processing.core.PApplet parent</pre>
 <div class="block">Processing PApplet</div>
+</li>
+</ul>
+<a name="sketch">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>sketch</h4>
+<pre>public static&nbsp;processing.core.PGraphics sketch</pre>
 </li>
 </ul>
 <a name="tuioClientList">
@@ -651,13 +705,31 @@ extends java.lang.Object</pre>
 <pre>protected static&nbsp;java.util.LinkedList&lt;java.io.BufferedReader&gt; tuioServerOutList</pre>
 </li>
 </ul>
+<a name="tuioServerInList">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tuioServerInList</h4>
+<pre>protected static&nbsp;java.util.LinkedList&lt;java.io.BufferedWriter&gt; tuioServerInList</pre>
+</li>
+</ul>
 <a name="extraClassList">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>extraClassList</h4>
+<pre>protected static&nbsp;java.util.ArrayList&lt;java.lang.Class&lt;?&gt;&gt; extraClassList</pre>
+</li>
+</ul>
+<a name="inShutdown">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>extraClassList</h4>
-<pre>protected static&nbsp;java.util.ArrayList&lt;java.lang.Class&lt;?&gt;&gt; extraClassList</pre>
+<h4>inShutdown</h4>
+<pre>protected static&nbsp;boolean inShutdown</pre>
 </li>
 </ul>
 </li>
@@ -696,9 +768,12 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>init</h4>
 <pre>public static&nbsp;void&nbsp;init(processing.core.PApplet&nbsp;parent)</pre>
-<div class="block">Initializes the TouchClient, begins listening to a TUIO source on the
- default port of 3333</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>parent</code> - PApplet - The Processing PApplet</dd></dl>
+<div class="block">Allows you to select the TouchSource backend from which to get
+ multi-touch events from</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>parent</code> - - PApplet: The Processing PApplet, usually just 'this' when
+            using the Processing IDE</dd><dd><code>port</code> - - int: The port to listen on</dd><dd><code>source</code> - -int: The source of touch events to listen to. One of:
+            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
+            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART</dd></dl>
 </li>
 </ul>
 <a name="init(processing.core.PApplet, int)">
@@ -873,9 +948,8 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>add</h4>
 <pre>public static&nbsp;void&nbsp;add(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</pre>
-<div class="block">Adds a zone to the zone list. When a student creates a zone, they must
- add it to this list.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>zones</code> - Zone - The zones to add to the list.</dd></dl>
+<div class="block">Adds a zone(s) to the sketch/application.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>zones</code> - - Zone: The zones to add to the sketch/application</dd></dl>
 </li>
 </ul>
 <a name="add(java.lang.String)">
@@ -890,6 +964,54 @@ extends java.lang.Object</pre>
  height, img</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>xmlFilename</code> - The XML file to read in for zone configuration</dd>
 <dt><span class="strong">Returns:</span></dt><dd>The array of zones created from the XML File</dd></dl>
+</li>
+</ul>
+<a name="addChild(vialab.SMT.Zone, vialab.SMT.Zone...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addChild</h4>
+<pre>public static&nbsp;void&nbsp;addChild(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;parent,
+            <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</pre>
+<div class="block">This adds a set of zones to a parent Zone</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>parent</code> - The Zone to add the given zones to</dd><dd><code>zones</code> - The zones to add to the parent as children</dd></dl>
+</li>
+</ul>
+<a name="addChild(java.lang.String, vialab.SMT.Zone...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addChild</h4>
+<pre>public static&nbsp;void&nbsp;addChild(java.lang.String&nbsp;parentName,
+            <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</pre>
+<div class="block">This adds a set of zones to a parent Zone</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>parentName</code> - The name of the Zone to add the given zones to</dd><dd><code>zones</code> - The zones to add to the parent as children</dd></dl>
+</li>
+</ul>
+<a name="removeChild(vialab.SMT.Zone, vialab.SMT.Zone...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>removeChild</h4>
+<pre>public static&nbsp;void&nbsp;removeChild(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;parent,
+               <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</pre>
+<div class="block">This removes a set of zones to a parent Zone</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>parent</code> - The Zone to add the given zones to</dd><dd><code>zones</code> - The zones to add to the parent as children</dd></dl>
+</li>
+</ul>
+<a name="removeChild(java.lang.String, vialab.SMT.Zone...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>removeChild</h4>
+<pre>public static&nbsp;void&nbsp;removeChild(java.lang.String&nbsp;parentName,
+               <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</pre>
+<div class="block">This removes a set of zones to a parent Zone</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>parentName</code> - The name of the Zone to add the given zones to</dd><dd><code>zones</code> - The zones to add to the parent as children</dd></dl>
 </li>
 </ul>
 <a name="grid(int, int, int, int, int, vialab.SMT.Zone...)">
@@ -909,18 +1031,32 @@ extends java.lang.Object</pre>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>x</code> - </dd><dd><code>y</code> - </dd><dd><code>width</code> - </dd><dd><code>xSpace</code> - </dd><dd><code>ySpace</code> - </dd><dd><code>zones</code> - </dd></dl>
 </li>
 </ul>
-<a name="remove(vialab.SMT.Zone)">
+<a name="remove(java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>remove</h4>
-<pre>public static&nbsp;boolean&nbsp;remove(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone)</pre>
+<pre>public static&nbsp;boolean&nbsp;remove(java.lang.String&nbsp;name)</pre>
+<div class="block">This removes the zone given from the TouchClient, meaning it will not be
+ drawn anymore or be assigned touches, but can be added back with a call
+ to add(zone);</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The name of the zone to remove</dd>
+<dt><span class="strong">Returns:</span></dt><dd>Whether all of the zones were removed successfully</dd></dl>
+</li>
+</ul>
+<a name="remove(vialab.SMT.Zone...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>remove</h4>
+<pre>public static&nbsp;boolean&nbsp;remove(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</pre>
 <div class="block">This removes the zone given from the TouchClient, meaning it will not be
  drawn anymore or be assigned touches, but can be added back with a call
  to add(zone);</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>zone</code> - The zone to remove</dd>
-<dt><span class="strong">Returns:</span></dt><dd>Whether the zone was removed</dd></dl>
+<dt><span class="strong">Returns:</span></dt><dd>Whether all of the zones were removed successfully</dd></dl>
 </li>
 </ul>
 <a name="draw()">
@@ -1159,14 +1295,14 @@ extends java.lang.Object</pre>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>zone</code> - The zone to place on top of the others</dd></dl>
 </li>
 </ul>
-<a name="getZone(java.lang.String, java.lang.Class)">
+<a name="get(java.lang.String, java.lang.Class)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getZone</h4>
-<pre>public static&nbsp;&lt;T extends <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&gt;&nbsp;T&nbsp;getZone(java.lang.String&nbsp;name,
-                         java.lang.Class&lt;T&gt;&nbsp;type)</pre>
+<h4>get</h4>
+<pre>public static&nbsp;&lt;T extends <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&gt;&nbsp;T&nbsp;get(java.lang.String&nbsp;name,
+                     java.lang.Class&lt;T&gt;&nbsp;type)</pre>
 <div class="block">This finds a zone by its name, returning the first zone with the given
  name or null.
  <P>
@@ -1177,13 +1313,13 @@ extends java.lang.Object</pre>
 <dt><span class="strong">Returns:</span></dt><dd>a Zone with the given name or null if it cannot be found</dd></dl>
 </li>
 </ul>
-<a name="getZone(java.lang.String)">
+<a name="get(java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getZone</h4>
-<pre>public static&nbsp;<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;getZone(java.lang.String&nbsp;name)</pre>
+<h4>get</h4>
+<pre>public static&nbsp;<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;get(java.lang.String&nbsp;name)</pre>
 <div class="block">This finds a zone by its name, returning the first zone with the given
  name or null</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The name of the zone to find</dd>

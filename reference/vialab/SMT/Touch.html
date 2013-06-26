@@ -105,8 +105,9 @@
 <br>
 <pre>public class <span class="strong">Touch</span>
 extends TUIO.TuioCursor</pre>
-<div class="block">Touch has some state information and extends TuioCursor</div>
-<dl><dt><span class="strong">See Also:</span></dt><dd><a href=http://www.tuio.org/api/java/TUIO/TuioCursor.html>TuioCursor Javadoc</a></dd></dl>
+<div class="block">Touch has state information of one touch and extends TuioCursor.</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href=http://www.tuio.org/api/java/TUIO/TuioCursor.html>TuioCursor
+      Javadoc</a></dd></dl>
 </li>
 </ul>
 </div>
@@ -133,7 +134,7 @@ extends TUIO.TuioCursor</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#cursorId">cursorId</a></strong></code>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#cursorID">cursorID</a></strong></code>
 <div class="block">The individual cursor ID number that is assigned to each TuioCursor.</div>
 </td>
 </tr>
@@ -275,26 +276,26 @@ extends TUIO.TuioCursor</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../vialab/SMT/Touch.html#Touch(long, int, float, float)">Touch</a></strong>(long&nbsp;si,
-     int&nbsp;ci,
-     float&nbsp;xp,
-     float&nbsp;yp)</code>
+<td class="colOne"><code><strong><a href="../../vialab/SMT/Touch.html#Touch(long, int, float, float)">Touch</a></strong>(long&nbsp;sessionID,
+     int&nbsp;cursorID,
+     float&nbsp;xCoord,
+     float&nbsp;yCoord)</code>
 <div class="block">This constructor takes the provided Session ID, Cursor ID, X and Y
  coordinate and assigns these values to the newly created Touch.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><strong><a href="../../vialab/SMT/Touch.html#Touch(TUIO.TuioCursor)">Touch</a></strong>(TUIO.TuioCursor&nbsp;t)</code>
+<td class="colOne"><code><strong><a href="../../vialab/SMT/Touch.html#Touch(TUIO.TuioCursor)">Touch</a></strong>(TUIO.TuioCursor&nbsp;tuioCursor)</code>
 <div class="block">This constructor takes the attributes of the provided TuioCursor and
  assigns these values to the newly created Touch.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colOne"><code><strong><a href="../../vialab/SMT/Touch.html#Touch(TUIO.TuioTime, long, int, float, float)">Touch</a></strong>(TUIO.TuioTime&nbsp;ttime,
-     long&nbsp;si,
-     int&nbsp;ci,
-     float&nbsp;xp,
-     float&nbsp;yp)</code>
+     long&nbsp;sessionID,
+     int&nbsp;cursorID,
+     float&nbsp;xCoord,
+     float&nbsp;yCoord)</code>
 <div class="block">This constructor takes a TuioTime argument and assigns it along with the
  provided Session ID, Cursor ID, X and Y coordinate to the newly created
  Touch.</div>
@@ -330,6 +331,14 @@ extends TUIO.TuioCursor</pre>
 <tr class="rowColor">
 <td class="colFirst"><code>java.awt.Point</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getLastPoint()">getLastPoint</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getLocalX(vialab.SMT.Zone)">getLocalX</a></strong>(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;z)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getLocalY(vialab.SMT.Zone)">getLocalY</a></strong>(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;z)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>float</code></td>
@@ -370,46 +379,50 @@ extends TUIO.TuioCursor</pre>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getSessionID()">getSessionID</a></strong>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="../../vialab/SMT/TouchSource.html" title="enum in vialab.SMT">TouchSource</a></code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getTouchSource()">getTouchSource</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getTuioState()">getTuioState</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getX()">getX</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getXSpeed()">getXSpeed</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getY()">getY</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#getYSpeed()">getYSpeed</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#isAssigned()">isAssigned</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#isMoving()">isMoving</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#remove(TUIO.TuioTime)">remove</a></strong>(TUIO.TuioTime&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#stop(TUIO.TuioTime)">stop</a></strong>(TUIO.TuioTime&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#unassignZone(vialab.SMT.Zone)">unassignZone</a></strong>(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#update(float, float, float, float, float)">update</a></strong>(float&nbsp;arg0,
       float&nbsp;arg1,
@@ -417,17 +430,17 @@ extends TUIO.TuioCursor</pre>
       float&nbsp;arg3,
       float&nbsp;arg4)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#update(TUIO.TuioContainer)">update</a></strong>(TUIO.TuioContainer&nbsp;arg0)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#update(TUIO.TuioTime, float, float)">update</a></strong>(TUIO.TuioTime&nbsp;arg0,
       float&nbsp;arg1,
       float&nbsp;arg2)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#update(TUIO.TuioTime, float, float, float, float, float)">update</a></strong>(TUIO.TuioTime&nbsp;arg0,
       float&nbsp;arg1,
@@ -436,7 +449,7 @@ extends TUIO.TuioCursor</pre>
       float&nbsp;arg4,
       float&nbsp;arg5)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Touch.html#updateTouch(TUIO.TuioCursor)">updateTouch</a></strong>(TUIO.TuioCursor&nbsp;t)</code>&nbsp;</td>
 </tr>
@@ -476,13 +489,13 @@ extends TUIO.TuioCursor</pre>
 <!--   -->
 </a>
 <h3>Field Detail</h3>
-<a name="cursorId">
+<a name="cursorID">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>cursorId</h4>
-<pre>public&nbsp;int cursorId</pre>
+<h4>cursorID</h4>
+<pre>public&nbsp;int cursorID</pre>
 <div class="block">The individual cursor ID number that is assigned to each TuioCursor.</div>
 </li>
 </ul>
@@ -718,10 +731,10 @@ extends TUIO.TuioCursor</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>Touch</h4>
-<pre>public&nbsp;Touch(TUIO.TuioCursor&nbsp;t)</pre>
+<pre>public&nbsp;Touch(TUIO.TuioCursor&nbsp;tuioCursor)</pre>
 <div class="block">This constructor takes the attributes of the provided TuioCursor and
  assigns these values to the newly created Touch.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>t</code> - - TuioCursor</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>tuioCursor</code> - - TuioCursor:</dd><dd><code>ttime</code> - - TuioTime: TuioTime</dd><dd><code>sessionID</code> - - long: Session ID</dd><dd><code>cursorID</code> - - int: Cursor ID</dd><dd><code>xCoord</code> - - float: X Coordinate</dd><dd><code>yCoord</code> - - float: Y Coordinate</dd></dl>
 </li>
 </ul>
 <a name="Touch(long, int, float, float)">
@@ -730,13 +743,13 @@ extends TUIO.TuioCursor</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>Touch</h4>
-<pre>public&nbsp;Touch(long&nbsp;si,
-     int&nbsp;ci,
-     float&nbsp;xp,
-     float&nbsp;yp)</pre>
+<pre>public&nbsp;Touch(long&nbsp;sessionID,
+     int&nbsp;cursorID,
+     float&nbsp;xCoord,
+     float&nbsp;yCoord)</pre>
 <div class="block">This constructor takes the provided Session ID, Cursor ID, X and Y
  coordinate and assigns these values to the newly created Touch.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>si</code> - - Session ID</dd><dd><code>ci</code> - - Cursor ID</dd><dd><code>xp</code> - - X Coordinate</dd><dd><code>yp</code> - - Y Coordinate</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>sessionID</code> - - long: Session ID</dd><dd><code>cursorID</code> - - int: Cursor ID</dd><dd><code>xCoord</code> - - float: X Coordinate</dd><dd><code>yCoord</code> - - float: Y Coordinate</dd></dl>
 </li>
 </ul>
 <a name="Touch(TUIO.TuioTime, long, int, float, float)">
@@ -746,14 +759,14 @@ extends TUIO.TuioCursor</pre>
 <li class="blockList">
 <h4>Touch</h4>
 <pre>public&nbsp;Touch(TUIO.TuioTime&nbsp;ttime,
-     long&nbsp;si,
-     int&nbsp;ci,
-     float&nbsp;xp,
-     float&nbsp;yp)</pre>
+     long&nbsp;sessionID,
+     int&nbsp;cursorID,
+     float&nbsp;xCoord,
+     float&nbsp;yCoord)</pre>
 <div class="block">This constructor takes a TuioTime argument and assigns it along with the
  provided Session ID, Cursor ID, X and Y coordinate to the newly created
  Touch.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>ttime</code> - - TuioTime</dd><dd><code>si</code> - - Session ID</dd><dd><code>ci</code> - - Cursor ID</dd><dd><code>xp</code> - - X Coordinate</dd><dd><code>yp</code> - - Y Coordinate</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>ttime</code> - - TuioTime: TuioTime</dd><dd><code>sessionID</code> - - long: Session ID</dd><dd><code>cursorID</code> - - int: Cursor ID</dd><dd><code>xCoord</code> - - float: X Coordinate</dd><dd><code>yCoord</code> - - float: Y Coordinate</dd></dl>
 </li>
 </ul>
 </li>
@@ -905,6 +918,37 @@ extends TUIO.TuioCursor</pre>
 <dt><strong>Overrides:</strong></dt>
 <dd><code>getY</code>&nbsp;in class&nbsp;<code>TUIO.TuioPoint</code></dd>
 </dl>
+</li>
+</ul>
+<a name="getTouchSource()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTouchSource</h4>
+<pre>public&nbsp;<a href="../../vialab/SMT/TouchSource.html" title="enum in vialab.SMT">TouchSource</a>&nbsp;getTouchSource()</pre>
+</li>
+</ul>
+<a name="getLocalX(vialab.SMT.Zone)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLocalX</h4>
+<pre>public&nbsp;int&nbsp;getLocalX(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;z)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>z</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>the x position of this Touch in local coordinates of the given zone</dd></dl>
+</li>
+</ul>
+<a name="getLocalY(vialab.SMT.Zone)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLocalY</h4>
+<pre>public&nbsp;int&nbsp;getLocalY(<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;z)</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>z</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>the y position of this Touch in local coordinates of the given zone</dd></dl>
 </li>
 </ul>
 <a name="update(TUIO.TuioTime, float, float)">

@@ -104,6 +104,15 @@
 <br>
 <pre>public enum <span class="strong">TouchSource</span>
 extends java.lang.Enum&lt;<a href="../../vialab/SMT/TouchSource.html" title="enum in vialab.SMT">TouchSource</a>&gt;</pre>
+<div class="block">Used to set the input device.
+ <P>
+ TUIO_DEVICE - Use Pure TUIO back end, no emulation here, any TUIO packets on port 3333 will taken as multi-touch input.<P>
+ MOUSE - Use a mouse to emulate multi-touch, left click is a touch, right click a hold, and right click the held cursor again to remove.<P>
+ WM_TOUCH - Use Windows Touch back end, for Windows devices that support multi-touch.<P>
+ ANDROID - Use Android back end, only available using processing for Android, which currently doesn't work.<P>
+ SMART - Use SMART SDK back end, when running on SMART hardware, such as the SMART Table.<P>
+ LEAP - Use Leap SDK back end, for the Leap Motion, using the finger positions.<P>
+ MULTIPLE - Runs all back-ends that do not interfere with each other, which currently excludes SMART.</div>
 </li>
 </ul>
 </div>

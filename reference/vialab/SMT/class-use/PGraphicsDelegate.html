@@ -87,54 +87,70 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><strong><a href="../../../vialab/SMT/CheckBoxZone.html" title="class in vialab.SMT">CheckBoxZone</a></strong></code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../vialab/SMT/CheckBoxZone.html" title="class in vialab.SMT">CheckBoxZone</a></strong></code>
+<div class="block">Creates a check box and will display a check mark
+  within it depending on the value given to the 
+  setChecked() function.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../vialab/SMT/ContainerZone.html" title="class in vialab.SMT">ContainerZone</a></strong></code>
-<div class="block">ContainerZone should allow easy ordering of Zones like any other, but does
- not draw or pickDraw anything, and so should not have an effect on Zone
- selection or drawing</div>
+<div class="block">ContainerZone is used to order and hold/contain zones.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../vialab/SMT/ImageZone.html" title="class in vialab.SMT">ImageZone</a></strong></code>
-<div class="block">This is a rectangular zone which displays an image.</div>
+<div class="block">This is a rectangular zone that displays the image given to it.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../vialab/SMT/KeyboardZone.html" title="class in vialab.SMT">KeyboardZone</a></strong></code>
-<div class="block">KeyboardZone is an implementation of an on-screen keyboard, use this zones
- addKeyListener(Zone) method to add zones such as TextZone to listen to this
- keyboard</div>
+<div class="block">KeyboardZone is an implementation of an on-screen keyboard.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><strong><a href="../../../vialab/SMT/LeftPopUpMenuZone.html" title="class in vialab.SMT">LeftPopUpMenuZone</a></strong></code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../vialab/SMT/LeftPopUpMenuZone.html" title="class in vialab.SMT">LeftPopUpMenuZone</a></strong></code>
+<div class="block">LeftPopUpMenuZone is a popup menu that appears as a red triangle pointing to
+ the left, that when pressed shows a menu with the buttons that were specified
+ by name only, in the constructor of this Zone</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><strong><a href="../../../vialab/SMT/PatternUnlockZone.html" title="class in vialab.SMT">PatternUnlockZone</a></strong></code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../vialab/SMT/PatternUnlockZone.html" title="class in vialab.SMT">PatternUnlockZone</a></strong></code>
+<div class="block">Creates a 'lock' that is unlocked when a
+ specified pattern is inputted by the user.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><strong><a href="../../../vialab/SMT/PieMenuZone.html" title="class in vialab.SMT">PieMenuZone</a></strong></code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../vialab/SMT/PieMenuZone.html" title="class in vialab.SMT">PieMenuZone</a></strong></code>
+<div class="block">Pie menu user interface widget.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><strong><a href="../../../vialab/SMT/ShapeZone.html" title="class in vialab.SMT">ShapeZone</a></strong></code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../vialab/SMT/ShapeZone.html" title="class in vialab.SMT">ShapeZone</a></strong></code>
+<div class="block">ShapeZone will only be touchable where it is drawn, for example if its draw
+ method calls ellipse(...) it will only be touchable in that ellipse, instead
+ of the default rectangle used for zone, or using pickDraw to customize this area</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><strong><a href="../../../vialab/SMT/SlideRevealZone.html" title="class in vialab.SMT">SlideRevealZone</a></strong></code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../vialab/SMT/SlideRevealZone.html" title="class in vialab.SMT">SlideRevealZone</a></strong></code>
+<div class="block">SlideRevealZone will slide to the right to reveal the text it was given in
+ its constructor</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../vialab/SMT/SliderZone.html" title="class in vialab.SMT">SliderZone</a></strong></code>
-<div class="block">SliderZone provides a simple GUI Slider that is designed for touch</div>
+<div class="block">SliderZone provides a simple GUI Slider that is designed for touch.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -147,9 +163,7 @@
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../vialab/SMT/TextZone.html" title="class in vialab.SMT">TextZone</a></strong></code>
-<div class="block">TextZone displays text, and is selectable by touch, each word is
- independently highlighted by touch, toggled whenever a TouchDown occurs on
- the word</div>
+<div class="block">TextZone displays text which is selectable by touch.</div>
 </td>
 </tr>
 <tr class="rowColor">
