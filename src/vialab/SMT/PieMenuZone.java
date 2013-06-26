@@ -431,7 +431,7 @@ public class PieMenuZone extends Zone {
 				// invoke both touchUp and press methods for the Slice zones, as
 				// either can be used
 				s.touchUpInvoker(t);
-				s.pressInvoker();
+				s.pressInvoker(t);
 				if (!s.children.isEmpty()) {
 					// make the selected Slice the root of the tree if it has
 					// children, for a submenu.

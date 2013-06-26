@@ -76,7 +76,7 @@ public class TabZone extends Zone {
 		}
 
 		@Override
-		public void pressImpl() {
+		public void pressImpl(Touch t) {
 			tabActive(this);
 		}
 

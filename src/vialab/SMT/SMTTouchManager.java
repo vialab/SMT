@@ -130,7 +130,7 @@ class SMTTouchManager {
 
 	private void doPress(Zone zone, Touch t) {
 		if (zone != null) {
-			zone.pressInvoker();
+			zone.pressRegister(t);
 		}
 	}
 

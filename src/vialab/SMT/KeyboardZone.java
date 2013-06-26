@@ -139,7 +139,7 @@ public class KeyboardZone extends Zone {
 		}
 
 		@Override
-		protected void pressImpl() {
+		protected void pressImpl(Touch t) {
 			// toggle Caps Lock
 			if (key.keyCode == KeyEvent.VK_CAPS_LOCK) {
 				capsLockOn = !capsLockOn;

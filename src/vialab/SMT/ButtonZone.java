@@ -230,10 +230,10 @@ public class ButtonZone extends Zone {
 	}
 
 	@Override
-	protected void pressInvoker() {
+	protected void pressInvoker(Touch t) {
 		if (!deactivated) {
 			// only allow press if we are not deactivated
-			super.pressInvoker();
+			super.pressInvoker(t);
 		}
 	}
 }

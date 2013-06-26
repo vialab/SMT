@@ -187,6 +187,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	private List<Touch> touchMovedList = new ArrayList<Touch>();
 
+	private List<Touch> pressList = new ArrayList<Touch>();
+
 	boolean warnDraw() {
 		return true;
 	}
@@ -550,7 +552,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public boolean isActive() {
 		return !activeTouches.isEmpty() || !touchUpList.isEmpty() || !touchDownList.isEmpty()
-				|| !touchMovedList.isEmpty();
+				|| !touchMovedList.isEmpty() || !pressList.isEmpty();
 	}
 
 	/**
@@ -1816,7 +1818,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void touch(boolean touchChildren, boolean isChild) {
-		if (!touchUpList.isEmpty() || !touchDownList.isEmpty() || !touchMovedList.isEmpty()) {
+		if (!touchUpList.isEmpty() || !touchDownList.isEmpty() || !touchMovedList.isEmpty() || !pressList.isEmpty()) {
 			PGraphics temp = applet.g;
 			applet.g = pg;
 
@@ -1825,6 +1827,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 			for (Touch t : touchUpList) {
 				touchUpInvoker(t);
+			}
+			
+			for (Touch t : pressList) {
+				pressInvoker(t);
 			}
 
 			for (Touch t : touchDownList) {
@@ -1843,6 +1849,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			touchUpList.clear();
 			touchDownList.clear();
 			touchMovedList.clear();
+			pressList.clear();
 
 			popStyle();
 			endTouch();
@@ -2316,15 +2323,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		SMTUtilities.invoke(touchMovedMethod, applet, this, touch);
 	}
 
-	protected void pressInvoker() {
-		pressImpl();
-		SMTUtilities.invoke(pressMethod, applet, this);
+	protected void pressInvoker(Touch touch) {
+		pressImpl(touch);
+		SMTUtilities.invoke(pressMethod, applet, this, touch);
 	}
 
 	/**
 	 * Override to specify a default behavior for press
 	 */
-	protected void pressImpl() {
+	protected void pressImpl(Touch touch) {
 	}
 
 	/**
@@ -2754,5 +2761,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else{
 			pg.background(arg0);
 		}
+	}
+
+	public void pressRegister(Touch touch) {
+		pressList.add(touch);
 	}
 }
