@@ -18,8 +18,7 @@ void draw() {
   background(79, 129, 189);
 }
 void drawCustom(){
-  fill(0);
-  rect(0,0,200,200);
+  background(0);
   fill(255);
   ellipse(100,100,100,100); 
 }

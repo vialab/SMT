@@ -26,5 +26,5 @@ void draw() {
 
 // Draw function for "myZone"
 void drawMyZone(Zone z){ 
-    rect(20, 20, 60, 60);
+    rect(0, 0, 50, 50);
 }

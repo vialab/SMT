@@ -61,6 +61,7 @@ import org.xml.sax.SAXException;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PGraphics;
 import processing.core.PImage;
 
 //import android.view.*;
@@ -89,6 +90,8 @@ public class TouchClient {
 
 	/** Processing PApplet */
 	protected static PApplet parent;
+	
+	public static PGraphics sketch;
 
 	/** Gesture Handler */
 	// private static GestureHandler handler;
@@ -291,6 +294,8 @@ public class TouchClient {
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		TouchClient.parent = parent;
+		
+		TouchClient.sketch = parent.g;
 
 		addMethodClasses(extraClasses);
 

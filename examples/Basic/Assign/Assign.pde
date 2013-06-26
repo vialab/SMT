@@ -21,7 +21,7 @@ void draw() {
 }
 
 void drawTest(Zone z){
-  rect(0,0,50,50);
+  background(255);
 }
 
 void touchTest(Zone z){

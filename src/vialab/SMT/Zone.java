@@ -46,6 +46,7 @@ import org.jbox2d.dynamics.joints.MouseJointDef;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.core.PMatrix3D;
 import processing.core.PVector;
 import processing.event.KeyEvent;
@@ -2662,6 +2663,96 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		else {
 			setLocation(getParent().toZoneVector(getOrigin()).x, y);
+		}
+	}
+	
+	@Override
+	public void background(float arg0, float arg1, float arg2, float arg3) {
+		if(direct){
+			pushStyle();
+			fill(arg0, arg1, arg2, arg3);
+			rect(0,0,width,height);
+			popStyle();
+		}
+		else{
+			pg.background(arg0, arg1, arg2, arg3);
+		}
+	}
+
+	@Override
+	public void background(float arg0, float arg1, float arg2) {
+		if(direct){
+			pushStyle();
+			fill(arg0, arg1, arg2);
+			rect(0,0,width,height);
+			popStyle();
+		}
+		else{
+			pg.background(arg0, arg1, arg2);
+		}
+	}
+
+	@Override
+	public void background(float arg0, float arg1) {
+		if(direct){
+			pushStyle();
+			fill(arg0, arg1);
+			rect(0,0,width,height);
+			popStyle();
+		}
+		else{
+			pg.background(arg0, arg1);
+		}
+	}
+
+	@Override
+	public void background(float arg0) {
+		if(direct){
+			pushStyle();
+			fill(arg0);
+			rect(0,0,width,height);
+			popStyle();
+		}
+		else{
+			pg.background(arg0);
+		}
+	}
+
+	@Override
+	public void background(int arg0, float arg1) {
+		if(direct){
+			pushStyle();
+			fill(arg0, arg1);
+			rect(0,0,width,height);
+			popStyle();
+		}
+		else{
+			pg.background(arg0, arg1);
+		}
+	}
+
+	@Override
+	public void background(int arg0) {
+		if(direct){
+			pushStyle();
+			fill(arg0);
+			rect(0,0,width,height);
+			popStyle();
+		}
+		else{
+			pg.background(arg0);
+		}
+	}
+
+	@Override
+	public void background(PImage arg0) {
+		if(direct){
+			pushStyle();
+			image(arg0,0,0,width,height);
+			popStyle();
+		}
+		else{
+			pg.background(arg0);
 		}
 	}
 }
