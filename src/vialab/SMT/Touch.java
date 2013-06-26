@@ -6,6 +6,7 @@ import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import processing.core.PApplet;
+import processing.core.PVector;
 import TUIO.*;
 
 /**
@@ -342,4 +343,20 @@ public class Touch extends TuioCursor {
 		}
 		return TouchClient.deviceMap.get((int) (sessionID >> 48));
 	}
+	
+	/**
+	 * @param z
+	 * @return the x position of this Touch in local coordinates of the given zone
+	 */
+	public int getLocalX(Zone z){
+		return z.getLocalX(this);
+	}
+	
+	/**
+	 * @param z
+	 * @return the y position of this Touch in local coordinates of the given zone
+	 */
+	public int getLocalY(Zone z){
+		return z.getLocalY(this);
+	}	
 }

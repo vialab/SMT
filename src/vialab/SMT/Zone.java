@@ -161,13 +161,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	boolean press;
 
 	private Object boundObject = null;
-	
+
 	protected int maxWidth, maxHeight;
-	
+
 	protected int minWidth, minHeight;
-	
+
 	protected boolean scalingLimit = false;
-	
+
 	public void enableScalingLimit(int maxW, int maxH, int minW, int minH) {
 		this.scalingLimit = true;
 		this.maxWidth = maxW;
@@ -244,14 +244,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are
 	 * 1
-	 *
-     * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
-     * @param x       - int: X-coordinate of the upper left corner of the zone
-	 * @param y       - int: Y-coordinate of the upper left corner of the zone
-	 * @param width   - int: Width of the zone
-	 * @param height  - int: Height of the zone
-     * @param renderer - String: The renderer used to draw this zone
-     */
+	 * 
+	 * @param name
+	 *            - String: The name of the zone, used for the draw<ZoneName>()
+	 *            and touch<ZoneName>(), etc methods
+	 * @param x
+	 *            - int: X-coordinate of the upper left corner of the zone
+	 * @param y
+	 *            - int: Y-coordinate of the upper left corner of the zone
+	 * @param width
+	 *            - int: Width of the zone
+	 * @param height
+	 *            - int: Height of the zone
+	 * @param renderer
+	 *            - String: The renderer used to draw this zone
+	 */
 	public Zone() {
 		this(null);
 	}
@@ -541,7 +548,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return Whether the zone has touches currently on it
 	 */
 	public boolean isActive() {
-		return !activeTouches.isEmpty() || !touchUpList.isEmpty() || !touchDownList.isEmpty() || !touchMovedList.isEmpty();
+		return !activeTouches.isEmpty() || !touchUpList.isEmpty() || !touchDownList.isEmpty()
+				|| !touchMovedList.isEmpty();
 	}
 
 	/**
@@ -1476,23 +1484,27 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 					rotate(angle, cross.x, cross.y, cross.z);
 				}
 				if (scale) {
-					float ratio = toDist/fromDist;
+					float ratio = toDist / fromDist;
 					if (this.scalingLimit) {
-						// Limits have to be consistent; i.e. it should be possible
-				    	// to maintain aspect ratio while fulfilling all requirements
-				    	float w = this.getWidth();
-				    	float h = this.getHeight();
-				    	if (w*ratio > this.maxWidth) {
-				    		ratio = this.maxWidth/w;
-				    	} else if (w*ratio < this.minWidth) {
-				    		ratio = this.minWidth/w;
-				    	}
-				    	if (h*ratio > this.maxHeight) {
-				    		ratio = this.maxHeight/h;
-				    	} else if (h*ratio < this.minHeight) {
-				    		ratio = this.minHeight/h;
-				    	}
-				    }
+						// Limits have to be consistent; i.e. it should be
+						// possible
+						// to maintain aspect ratio while fulfilling all
+						// requirements
+						float w = this.getWidth();
+						float h = this.getHeight();
+						if (w * ratio > this.maxWidth) {
+							ratio = this.maxWidth / w;
+						}
+						else if (w * ratio < this.minWidth) {
+							ratio = this.minWidth / w;
+						}
+						if (h * ratio > this.maxHeight) {
+							ratio = this.maxHeight / h;
+						}
+						else if (h * ratio < this.minHeight) {
+							ratio = this.minHeight / h;
+						}
+					}
 					scale(ratio);
 				}
 			}
@@ -1809,28 +1821,28 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 			beginTouch();
 			pushStyle();
-			
-			for(Touch t: touchUpList){
+
+			for (Touch t : touchUpList) {
 				touchUpInvoker(t);
 			}
-			
-			for(Touch t: touchDownList){
+
+			for (Touch t : touchDownList) {
 				touchDownInvoker(t);
 			}
-			
-			for(Touch t: touchMovedList){
+
+			for (Touch t : touchMovedList) {
 				touchMovedInvoker(t);
 			}
-			
-			if(!touchMovedList.isEmpty()){
+
+			if (!touchMovedList.isEmpty()) {
 				touchImpl();
 				SMTUtilities.invoke(touchMethod, applet, this);
 			}
-			
+
 			touchUpList.clear();
 			touchDownList.clear();
 			touchMovedList.clear();
-			
+
 			popStyle();
 			endTouch();
 
@@ -2263,8 +2275,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	@Override
 	public void keyReleased(java.awt.event.KeyEvent e) {
-		keyReleased(new KeyEvent(e, e.getWhen(), KeyEvent.RELEASE, e.getModifiers(), e.getKeyChar(),
-				e.getKeyCode()));
+		keyReleased(new KeyEvent(e, e.getWhen(), KeyEvent.RELEASE, e.getModifiers(),
+				e.getKeyChar(), e.getKeyCode()));
 	}
 
 	@Override
@@ -2609,5 +2621,47 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	public void touchMovedRegister(Touch touch) {
 		touchMovedList.add(touch);
+	}
+	
+	/**
+	 * @param t
+	 * @return the x position of the touch in local coordinates
+	 */
+	public int getLocalX(Touch t) {
+		return (int) toZoneVector(new PVector(t.x, t.y)).x;
+	}
+
+	/**
+	 * @param t
+	 * @return the y position of the touch in local coordinates
+	 */
+	public int getLocalY(Touch t) {
+		return (int) toZoneVector(new PVector(t.x, t.y)).y;
+	}
+	
+	/**
+	 * Sets the local x position
+	 * @param x
+	 */
+	public void setX(int x) {
+		if (getParent() == null) {
+			setLocation(x, getOrigin().y);
+		}
+		else {
+			setLocation(x, getParent().toZoneVector(getOrigin()).y);
+		}
+	}
+
+	/**
+	 * Sets the local y position
+	 * @param y
+	 */
+	public void setY(int y) {
+		if (getParent() == null) {
+			setLocation(getOrigin().x, y);
+		}
+		else {
+			setLocation(getParent().toZoneVector(getOrigin()).x, y);
+		}
 	}
 }
