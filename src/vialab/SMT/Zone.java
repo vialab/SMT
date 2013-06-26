@@ -2041,7 +2041,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * @return A PVector containing the origin of the Zone. The origin is
-	 *         defined to be at the top-right corner of the Zone
+	 *         defined to be at the top-left corner of the Zone
 	 */
 	public PVector getOrigin() {
 		return fromZoneVector(new PVector(0, 0));
