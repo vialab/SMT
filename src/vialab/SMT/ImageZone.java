@@ -47,13 +47,12 @@ public class ImageZone extends Zone {
 	/**
 	 * ImageZone constructor, creates a rectangular zone and draws a PImage to it.
 	 * 
-	 * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
+	 * @param name    - String: The name of the zone
 	 * @param img     - PImage: The PImage that will be drawn to the zone's coordinates.
 	 * @param x       - int: X-coordinate of the upper left corner of the zone
 	 * @param y       - int: Y-coordinate of the upper left corner of the zone
 	 * @param width   - int: Width of the zone
 	 * @param height  - int: Height of the zone
-     * @param tintColour - int: The image will be tinted by this colour
 	 */
 	public ImageZone(String name, PImage img, int x, int y, int width, int height) {
 		super(name, x, y, width, height);
@@ -65,40 +64,49 @@ public class ImageZone extends Zone {
 	}
 
 	/**
-	 * ImageZone constructor, creates a rectangular zone and draws a PImage to
-	 * it.
+	 * ImageZone constructor, creates a rectangular zone and draws a PImage to it.
 	 * 
-	 * @param name
-	 *            The name of the zone, used for the drawZoneName() and
-	 *            touchZoneName(), etc methods
-	 * 
-	 * @param img
-	 *            PImage - The PImage that will be drawn to the zone's
-	 *            coordinates.
-	 * @param x
-	 *            int - X-coordinate of the upper left corner of the zone
-	 * @param y
-	 *            int - Y-coordinate of the upper left corner of the zone
-	 * @param width
-	 *            int - Width of the zone
-	 * @param height
-	 *            int - Height of the zone
-	 * @param tintColour
-	 *            int - colour the image will be tinted by
+	 * @param name    - String: The name of the zone
+	 * @param img     - PImage: The PImage that will be drawn to the zone's coordinates.
+	 * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+     * @param tintColour - int: The image will be tinted by this colour
 	 */
 	public ImageZone(String name, PImage img, int x, int y, int width, int height, int tintColour) {
 		this(name, img, x, y, width, height);
 		this.tintColour = tintColour;
 	}
 
+    /**
+	 * ImageZone constructor, creates a rectangular zone and draws a PImage to it.
+	 * 
+	 * @param img     - PImage: The PImage that will be drawn to the zone's coordinates.
+	 * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 */
 	public ImageZone(PImage img, int x, int y, int width, int height) {
 		this(null, img, x, y, width, height);
 	}
 
+    /**
+	 * ImageZone constructor, creates a rectangular zone and draws a PImage to it.
+	 * 
+	 * @param img     - PImage: The PImage that will be drawn to the zone's coordinates.
+	 */
 	public ImageZone(PImage img) {
 		this(img, 0, 0, img.width, img.height);
 	}
 
+    /**
+	 * ImageZone constructor, creates a rectangular zone and draws a PImage to it.
+	 * 
+	 * @param name    - String: The name of the zone
+	 * @param img     - PImage: The PImage that will be drawn to the zone's coordinates.
+	 */
 	public ImageZone(String name, PImage img) {
 		this(name, img, 0, 0, img.width, img.height);
 	}
@@ -108,22 +116,33 @@ public class ImageZone extends Zone {
 	 * it. The width and height of the zone is set to the PImage's width and
 	 * height.
 	 * 
-	 * @param img
-	 *            PImage - The PImage that will be drawn to the zone's
-	 *            coordinates.
-	 * @param x
-	 *            int - X-coordinate of the upper left corner of the zone
-	 * @param y
-	 *            int - Y-coordinate of the upper left corner of the zone
+	 * @param img     - PImage: The PImage that will be drawn to the zone's coordinates.
+	 * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
 	 */
 	public ImageZone(PImage img, int x, int y) {
 		this(img, x, y, img.width, img.height);
 	}
 
+    /**
+	 * ImageZone constructor. Creates a rectangular zone and draws a PImage to
+	 * it. The width and height of the zone is set to the PImage's width and
+	 * height.
+	 * 
+     * @param name    - String: The name of the zone
+	 * @param img     - PImage: The PImage that will be drawn to the zone's coordinates.
+	 * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 */
 	public ImageZone(String name, PImage img, int x, int y) {
 		this(name, img, x, y, img.width, img.height);
 	}
 
+    /**
+	 * Pass a created ImageZone to 'clone' it.
+	 * 
+	 * @param imgZone - ImageZone: The ImageZone that is copied.
+	 */
 	public ImageZone(ImageZone imgZone) {
 		this(imgZone.name, imgZone.img, imgZone.x, imgZone.y, imgZone.width, imgZone.height);
 	}

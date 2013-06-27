@@ -3,7 +3,7 @@ package vialab.SMT;
 /**
  * 
  * SlideRevealZone will slide to the right to reveal the text it was given in
- * its constructor
+ * its constructor, when a swipe/slide gesture is performed on it.
  * 
  */
 public class SlideRevealZone extends Zone {
@@ -34,16 +34,11 @@ public class SlideRevealZone extends Zone {
 	}
 
 	/**
-	 * @param x
-	 *            - int: X-coordinate of the upper left corner of the zone
-	 * @param y
-	 *            - int: Y-coordinate of the upper left corner of the zone
-	 * @param width
-	 *            - int: Width of the zone
-	 * @param height
-	 *            - int: Height of the zone
-	 * @param text
-	 *            - String: The text displayed in the zone
+	 * @param x   - int: X-coordinate of the upper left corner of the zone
+	 * @param y   - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 * @param text  - String: The text displayed in the zone
 	 */
 	public SlideRevealZone(int x, int y, int width, int height, String text) {
 		super(x, y, width, height);

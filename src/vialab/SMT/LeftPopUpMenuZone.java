@@ -9,20 +9,13 @@ public class LeftPopUpMenuZone extends Zone {
 	private MenuZone menu;
 
 	/**
-	 * @param x
-	 *            - int: X-coordinate of the upper left corner of the zone
-	 * @param y
-	 *            - int: Y-coordinate of the upper left corner of the zone
-	 * @param width
-	 *            - int: Width of the zone
-	 * @param height
-	 *            - int: Height of the zone
-	 * @param mWidth
-	 *            - int: Width of the menu
-	 * @param mHeight
-	 *            - int: Height of the menu
-	 * @param menuButtonNames
-	 *            - String...: The names of the menu buttons
+	 * @param x      - int: X-coordinate of the upper left corner of the zone
+	 * @param y      - int: Y-coordinate of the upper left corner of the zone
+	 * @param width  - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 * @param mWidth  - int: Width of the menu
+	 * @param mHeight - int: Height of the menu
+	 * @param menuButtonNames - String...: The names of the menu buttons
 	 */
 	public LeftPopUpMenuZone(int x, int y, int width, int height, int mWidth, int mHeight,
 			String... menuButtonNames) {

@@ -102,17 +102,6 @@ public class TabZone extends Zone {
 	private Map<Tab, Zone> Tabs = Collections.synchronizedMap(new LinkedHashMap<Tab, Zone>());
 
 	
-    
-    /**
-	 * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
-     * @param x       - int: X-coordinate of the upper left corner of the zone
-	 * @param y       - int: Y-coordinate of the upper left corner of the zone
-	 * @param width   - int: Width of the zone
-	 * @param height  - int: Height of the zone
-	 * @param tabHeight - int: The height of the tab
-     * @param closeButtons - boolean: Display close/exit buttons for tabs
-     *
-     */
     public TabZone() {
 		this(false);
 	}
@@ -153,6 +142,16 @@ public class TabZone extends Zone {
 		this(name, x, y, width, height, 50, closeButtons);
 	}
 
+    /**
+	 * @param name    - String: The name of the zone
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 * @param tabHeight - int: The height of the tab
+     * @param closeButtons - boolean: Display close/exit buttons for tabs
+     *
+     */
 	public TabZone(String name, int x, int y, int width, int height, int tabHeight,
 			boolean closeButtons) {
 		super(name, x, y, width, height);

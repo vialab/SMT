@@ -30,7 +30,60 @@ public class SliderZone extends Zone {
 	}
 
     /**
-	 * @param name    - String: The name of the zone, used for the draw<ZoneName>() and touch<ZoneName>(), etc methods
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 * @param minValue  - int: Minimum value of the slider
+	 * @param maxValue  - int: Maximum value of the slider
+	 */
+	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue) {
+		this(null, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, null);
+	}
+
+     /**
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 * @param minValue  - int: Minimum value of the slider
+	 * @param maxValue  - int: Maximum value of the slider
+	 * @param label   - String: Text label of the zone
+	 */
+	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue, String label) {
+		this(null, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, label);
+	}
+
+     /**
+	 * @param name    - String: The name of the zone
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 * @param minValue  - int: Minimum value of the slider
+	 * @param maxValue  - int: Maximum value of the slider
+	 */
+	public SliderZone(String name, int x, int y, int width, int height, int minValue, int maxValue) {
+		this(name, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, null);
+	}
+
+     /**
+	 * @param name    - String: The name of the zone
+     * @param x       - int: X-coordinate of the upper left corner of the zone
+	 * @param y       - int: Y-coordinate of the upper left corner of the zone
+	 * @param width   - int: Width of the zone
+	 * @param height  - int: Height of the zone
+	 * @param minValue  - int: Minimum value of the slider
+	 * @param maxValue  - int: Maximum value of the slider
+	 * @param label   - String: Text label of the zone
+	 */
+	public SliderZone(String name, int x, int y, int width, int height, int minValue, int maxValue,
+			String label) {
+		this(name, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, label);
+	}
+
+	 /**
+	 * @param name    - String: The name of the zone
      * @param x       - int: X-coordinate of the upper left corner of the zone
 	 * @param y       - int: Y-coordinate of the upper left corner of the zone
 	 * @param width   - int: Width of the zone
@@ -41,36 +94,6 @@ public class SliderZone extends Zone {
 	 * @param minorTickSpacing - int: Spacing between the minor ticks of the slider
 	 * @param majorTickSpacing - int: Spacing between the major ticks of the slider
 	 * @param label   - String: Text label of the zone
-	 */
-	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue) {
-		this(null, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, null);
-	}
-
-	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue, String label) {
-		this(null, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, label);
-	}
-
-	public SliderZone(String name, int x, int y, int width, int height, int minValue, int maxValue) {
-		this(name, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, null);
-	}
-
-	public SliderZone(String name, int x, int y, int width, int height, int minValue, int maxValue,
-			String label) {
-		this(name, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, label);
-	}
-
-	/**
-	 * @param name
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param currentValue
-	 * @param minValue
-	 * @param maxValue
-	 * @param minorTickSpacing
-	 * @param majorTickSpacing
-	 * @param label
 	 */
 	public SliderZone(String name, int x, int y, int width, int height, int currentValue,
 			int minValue, int maxValue, int minorTickSpacing, int majorTickSpacing, String label) {

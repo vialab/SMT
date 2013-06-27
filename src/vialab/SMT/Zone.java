@@ -245,22 +245,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are
-	 * 1
+	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are 1
 	 * 
-	 * @param name
-	 *            - String: The name of the zone, used for the draw<ZoneName>()
-	 *            and touch<ZoneName>(), etc methods
-	 * @param x
-	 *            - int: X-coordinate of the upper left corner of the zone
-	 * @param y
-	 *            - int: Y-coordinate of the upper left corner of the zone
-	 * @param width
-	 *            - int: Width of the zone
-	 * @param height
-	 *            - int: Height of the zone
-	 * @param renderer
-	 *            - String: The renderer used to draw this zone
 	 */
 	public Zone() {
 		this(null);
@@ -270,8 +256,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Zone constructor, with a name, (x,y) position is (0,0) , width and height
 	 * are 1
 	 * 
-	 * @param name
-	 *            Name of the zone, used in the draw, touch ,etc methods
+	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
 	 */
 	public Zone(String name) {
 		this(name, TouchClient.defaultRenderer);
@@ -281,10 +266,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Zone constructor, with a name, (x,y) position is (0,0) , width and height
 	 * are 1
 	 * 
-	 * @param name
-	 *            Name of the zone, used in the draw, touch ,etc methods
-	 * @param renderer
-	 *            The PGraphics renderer that draws the Zone
+	 * @param name  - String: Name of the zone, used in the draw, touch ,etc methods
+	 * @param renderer - String: The PGraphics renderer that draws the Zone
 	 */
 	public Zone(String name, String renderer) {
 		this(name, 0, 0, 1, 1, renderer);

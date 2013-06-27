@@ -47,68 +47,150 @@ public class ButtonZone extends Zone {
 		return false;
 	}
     
+    
+	public ButtonZone() {
+		this(null);
+	}
+    
+    /**
+     *
+     * @param name      - String: Name of the Zone
+     */
+	public ButtonZone(String name) {
+		this(name, null);
+	}
+
+    /**
+     *
+     * @param name      - String: Name of the Zone
+     * @param text      - String: Text displayed within the zone
+     */
+	public ButtonZone(String name, String text) {
+		this(name, text, null);
+	}
+
     /**
      *
      * @param name      - String: Name of the Zone
      * @param text      - String: Text displayed within the zone
      * @param font      - PFont: The font used to display the text
-     * @param x         - int: X-coordinate of the upper left corner of the zone
-	 * @param y         - int: Y-coordinate of the upper left corner of the zone
-     * @param width     - int: Width of the zone
-     * @param height    - int: Height of the zone
-     * @param fontSize  - int: Size of the font
-     * @param angle     - float: Angle of text
      */
-	public ButtonZone() {
-		this(null);
-	}
-    
-	public ButtonZone(String name) {
-		this(name, null);
-	}
-
-	public ButtonZone(String name, String text) {
-		this(name, text, null);
-	}
-
 	public ButtonZone(String name, String text, PFont font) {
 		this(name, 0, 0, 200, 100, text, 16, font);
 	}
 
+    /**
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     */
 	public ButtonZone(int x, int y, int width, int height) {
 		this(null, x, y, width, height);
 	}
 
+     /**
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     * @param text      - String: Text displayed within the zone
+     */
 	public ButtonZone(int x, int y, int width, int height, String text) {
 		this(null, x, y, width, height, text, 16);
 	}
 
+    /**
+     * @param name      - String: Name of the Zone
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     */
 	public ButtonZone(String name, int x, int y, int width, int height) {
 		this(name, x, y, width, height, null, 16, null, 0);
 	}
 
+    /**
+     * @param name      - String: Name of the Zone
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     * @param text      - String: Text displayed within the zone
+     */
 	public ButtonZone(String name, int x, int y, int width, int height, String text) {
 		this(name, x, y, width, height, text, 16, null, 0);
 	}
 
+    /**
+     * @param name      - String: Name of the Zone
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     * @param text      - String: Text displayed within the zone
+     * @param font      - PFont: The font used to display the text
+     */
 	public ButtonZone(String name, int x, int y, int width, int height, String text, PFont font) {
 		this(name, x, y, width, height, text, 16, font, 0);
 	}
 
+    /**
+     * @param name      - String: Name of the Zone
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     * @param text      - String: Text displayed within the zone
+     * @param font      - PFont: The font used to display the text
+     * @param angle     - float: Angle of the button zone
+     */
 	public ButtonZone(String name, int x, int y, int width, int height, String text, PFont font,
 			float angle) {
 		this(name, x, y, width, height, text, 16, font, angle);
 	}
 
+    /**
+     * @param name      - String: Name of the Zone
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     * @param text      - String: Text displayed within the zone
+     * @param fontSize  - int: Size of the font
+     */
 	public ButtonZone(String name, int x, int y, int width, int height, String text, int fontSize) {
 		this(name, x, y, width, height, text, fontSize, null, 0);
 	}
 
+    /**
+     * @param name      - String: Name of the Zone
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     * @param text      - String: Text displayed within the zone
+     * @param fontSize  - int: Size of the font
+     * @param font      - PFont: The font used to display the text
+     */
 	public ButtonZone(String name, int x, int y, int width, int height, String text, int fontSize,
 			PFont font) {
 		this(name, x, y, width, height, text, fontSize, font, 0);
 	}
 
+    /**
+     *
+     * @param name      - String: Name of the Zone
+     * @param x         - int: X-coordinate of the upper left corner of the zone
+	 * @param y         - int: Y-coordinate of the upper left corner of the zone
+     * @param width     - int: Width of the zone
+     * @param height    - int: Height of the zone
+     * @param text      - String: Text displayed within the zone
+     * @param fontSize  - int: Size of the font
+     * @param font      - PFont: The font used to display the text
+     * @param angle     - float: Angle of the button zone
+     */
 	public ButtonZone(String name, int x, int y, int width, int height, String text, int fontSize,
 			PFont font, float angle) {
 		super(name, x, y, width, height);

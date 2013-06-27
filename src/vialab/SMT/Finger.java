@@ -58,12 +58,9 @@ class Finger {
 	 * Touch Constructor, creates a touch cursor with the given session ID, and
 	 * coordinates.
 	 * 
-	 * @param sID
-	 *            int - Session ID
-	 * @param xPos
-	 *            int - x-coordinate
-	 * @param yPos
-	 *            int - y-coordinate
+	 * @param sID     - int: Session ID
+	 * @param xPos    - int: x-coordinate
+	 * @param yPos    - int: y-coordinate
 	 */
 	public Finger(int sID, int xPos, int yPos) {
 		this.sessionID = sID;
@@ -78,10 +75,10 @@ class Finger {
 	/**
 	 * Updates the touch cursor with the new coordinates
 	 * 
-	 * @param xpos
-	 *            int - New x-coordinate
-	 * @param ypos
-	 *            int - New y-coordinate
+	 * @param xPos    - int: New x-coordinate
+	 * @param yPos    - int: New y-coordinate
+     * @param windowWidth    - int: Window width
+	 * @param windowHeight    - int: Window height
 	 */
 	public final void update(int xpos, int ypos, int windowWidth, int windowHeight) {
 		Point lastPoint = getPosition();
@@ -137,8 +134,7 @@ class Finger {
 	/**
 	 * Sets the touch ID for Android touches
 	 * 
-	 * @param tID
-	 *            int - ID of the Android touch
+	 * @param tID   -int: ID of the Android touch
 	 */
 	public final void setTouchId(int tID) {
 		touchID = tID;

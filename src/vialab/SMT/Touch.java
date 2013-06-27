@@ -76,18 +76,7 @@ public class Touch extends TuioCursor {
 	 * This constructor takes the attributes of the provided TuioCursor and
 	 * assigns these values to the newly created Touch.
 	 * 
-	 * @param tuioCursor
-	 *            - TuioCursor:
-	 * @param ttime
-	 *            - TuioTime: TuioTime
-	 * @param sessionID
-	 *            - long: Session ID
-	 * @param cursorID
-	 *            - int: Cursor ID
-	 * @param xCoord
-	 *            - float: X Coordinate
-	 * @param yCoord
-	 *            - float: Y Coordinate
+	 * @param tuioCursor  - TuioCursor: The TUIO Cursor
 	 */
 	public Touch(TuioCursor tuioCursor) {
 		super(tuioCursor);
@@ -100,14 +89,10 @@ public class Touch extends TuioCursor {
 	 * This constructor takes the provided Session ID, Cursor ID, X and Y
 	 * coordinate and assigns these values to the newly created Touch.
 	 * 
-	 * @param sessionID
-	 *            - long: Session ID
-	 * @param cursorID
-	 *            - int: Cursor ID
-	 * @param xCoord
-	 *            - float: X Coordinate
-	 * @param yCoord
-	 *            - float: Y Coordinate
+	 * @param sessionID   - long: Session ID
+	 * @param cursorID   - int: Cursor ID
+	 * @param xCoord    - float: X Coordinate
+	 * @param yCoord    - float: Y Coordinate
 	 */
 	public Touch(long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(sessionID, cursorID, xCoord, yCoord);
@@ -130,16 +115,11 @@ public class Touch extends TuioCursor {
 	 * provided Session ID, Cursor ID, X and Y coordinate to the newly created
 	 * Touch.
 	 * 
-	 * @param ttime
-	 *            - TuioTime: TuioTime
-	 * @param sessionID
-	 *            - long: Session ID
-	 * @param cursorID
-	 *            - int: Cursor ID
-	 * @param xCoord
-	 *            - float: X Coordinate
-	 * @param yCoord
-	 *            - float: Y Coordinate
+	 * @param ttime   - TuioTime: TuioTime
+	 * @param sessionID   - long: Session ID
+	 * @param cursorID  - int: Cursor ID
+	 * @param xCoord  - float: X Coordinate
+	 * @param yCoord   - float: Y Coordinate
 	 */
 	public Touch(TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(ttime, sessionID, cursorID, xCoord, yCoord);
