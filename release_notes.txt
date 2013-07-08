@@ -1,3 +1,14 @@
+SMTv3.6.1 Release Notes
+_____________________
+
+	API Additions:
+		-Added getLocalX and getLocalY in Touch and Zone, taking the other as a param.
+		-TouchClient.sketch refers to the sketches original PGraphics, for setting the background of the sketch, etc
+		
+	Bug Fixes:
+		-Zone.background() now only sets the background for the area of the Zone
+
+
 SMTv3.6 Release Notes
 _____________________
 
