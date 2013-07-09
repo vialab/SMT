@@ -11,7 +11,7 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <file path="/SMT/README.txt"/>
+        <file path="/SMT/README.md"/>
         <file path="/SMT/release_notes.txt"/>
         <javaElement handleIdentifier="=SMT/src"/>
     </selectedElements>

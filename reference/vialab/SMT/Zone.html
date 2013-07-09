@@ -371,8 +371,7 @@ implements processing.core.PConstants, java.awt.event.KeyListener</pre>
 </tr>
 <tr class="altColor">
 <td class="colOne"><code><strong><a href="../../vialab/SMT/Zone.html#Zone()">Zone</a></strong>()</code>
-<div class="block">Zone constructor, no name, (x,y) position is (0,0) , width and height are
- 1</div>
+<div class="block">Zone constructor, no name, (x,y) position is (0,0) , width and height are 1</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -824,7 +823,15 @@ implements processing.core.PConstants, java.awt.event.KeyListener</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Zone.html#getLocalX()">getLocalX</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/Zone.html#getLocalX(vialab.SMT.Touch)">getLocalX</a></strong>(<a href="../../vialab/SMT/Touch.html" title="class in vialab.SMT">Touch</a>&nbsp;t)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/Zone.html#getLocalY()">getLocalY</a></strong>()</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
@@ -1876,10 +1883,7 @@ implements processing.core.PConstants, java.awt.event.KeyListener</pre>
 <li class="blockList">
 <h4>Zone</h4>
 <pre>public&nbsp;Zone()</pre>
-<div class="block">Zone constructor, no name, (x,y) position is (0,0) , width and height are
- 1</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - - String: The name of the zone, used for the draw<ZoneName>()
-            and touch<ZoneName>(), etc methods</dd><dd><code>x</code> - - int: X-coordinate of the upper left corner of the zone</dd><dd><code>y</code> - - int: Y-coordinate of the upper left corner of the zone</dd><dd><code>width</code> - - int: Width of the zone</dd><dd><code>height</code> - - int: Height of the zone</dd><dd><code>renderer</code> - - String: The renderer used to draw this zone</dd></dl>
+<div class="block">Zone constructor, no name, (x,y) position is (0,0) , width and height are 1</div>
 </li>
 </ul>
 <a name="Zone(java.lang.String)">
@@ -1891,7 +1895,7 @@ implements processing.core.PConstants, java.awt.event.KeyListener</pre>
 <pre>public&nbsp;Zone(java.lang.String&nbsp;name)</pre>
 <div class="block">Zone constructor, with a name, (x,y) position is (0,0) , width and height
  are 1</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - Name of the zone, used in the draw, touch ,etc methods</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - - String: Name of the zone, used in the draw, touch ,etc methods</dd></dl>
 </li>
 </ul>
 <a name="Zone(java.lang.String, java.lang.String)">
@@ -1904,7 +1908,7 @@ implements processing.core.PConstants, java.awt.event.KeyListener</pre>
     java.lang.String&nbsp;renderer)</pre>
 <div class="block">Zone constructor, with a name, (x,y) position is (0,0) , width and height
  are 1</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - Name of the zone, used in the draw, touch ,etc methods</dd><dd><code>renderer</code> - The PGraphics renderer that draws the Zone</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - - String: Name of the zone, used in the draw, touch ,etc methods</dd><dd><code>renderer</code> - - String: The PGraphics renderer that draws the Zone</dd></dl>
 </li>
 </ul>
 <a name="Zone(int, int, int, int)">
@@ -4000,6 +4004,27 @@ implements processing.core.PConstants, java.awt.event.KeyListener</pre>
 <pre>public&nbsp;void&nbsp;touchMovedRegister(<a href="../../vialab/SMT/Touch.html" title="class in vialab.SMT">Touch</a>&nbsp;touch)</pre>
 </li>
 </ul>
+<a name="getLocalX()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLocalX</h4>
+<pre>public&nbsp;int&nbsp;getLocalX()</pre>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>t</code> - </dd>
+<dt><span class="strong">Returns:</span></dt><dd>the x position of the touch in local coordinates</dd></dl>
+</li>
+</ul>
+<a name="getLocalY()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLocalY</h4>
+<pre>public&nbsp;int&nbsp;getLocalY()</pre>
+<dl><dt><span class="strong">Returns:</span></dt><dd>the y position of zone in parent coordinates</dd></dl>
+</li>
+</ul>
 <a name="getLocalX(vialab.SMT.Touch)">
 <!--   -->
 </a>
@@ -4007,8 +4032,7 @@ implements processing.core.PConstants, java.awt.event.KeyListener</pre>
 <li class="blockList">
 <h4>getLocalX</h4>
 <pre>public&nbsp;int&nbsp;getLocalX(<a href="../../vialab/SMT/Touch.html" title="class in vialab.SMT">Touch</a>&nbsp;t)</pre>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>t</code> - </dd>
-<dt><span class="strong">Returns:</span></dt><dd>the x position of the touch in local coordinates</dd></dl>
+<dl><dt><span class="strong">Returns:</span></dt><dd>the x position of zone in parent coordinates</dd></dl>
 </li>
 </ul>
 <a name="getLocalY(vialab.SMT.Touch)">

@@ -76,6 +76,16 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/PieMenuZone.html#add(java.lang.String, processing.core.PImage, java.lang.String)">add(String, PImage, String)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PieMenuZone.html" title="class in vialab.SMT">PieMenuZone</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/SMT.html#add(vialab.SMT.Zone...)">add(Zone...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
+<dd>
+<div class="block">Adds a zone(s) to the sketch/application.</div>
+</dd>
+<dt><span class="strong"><a href="../vialab/SMT/SMT.html#add(java.lang.String)">add(String)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
+<dd>
+<div class="block">This adds zones by creating them from XML specs, the XML needs "zone"
+ tags, and currently supports the following variables: name, x, y, width,
+ height, img</div>
+</dd>
 <dt><span class="strong"><a href="../vialab/SMT/TabZone.html#add(vialab.SMT.Zone)">add(Zone)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/TabZone.html" title="class in vialab.SMT">TabZone</a></dt>
 <dd>
 <div class="block">This adds the Given zone to a tab, the Tabs name will be Tab1, Tab2, etc
@@ -90,25 +100,15 @@
 <dd>
 <div class="block">This adds the Given zone to a tab, with the given tabName and tabText</div>
 </dd>
-<dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#add(vialab.SMT.Zone...)">add(Zone...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
-<dd>
-<div class="block">Adds a zone(s) to the sketch/application.</div>
-</dd>
-<dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#add(java.lang.String)">add(String)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
-<dd>
-<div class="block">This adds zones by creating them from XML specs, the XML needs "zone"
- tags, and currently supports the following variables: name, x, y, width,
- height, img</div>
-</dd>
 <dt><span class="strong"><a href="../vialab/SMT/Zone.html#add(vialab.SMT.Zone)">add(Zone)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/TextZone.html#addChar(char)">addChar(char)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/TextZone.html" title="class in vialab.SMT">TextZone</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#addChild(vialab.SMT.Zone, vialab.SMT.Zone...)">addChild(Zone, Zone...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/SMT.html#addChild(vialab.SMT.Zone, vialab.SMT.Zone...)">addChild(Zone, Zone...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
 <dd>
 <div class="block">This adds a set of zones to a parent Zone</div>
 </dd>
-<dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#addChild(java.lang.String, vialab.SMT.Zone...)">addChild(String, Zone...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/SMT.html#addChild(java.lang.String, vialab.SMT.Zone...)">addChild(String, Zone...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
 <dd>
 <div class="block">This adds a set of zones to a parent Zone</div>
 </dd>
@@ -116,7 +116,7 @@
 <dd>
 <div class="block">This adds a KeyListener to listen to this keyboard implementation.</div>
 </dd>
-<dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#addMethodClasses(java.lang.Class...)">addMethodClasses(Class&lt;?&gt;...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/SMT.html#addMethodClasses(java.lang.Class...)">addMethodClasses(Class&lt;?&gt;...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
 <dd>
 <div class="block">This adds objects to check for drawZoneName, touchZoneName, etc methods
  in, similar to PApplet</div>
@@ -181,7 +181,7 @@
 <dd>
 <div class="block">Assigns a touch to this zone, maintaining the order of touches.</div>
 </dd>
-<dt><span class="strong"><a href="../vialab/SMT/TouchClient.html#assignTouches(vialab.SMT.Zone, vialab.SMT.Touch...)">assignTouches(Zone, Touch...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/TouchClient.html" title="class in vialab.SMT">TouchClient</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/SMT.html#assignTouches(vialab.SMT.Zone, vialab.SMT.Touch...)">assignTouches(Zone, Touch...)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/Touch.html#assignZone(vialab.SMT.Zone)">assignZone(Zone)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Touch.html" title="class in vialab.SMT">Touch</a></dt>
 <dd>&nbsp;</dd>

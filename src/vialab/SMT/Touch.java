@@ -26,7 +26,7 @@ public class Touch extends TuioCursor {
 	long startTimeMillis;
 
 	/** Processing PApplet */
-	static PApplet applet = TouchClient.parent;
+	static PApplet applet = SMT.parent;
 	/** The individual cursor ID number that is assigned to each TuioCursor. */
 	public int cursorID;
 	/** Reflects the current state of the TuioComponent. */
@@ -319,9 +319,9 @@ public class Touch extends TuioCursor {
 		// partition index, and so can be used to find the port, and so the
 		// device it came from
 		if (sessionID >> 48 == 0) {
-			return TouchClient.deviceMap.get(TouchClient.mainListenerPort);
+			return SMT.deviceMap.get(SMT.mainListenerPort);
 		}
-		return TouchClient.deviceMap.get((int) (sessionID >> 48));
+		return SMT.deviceMap.get((int) (sessionID >> 48));
 	}
 	
 	/**

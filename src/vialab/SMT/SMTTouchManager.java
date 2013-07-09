@@ -22,9 +22,9 @@ class SMTTouchManager {
 	public SMTTouchManager(SMTTuioListener tuioListener, SMTZonePicker picker) {
 		this.tuioListener = tuioListener;
 		this.picker = picker;
-		this.applet = TouchClient.parent;
+		this.applet = SMT.parent;
 
-		retrieveMethods(TouchClient.parent);
+		retrieveMethods(SMT.parent);
 	}
 
 	/**

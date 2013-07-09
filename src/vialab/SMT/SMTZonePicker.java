@@ -38,7 +38,7 @@ class SMTZonePicker {
 	int SIZEOF_INT = Integer.SIZE / 8;
 
 	public SMTZonePicker() {
-		this.applet = TouchClient.parent;
+		this.applet = SMT.parent;
 
 		// add the background color mapping to null
 		zonesByPickColor.put(BG_PICK_COLOR, null);
@@ -108,7 +108,7 @@ class SMTZonePicker {
 
 		PGL pgl = applet.g.beginPGL();
 		// force fallback until 2.0b10
-		if (!TouchClient.fastPicking || pgl == null) {
+		if (!SMT.fastPicking || pgl == null) {
 			// really slow way(max 70 fps on a high end card vs 200+ fps with
 			// readPixels), with loadPixels at the end of renderPickBuffer()
 			pickColor = applet.g.pixels[x + y * applet.g.width] & 0x00FFFFFF;
@@ -116,7 +116,7 @@ class SMTZonePicker {
 		else {
 			ByteBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT);
 
-			pgl.readPixels(t.x, TouchClient.parent.height - t.y, 1, 1, GL.GL_RGBA,
+			pgl.readPixels(t.x, SMT.parent.height - t.y, 1, 1, GL.GL_RGBA,
 					GL.GL_UNSIGNED_BYTE, buffer);
 
 			// get the first three bytes
@@ -136,7 +136,7 @@ class SMTZonePicker {
 		else {
 			// only show error in debug mode, since it is much to prevalent
 			// still to always show
-			if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+			if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
 				// not mapped means a bug in the pickDrawn colors, or maybe that
 				// BG_PICK_COLOR or a Zone got unmapped when it should'nt have
 				System.err
@@ -153,7 +153,7 @@ class SMTZonePicker {
 		applet.g.colorMode(PConstants.RGB, 255);
 		applet.g.background(BG_PICK_COLOR, 255);
 		ArrayList<Zone> toDraw = new ArrayList<Zone>();
-		for (Zone zone : TouchClient.zoneList) {
+		for (Zone zone : SMT.zoneList) {
 			if (zone.getParent() == null) {
 				toDraw.add(zone);
 			}
@@ -170,7 +170,7 @@ class SMTZonePicker {
 		// really slow way(max 70 fps on a high end card vs 200+ fps with
 		// readPixels), with loadPixels at the end of renderPickBuffer()
 		PGL pgl = applet.g.beginPGL();
-		if (!TouchClient.fastPicking || pgl == null) {
+		if (!SMT.fastPicking || pgl == null) {
 			applet.g.loadPixels();
 		}
 		applet.g.endPGL();

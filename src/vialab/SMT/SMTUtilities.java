@@ -54,8 +54,8 @@ public final class SMTUtilities {
 		}
 		catch (NoSuchMethodException e) {
 			Method m = null;
-			if (!TouchClient.extraClassList.isEmpty()) {
-				for (Class<?> c : TouchClient.extraClassList) {
+			if (!SMT.extraClassList.isEmpty()) {
+				for (Class<?> c : SMT.extraClassList) {
 					try {
 						m = c.getMethod(methodName, parameterTypes);
 					}
@@ -66,7 +66,7 @@ public final class SMTUtilities {
 						continue;
 					}
 					if (m != null) {
-						if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+						if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
 							System.out.println(c.toString() + m.toString());
 						}
 						return m;
@@ -350,7 +350,7 @@ public final class SMTUtilities {
 	 */
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
 		if (method != null) {
-			if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+			if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
 				System.out.println("Method:" + method.toString());
 			}
 			Object[] removeFromFront = parameters.clone();
@@ -361,7 +361,7 @@ public final class SMTUtilities {
 			for (int i = 0; i < parameters.length + 1; i++) {
 				// invoke with parameters removed from the front
 				try {
-					if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+					if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
 						System.out.print("In Papplet with params: ");
 						for (Object o : removeFromFront) {
 							System.out.print(o.toString());
@@ -375,7 +375,7 @@ public final class SMTUtilities {
 					if (((Zone) parameters[0]).getBoundObject() != null) {
 						Object o = ((Zone) parameters[0]).getBoundObject();
 						try {
-							if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+							if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
 								System.out.print(o.toString() + " with params: ");
 								for (Object o2 : removeFromFront) {
 									System.out.print(o2.toString());
@@ -386,7 +386,7 @@ public final class SMTUtilities {
 						}
 						catch (Exception e) {}
 					}
-					else if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+					else if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
 						System.out.println("There was no object bound to the Zone: "
 								+ parameters[0].toString());
 					}
@@ -394,7 +394,7 @@ public final class SMTUtilities {
 
 				// invoke with parameters removed from the back
 				try {
-					if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+					if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
 						System.out.print("In Papplet with params: ");
 						for (Object o : removeFromFront) {
 							System.out.print(o.toString());
@@ -408,7 +408,7 @@ public final class SMTUtilities {
 					if (((Zone) parameters[0]).getBoundObject() != null) {
 						Object o = ((Zone) parameters[0]).getBoundObject();
 						try {
-							if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+							if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
 								System.out.print(o.toString() + " with params: ");
 								for (Object o2 : removeFromBack) {
 									System.out.print(o2.toString());
@@ -419,7 +419,7 @@ public final class SMTUtilities {
 						}
 						catch (Exception e) {}
 					}
-					else if (TouchClient.drawTouchPoints == TouchDraw.DEBUG) {
+					else if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
 						System.out.println("There was no object bound to the Zone: "
 								+ parameters[0].toString());
 					}

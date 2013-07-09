@@ -259,7 +259,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
 	 */
 	public Zone(String name) {
-		this(name, TouchClient.defaultRenderer);
+		this(name, SMT.defaultRenderer);
 	}
 
 	/**
@@ -284,7 +284,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            of the zone
 	 */
 	public Zone(int x, int y, int width, int height) {
-		this(x, y, width, height, TouchClient.defaultRenderer);
+		this(x, y, width, height, SMT.defaultRenderer);
 	}
 
 	/**
@@ -317,7 +317,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            of the zone
 	 */
 	public Zone(String name, int x, int y, int width, int height) {
-		this(name, x, y, width, height, TouchClient.defaultRenderer);
+		this(name, x, y, width, height, SMT.defaultRenderer);
 	}
 
 	/**
@@ -338,7 +338,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
 
-		applet = TouchClient.parent;
+		applet = SMT.parent;
 
 		if (applet == null) {
 			System.err
@@ -363,7 +363,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		zoneBodyDef.type = BodyType.DYNAMIC;
 		zoneBodyDef.linearDamping = 1.0f;
 		zoneBodyDef.angularDamping = 1.0f;
-		zoneShape.setAsBox(TouchClient.box2dScale * width / 2, TouchClient.box2dScale * height / 2);
+		zoneShape.setAsBox(SMT.box2dScale * width / 2, SMT.box2dScale * height / 2);
 		zoneFixtureDef.shape = zoneShape;
 		zoneFixtureDef.density = 1.0f;
 		zoneFixtureDef.friction = 0.3f;
@@ -383,8 +383,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            The name of the zone to load the methods from
 	 */
 	protected void loadMethods(String name) {
-		if (TouchClient.warnUnimplemented != null) {
-			if (TouchClient.warnUnimplemented.booleanValue()) {
+		if (SMT.warnUnimplemented != null) {
+			if (SMT.warnUnimplemented.booleanValue()) {
 				loadMethods(name, true, true, true, true, true, true);
 			}
 			else {
@@ -636,7 +636,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			t.unassignZone(this);
 			// at unassign if we have a mJoint destroy it
 			if (mJoint != null) {
-				TouchClient.world.destroyJoint(mJoint);
+				SMT.world.destroyJoint(mJoint);
 				mJoint = null;
 			}
 		}
@@ -792,8 +792,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 			// if the parent already is in the client zoneList, then add the
 			// child if it is not in the client zoneList
-			if (TouchClient.zoneList.contains(this) && !TouchClient.zoneList.contains(zone)) {
-				TouchClient.add(zone);
+			if (SMT.zoneList.contains(this) && !SMT.zoneList.contains(zone)) {
+				SMT.add(zone);
 			}
 			zone.parent = this;
 			if (!children.contains(zone)) {
@@ -816,8 +816,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			// if the parent is in the client zoneList, then remove the child
 			// from
 			// the zoneList, but only if it is in children
-			if (TouchClient.zoneList.contains(this) && this.children.contains(child)) {
-				TouchClient.remove(child);
+			if (SMT.zoneList.contains(this) && this.children.contains(child)) {
+				SMT.remove(child);
 			}
 			child.parent = null;
 			return children.remove(child);
@@ -1748,7 +1748,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void drawChild(Zone child, PGraphics pg, boolean picking) {
 		// only draw/pickDraw when the child is in zonelist (parent zone's are
 		// responsible for adding/removing child to/from zonelist)
-		if (TouchClient.zoneList.contains(child)) {
+		if (SMT.zoneList.contains(child)) {
 			child.draw(true, picking);
 		}
 	}
@@ -2353,8 +2353,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// get origin position
 		PVector o = fromZoneVector(new PVector(width / 2, height / 2));
 		// height-y to account for difference in coordinates
-		zoneBody.setTransform(new Vec2(o.x * TouchClient.box2dScale, (applet.height - o.y)
-				* TouchClient.box2dScale), getRotationAngle());
+		zoneBody.setTransform(new Vec2(o.x * SMT.box2dScale, (applet.height - o.y)
+				* SMT.box2dScale), getRotationAngle());
 	}
 
 	public void setMatrixFromBody() {
@@ -2362,8 +2362,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// matrix
 		PMatrix3D ng = new PMatrix3D();
 		// height-y to account for difference in coordinates
-		ng.translate(zoneBody.getPosition().x / TouchClient.box2dScale,
-				(applet.height - zoneBody.getPosition().y / TouchClient.box2dScale));
+		ng.translate(zoneBody.getPosition().x / SMT.box2dScale,
+				(applet.height - zoneBody.getPosition().y / SMT.box2dScale));
 		ng.rotate(zoneBody.getAngle());
 		ng.translate(-width / 2, -height / 2);
 		// ng=PM == (P-1)*ng=M
@@ -2381,8 +2381,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		physics = true;
 		Touch t = getActiveTouch(0);
 		if (zoneBody != null && mJoint != null) {
-			mJoint.setTarget(new Vec2(t.x * TouchClient.box2dScale, (applet.height - t.y)
-					* TouchClient.box2dScale));
+			mJoint.setTarget(new Vec2(t.x * SMT.box2dScale, (applet.height - t.y)
+					* SMT.box2dScale));
 		}
 	}
 
@@ -2524,10 +2524,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			mJointDef = new MouseJointDef();
 			mJointDef.maxForce = 1000000.0f;
 			mJointDef.frequencyHz = applet.frameRate;
-			mJointDef.bodyA = TouchClient.groundBody;
+			mJointDef.bodyA = SMT.groundBody;
 			mJointDef.bodyB = zoneBody;
 			mJointDef.target.set(new Vec2(zoneBody.getPosition().x, zoneBody.getPosition().y));
-			mJoint = (MouseJoint) TouchClient.world.createJoint(mJointDef);
+			mJoint = (MouseJoint) SMT.world.createJoint(mJointDef);
 			zoneBody.setAwake(true);
 		}
 	}

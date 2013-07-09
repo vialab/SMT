@@ -352,7 +352,7 @@ public class KeyboardZone extends Zone {
 					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k, fontSize, font));
 		}
 
-		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+		SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
 				this.children.toArray(new Zone[children.size()]));
 
 		for (Zone zone : this.children) {
@@ -384,14 +384,14 @@ public class KeyboardZone extends Zone {
 				keyZone.fontSize = ((this.height * 9 / 10) / NUM_KEYBOARD_ROWS) * 16 / 50;
 			}
 		}
-		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+		SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
 				this.children.toArray(new Zone[children.size()]));
 	}
 
 	@Override
 	protected void init() {
 		super.init();
-		TouchClient.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+		SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
 				this.children.toArray(new Zone[children.size()]));
 	}
 
