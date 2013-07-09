@@ -1208,61 +1208,37 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			lastUpdate = maxTime(pair);
 			return;
 		}
-		beginTouch();
-		if ((dragLeft && pair.to.x < pair.from.x) || (dragRight && pair.to.x > pair.from.x)) {
-			translate(pair.to.x - pair.from.x, 0);
+		int tx = pair.to.x;
+		int ty = pair.to.y;
+		if(getParent() != null){
+			tx = getLocalX()+getParent().getLocalX(pair.to)-getParent().getLocalX(pair.from);
+			ty = getLocalY()+getParent().getLocalY(pair.to)-getParent().getLocalY(pair.from);
 		}
-
-		if (dragUp && pair.to.y > pair.from.y || dragDown && pair.to.y < pair.from.y) {
-			translate(0, pair.to.y - pair.from.y);
+				
+		if(!dragUp){
+			upLimit = getLocalY();
 		}
-		if (getParent() == null) {
-			// get position with fromZoneVector (not counting any
-			// transformations
-			// applied during since the last endTouch())
-			PVector prevPos = fromZoneVector(new PVector(0, 0));
-
-			// get the movement limits, left and up is negative, right and down
-			// positive
-			int maxLeftMove = -(int) (prevPos.x - leftLimit);
-			int maxRightMove = (int) (rightLimit - (prevPos.x + width));
-			int maxUpMove = -(int) (prevPos.y - upLimit);
-			int maxDownMove = (int) (downLimit - (prevPos.y + height));
-			// respect the limits by translating back to limit if needed
-			if ((pair.to.x - pair.from.x) < maxLeftMove) {
-				translate(-((pair.to.x - pair.from.x) - maxLeftMove), 0);
-			}
-			if ((pair.to.x - pair.from.x) > maxRightMove) {
-				translate(-((pair.to.x - pair.from.x) - maxRightMove), 0);
-			}
-			if ((pair.to.y - pair.from.y) < maxUpMove) {
-				translate(0, -((pair.to.y - pair.from.y) - maxUpMove));
-			}
-			if ((pair.to.y - pair.from.y) > maxDownMove) {
-				translate(0, -((pair.to.y - pair.from.y) - maxDownMove));
-			}
-			endTouch();
+		
+		if(!dragDown){
+			downLimit = getLocalY();
 		}
-		else {
-			endTouch();
-			PVector newPos = getParent().toZoneVector(getOrigin());
-
-			// respect the limits by translating back to limit if needed, in
-			// local coordinates
-			if (newPos.x < leftLimit) {
-				newPos.x = leftLimit;
-			}
-			if (newPos.x + width > rightLimit) {
-				newPos.x = rightLimit - width;
-			}
-			if (newPos.y < upLimit) {
-				newPos.y = upLimit;
-			}
-			if (newPos.y + height > downLimit) {
-				newPos.y = downLimit - height;
-			}
-			setLocation(newPos.x, newPos.y);
+		
+		if(!dragLeft){
+			leftLimit = getLocalX();
 		}
+		
+		if(!dragRight){
+			rightLimit = getLocalX();
+		}
+		
+		if(dragUp || dragDown){
+			setY(Math.max(upLimit,Math.min(downLimit-height, ty)));
+		}
+		
+		if(dragLeft || dragRight){
+			setX(Math.max(leftLimit,Math.min(rightLimit-width, tx)));
+		}
+		
 		lastUpdate = maxTime(pair);
 	}
 
@@ -2617,6 +2593,26 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * @param t
 	 * @return the x position of the touch in local coordinates
+	 */
+	public int getLocalX() {
+		if(getParent() == null){
+			return (int) getOrigin().x;
+		}
+		return (int) getParent().toZoneVector(getOrigin()).x;
+	}
+
+	/**
+	 * @return the y position of zone in parent coordinates
+	 */
+	public int getLocalY() {
+		if(getParent() == null){
+			return (int) getOrigin().y;
+		}
+		return (int) getParent().toZoneVector(getOrigin()).y;
+	}
+	
+	/**
+	 * @return the x position of zone in parent coordinates
 	 */
 	public int getLocalX(Touch t) {
 		return (int) toZoneVector(new PVector(t.x, t.y)).x;
