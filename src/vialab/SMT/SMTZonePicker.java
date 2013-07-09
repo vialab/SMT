@@ -132,12 +132,13 @@ class SMTZonePicker {
 		if (zonesByPickColor.containsKey(pickColor)) {
 			// if mapped it is either a Zone or null (background)
 			Zone picked =  zonesByPickColor.get(pickColor);
-			Zone current = picked.getParent();
+			Zone current = picked;
 			while (current != null){
+				//find the first ancestor (including itself) with stealChildrensTouch and give it to that one
 				if(current.stealChildrensTouch){
-					picked = current;
+					return current;
 				}
-				current = current.getParent(); 
+				current = current.getParent();
 			}
 			return picked;
 		}
