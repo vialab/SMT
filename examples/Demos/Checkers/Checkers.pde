@@ -18,15 +18,15 @@ class CheckerZone extends Zone{
 }
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MOUSE);
   for(int i=0; i<PIECES_PER_PLAYER; i++){
     p1[i]=new CheckerZone("Checker",0, 0, 100, 100,color(255,0,0));
-    TouchClient.add(p1[i]);
+    SMT.add(p1[i]);
     p1[i].setDirect(true);
   }
   for(int i=0; i<PIECES_PER_PLAYER; i++){
     p2[i]=new CheckerZone("Checker",0, 0, 100, 100,color(255,255,255));
-    TouchClient.add(p2[i]);
+    SMT.add(p2[i]);
     p2[i].setDirect(true);
   }
   int c1=0,c2=0;
@@ -63,8 +63,8 @@ void draw() {
     }
   }
   fill(255);
-  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length,width/2,10);
-  TouchClient.drawPickBuffer(0,0,100,100);
+  text(round(frameRate)+"fps, # of zones: "+SMT.getZones().length,width/2,10);
+  SMT.drawPickBuffer(0,0,100,100);
 }
 
 void drawChecker(CheckerZone zone){

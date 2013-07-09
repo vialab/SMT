@@ -7,10 +7,10 @@
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.add(new CheckBoxZone("Checkbox",100,100,200,200));
+  SMT.init(this, TouchSource.MOUSE);
+  SMT.add(new CheckBoxZone("Checkbox",100,100,200,200));
 }
 void draw() {
   background(79, 129, 189);
-  text("Checked:"+TouchClient.get("Checkbox",CheckBoxZone.class).checked,50,50);
+  text("Checked:"+SMT.get("Checkbox",CheckBoxZone.class).checked,50,50);
 }

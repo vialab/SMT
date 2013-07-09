@@ -6,12 +6,12 @@
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.add(new ShapeZone("RotatingZone",100,100,200,200));
+  SMT.init(this, TouchSource.MOUSE);
+  SMT.add(new ShapeZone("RotatingZone",100,100,200,200));
 }
 void draw() {
   background(79, 129, 189);
-  println(TouchClient.get("RotatingZone").getRotationAngle()*180/PI);
+  println(SMT.get("RotatingZone").getRotationAngle()*180/PI);
 }
 void drawRotatingZone(){
   fill(255);

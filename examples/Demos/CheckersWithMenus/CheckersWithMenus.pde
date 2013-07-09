@@ -32,7 +32,7 @@ class CheckerZone extends Zone{
    }
    protected void touchImpl(){
      if(name=="Checker"){
-       TouchClient.putZoneOnTop(this);
+       SMT.putZoneOnTop(this);
        rst();
      }else{
        unassignAll(); 
@@ -42,7 +42,7 @@ class CheckerZone extends Zone{
 
 void setup() {
   size(displayWidth, displayHeight, OPENGL);
-  TouchClient.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MOUSE);
   
   //call this to not display warnings for unimplemented methods
   //client.setWarnUnimplemented(false);
@@ -50,7 +50,7 @@ void setup() {
   title = new ContainerZone("Title",0,0,displayWidth,displayHeight);
   board = new ContainerZone("Board",(displayWidth-1000)/2,(displayHeight-1000)/2,1000,1000);
   options = new ContainerZone("Options",0,0,displayWidth,displayHeight);
-  TouchClient.add(title);
+  SMT.add(title);
   title.add(new ButtonZone("PlayButton",displayWidth/2-100,displayHeight/2-100,200,100,"Play",20));
   title.add(new ButtonZone("OptionsButton",displayWidth/2-100,displayHeight/2+100,200,100,"Options",20));
   title.add(new ButtonZone("ExitButton",displayWidth/2-100,displayHeight/2+300,200,100,"Exit",20));
@@ -96,7 +96,7 @@ void setup() {
 void draw() {
   background(79, 129, 189);
   fill(255);
-  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length, width/2,10);
+  text(round(frameRate)+"fps, # of zones: "+SMT.getZones().length, width/2,10);
   text("typed text: "+t,width/10,50);
   c1.c=color(s[0].getCurrentValue(),s[1].getCurrentValue(),s[2].getCurrentValue());
   c2.c=color(s[3].getCurrentValue(),s[4].getCurrentValue(),s[5].getCurrentValue());
@@ -126,7 +126,7 @@ void drawTitle(){
   textSize(100);
   text("Checkers",displayWidth/2-textWidth("Checkers")/2,displayHeight/2.8);
   textSize(16);
-  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length,width/2,20);
+  text(round(frameRate)+"fps, # of zones: "+SMT.getZones().length,width/2,20);
   text("typed text: "+t,width/2,50);
 }
 
@@ -161,13 +161,13 @@ void placePieces(){
 }
 
 void pressPlayButton(Zone zone){
-  TouchClient.remove(title);
-  TouchClient.add(board);
+  SMT.remove(title);
+  SMT.add(board);
 }
 
 void pressOptionsButton(Zone zone){
-  TouchClient.remove(title);
-  TouchClient.add(options);
+  SMT.remove(title);
+  SMT.add(options);
 }
 
 void pressExitButton(Zone zone){
@@ -175,9 +175,9 @@ void pressExitButton(Zone zone){
 }
 
 void pressToTitleButton(Zone zone){
-  TouchClient.remove(board);
-  TouchClient.remove(options);
-  TouchClient.add(title);
+  SMT.remove(board);
+  SMT.remove(options);
+  SMT.add(title);
 }
 
 void pressChangeC1(Zone zone){

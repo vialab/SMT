@@ -11,11 +11,11 @@ void setup() {
   //make a fullscreen sketch and start the touchclient with the
   //multiple backend, to use any device detected
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.MULTIPLE);
+  SMT.init(this, TouchSource.MULTIPLE);
 
   //load 5 image zones with random size + position
   for (int i=0; i<5; i++) {  
-    TouchClient.add(new ImageZone("ImageZone", loadImage(i + ".jpg"), 
+    SMT.add(new ImageZone("ImageZone", loadImage(i + ".jpg"), 
     (int)random(0, displayWidth-200), (int)random(0, displayHeight-200), 
     (int)random(100, 200), (int)random(100, 200)));
   }
@@ -24,7 +24,7 @@ void setup() {
 void touchImageZone(Zone z) {
   //tell image zones to be put on the top when touched, and to
   //rotate scale and tranlate
-  TouchClient.putZoneOnTop(z);
+  SMT.putZoneOnTop(z);
   z.rst();
 }
 

@@ -5,11 +5,11 @@
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.add(new Zone("Custom1",0,0,200,200));
-  TouchClient.add(new Zone("Custom2",200,0,200,200));
-  TouchClient.add(new Zone("Custom3",0,200,200,200));
-  TouchClient.add(new Zone("Custom4",200,200,200,200));
+  SMT.init(this, TouchSource.MOUSE);
+  SMT.add(new Zone("Custom1",0,0,200,200));
+  SMT.add(new Zone("Custom2",200,0,200,200));
+  SMT.add(new Zone("Custom3",0,200,200,200));
+  SMT.add(new Zone("Custom4",200,200,200,200));
 }
 void draw() {
   background(79, 129, 189);

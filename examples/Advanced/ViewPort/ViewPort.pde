@@ -9,9 +9,9 @@ PImage img;
 
 void setup(){
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.add(new Zone("Under", 0, 0, displayWidth, displayHeight));
-  TouchClient.add(new ShapeZone("Over", 0, 0, displayWidth, displayHeight));
+  SMT.init(this, TouchSource.MOUSE);
+  SMT.add(new Zone("Under", 0, 0, displayWidth, displayHeight));
+  SMT.add(new ShapeZone("Over", 0, 0, displayWidth, displayHeight));
   img = loadImage("0.jpg");
 }
 

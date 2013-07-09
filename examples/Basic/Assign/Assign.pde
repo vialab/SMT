@@ -10,9 +10,9 @@ Zone z;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MOUSE);
   z = new Zone("Test",0,0,50,50);
-  TouchClient.add(z);
+  SMT.add(z);
 }
 
 void draw() {
@@ -29,6 +29,6 @@ void touchTest(Zone z){
 }
 
 void touchDown(){
-  z.assign(TouchClient.getTouches()); 
+  z.assign(SMT.getTouches()); 
 }
 

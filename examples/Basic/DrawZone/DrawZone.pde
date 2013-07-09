@@ -15,10 +15,10 @@ import vialab.SMT.*;
 
 void setup() {
     size(displayWidth, displayHeight, P3D);  
-    TouchClient.init(this, TouchSource.MOUSE);
+    SMT.init(this, TouchSource.MOUSE);
     
     Zone z = new Zone("myZone", 10, 10, 50, 50);
-    TouchClient.add(z);
+    SMT.add(z);
 }
                     
 void draw() {

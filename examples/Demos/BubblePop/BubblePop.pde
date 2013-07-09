@@ -20,17 +20,17 @@ class BubbleZone extends Zone {
 void setup() {
   frameRate(1000);
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.MULTIPLE);
-  TouchClient.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
+  SMT.init(this, TouchSource.MULTIPLE);
+  SMT.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
 }
 
 void draw() { 
-  if (TouchClient.getZones().length<100) {
-    TouchClient.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
+  if (SMT.getZones().length<100) {
+    SMT.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
   }
   background(79, 129, 189);
   fill(255);
-  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length, width/2, 10);
+  text(round(frameRate)+"fps, # of zones: "+SMT.getZones().length, width/2, 10);
 }
 
 void drawBubble(BubbleZone zone) {
@@ -46,6 +46,6 @@ void pickDrawBubble(BubbleZone zone) {
 
 void touchBubble(BubbleZone zone) {
   zone.unassignAll();
-  TouchClient.remove(zone);
+  SMT.remove(zone);
 }
 

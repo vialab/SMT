@@ -50,13 +50,13 @@ void setup() {
   for (int i=0; i<NUM_BALLS; i++) {
     balls.add(new Ball());
   }
-  TouchClient.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MOUSE);
   for (int i = 0; i < NUM_ZONES; i++) {
     zone[i] = new reflectZone("Paddle",(i%2)*(displayWidth-450)+200, 400, 50, 300, (i%2==0)? new PVector(1.0, 0):new PVector(-1.0, 0.0));
-    TouchClient.add(zone[i]);
+    SMT.add(zone[i]);
   }
   score= new ButtonZone("Score",displayWidth/2-50, 100, 100, 50,""+p1score+"|"+p2score,createFont("Arial-Black", 16));
-  TouchClient.add(score);
+  SMT.add(score);
 }
 
 void touchPaddle(Zone z){

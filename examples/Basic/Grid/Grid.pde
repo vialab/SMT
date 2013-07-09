@@ -1,17 +1,17 @@
 /**
- * This example shows how to use the TouchClient.grid() function
+ * This example shows how to use the SMT.grid() function
  * to align Zones into a grid.
- * See http://vialab.github.io/SMT/vialab/SMT/TouchClient.html#grid(int, int, int, int, int, vialab.SMT.Zone...) 
+ * See http://vialab.github.io/SMT/vialab/SMT/SMT.html#grid(int, int, int, int, int, vialab.SMT.Zone...) 
  */
 import vialab.SMT.*;
 
 void setup() {
   size(800, 800, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MOUSE);
   for(int i=0; i<12; i++){
-    TouchClient.add(new Zone("Zone",200,400, 50, 50));
+    SMT.add(new Zone("Zone",200,400, 50, 50));
   }
-  TouchClient.add(new Zone("Grid",400, 400, 100, 100));
+  SMT.add(new Zone("Grid",400, 400, 100, 100));
 }
 
 void draw() {
@@ -23,7 +23,7 @@ void touchZone(Zone zone){
 }
 
 void touchGrid(Zone zone){
-  TouchClient.grid(0,0,width,100,100,TouchClient.getZones());
+  SMT.grid(0,0,width,100,100,TouchClient.getZones());
 }
 
 void drawGrid(Zone zone){

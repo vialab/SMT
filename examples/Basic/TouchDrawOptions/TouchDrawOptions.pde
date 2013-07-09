@@ -8,13 +8,13 @@ import vialab.SMT.*;
 
 void setup() {
   size(400, 400, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.setTouchDraw(TouchDraw.DEBUG,100);
-  //TouchClient.setTouchDraw(TouchDraw.NONE,100);
-  //TouchClient.setTouchDraw(TouchDraw.SMOOTH,100);
-  //TouchClient.setTouchDraw(TouchDraw.DEBUG);
-  //TouchClient.setTouchDraw(TouchDraw.NONE);
-  //TouchClient.setTouchDraw(TouchDraw.SMOOTH);
+  SMT.init(this, TouchSource.MOUSE);
+  SMT.setTouchDraw(TouchDraw.DEBUG,100);
+  //SMT.setTouchDraw(TouchDraw.NONE,100);
+  //SMT.setTouchDraw(TouchDraw.SMOOTH,100);
+  //SMT.setTouchDraw(TouchDraw.DEBUG);
+  //SMT.setTouchDraw(TouchDraw.NONE);
+  //SMT.setTouchDraw(TouchDraw.SMOOTH);
 }
 
 void draw() {

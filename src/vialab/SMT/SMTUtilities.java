@@ -187,7 +187,7 @@ public final class SMTUtilities {
 					&& !checkImpl(callingClass, methodPrefix, parameters)) {
 				if (!warned) {
 					System.err
-							.println("\nCall TouchClient.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
+							.println("\nCall SMT.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
 					warned = true;
 				}
 				System.err.println("No such method: " + methodPrefix + name);

@@ -11,8 +11,8 @@ int x, y;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
-  TouchClient.add(new Zone("Z3D",400, 400, 400, 400));
+  SMT.init(this, TouchSource.MOUSE);
+  SMT.add(new Zone("Z3D",400, 400, 400, 400));
 }
 
 void draw() {

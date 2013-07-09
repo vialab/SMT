@@ -21,9 +21,9 @@ import vialab.SMT.*;
 
 void setup(){
   size(800,800,P3D);
-  TouchClient.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MOUSE);
   PieMenuZone menu = new PieMenuZone("PieMenu", 400, 400, 355);
-  TouchClient.add(menu);
+  SMT.add(menu);
   menu.add("Forward",loadImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE_lpEhrobnGhxrMyF6TFLUuAcVpGJixDzak4TxVQjjiDW5UjF", "png"));
   menu.add("Submenu");
   menu.add("Add");
@@ -36,11 +36,11 @@ void setup(){
   menu.addSubmenu("Submenu","Option3");
   ButtonZone b = new ButtonZone("ShowHide","Show / Hide Pie Menu");
   //b.deactivated = true;
-  TouchClient.add(b);
+  SMT.add(b);
 }
 
 void pressShowHide(){
-  PieMenuZone m = TouchClient.get("PieMenu",PieMenuZone.class);
+  PieMenuZone m = SMT.get("PieMenu",PieMenuZone.class);
   m.setVisible(!m.isVisible());
 }
 
@@ -50,9 +50,9 @@ void draw(){
 
 void touchUpForward(){println("Forward");}
 void touchUpSubmenu(){println("Submenu");}
-void touchUpAdd(){println("Add");TouchClient.get("PieMenu",PieMenuZone.class).add("Remove Self");}
+void touchUpAdd(){println("Add");SMT.get("PieMenu",PieMenuZone.class).add("Remove Self");}
 void touchUpViewSource(){println("View Source");}
-void touchUpRemoveSelf(){println("Remove Self");TouchClient.remove("PieMenu");}
+void touchUpRemoveSelf(){println("Remove Self");SMT.remove("PieMenu");}
 void touchUpPieMenu(PieMenuZone m){
   println("Selected: "+m.getSelectedName());
 }

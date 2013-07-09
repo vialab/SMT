@@ -9,7 +9,7 @@ import vialab.SMT.*;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  TouchClient.init(this, TouchSource.MULTIPLE);
+  SMT.init(this, TouchSource.MULTIPLE);
 
   final int IMAGE_FILES=5;
   final int IMAGE_COPIES=4;
@@ -20,18 +20,18 @@ void setup() {
   }
 
   for (int i=0; i < IMAGE_FILES*IMAGE_COPIES; i++) {  
-    TouchClient.add(new ImageZone("ImageZone", img[i%IMAGE_FILES], 
+    SMT.add(new ImageZone("ImageZone", img[i%IMAGE_FILES], 
     (int)random(0, displayWidth-400), (int)random(0, displayHeight-400), 
     (int)random(100, 200), (int)random(100, 200)));
   }
   
-  for(Zone z : TouchClient.getZones()){
+  for(Zone z : SMT.getZones()){
     z.physics=true; 
   }
 }
 
 void touchImageZone(Zone z) {
-  TouchClient.putZoneOnTop(z);
+  SMT.putZoneOnTop(z);
   z.toss();
 }
 

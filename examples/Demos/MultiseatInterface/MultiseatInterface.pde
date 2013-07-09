@@ -6,7 +6,7 @@ import vialab.SMT.*;
 
 void setup() {
   size(displayWidth, displayHeight, OPENGL);
-  TouchClient.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MOUSE);
   
   //create a "UserArea" Zone for each user
   Zone z1=new Zone("UserArea",0, 0, 800, 200);
@@ -29,18 +29,18 @@ void setup() {
   z3.add(new Zone("Item",0,0,200,100));
   z4.add(new Zone("Item",0,0,200,100));
   
-  //add the "UserArea" Zones to the TouchClient
+  //add the "UserArea" Zones to the SMT
   //so that they are shown on screen
-  TouchClient.add(z1);
-  TouchClient.add(z2);
-  TouchClient.add(z3);
-  TouchClient.add(z4);
+  SMT.add(z1);
+  SMT.add(z2);
+  SMT.add(z3);
+  SMT.add(z4);
 }
 
 void draw() {
   //background with fps
   background(79, 129, 189);
-  text(round(frameRate)+"fps, # of zones: "+TouchClient.getZones().length, width/2, height/2);
+  text(round(frameRate)+"fps, # of zones: "+SMT.getZones().length, width/2, height/2);
   fill(255);
 }
 
