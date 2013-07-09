@@ -1,5 +1,11 @@
-Project Website: http://vialab.science.uoit.ca/SMT/
------------------------------------------------------
+Project website: http://vialab.science.uoit.ca/SMT/
+--------------------------------------------------
+It has online
+* examples
+* Processing style documentation
+* support
+
+--------------------------------------------
 
 Version 3.6.1
 
