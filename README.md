@@ -1,6 +1,8 @@
-Version 3.6
-
 Project Website: http://vialab.science.uoit.ca/SMT/
+-----------------------------------------------------
+
+Version 3.6.1
+
 Research Website: http://vialab.science.uoit.ca/portfolio/smt-toolkit
 
 SMT (Simple Multi-Touch Toolkit) is a project to support the learning of HCI concepts.
