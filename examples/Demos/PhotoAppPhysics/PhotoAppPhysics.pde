@@ -15,11 +15,11 @@ void setup() {
   final int IMAGE_COPIES=4;
   PImage[] img = new PImage[IMAGE_FILES];
 
-  for (int i=0; i<IMAGE_FILES; i++) {  
+  for (int i=0; i < IMAGE_FILES; i++) {  
     img[i] = loadImage(i + ".jpg");
   }
 
-  for (int i=0; i<IMAGE_FILES*IMAGE_COPIES; i++) {  
+  for (int i=0; i < IMAGE_FILES*IMAGE_COPIES; i++) {  
     TouchClient.add(new ImageZone("ImageZone", img[i%IMAGE_FILES], 
     (int)random(0, displayWidth-400), (int)random(0, displayHeight-400), 
     (int)random(100, 200), (int)random(100, 200)));
