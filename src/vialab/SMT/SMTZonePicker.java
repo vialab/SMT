@@ -131,7 +131,15 @@ class SMTZonePicker {
 
 		if (zonesByPickColor.containsKey(pickColor)) {
 			// if mapped it is either a Zone or null (background)
-			return zonesByPickColor.get(pickColor);
+			Zone picked =  zonesByPickColor.get(pickColor);
+			Zone current = picked.getParent();
+			while (current != null){
+				if(current.stealChildrensTouch){
+					picked = current;
+				}
+				current = current.getParent(); 
+			}
+			return picked;
 		}
 		else {
 			// only show error in debug mode, since it is much to prevalent

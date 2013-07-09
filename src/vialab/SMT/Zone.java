@@ -63,6 +63,8 @@ import TUIO.TuioTime;
  */
 public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
+	public boolean stealChildrensTouch = false;
+	
 	public boolean physics = false;
 
 	BodyDef zoneBodyDef = new BodyDef();
