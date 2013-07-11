@@ -85,7 +85,18 @@ public final class SMTUtilities {
 		if (!suffix.isEmpty()) {
 			suffix = suffix.substring(0, 1).toUpperCase() + suffix.substring(1, suffix.length());
 		}
-		return getPMethod(parent, methodPrefix + suffix, parameterTypes);
+		
+		Method m = getPMethod(parent, methodPrefix + suffix, parameterTypes);
+		if(m == null){
+			String suffix_no_num_suffix = suffix;
+			while(suffix_no_num_suffix.length()>0 && suffix_no_num_suffix.substring(suffix_no_num_suffix.length()-1, suffix_no_num_suffix.length()).matches("\\d")){
+					suffix_no_num_suffix = suffix_no_num_suffix.substring(0,suffix_no_num_suffix.length()-1);
+			}
+			if(suffix_no_num_suffix.length()>0){
+				m = getPMethod(parent, methodPrefix + suffix_no_num_suffix, parameterTypes);
+			}
+		}
+		return m;
 	}
 
 	static Method getAnyPMethod(PApplet parent, String methodPrefix, String methodSuffix,
