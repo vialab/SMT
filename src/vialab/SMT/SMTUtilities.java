@@ -1,6 +1,7 @@
 package vialab.SMT;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -190,7 +191,43 @@ public final class SMTUtilities {
 							.println("\nCall SMT.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
 					warned = true;
 				}
-				System.err.println("No such method: " + methodPrefix + name);
+				System.err.print("No such method: " + methodPrefix + name+"(");
+				boolean first = true;
+				for(Class<?> c : parameters){
+					if(first){
+						first = false;
+					}
+					else{
+						System.err.print(", ");
+					}
+					System.err.print(c.getName());
+				}
+				System.err.print(")");
+				
+				ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+				classes.add(parent.getClass());
+				classes.addAll(SMT.extraClassList);
+				for(Class<?> c : classes){
+					for(Method m : c.getDeclaredMethods()){
+						if(m.getName().equalsIgnoreCase(methodPrefix+name)){
+							System.err.print(", method found named "+m.getName()+"(");
+							boolean first2 = true;
+							for(Class<?> c2 : m.getParameterTypes()){
+								if(first2){
+									first2 = false;
+								}
+								else{
+									System.err.print(", ");
+								}
+								System.err.print(c2.getName());
+							}
+							System.err.print(")");
+							System.err.print(" in the class "+c.getName()+", which did not have correct capitalization or parameters");
+							break;
+						}
+					}
+				}
+				System.err.println();
 			}
 			// set method to methodPrefix+Default if defined
 			method = getAnyPMethod(parent, methodPrefix, "Default", true, parameters);
