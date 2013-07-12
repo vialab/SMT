@@ -214,7 +214,7 @@ public final class SMTUtilities {
 					System.err.print(c.getName());
 				}
 				System.err.print(")");
-				
+				System.err.print(", using default "+methodPrefix+" method");
 				ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
 				classes.add(parent.getClass());
 				classes.addAll(SMT.extraClassList);

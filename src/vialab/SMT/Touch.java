@@ -328,7 +328,7 @@ public class Touch extends TuioCursor {
 	 * @param z
 	 * @return the x position of this Touch in local coordinates of the given zone
 	 */
-	public int getLocalX(Zone z){
+	public float getLocalX(Zone z){
 		return z.getLocalX(this);
 	}
 	
@@ -336,7 +336,7 @@ public class Touch extends TuioCursor {
 	 * @param z
 	 * @return the y position of this Touch in local coordinates of the given zone
 	 */
-	public int getLocalY(Zone z){
+	public float getLocalY(Zone z){
 		return z.getLocalY(this);
 	}	
 }

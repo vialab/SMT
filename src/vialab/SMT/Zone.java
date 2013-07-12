@@ -148,6 +148,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected boolean touchImpl;
 
 	protected boolean pickImpl;
+	
+	protected boolean drawImpl;
 
 	protected PGraphicsOpenGL drawPG;
 
@@ -459,7 +461,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 
 		touchImpl = SMTUtilities.checkImpl(Zone.class, "touch", this.getClass());
-		SMTUtilities.checkImpl(Zone.class, "draw", this.getClass());
+		drawImpl = SMTUtilities.checkImpl(Zone.class, "draw", this.getClass());
 		pickImpl = SMTUtilities.checkImpl(Zone.class, "pickDraw", this.getClass());
 	}
 
@@ -1210,27 +1212,27 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			lastUpdate = maxTime(pair);
 			return;
 		}
-		int tx = pair.to.x;
-		int ty = pair.to.y;
+		float tx = getLocalX()+pair.to.x-pair.from.x;
+		float ty = getLocalY()+pair.to.y-pair.from.y;
 		if(getParent() != null){
 			tx = getLocalX()+getParent().getLocalX(pair.to)-getParent().getLocalX(pair.from);
 			ty = getLocalY()+getParent().getLocalY(pair.to)-getParent().getLocalY(pair.from);
 		}
 				
 		if(!dragUp){
-			upLimit = getLocalY();
+			upLimit = (int) getLocalY();
 		}
 		
 		if(!dragDown){
-			downLimit = getLocalY();
+			downLimit = (int) getLocalY();
 		}
 		
 		if(!dragLeft){
-			leftLimit = getLocalX();
+			leftLimit = (int) getLocalX();
 		}
 		
 		if(!dragRight){
-			rightLimit = getLocalX();
+			rightLimit = (int) getLocalX();
 		}
 		
 		if(dragUp || dragDown){
@@ -1679,8 +1681,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			}
 		}
 		else {
-			drawImpl();
-			SMTUtilities.invoke(drawMethod, applet, this);
+			if (drawMethod == null && !drawImpl) {
+				rect(0, 0, width, height);
+				fill(0);
+				text("No Draw Method", 0, 0, width, height);
+			}
+			else{
+				drawImpl();
+				SMTUtilities.invoke(drawMethod, applet, this);
+			}
 		}
 		popStyle();
 		if (drawChildren) {
@@ -1806,6 +1815,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				touchImpl();
 				SMTUtilities.invoke(touchMethod, applet, this);
 			}
+			
+			if (touchMethod == null && !touchImpl && touchUpMethod == null
+					&& touchDownMethod == null && touchMovedMethod == null && !touchUDM && !press
+					&& pressMethod == null) {
+				drag();
+			}
 
 			touchUpList.clear();
 			touchDownList.clear();
@@ -1814,12 +1829,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 			popStyle();
 			endTouch();
-
-			if (touchMethod == null && !touchImpl && touchUpMethod == null
-					&& touchDownMethod == null && touchMovedMethod == null && !touchUDM && !press
-					&& pressMethod == null) {
-				unassignAll();
-			}
 
 			applet.g = temp;
 		}
@@ -2596,61 +2605,61 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param t
 	 * @return the x position of the touch in local coordinates
 	 */
-	public int getLocalX() {
+	public float getLocalX() {
 		if(getParent() == null){
-			return (int) getOrigin().x;
+			return getOrigin().x;
 		}
-		return (int) getParent().toZoneVector(getOrigin()).x;
+		return getParent().toZoneVector(getOrigin()).x;
 	}
 
 	/**
 	 * @return the y position of zone in parent coordinates
 	 */
-	public int getLocalY() {
+	public float getLocalY() {
 		if(getParent() == null){
-			return (int) getOrigin().y;
+			return getOrigin().y;
 		}
-		return (int) getParent().toZoneVector(getOrigin()).y;
+		return getParent().toZoneVector(getOrigin()).y;
 	}
 	
 	/**
 	 * @return the x position of zone in parent coordinates
 	 */
-	public int getLocalX(Touch t) {
-		return (int) toZoneVector(new PVector(t.x, t.y)).x;
+	public float getLocalX(Touch t) {
+		return  toZoneVector(new PVector(t.x, t.y)).x;
 	}
 
 	/**
 	 * @param t
 	 * @return the y position of the touch in local coordinates
 	 */
-	public int getLocalY(Touch t) {
-		return (int) toZoneVector(new PVector(t.x, t.y)).y;
+	public float getLocalY(Touch t) {
+		return toZoneVector(new PVector(t.x, t.y)).y;
 	}
 	
 	/**
 	 * Sets the local x position
-	 * @param x
+	 * @param f
 	 */
-	public void setX(int x) {
+	public void setX(float f) {
 		if (getParent() == null) {
-			setLocation(x, getOrigin().y);
+			setLocation(f, getOrigin().y);
 		}
 		else {
-			setLocation(x, getParent().toZoneVector(getOrigin()).y);
+			setLocation(f, getParent().toZoneVector(getOrigin()).y);
 		}
 	}
 
 	/**
 	 * Sets the local y position
-	 * @param y
+	 * @param f
 	 */
-	public void setY(int y) {
+	public void setY(float f) {
 		if (getParent() == null) {
-			setLocation(getOrigin().x, y);
+			setLocation(getOrigin().x, f);
 		}
 		else {
-			setLocation(getParent().toZoneVector(getOrigin()).x, y);
+			setLocation(getParent().toZoneVector(getOrigin()).x, f);
 		}
 	}
 	
