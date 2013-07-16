@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -192,6 +193,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	private List<Touch> touchMovedList = new ArrayList<Touch>();
 
 	private List<Touch> pressList = new ArrayList<Touch>();
+
+	private float offsetX;
+
+	private float offsetY;
+
+	private HashSet<Long> dragSeenTouch = new HashSet<Long>();
 
 	boolean warnDraw() {
 		return true;
@@ -1212,11 +1219,23 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			lastUpdate = maxTime(pair);
 			return;
 		}
-		float tx = getLocalX()+pair.to.x-pair.from.x;
-		float ty = getLocalY()+pair.to.y-pair.from.y;
+		float tx = pair.to.x;
+		float ty = pair.to.y;
 		if(getParent() != null){
-			tx = getLocalX()+getParent().getLocalX(pair.to)-getParent().getLocalX(pair.from);
-			ty = getLocalY()+getParent().getLocalY(pair.to)-getParent().getLocalY(pair.from);
+			tx = getParent().getLocalX(pair.to);
+			ty = getParent().getLocalY(pair.to);
+		}
+		
+		if(!dragSeenTouch.contains(pair.from.sessionID)){
+			//the first time we see a touch we use its position for the offset
+			//of the Zone from the touch
+			offsetX = pair.from.x-getLocalX();
+			offsetY = pair.from.y-getLocalY();
+			if(getParent() != null){
+				offsetX = getParent().getLocalX(pair.from)-getLocalX();
+				offsetY = getParent().getLocalY(pair.from)-getLocalY();
+			}
+			dragSeenTouch.add(pair.from.sessionID);
 		}
 				
 		if(!dragUp){
@@ -1236,11 +1255,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		
 		if(dragUp || dragDown){
-			setY(Math.max(upLimit,Math.min(downLimit-height, ty)));
+			setY(Math.max(upLimit,Math.min(downLimit-height, ty-offsetY)));
 		}
 		
 		if(dragLeft || dragRight){
-			setX(Math.max(leftLimit,Math.min(rightLimit-width, tx)));
+			setX(Math.max(leftLimit,Math.min(rightLimit-width, tx-offsetX)));
 		}
 		
 		lastUpdate = maxTime(pair);
