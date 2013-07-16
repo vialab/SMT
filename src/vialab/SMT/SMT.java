@@ -103,7 +103,7 @@ public class SMT {
 	protected static CopyOnWriteArrayList<Zone> zoneList = new CopyOnWriteArrayList<Zone>();
 
 	/** Flag for drawing touch points */
-	protected static TouchDraw drawTouchPoints = TouchDraw.SMOOTH;
+	private static TouchDraw drawTouchPoints = TouchDraw.SMOOTH;
 
 	/** Matrix used to test if the zone has gone off the screen */
 	// private PMatrix3D mTest = new PMatrix3D();
