@@ -18,7 +18,7 @@ class CheckerZone extends Zone{
 }
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   for(int i=0; i<PIECES_PER_PLAYER; i++){
     p1[i]=new CheckerZone("Checker",0, 0, 100, 100,color(255,0,0));
     SMT.add(p1[i]);

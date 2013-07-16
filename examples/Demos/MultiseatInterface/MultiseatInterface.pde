@@ -6,7 +6,7 @@ import vialab.SMT.*;
 
 void setup() {
   size(displayWidth, displayHeight, OPENGL);
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   
   //create a "UserArea" Zone for each user
   Zone z1=new Zone("UserArea",0, 0, 800, 200);

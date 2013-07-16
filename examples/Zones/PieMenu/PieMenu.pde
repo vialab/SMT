@@ -21,7 +21,7 @@ import vialab.SMT.*;
 
 void setup(){
   size(800,800,P3D);
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   PieMenuZone menu = new PieMenuZone("PieMenu", 400, 400, 355);
   SMT.add(menu);
   menu.add("Forward",loadImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE_lpEhrobnGhxrMyF6TFLUuAcVpGJixDzak4TxVQjjiDW5UjF", "png"));

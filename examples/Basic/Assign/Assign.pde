@@ -10,7 +10,7 @@ Zone z;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   z = new Zone("Test",0,0,50,50);
   SMT.add(z);
 }

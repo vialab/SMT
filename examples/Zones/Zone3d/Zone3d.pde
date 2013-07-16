@@ -11,7 +11,7 @@ int x, y;
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   SMT.add(new Zone("Z3D",400, 400, 400, 400));
 }
 

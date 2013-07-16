@@ -8,7 +8,7 @@
 import vialab.SMT.*;
 void setup() {
   size(800, 800, P3D);
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   KeyboardZone kb = new KeyboardZone("Keyboard");
   kb.add(new TextZone("Text", 0, 400, 200, 200));
   SMT.add(kb);

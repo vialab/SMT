@@ -12,7 +12,7 @@
 import vialab.SMT.*;
 void setup() {
   size(400, 400, P3D);
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   SMT.add(new PatternUnlockZone(100,100,200,200));
 }
 void draw() {

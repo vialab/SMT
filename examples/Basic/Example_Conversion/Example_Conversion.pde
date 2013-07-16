@@ -30,7 +30,7 @@ void setup() {
   //This provides the multi-touch functionality, and TouchSource selection
   //change MOUSE to SMART to switch from using the mouse for
   //input to Smart table multitouch input for example 
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   
   //this adds a zone to the SMT, with the given parameters
   //String name, int x, int y, int width, int height

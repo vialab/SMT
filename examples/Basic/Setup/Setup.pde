@@ -13,7 +13,7 @@ void setup() {
     size(displayWidth, displayHeight , P3D);
     
     // Initializes SMT
-    SMT.init(this, TouchSource.MOUSE); 
+    SMT.init(this, TouchSource.MULTIPLE); 
 }
                     
 void draw() { 

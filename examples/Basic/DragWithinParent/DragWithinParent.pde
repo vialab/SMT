@@ -8,7 +8,7 @@ import vialab.SMT.*;
 
 void setup() {
   size(400, 400, P3D);
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   Zone z = new Zone("Parent", 100, 100, 200, 200);
   z.add(new Zone("Child", 0, 0, 100, 100));
   SMT.add(z);

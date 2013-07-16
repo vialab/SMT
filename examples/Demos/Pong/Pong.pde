@@ -50,7 +50,7 @@ void setup() {
   for (int i=0; i<NUM_BALLS; i++) {
     balls.add(new Ball());
   }
-  SMT.init(this, TouchSource.MOUSE);
+  SMT.init(this, TouchSource.MULTIPLE);
   for (int i = 0; i < NUM_ZONES; i++) {
     zone[i] = new reflectZone("Paddle",(i%2)*(displayWidth-450)+200, 400, 50, 300, (i%2==0)? new PVector(1.0, 0):new PVector(-1.0, 0.0));
     SMT.add(zone[i]);
