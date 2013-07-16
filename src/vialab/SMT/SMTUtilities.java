@@ -42,6 +42,7 @@ public final class SMTUtilities {
 	public static final TuioTimeComparator tuioTimeComparator = new TuioTimeComparator();
 	static Set<String> methodSet = new HashSet<String>();
 	static Set<String> prefixSet = new HashSet<String>();
+	private static HashSet<Method> invokeList = new HashSet<Method>();
 
 	/**
 	 * Don't let anyone instantiate this class.
@@ -398,7 +399,11 @@ public final class SMTUtilities {
 	 */
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
 		if (method != null) {
-			if (SMT.debug) {
+			//we only want to print debug messages once for each method
+			//so as to not print multiple identical messages per second
+			boolean first = !invokeList.contains(method);
+			invokeList.add(method);
+			if (SMT.debug && first) {
 				System.out.println("Invoking Method:" + method.toString());
 			}
 			Object[] removeFromFront = parameters.clone();
@@ -409,10 +414,10 @@ public final class SMTUtilities {
 			for (int i = 0; i < parameters.length + 1; i++) {
 				// invoke with parameters removed from the front
 				try {
-					if (SMT.debug) {
-						System.out.print("In Papplet with params: ");
+					if (SMT.debug && first) {
+						System.out.print("Checking for method in Papplet with params: ");
 						for (Object o : removeFromFront) {
-							System.out.print(o.toString());
+							System.out.print(o.getClass().getName() + " ");
 						}
 						System.out.println();
 					}
@@ -423,10 +428,10 @@ public final class SMTUtilities {
 					if (((Zone) parameters[0]).getBoundObject() != null) {
 						Object o = ((Zone) parameters[0]).getBoundObject();
 						try {
-							if (SMT.debug) {
-								System.out.print(o.toString() + " with params: ");
+							if (SMT.debug && first) {
+								System.out.print("Checking for method in " + o.getClass().getName() + " with params: ");
 								for (Object o2 : removeFromFront) {
-									System.out.print(o2.toString());
+									System.out.print(o2.getClass().getName() + " ");
 								}
 								System.out.println();
 							}
@@ -434,7 +439,7 @@ public final class SMTUtilities {
 						}
 						catch (Exception e) {}
 					}
-					else if (SMT.debug) {
+					else if (SMT.debug && first) {
 						System.out.println("There was no object bound to the Zone: "
 								+ parameters[0].toString());
 					}
@@ -442,10 +447,10 @@ public final class SMTUtilities {
 
 				// invoke with parameters removed from the back
 				try {
-					if (SMT.debug) {
-						System.out.print("In Papplet with params: ");
-						for (Object o : removeFromFront) {
-							System.out.print(o.toString());
+					if (SMT.debug && first) {
+						System.out.print("Checking for method in Papplet with params: ");
+						for (Object o : removeFromBack) {
+							System.out.print(o.getClass().getName() + " ");
 						}
 						System.out.println();
 					}
@@ -456,10 +461,10 @@ public final class SMTUtilities {
 					if (((Zone) parameters[0]).getBoundObject() != null) {
 						Object o = ((Zone) parameters[0]).getBoundObject();
 						try {
-							if (SMT.debug) {
-								System.out.print(o.toString() + " with params: ");
+							if (SMT.debug && first) {
+								System.out.print("Checking for method in " + o.getClass().getName() + " with params: ");
 								for (Object o2 : removeFromBack) {
-									System.out.print(o2.toString());
+									System.out.print(o2.getClass().getName() + " ");
 								}
 								System.out.println();
 							}
@@ -467,7 +472,7 @@ public final class SMTUtilities {
 						}
 						catch (Exception e) {}
 					}
-					else if (SMT.debug) {
+					else if (SMT.debug && first) {
 						System.out.println("There was no object bound to the Zone: "
 								+ parameters[0].toString());
 					}
