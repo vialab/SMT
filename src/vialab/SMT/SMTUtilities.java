@@ -67,7 +67,7 @@ public final class SMTUtilities {
 						continue;
 					}
 					if (m != null) {
-						if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
+						if (SMT.debug) {
 							System.out.println(c.toString() + m.toString());
 						}
 						return m;
@@ -398,7 +398,7 @@ public final class SMTUtilities {
 	 */
 	static Object invoke(Method method, PApplet parent, Object... parameters) {
 		if (method != null) {
-			if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
+			if (SMT.debug) {
 				System.out.println("Method:" + method.toString());
 			}
 			Object[] removeFromFront = parameters.clone();

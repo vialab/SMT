@@ -145,7 +145,7 @@ class SMTZonePicker {
 		else {
 			// only show error in debug mode, since it is much to prevalent
 			// still to always show
-			if (SMT.drawTouchPoints == TouchDraw.DEBUG) {
+			if (SMT.debug) {
 				// not mapped means a bug in the pickDrawn colors, or maybe that
 				// BG_PICK_COLOR or a Zone got unmapped when it should'nt have
 				System.err

@@ -157,6 +157,8 @@ public class SMT {
 	static int mainListenerPort;
 
 	protected static boolean inShutdown = false;
+	
+	public static boolean debug = false;
 
 	/**
 	 * Prevent SMT instantiation with protected constructor
@@ -324,7 +326,9 @@ public class SMT {
 		c.addTuioListener(listener);
 		tuioClientList.add(c);
 
-		System.out.println("TuioClient listening on port: " + port);
+		if(debug){
+			System.out.println("TuioClient listening on port: " + port);
+		}
 		mainListenerPort = port;
 
 		switch (source) {
@@ -384,7 +388,9 @@ public class SMT {
 					c2.connect();
 				}
 				c2.addTuioListener(new SMTProxyTuioListener(port, listener));
-				System.out.println("TuioClient listening on port: " + port);
+				if(debug){
+					System.out.println("TuioClient listening on port: " + port);
+				}
 				if (System.getProperty("os.arch").equals("x86")) {
 					SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
 					deviceMap.put(port, TouchSource.WM_TOUCH);
@@ -402,7 +408,9 @@ public class SMT {
 					c3.connect();
 				}
 				c3.addTuioListener(new SMTProxyTuioListener(port, listener));
-				System.out.println("TuioClient listening on port: " + port);
+				if(debug){
+					System.out.println("TuioClient listening on port: " + port);
+				}
 				SMT.runLeapTuioServer(port);
 				deviceMap.put(port, TouchSource.LEAP);
 
@@ -414,7 +422,9 @@ public class SMT {
 					c4.connect();
 				}
 				c4.addTuioListener(new SMTProxyTuioListener(port, listener));
-				System.out.println("TuioClient listening on port: " + port);
+				if(debug){
+					System.out.println("TuioClient listening on port: " + port);
+				}
 
 				// this still uses the old method, should be re-implemented
 				// without
@@ -1359,10 +1369,10 @@ public class SMT {
 						tuioServerInList.add(tuioServerIn);
 
 						while (true) {
-							if (tuioServerErr.ready()) {
+							if (tuioServerErr.ready() && debug) {
 								System.err.println("WM_TOUCH: " + tuioServerErr.readLine());
 							}
-							if (tuioServerOut.ready()) {
+							if (tuioServerOut.ready() && debug) {
 								System.out.println("WM_TOUCH: " + tuioServerOut.readLine());
 							}
 
@@ -1467,10 +1477,10 @@ public class SMT {
 						tuioServerInList.add(tuioServerIn);
 
 						while (true) {
-							if (tuioServerErr.ready()) {
+							if (tuioServerErr.ready() && debug) {
 								System.err.println("SMART: " + tuioServerErr.readLine());
 							}
-							if (tuioServerOut.ready()) {
+							if (tuioServerOut.ready() && debug) {
 								System.out.println("SMART: " + tuioServerOut.readLine());
 							}
 
@@ -1566,10 +1576,10 @@ public class SMT {
 						tuioServerInList.add(tuioServerIn);
 
 						while (true) {
-							if (tuioServerErr.ready()) {
+							if (tuioServerErr.ready() && debug) {
 								System.err.println("LEAP: " + tuioServerErr.readLine());
 							}
-							if (tuioServerOut.ready()) {
+							if (tuioServerOut.ready() && debug) {
 								System.out.println("LEAP: " + tuioServerOut.readLine());
 							}
 
@@ -1628,10 +1638,10 @@ public class SMT {
 						tuioServerInList.add(tuioServerIn);
 
 						while (true) {
-							if (tuioServerErr.ready()) {
+							if (tuioServerErr.ready() && debug) {
 								System.err.println(path + ": " + tuioServerErr.readLine());
 							}
-							if (tuioServerOut.ready()) {
+							if (tuioServerOut.ready() && debug) {
 								System.out.println(path + ": " + tuioServerOut.readLine());
 							}
 							Thread.sleep(1000);
