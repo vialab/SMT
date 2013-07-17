@@ -1300,6 +1300,110 @@ public class SMT {
 			}
 		}
 	}
+	
+	/**
+	 * @return A temp file directory with a unique name
+	 * @throws IOException
+	 */
+	private static File tempDir() throws IOException{
+		File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
+	
+		if (!(temp.delete())) {
+			throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
+		}
+	
+		if (!(temp.mkdir())) {
+			throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
+		}
+		
+		return temp;
+	}
+	
+	/**
+	 * @param dir The directory to load the resource into
+	 * @param resource A string containing the name a program in SMT's resources folder
+	 * @return A file written into dir
+	 * @throws IOException
+	 */
+	private static File loadFile(File dir, String resource) throws IOException{
+		BufferedInputStream src = new BufferedInputStream(
+				SMT.class.getResourceAsStream("/resources/"+resource));
+		final File exeTempFile = new File(dir.getAbsolutePath() + "\\"+resource);
+		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
+		byte[] tempexe = new byte[4 * 1024];
+		int rc;
+		while ((rc = src.read(tempexe)) > 0) {
+			out.write(tempexe, 0, rc);
+		}
+		src.close();
+		out.close();
+		exeTempFile.deleteOnExit();
+		return exeTempFile;
+	}
+	
+	/**
+	 * This class encapsulates all the logic for running a seperate process in a thread
+	 * It is used by runWinTouchTuioServer(), runSMart2TuioServer(), and runLeapTuioServer()
+	 * To avoid duplicated code. It puts labels on output and allows specifying a error message
+	 * for premature shutdown condition.
+	 */
+	private static class TouchSourceThread extends Thread{
+		String label;
+		String execArg;
+		String prematureShutdownError;
+		
+		TouchSourceThread(String label, String execArg, String prematureShutdownError){
+			this.label=label;
+			this.execArg=execArg;
+			this.prematureShutdownError=prematureShutdownError;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				Process tuioServer = Runtime.getRuntime().exec(execArg);
+				BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
+						tuioServer.getErrorStream()));
+				BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
+						tuioServer.getInputStream()));
+				BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
+						tuioServer.getOutputStream()));
+
+				tuioServerList.add(tuioServer);
+				tuioServerErrList.add(tuioServerErr);
+				tuioServerOutList.add(tuioServerOut);
+				tuioServerInList.add(tuioServerIn);
+
+				while (true) {
+					if (tuioServerErr.ready() && debug) {
+						System.err.println(label + ": " + tuioServerErr.readLine());
+					}
+					if (tuioServerOut.ready() && debug) {
+						System.out.println(label + ": " + tuioServerOut.readLine());
+					}
+
+					try {
+						tuioServer.exitValue();
+						if(!SMT.inShutdown){
+							System.err
+									.println(prematureShutdownError);
+							break;
+						}
+					}
+					catch (IllegalThreadStateException e) {
+						// still running... sleep time
+						Thread.sleep(100);
+					}
+				}
+			}
+			catch (IOException e) {
+				System.err.println(e.getMessage());
+			}
+			catch (Exception e) {
+				System.err.println(label + " TUIO Server stopped!");
+			}
+		}
+	}
 
 	/**
 	 * Runs a server that sends TUIO events using Windows 7 Touch events
@@ -1309,207 +1413,29 @@ public class SMT {
 	 */
 	private static void runWinTouchTuioServer(boolean is64Bit, final String address, final int port) {
 		try {
-			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
+			File temp = tempDir();
+			
+			loadFile(temp, is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
 
-			if (!(temp.delete())) {
-				throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
-			}
-
-			if (!(temp.mkdir())) {
-				throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
-			}
-			BufferedInputStream src = new BufferedInputStream(
-					SMT.class.getResourceAsStream(is64Bit ? "/resources/Touch2Tuio_x64.exe"
-							: "/resources/Touch2Tuio.exe"));
-			final File exeTempFile = new File(is64Bit ? temp.getAbsolutePath()
-					+ "\\Touch2Tuio_x64.exe" : temp.getAbsolutePath() + "\\Touch2Tuio.exe");
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
-			byte[] tempexe = new byte[4 * 1024];
-			int rc;
-			while ((rc = src.read(tempexe)) > 0) {
-				out.write(tempexe, 0, rc);
-			}
-			src.close();
-			out.close();
-			exeTempFile.deleteOnExit();
-
-			BufferedInputStream dllsrc = new BufferedInputStream(
-					SMT.class.getResourceAsStream(is64Bit ? "/resources/TouchHook_x64.dll"
-							: "/resources/TouchHook.dll"));
-			final File dllTempFile = new File(is64Bit ? temp.getAbsolutePath()
-					+ "\\TouchHook_x64.dll" : temp.getAbsolutePath() + "\\TouchHook.dll");
-			BufferedOutputStream outdll = new BufferedOutputStream(
-					new FileOutputStream(dllTempFile));
-			byte[] tempdll = new byte[4 * 1024];
-			int rcdll;
-			while ((rcdll = dllsrc.read(tempdll)) > 0) {
-				outdll.write(tempdll, 0, rcdll);
-			}
-			dllsrc.close();
-			outdll.close();
-			dllTempFile.deleteOnExit();
-
-			Thread serverThread = new Thread() {
-				@Override
-				public void run() {
-					try {
-						Process tuioServer = Runtime.getRuntime().exec(
-								exeTempFile.getAbsolutePath() + " " + parent.frame.getTitle() + " "
-										+ address + " " + port);
-						BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
-								tuioServer.getErrorStream()));
-						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
-								tuioServer.getInputStream()));
-						BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
-								tuioServer.getOutputStream()));
-
-						tuioServerList.add(tuioServer);
-						tuioServerErrList.add(tuioServerErr);
-						tuioServerOutList.add(tuioServerOut);
-						tuioServerInList.add(tuioServerIn);
-
-						while (true) {
-							if (tuioServerErr.ready() && debug) {
-								System.err.println("WM_TOUCH: " + tuioServerErr.readLine());
-							}
-							if (tuioServerOut.ready() && debug) {
-								System.out.println("WM_TOUCH: " + tuioServerOut.readLine());
-							}
-
-							try {
-								tuioServer.exitValue();
-								if(!SMT.inShutdown){
-									System.err
-											.println("WM_TOUCH Process died, is Visual C++ Redistributable for Visual Studio 2012 installed?");
-									break;
-								}
-							}
-							catch (IllegalThreadStateException e) {
-								// still running... sleep time
-								Thread.sleep(100);
-							}
-						}
-					}
-					catch (IOException e) {
-						System.err.println(e.getMessage());
-					}
-					catch (Exception e) {
-						System.err.println("TUIO Server stopped!");
-					}
-				}
-			};
-			serverThread.start();
+			new TouchSourceThread("WM_TOUCH", loadFile(temp, is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe").getAbsolutePath() + " " + parent.frame.getTitle() + " "
+										+ address + " " + port, "WM_TOUCH Process died, is Visual C++ Redistributable for Visual Studio 2012 installed?").start();
 		}
-		catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	private static void runSmart2TuioServer() {
 		try {
-			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
+			File temp = tempDir();
+			
+			loadFile(temp, "SMARTTableSDK.Core.dll");
+			loadFile(temp, "libTUIO.dll");
 
-			if (!(temp.delete())) {
-				throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
-			}
-
-			if (!(temp.mkdir())) {
-				throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
-			}
-			BufferedInputStream src = new BufferedInputStream(
-					SMT.class.getResourceAsStream("/resources/SMARTtoTUIO2.exe"));
-			final File exeTempFile = new File(temp.getAbsolutePath() + "\\SMARTtoTUIO2.exe");
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
-			byte[] tempexe = new byte[4 * 1024];
-			int rc;
-			while ((rc = src.read(tempexe)) > 0) {
-				out.write(tempexe, 0, rc);
-			}
-			src.close();
-			out.close();
-			exeTempFile.deleteOnExit();
-
-			BufferedInputStream sdksrc = new BufferedInputStream(
-					SMT.class.getResourceAsStream("/resources/SMARTTableSDK.Core.dll"));
-			final File sdkTempFile = new File(temp.getAbsolutePath() + "\\SMARTTableSDK.Core.dll");
-			BufferedOutputStream outsdk = new BufferedOutputStream(
-					new FileOutputStream(sdkTempFile));
-			byte[] tempsdk = new byte[4 * 1024];
-			int rcsdk;
-			while ((rcsdk = sdksrc.read(tempsdk)) > 0) {
-				outsdk.write(tempsdk, 0, rcsdk);
-			}
-			sdksrc.close();
-			outsdk.close();
-			sdkTempFile.deleteOnExit();
-
-			BufferedInputStream tuiosrc = new BufferedInputStream(
-					SMT.class.getResourceAsStream("/resources/libTUIO.dll"));
-			final File tuioTempFile = new File(temp.getAbsolutePath() + "\\libTUIO.dll");
-			BufferedOutputStream outtuio = new BufferedOutputStream(new FileOutputStream(
-					tuioTempFile));
-			byte[] tempdll = new byte[4 * 1024];
-			int rctuio;
-			while ((rctuio = tuiosrc.read(tempdll)) > 0) {
-				outtuio.write(tempdll, 0, rctuio);
-			}
-			tuiosrc.close();
-			outtuio.close();
-			tuioTempFile.deleteOnExit();
-
-			Thread serverThread = new Thread() {
-				@Override
-				public void run() {
-					try {
-						Process tuioServer = Runtime.getRuntime().exec(
-								exeTempFile.getAbsolutePath());
-						BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
-								tuioServer.getErrorStream()));
-						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
-								tuioServer.getInputStream()));
-						BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
-								tuioServer.getOutputStream()));
-
-						tuioServerList.add(tuioServer);
-						tuioServerErrList.add(tuioServerErr);
-						tuioServerOutList.add(tuioServerOut);
-						tuioServerInList.add(tuioServerIn);
-
-						while (true) {
-							if (tuioServerErr.ready() && debug) {
-								System.err.println("SMART: " + tuioServerErr.readLine());
-							}
-							if (tuioServerOut.ready() && debug) {
-								System.out.println("SMART: " + tuioServerOut.readLine());
-							}
-
-							try {
-								tuioServer.exitValue();
-								if(!SMT.inShutdown){
-									System.err.println("SMART Process died");
-									break;
-								}
-							}
-							catch (IllegalThreadStateException e) {
-								// still running... sleep time
-								Thread.sleep(1000);
-							}
-						}
-					}
-					catch (IOException e) {
-						System.err.println(e.getMessage());
-					}
-					catch (Exception e) {
-						System.err.println("SMARTtoTUIO2.exe Server stopped!");
-					}
-				}
-			};
-			serverThread.start();
+			new TouchSourceThread("SMART", loadFile(temp, "SMARTtoTUIO2.exe").getAbsolutePath(), "SMART Process died").start();								
 		}
-		catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1521,95 +1447,14 @@ public class SMT {
 	 */
 	private static void runLeapTuioServer(final int port) {
 		try {
-			File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
+			File temp = tempDir();
+			
+			loadFile(temp, "Leap.dll");
 
-			if (!(temp.delete())) {
-				throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
-			}
-
-			if (!(temp.mkdir())) {
-				throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
-			}
-			BufferedInputStream src = new BufferedInputStream(
-					SMT.class.getResourceAsStream("/resources/motionLess.exe"));
-			final File exeTempFile = new File(temp.getAbsolutePath() + "\\motionLess.exe");
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
-			byte[] tempexe = new byte[4 * 1024];
-			int rc;
-			while ((rc = src.read(tempexe)) > 0) {
-				out.write(tempexe, 0, rc);
-			}
-			src.close();
-			out.close();
-			exeTempFile.deleteOnExit();
-
-			BufferedInputStream dllsrc = new BufferedInputStream(
-					SMT.class.getResourceAsStream("/resources/Leap.dll"));
-			final File dllTempFile = new File(temp.getAbsolutePath() + "\\Leap.dll");
-			BufferedOutputStream outdll = new BufferedOutputStream(
-					new FileOutputStream(dllTempFile));
-			byte[] tempdll = new byte[4 * 1024];
-			int rcdll;
-			while ((rcdll = dllsrc.read(tempdll)) > 0) {
-				outdll.write(tempdll, 0, rcdll);
-			}
-			dllsrc.close();
-			outdll.close();
-			dllTempFile.deleteOnExit();
-
-			Thread serverThread = new Thread() {
-				@Override
-				public void run() {
-					try {
-						Process tuioServer = Runtime.getRuntime().exec(
-								exeTempFile.getAbsolutePath() + " " + port);
-						BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
-								tuioServer.getErrorStream()));
-						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
-								tuioServer.getInputStream()));
-						BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
-								tuioServer.getOutputStream()));
-
-						tuioServerList.add(tuioServer);
-						tuioServerErrList.add(tuioServerErr);
-						tuioServerOutList.add(tuioServerOut);
-						tuioServerInList.add(tuioServerIn);
-
-						while (true) {
-							if (tuioServerErr.ready() && debug) {
-								System.err.println("LEAP: " + tuioServerErr.readLine());
-							}
-							if (tuioServerOut.ready() && debug) {
-								System.out.println("LEAP: " + tuioServerOut.readLine());
-							}
-
-							try {
-								tuioServer.exitValue();
-								if(!SMT.inShutdown){
-									System.err
-											.println("LEAP Process died, is Visual C++ 2010 Redistributable (x86) installed?");
-									break;
-								}
-							}
-							catch (IllegalThreadStateException e) {
-								// still running... sleep time
-								Thread.sleep(1000);
-							}
-						}
-					}
-					catch (IOException e) {
-						System.err.println(e.getMessage());
-					}
-					catch (Exception e) {
-						System.err.println("TUIO Server stopped!");
-					}
-				}
-			};
-			serverThread.start();
+			new TouchSourceThread("LEAP", loadFile(temp, "motionLess.exe").getAbsolutePath() + " " + port, "LEAP Process died, is Visual C++ 2010 Redistributable (x86) installed?").start();
 		}
-		catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
