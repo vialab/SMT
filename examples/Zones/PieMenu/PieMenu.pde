@@ -52,7 +52,7 @@ void touchUpForward(){println("Forward");}
 void touchUpSubmenu(){println("Submenu");}
 void touchUpAdd(){println("Add");SMT.get("PieMenu",PieMenuZone.class).add("Remove Self");}
 void touchUpViewSource(){println("View Source");}
-void touchUpRemoveSelf(){println("Remove Self");SMT.remove("PieMenu");}
+void touchUpRemoveSelf(Zone z){println("Remove Self");SMT.get("PieMenu").remove(z);}
 void touchUpPieMenu(PieMenuZone m){
   println("Selected: "+m.getSelectedName());
 }

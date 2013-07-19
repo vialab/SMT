@@ -203,7 +203,7 @@ public class TextZone extends Zone {
 			currentWordZone.word += "    ";
 		}
 		else if (c == '\n') {
-			this.currentWordZone = new WordZone(0, currentWordZone.y
+			this.currentWordZone = new WordZone(5, currentWordZone.y
 					+ (int) (fontSize * (20.0 / 16.0)), 0, (int) (fontSize * (20.0 / 16.0)));
 		}
 		else {

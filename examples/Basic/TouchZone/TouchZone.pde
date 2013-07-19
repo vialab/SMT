@@ -31,5 +31,5 @@ void drawMyZone(Zone z){
 // Executes when "myZone" is touched
 void touchMyZone(Zone z){ 
    // Check out the gesture example for RST 
-   z.rst;  
+   z.rst();  
 }

@@ -22,12 +22,10 @@ public class PatternUnlockZone extends Zone {
 
 		protected void touchImpl() {
 			unassignAll();
-			if (!accepted) {
-				if (!touched) {
-					code.add(index);
-				}
-				touched = true;
+			if (!touched) {
+				code.add(index);
 			}
+			touched = true;
 		}
 
 		protected void drawImpl() {
@@ -36,15 +34,6 @@ public class PatternUnlockZone extends Zone {
 			if (touched) {
 				fill(0, 255, 0);
 				ellipse(width / 2, height / 2, width / 2, height / 2);
-			}
-		}
-
-		protected void touchUpImpl(Touch t) {
-			if (!accepted) {
-				code.clear();
-				for (int i = 0; i < 9; i++) {
-					pattern[i].touched = false;
-				}
 			}
 		}
 	}
@@ -86,10 +75,24 @@ public class PatternUnlockZone extends Zone {
 		fill(0);
 		textAlign(RIGHT);
 		text(pass, width, height);
-		if (pass.length() >= 5) {
-			if ((pass.equals(passcode) || pass.equals(new StringBuilder(passcode).reverse().toString())) && !accepted) {
-				System.out.println("passcode accepted");
-				accepted = true;
+		if ((pass.equals(passcode) || pass.equals(new StringBuilder(passcode).reverse().toString()))) {
+			if(SMT.debug){
+				System.out.println("passcode accepted for "+ name);
+			}
+			accepted = true;
+		}
+		
+		boolean currentlyTouched = false;		
+		for(Touch t : SMT.getUnassignedTouches()){
+			if(contains(t.x,t.y)){
+				currentlyTouched = true;
+			}
+		}
+
+		if (!currentlyTouched) {
+			code.clear();
+			for (int i = 0; i < 9; i++) {
+				pattern[i].touched = false;
 			}
 		}
 	}

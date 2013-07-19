@@ -79,6 +79,20 @@ import TUIO.*;
  * @version 1.0
  */
 public class SMT {
+	
+	private static class MainZone extends Zone{
+		MainZone(int x, int y, int w, int h){
+			super(x, y, w, h);
+		}
+		
+		protected void drawImpl() {
+		}
+
+		protected void touchImpl() {
+		}
+	}
+	
+	static Zone sketch;
 
 	static float box2dScale = 0.1f;
 
@@ -90,17 +104,12 @@ public class SMT {
 
 	/** Processing PApplet */
 	protected static PApplet parent;
-	
-	public static PGraphics sketch;
 
 	/** Gesture Handler */
 	// private static GestureHandler handler;
 
 	/** Tuio Client that listens for Tuio Messages via port 3333 UDP */
 	protected static LinkedList<TuioClient> tuioClientList = new LinkedList<TuioClient>();
-
-	/** The main zone list */
-	protected static CopyOnWriteArrayList<Zone> zoneList = new CopyOnWriteArrayList<Zone>();
 
 	/** Flag for drawing touch points */
 	private static TouchDraw drawTouchPoints = TouchDraw.SMOOTH;
@@ -297,7 +306,7 @@ public class SMT {
 
 		SMT.parent = parent;
 		
-		SMT.sketch = parent.g;
+		SMT.sketch = new MainZone(0,0,parent.width,parent.height);
 
 		addMethodClasses(extraClasses);
 
@@ -535,7 +544,16 @@ public class SMT {
 	 * @return zoneList
 	 */
 	public static Zone[] getZones() {
-		return zoneList.toArray(new Zone[zoneList.size()]);
+		return getDescendents(sketch).toArray(new Zone[0]);
+	}
+
+	private static List<Zone> getDescendents(Zone parent) {
+		ArrayList<Zone> descendents = new ArrayList<Zone>();
+		for(Zone child : parent.getChildren()){
+			descendents.add(child);
+			descendents.addAll(getDescendents(child));
+		}
+		return descendents;
 	}
 
 	/**
@@ -698,37 +716,33 @@ public class SMT {
 	 */
 	public static void add(Zone... zones) {
 		for (Zone zone : zones) {
-			if (zone != null) {
-				// Zone is being added at top level, make sure its parent is set
-				// to null, so that we draw it at SMT level
-				// the zone will set parent afterwards when adding anyways, so
-				// we should always do this to make sure we dont have issues
-				// when a zone has not been removed from its parent (and so
-				// parent!=null), and so is not drawn after being added to
-				// SMT
-				zone.parent = null;
-
-				addToZoneList(zone);
-				picker.add(zone);
-
-				// make sure the matrix is up to date, these calls should not
-				// occur if we do not call begin/endTouch once per
-				// frame and once at Zone initialization
-				zone.endTouch();
-				zone.beginTouch();
-			}
-			else {
-				System.err.println("Error: Added a null Zone");
+			//no-op if the zone is already a child of the root Zone, or if the
+			//zone is the root zone (to prevent parenting to itself)
+			if(!SMT.sketch.children.contains(zone) && SMT.sketch != zone){
+				if (zone != null) {
+					if(zone.parent == null){
+						zone.parent = SMT.sketch;
+						addToZoneList(zone);
+					}
+					
+					picker.add(zone);
+	
+					// make sure the matrix is up to date, these calls should not
+					// occur if we do not call begin/endTouch once per
+					// frame and once at Zone initialization
+					zone.endTouch();
+					zone.beginTouch();
+				}
+				else {
+					System.err.println("Error: Added a null Zone");
+				}
 			}
 		}
 	}
 
 	private static void addToZoneList(Zone zone) {
-		if (!zoneList.contains(zone)) {
-			zoneList.add(zone);
-		}
-		for (Zone child : zone.children) {
-			addToZoneList(child);
+		if (!sketch.children.contains(zone)) {
+			sketch.children.add(zone);
 		}
 	}
 
@@ -949,15 +963,19 @@ public class SMT {
 	public static boolean remove(Zone... zones) {
 		boolean r = true;
 		for (Zone zone : zones) {
-			if (zone != null) {
-				picker.remove(zone);
-				if (!removeFromZoneList(zone)) {
-					r = false;
+			//no-op if the zone is not a child of the root Zone
+			if(SMT.sketch.children.contains(zone)){
+				if (zone != null) {
+					zone.parent=null;
+					picker.remove(zone);
+					if (!removeFromZoneList(zone)) {
+						r = false;
+					}
 				}
-			}
-			else {
-				r = false;
-				System.err.println("Error: Removed a null Zone");
+				else {
+					r = false;
+					System.err.println("Error: Removed a null Zone");
+				}
 			}
 		}
 		return r;
@@ -980,7 +998,7 @@ public class SMT {
 			zone.zoneFixture = null;
 			zone.mJoint = null;
 		}
-		return zoneList.remove(zone);
+		return sketch.children.remove(zone);
 	}
 
 	/**
@@ -990,18 +1008,8 @@ public class SMT {
 	 * the matrix, and when at the end of the list, it draws the touch points.
 	 */
 	public static void draw() {
-		ArrayList<Zone> toDraw = new ArrayList<Zone>();
-		for (Zone zone : zoneList) {
-			if (zone.getParent() == null) {
-				toDraw.add(zone);
-			}
-		}
-		// first extract order of all Zones to be drawn, then actually draw
-		// them, so that re-parenting, etc can occur in a draw, and we do not
-		// get ConcurrentModificationException
-		for (Zone zone : toDraw) {
-			zone.draw();
-		}
+		sketch.draw();
+		
 		switch (drawTouchPoints) {
 		case DEBUG:
 			drawDebugTouchPoints();
@@ -1012,9 +1020,6 @@ public class SMT {
 		case NONE:
 			break;
 		}
-
-		// PApplet.println(parent.color((float) 0));
-		// PApplet.println(parent.get(100, 100));
 	}
 
 	/**
@@ -1049,13 +1054,13 @@ public class SMT {
 	 *         to zones
 	 */
 	public static Touch[] getUnassignedTouches() {
-		Map<Long, Touch> touches = getTouchMap();
-		for (Zone zone : zoneList) {
-			for (Touch touch : zone.getTouches()) {
-				touches.remove(touch.sessionID);
+		List<Touch> touches = new ArrayList<Touch>();
+		for (Touch touch : getTouches()) {
+			if(!touch.isAssigned()){
+				touches.add(touch);
 			}
 		}
-		return touches.values().toArray(new Touch[touches.size()]);
+		return touches.toArray(new Touch[touches.size()]);
 	}
 
 	/**
@@ -1064,7 +1069,7 @@ public class SMT {
 	 */
 	public static Touch[] getAssignedTouches() {
 		List<Touch> touches = new ArrayList<Touch>();
-		for (Zone zone : zoneList) {
+		for (Zone zone : getZones()) {
 			for (Touch touch : zone.getTouches()) {
 				touches.add(touch);
 			}
@@ -1131,7 +1136,7 @@ public class SMT {
 	 */
 	public static Zone[] getActiveZones() {
 		ArrayList<Zone> zones = new ArrayList<Zone>();
-		for (Zone zone : zoneList) {
+		for (Zone zone : getZones()) {
 			if (zone.isActive()) {
 				zones.add(zone);
 			}
@@ -1250,15 +1255,8 @@ public class SMT {
 		if (getTouches().length > 0) {
 			SMTUtilities.invoke(touch, parent);
 		}
-		for (Zone zone : zoneList) {
-			if (zone.getParent() != null) {
-				// the parent should handle the touch calling
-				continue;
-			}
-			if (zone.isChildActive()) {
-				zone.touch();
-			}
-		}
+		
+		sketch.touch();
 
 		updateStep();
 
@@ -1271,7 +1269,7 @@ public class SMT {
 	 * after of each Zone to keep the matrix and bodies synchronized
 	 */
 	private static void updateStep() {
-		for (Zone z : zoneList) {
+		for (Zone z : getZones()) {
 			if (z.physics) {
 				// generate body and fixture for zone if they do not exist
 				if (z.zoneBody == null && z.zoneFixture == null) {
@@ -1294,7 +1292,7 @@ public class SMT {
 
 		world.step(1f / parent.frameRate, 8, 3);
 
-		for (Zone z : zoneList) {
+		for (Zone z : sketch.children) {
 			if (z.physics) {
 				z.setMatrixFromBody();
 			}
@@ -1511,13 +1509,7 @@ public class SMT {
 	 *            The zone to place on top of the others
 	 */
 	public static void putZoneOnTop(Zone zone) {
-		if (zoneList.indexOf(zone) < zoneList.size() - 1) {
-			if (zone.getParent() != null) {
-				zone.getParent().putChildOnTop(zone);
-			}
-			zoneList.remove(zone);
-			zoneList.add(zone);
-		}
+		sketch.putChildOnTop(zone);
 	}
 
 	/**
@@ -1536,7 +1528,7 @@ public class SMT {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Zone> T get(String name, Class<T> type) {
-		for (Zone z : zoneList) {
+		for (Zone z : getZones()) {
 			if (z.name != null && z.name.equals(name)) {
 				return (T) z;
 			}

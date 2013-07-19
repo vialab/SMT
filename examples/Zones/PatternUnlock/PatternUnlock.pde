@@ -1,7 +1,7 @@
 /**
  *  This shows the use of the PatternUnlockZone, designed similar
  *  to android's unlock screen. It doesn't currently work well,
- *  but will print passcode accepted when the S-gesture is entered
+ *  but will change the background color when the S-gesture is entered
  *  Layout:
  *  0 1 2
  *  3 4 5
@@ -16,5 +16,10 @@ void setup() {
   SMT.add(new PatternUnlockZone(100,100,200,200));
 }
 void draw() {
-  background(79, 129, 189);
+  if(SMT.get("PatternUnlockZone",PatternUnlockZone.class).accepted){
+    background(0, 255, 0);
+  }
+  else{
+    background(79, 129, 189);
+  }
 }

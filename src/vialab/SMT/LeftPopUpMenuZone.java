@@ -63,5 +63,8 @@ public class LeftPopUpMenuZone extends Zone {
 			fill(125);
 			rect(0, 0, width, height);
 		}
+
+		protected void touchImpl() {
+		}
 	}
 }

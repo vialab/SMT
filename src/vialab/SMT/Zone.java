@@ -431,7 +431,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				|| SMTUtilities.checkImpl(Zone.class, "touchUp", this.getClass(), Touch.class)
 				|| SMTUtilities.checkImpl(Zone.class, "touchMoved", this.getClass(), Touch.class);
 
-		press = SMTUtilities.checkImpl(Zone.class, "press", this.getClass());
+		press = SMTUtilities.checkImpl(Zone.class, "press", this.getClass(), Touch.class);
 
 		if (name != null) {
 			drawMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "draw", name, warnDraw,
@@ -456,7 +456,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 					warnTouchUDM, this.getClass(), Touch.class);
 
 			pressMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "press", name, warnPress,
-					this.getClass());
+					this.getClass(), Touch.class);
 
 			if (touchUpMethod != null || touchDownMethod != null || touchMovedMethod != null
 					|| touchUDM || press || pressMethod != null) {
@@ -794,19 +794,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return Whether the zone was successfully added or not
 	 */
 	public boolean add(Zone zone) {
-		if (zone != null) {
-			// make sure children immediately get parents current matrix, these
-			// calls should not occur if we do not call begin/endTouch once per
-			// frame and once at Zone initialization
-			this.endTouch();
-			this.beginTouch();
-
-			// if the parent already is in the client zoneList, then add the
-			// child if it is not in the client zoneList
-			if (SMT.zoneList.contains(this) && !SMT.zoneList.contains(zone)) {
-				SMT.add(zone);
-			}
+		if (zone != null && zone != this) {
 			zone.parent = this;
+			
+			SMT.add(zone);
+			
 			if (!children.contains(zone)) {
 				return children.add(zone);
 			}
@@ -823,13 +815,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return Whether the zone was successfully removed or not
 	 */
 	public boolean remove(Zone child) {
-		if (child != null) {
-			// if the parent is in the client zoneList, then remove the child
-			// from
-			// the zoneList, but only if it is in children
-			if (SMT.zoneList.contains(this) && this.children.contains(child)) {
-				SMT.remove(child);
-			}
+		if (child != null && child != this) {
+			SMT.remove(child);
 			child.parent = null;
 			return children.remove(child);
 		}
@@ -844,9 +831,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public void clearZones() {
 		for (Zone zone : children) {
-			zone.parent = null;
+			this.remove(zone);
 		}
-		children.clear();
 	}
 
 	/**
@@ -1776,11 +1762,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void drawChild(Zone child, PGraphics pg, boolean picking) {
-		// only draw/pickDraw when the child is in zonelist (parent zone's are
-		// responsible for adding/removing child to/from zonelist)
-		if (SMT.zoneList.contains(child)) {
-			child.draw(true, picking);
-		}
+		child.draw(true, picking);
 	}
 
 	/**

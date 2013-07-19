@@ -161,18 +161,9 @@ class SMTZonePicker {
 		// make sure colorMode is correct for the pickBuffer
 		applet.g.colorMode(PConstants.RGB, 255);
 		applet.g.background(BG_PICK_COLOR, 255);
-		ArrayList<Zone> toDraw = new ArrayList<Zone>();
-		for (Zone zone : SMT.zoneList) {
-			if (zone.getParent() == null) {
-				toDraw.add(zone);
-			}
-		}
-		// first extract order of all Zones to be drawn, then actually draw
-		// them, so that re-parenting, etc can occur in a draw, and we do not
-		// get ConcurrentModificationException
-		for (Zone zone : toDraw) {
-			zone.drawForPickBuffer();
-		}
+		
+		SMT.sketch.drawForPickBuffer();
+		
 		applet.g.flush();
 		
 		// force fallback until 2.0b10
