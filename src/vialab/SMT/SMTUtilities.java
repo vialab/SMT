@@ -1,9 +1,9 @@
 package vialab.SMT;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
@@ -43,6 +43,25 @@ public final class SMTUtilities {
 	static Set<String> methodSet = new HashSet<String>();
 	static Set<String> prefixSet = new HashSet<String>();
 	private static HashSet<Method> invokeList = new HashSet<Method>();
+	
+	static HashMap<String,Method> methodMap = new HashMap<String,Method>();
+	
+	/**
+	 * This scans all classes in the parent and SMT.extraClassList and puts the found methods into methodMap indexed by their name suffixed with parameters
+	 */
+	public static void loadMethods(Class<?> c){
+		for (Method m : c.getMethods()){
+			methodMap.put(nameParamToString(m.getName(),m.getParameterTypes()),m);
+		}
+	}
+
+	private static String nameParamToString(String name, Class<?>... params) {
+		String s = "";
+		for(Class<?> c : params){
+			s+=","+c.getSimpleName();
+		}
+		return name+s;
+	}
 
 	/**
 	 * Don't let anyone instantiate this class.
@@ -51,33 +70,7 @@ public final class SMTUtilities {
 	}
 
 	static Method getPMethod(PApplet parent, String methodName, Class<?>... parameterTypes) {
-		try {
-			return parent.getClass().getMethod(methodName, parameterTypes);
-		}
-		catch (NoSuchMethodException e) {
-			Method m = null;
-			if (!SMT.extraClassList.isEmpty()) {
-				for (Class<?> c : SMT.extraClassList) {
-					try {
-						m = c.getMethod(methodName, parameterTypes);
-					}
-					catch (NoSuchMethodException e1) {
-						continue;
-					}
-					catch (SecurityException e1) {
-						continue;
-					}
-					if (m != null) {
-						if (SMT.debug) {
-							System.out.println(c.toString() + m.toString());
-						}
-						return m;
-					}
-				}
-			}
-		}
-		catch (SecurityException e) {}
-		return null;
+		return methodMap.get(nameParamToString(methodName,parameterTypes));
 	}
 
 	static Method getPMethod(PApplet parent, String methodPrefix, String methodSuffix,
@@ -216,27 +209,22 @@ public final class SMTUtilities {
 				}
 				System.err.print(")");
 				System.err.print(", using default "+methodPrefix+" method");
-				ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
-				classes.add(parent.getClass());
-				classes.addAll(SMT.extraClassList);
-				for(Class<?> c : classes){
-					for(Method m : c.getDeclaredMethods()){
-						if(m.getName().equalsIgnoreCase(methodPrefix+name)){
-							System.err.print(", method found named "+m.getName()+"(");
-							boolean first2 = true;
-							for(Class<?> c2 : m.getParameterTypes()){
-								if(first2){
-									first2 = false;
-								}
-								else{
-									System.err.print(", ");
-								}
-								System.err.print(c2.getName());
+				for(Method m : methodMap.values()){
+					if(m.getName().equalsIgnoreCase(methodPrefix+name)){
+						System.err.print(", method found named "+m.getName()+"(");
+						boolean first2 = true;
+						for(Class<?> c2 : m.getParameterTypes()){
+							if(first2){
+								first2 = false;
 							}
-							System.err.print(")");
-							System.err.print(" in the class "+c.getName()+", which did not have correct capitalization or parameters");
-							break;
+							else{
+								System.err.print(", ");
+							}
+							System.err.print(c2.getName());
 						}
+						System.err.print(")");
+						System.err.print(" which did not have correct capitalization or parameters");
+						break;
 					}
 				}
 				System.err.println();

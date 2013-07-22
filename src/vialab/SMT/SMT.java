@@ -43,7 +43,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -61,7 +60,6 @@ import org.xml.sax.SAXException;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
-import processing.core.PGraphics;
 import processing.core.PImage;
 
 //import android.view.*;
@@ -155,8 +153,6 @@ public class SMT {
 	protected static LinkedList<BufferedWriter> tuioServerInList = new LinkedList<BufferedWriter>();
 
 	static Body groundBody;
-
-	protected static ArrayList<Class<?>> extraClassList = new ArrayList<Class<?>>();
 
 	static boolean fastPicking = true;
 
@@ -305,6 +301,8 @@ public class SMT {
 		touch = SMTUtilities.getPMethod(parent, "touch");
 
 		SMT.parent = parent;
+		
+		SMTUtilities.loadMethods(parent.getClass());
 		
 		SMT.sketch = new MainZone(0,0,parent.width,parent.height);
 
@@ -1556,8 +1554,8 @@ public class SMT {
 	 *            The additional objects to check in for methods
 	 */
 	public static void addMethodClasses(Class<?>... classes) {
-		for (Class<?> extraClass : classes) {
-			extraClassList.add(extraClass);
+		for (Class<?> c : classes) {
+			SMTUtilities.loadMethods(c);
 		}
 	}
 }
