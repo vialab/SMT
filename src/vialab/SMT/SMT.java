@@ -306,8 +306,6 @@ public class SMT {
 		
 		SMT.sketch = new MainZone(0,0,parent.width,parent.height);
 
-		addMethodClasses(extraClasses);
-
 		// set Zone.applet so that it is consistently set at this time, not
 		// after a zone is constructed
 		Zone.applet = parent;
