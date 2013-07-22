@@ -285,6 +285,10 @@ public class SMT {
 					.println("Null parent PApplet, pass 'this' to SMT.init() instead of null");
 			return;
 		}
+		
+		SMT.parent = parent;
+		
+		SMTUtilities.loadMethods(parent.getClass());
 
 		// As of now the toolkit only supports OpenGL
 		if (!parent.g.isGL()) {
@@ -299,10 +303,6 @@ public class SMT {
 		}
 
 		touch = SMTUtilities.getPMethod(parent, "touch");
-
-		SMT.parent = parent;
-		
-		SMTUtilities.loadMethods(parent.getClass());
 		
 		SMT.sketch = new MainZone(0,0,parent.width,parent.height);
 
