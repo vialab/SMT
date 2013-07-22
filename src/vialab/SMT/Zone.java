@@ -794,19 +794,47 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return Whether the zone was successfully added or not
 	 */
 	public boolean add(Zone zone) {
-		if (zone != null && zone != this) {
-			zone.parent = this;
-			
-			SMT.add(zone);
-			
-			if (!children.contains(zone)) {
-				return children.add(zone);
+		if (zone != null) {
+			if(zone != this && !isAncestor(zone)){
+				zone.removeFromParent();
+				zone.parent = this;
+				
+				SMT.add(zone);
+				
+				if (!children.contains(zone)) {
+					return children.add(zone);
+				}
+			}
+			else {
+				System.err.println("Error: Added a Zone to itself or an ancestor");
 			}
 		}
 		else {
 			System.err.println("Error: Added a null Zone");
 		}
 		return false;
+	}
+	/**
+	 * @param zone
+	 * @return Whether the given zone is an ancestor of this one.
+	 */
+	public boolean isAncestor(Zone zone) {
+		Zone ancestor = zone;
+		while((ancestor = ancestor.getParent()) != null){
+			if(ancestor == zone){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Removes this zone from its parent
+	 */
+	public void removeFromParent() {
+		if(parent != null){
+			parent.remove(this);
+		}
 	}
 
 	/**
@@ -815,10 +843,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return Whether the zone was successfully removed or not
 	 */
 	public boolean remove(Zone child) {
-		if (child != null && child != this) {
-			SMT.remove(child);
-			child.parent = null;
-			return children.remove(child);
+		if (child != null){
+			if(children.contains(child)) {
+				SMT.remove(child);
+				child.parent = null;
+				return children.remove(child);
+			}
+			else{
+				System.err.println("Error: Removed a Zone that was not a child");
+			}
 		}
 		else {
 			System.err.println("Error: Removed a null Zone");
