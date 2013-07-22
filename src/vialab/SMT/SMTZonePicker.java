@@ -1,6 +1,5 @@
 package vialab.SMT;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -166,9 +165,9 @@ class SMTZonePicker {
 		
 		applet.g.flush();
 		
-		// force fallback until 2.0b10
-		// really slow way(max 70 fps on a high end card vs 200+ fps with
-		// readPixels), with loadPixels at the end of renderPickBuffer()
+		// If fast picking disabled, use loadPixels() which is
+		// really slow (max 70 fps on a high end card vs 200+ fps with
+		// readPixels) as a backup
 		PGL pgl = applet.g.beginPGL();
 		if (!SMT.fastPicking || pgl == null) {
 			applet.g.loadPixels();

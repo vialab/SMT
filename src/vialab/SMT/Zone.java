@@ -353,7 +353,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 		if (applet == null) {
 			System.err
-					.println("Error: Instantiation of Zone before TouchClient.init(). Expect serious issues if you see this message.");
+					.println("Error: Instantiation of Zone before SMT.init(). Expect serious issues if you see this message.");
 		}
 
 		this.renderer = renderer;
