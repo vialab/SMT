@@ -48,7 +48,6 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import processing.core.PMatrix2D;
 import processing.core.PMatrix3D;
 import processing.core.PVector;
 import processing.event.KeyEvent;
@@ -718,7 +717,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void beginPickDraw() {
 		// update with changes from zonePG
-		matrix.preApply(new PMatrix3D(zonePG.getMatrix()));
+		matrix.preApply((PMatrix3D) (zonePG.getMatrix()));
 		zonePG.popMatrix();
 		zonePG.pushMatrix();
 

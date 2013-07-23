@@ -373,7 +373,7 @@ public final class SMTUtilities {
 	public static Object invoke(Method method, Zone zone) {
 		return SMTUtilities.invoke(method, Zone.applet, zone);
 	}
-
+	
 	/**
 	 * This tries every different way we know to invoke the method, although we
 	 * should just store the needed info when we get the method
@@ -385,92 +385,57 @@ public final class SMTUtilities {
 	 *         will be null, the opposite is not true, as the return of an
 	 *         invoked method can be null also
 	 */
-	static Object invoke(Method method, PApplet parent, Object... parameters) {
+	static Object invoke(Method method, PApplet parent, Zone zone, Object... parameters) {
 		if (method != null) {
-			//we only want to print debug messages once for each method
-			//so as to not print multiple identical messages per second
 			boolean first = !invokeList.contains(method);
 			invokeList.add(method);
 			if (SMT.debug && first) {
 				System.out.println("Invoking Method:" + method.toString());
 			}
-			Object[] removeFromFront = parameters.clone();
-			Object[] removeFromBack = parameters.clone();
-			// try to invoke the method many times, with parameters removed from
-			// the front and back separately
-			// one of these should return
-			for (int i = 0; i < parameters.length + 1; i++) {
-				// invoke with parameters removed from the front
+			
+			Object[] parametersZone = new Object[parameters.length +1];
+			parametersZone[0] = zone;
+			System.arraycopy(parameters, 0, parametersZone, 1, parameters.length);
+			
+			Object[] paramSubset = new Object[method.getParameterTypes().length];
+			
+			for(int i=0; i<paramSubset.length; i++){
+				Object param = null;
+				for(int k=0; k<parametersZone.length; k++){
+					if(parametersZone[k] != null && method.getParameterTypes()[i].isAssignableFrom(parametersZone[k].getClass())){
+						param = parametersZone[k];
+						//only allow one match per param
+						parametersZone[k] = null;
+						break;
+					}
+				}
+				if(param == null){
+					if(SMT.debug && first){
+						System.err.println("No matching parameter for class " + method.getParameterTypes()[i]);
+					}
+					return null;
+				}
+				paramSubset[i]=param;
+			}
+			
+			if (zone != null && zone.getBoundObject() != null) {
 				try {
-					if (SMT.debug && first) {
-						System.out.print("Checking for method in Papplet with params: ");
-						for (Object o : removeFromFront) {
-							System.out.print(o.getClass().getName() + " ");
-						}
-						System.out.println();
-					}
-					return method.invoke(parent, removeFromFront);
+					return method.invoke(zone.getBoundObject(), paramSubset);
 				}
-				catch (Exception e) {}
-				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass())) {
-					if (((Zone) parameters[0]).getBoundObject() != null) {
-						Object o = ((Zone) parameters[0]).getBoundObject();
-						try {
-							if (SMT.debug && first) {
-								System.out.print("Checking for method in " + o.getClass().getName() + " with params: ");
-								for (Object o2 : removeFromFront) {
-									System.out.print(o2.getClass().getName() + " ");
-								}
-								System.out.println();
-							}
-							return method.invoke(o, removeFromFront);
-						}
-						catch (Exception e) {}
-					}
-					else if (SMT.debug && first) {
-						System.out.println("There was no object bound to the Zone: "
-								+ parameters[0].toString());
+				catch (Exception e) {
+					if(SMT.debug && first){
+						e.printStackTrace();
 					}
 				}
-
-				// invoke with parameters removed from the back
+			}
+			else{
 				try {
-					if (SMT.debug && first) {
-						System.out.print("Checking for method in Papplet with params: ");
-						for (Object o : removeFromBack) {
-							System.out.print(o.getClass().getName() + " ");
-						}
-						System.out.println();
-					}
-					return method.invoke(parent, removeFromBack);
+					return method.invoke(parent, paramSubset);
 				}
-				catch (Exception e) {}
-				if (parameters.length > 0 && Zone.class.isAssignableFrom(parameters[0].getClass())) {
-					if (((Zone) parameters[0]).getBoundObject() != null) {
-						Object o = ((Zone) parameters[0]).getBoundObject();
-						try {
-							if (SMT.debug && first) {
-								System.out.print("Checking for method in " + o.getClass().getName() + " with params: ");
-								for (Object o2 : removeFromBack) {
-									System.out.print(o2.getClass().getName() + " ");
-								}
-								System.out.println();
-							}
-							return method.invoke(o, removeFromBack);
-						}
-						catch (Exception e) {}
+				catch (Exception e) {
+					if(SMT.debug){
+						e.printStackTrace();
 					}
-					else if (SMT.debug && first) {
-						System.out.println("There was no object bound to the Zone: "
-								+ parameters[0].toString());
-					}
-				}
-
-				if (removeFromFront.length > 0 && removeFromBack.length > 0) {
-					removeFromFront = new Object[removeFromFront.length - 1];
-					System.arraycopy(parameters, 1 + i, removeFromFront, 0, removeFromFront.length);
-					removeFromBack = new Object[removeFromBack.length - 1];
-					System.arraycopy(parameters, 0, removeFromBack, 0, removeFromBack.length);
 				}
 			}
 		}

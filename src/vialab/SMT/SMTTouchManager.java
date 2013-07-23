@@ -52,7 +52,7 @@ class SMTTouchManager {
 		for (Touch t : currentTouchState) {
 			// touchDowns only happen on new touches
 			if (!previousTouchState.contains(t.sessionID)) {
-				SMTUtilities.invoke(touchDown, applet, t);
+				SMTUtilities.invoke(touchDown, applet, null, t);
 				Zone z = picker.pick(t);
 				touchPrevZone.put(t, z);
 				doTouchDown(z, t);
@@ -67,7 +67,7 @@ class SMTTouchManager {
 		for (Touch t : previousTouchState) {
 			if (!currentTouchState.contains(t.sessionID)) {
 				// the touch existed, but no longer exists, so it went up
-				SMTUtilities.invoke(touchUp, applet, t);
+				SMTUtilities.invoke(touchUp, applet, null, t);
 				for (Zone zone : t.getAssignedZones()) {
 					doTouchUp(zone, t);
 					if (touchPrevZone.get(t) == zone) {
@@ -86,7 +86,7 @@ class SMTTouchManager {
 	protected void handleTouchesMoved() {
 		for (Touch t : currentTouchState) {
 			if (previousTouchState.contains(t.sessionID)) {
-				SMTUtilities.invoke(touchMoved, applet, t);
+				SMTUtilities.invoke(touchMoved, applet, null, t);
 				Zone z = null;
 				if (!t.isAssigned()) {
 					z = picker.pick(t);

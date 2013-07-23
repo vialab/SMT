@@ -1249,7 +1249,7 @@ public class SMT {
 
 		parent.g.flush();
 		if (getTouches().length > 0) {
-			SMTUtilities.invoke(touch, parent);
+			SMTUtilities.invoke(touch, parent, null);
 		}
 		
 		sketch.touch();
