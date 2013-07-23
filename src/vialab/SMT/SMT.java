@@ -1412,7 +1412,7 @@ public class SMT {
 			loadFile(temp, is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
 
 			new TouchSourceThread("WM_TOUCH", loadFile(temp, is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe").getAbsolutePath() + " " + parent.frame.getTitle() + " "
-										+ address + " " + port, "WM_TOUCH Process died, is Visual C++ Redistributable for Visual Studio 2012 installed?").start();
+										+ address + " " + port, "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679)").start();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -1445,7 +1445,7 @@ public class SMT {
 			
 			loadFile(temp, "Leap.dll");
 
-			new TouchSourceThread("LEAP", loadFile(temp, "motionLess.exe").getAbsolutePath() + " " + port, "LEAP Process died, is Visual C++ 2010 Redistributable (x86) installed?").start();
+			new TouchSourceThread("LEAP", loadFile(temp, "motionLess.exe").getAbsolutePath() + " " + port, "LEAP Process died early, make sure Visual C++ 2010 Redistributable (x86) is installed (http://www.microsoft.com/en-ca/download/details.aspx?id=5555)").start();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
