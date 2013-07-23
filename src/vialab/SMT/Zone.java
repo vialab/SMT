@@ -48,6 +48,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.core.PMatrix2D;
 import processing.core.PMatrix3D;
 import processing.core.PVector;
 import processing.event.KeyEvent;
@@ -253,6 +254,22 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public void setDirect(boolean direct) {
 		this.direct = direct;
+		if(direct){
+			this.vertices = null;
+			this.tessGeo = null;
+			this.texCache = null;
+			this.inGeo = null;
+			this.textBuffer = null;
+			this.textWidthBuffer = null;
+		}
+		else{
+			this.vertices = new float[512][VERTEX_FIELD_COUNT];
+			this.tessGeo = newTessGeometry(IMMEDIATE);
+			this.texCache = newTexCache();
+			this.inGeo = newInGeometry(IMMEDIATE);
+			this.textBuffer = new char[8 * 1024];
+			this.textWidthBuffer = new char[8 * 1024];
+		}
 	}
 
 	/**
@@ -349,6 +366,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
 
+		setDirect(direct);
+		
 		applet = SMT.parent;
 
 		if (applet == null) {
@@ -485,8 +504,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			zonePG.popMatrix();
 		}
 
+		setSize(width, height);
+		
 		// pgraphics for the zone
-		zonePG = (PGraphicsOpenGL) applet.createGraphics(width, height, OPENGL);
+		zonePG = this;
 		// pgraphics for drawing
 		drawPG = zonePG;
 		// pgraphics that all methods call be default
@@ -494,7 +515,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 		// push and clear the matrix to [re]start the matrix loading cycle
 		zonePG.pushMatrix();
-		zonePG.setMatrix(new PMatrix3D());
+		//zonePG.setMatrix(new PMatrix3D());
 	}
 
 	/**
@@ -700,7 +721,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		matrix.preApply(new PMatrix3D(zonePG.getMatrix()));
 		zonePG.popMatrix();
 		zonePG.pushMatrix();
-		zonePG.setMatrix(new PMatrix3D());
 
 		if (direct) {
 			if (getParent() == null) {
@@ -758,7 +778,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public void beginTouch() {
 		zonePG.pushMatrix();
-		zonePG.setMatrix(new PMatrix3D());
 	}
 
 	/**
@@ -771,7 +790,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur after touch commands
 	 */
 	public void endTouch() {
-		matrix.preApply(new PMatrix3D(zonePG.getMatrix()));
+		matrix.preApply((PMatrix3D) zonePG.getMatrix());
 		zonePG.popMatrix();
 	}
 
@@ -956,22 +975,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				this.matrix.preApply(getParent().matrix);
 			}
 		}
-	}
-
-	/**
-	 * This recreates the zone's PGraphics with a new size
-	 * 
-	 * @param w
-	 *            The new width of the zone
-	 * @param h
-	 *            The new height of the zone
-	 */
-	@Override
-	public void setSize(int w, int h) {
-		this.width = w;
-		this.height = h;
-		init();
-		resetMatrix();
 	}
 
 	/**
