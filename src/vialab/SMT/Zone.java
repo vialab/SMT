@@ -258,16 +258,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			this.tessGeo = null;
 			this.texCache = null;
 			this.inGeo = null;
-			this.textBuffer = null;
-			this.textWidthBuffer = null;
 		}
 		else{
 			this.vertices = new float[512][VERTEX_FIELD_COUNT];
 			this.tessGeo = newTessGeometry(IMMEDIATE);
 			this.texCache = newTexCache();
 			this.inGeo = newInGeometry(IMMEDIATE);
-			this.textBuffer = new char[8 * 1024];
-			this.textWidthBuffer = new char[8 * 1024];
 		}
 	}
 
@@ -694,7 +690,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			background(0, 0, 0, 0);
 		}
 		pg.pushStyle();
-		noLights();
 	}
 
 	/**

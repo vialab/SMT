@@ -221,6 +221,7 @@ public class TextZone extends Zone {
 			}
 		}
 		pushStyle();
+		textFont(font);
 		textSize(fontSize);
 		currentWordZone.width = (int) Math.ceil(textWidth(currentWordZone.word));
 		popStyle();
