@@ -296,12 +296,6 @@ public class SMT {
 					.println("SMT only supports using OpenGL 3D renderers, please use either OPENGL, P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
 		}
 
-		if (System.getProperty("os.name").equals("Mac OS X")) {
-			SMT.fastPicking = false;
-			System.out
-					.println("Defaulting to slow picking on OS X, if calling SMT.setFastPicking(true); after SMT.init() increases performance and doesn't cause bugs, please contact SMT's developers.");
-		}
-
 		touch = SMTUtilities.getPMethod(parent, "touch");
 		
 		SMT.sketch = new MainZone(0,0,parent.width,parent.height);

@@ -3,6 +3,7 @@ package vialab.SMT;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import processing.core.PApplet;
+import processing.core.PGraphics;
 
 class SMTTouchManager {
 	private PApplet applet;
@@ -32,6 +33,10 @@ class SMTTouchManager {
 	 * them.
 	 */
 	public void handleTouches() {
+		PGraphics temp = applet.g;
+		applet.g = picker.pg;
+		applet.g.beginDraw();
+		
 		picker.renderPickBuffer();
 
 		previousTouchState = new TouchState(currentTouchState);
@@ -43,6 +48,9 @@ class SMTTouchManager {
 		handleTouchesDown();
 		handleTouchesUp();
 		handleTouchesMoved();
+		
+		applet.g.endDraw();
+		applet.g = temp;
 	}
 
 	/**
