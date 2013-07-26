@@ -385,40 +385,45 @@ public class SMT {
 				// covered already by c
 				deviceMap.put(port, TouchSource.TUIO_DEVICE);
 
-				// WM_TOUCH:
-				TuioClient c2 = new TuioClient(++port);
-				c2.connect();
-				while (!c2.isConnected()) {
-					c2 = new TuioClient(++port);
+				if(System.getProperty("os.name").startsWith("Windows")){
+					// WM_TOUCH:
+					TuioClient c2 = new TuioClient(++port);
 					c2.connect();
-				}
-				c2.addTuioListener(new SMTProxyTuioListener(port, listener));
-				if(debug){
-					System.out.println("TuioClient listening on port: " + port);
-				}
-				if (System.getProperty("os.arch").equals("x86")) {
-					SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
-					deviceMap.put(port, TouchSource.WM_TOUCH);
-				}
-				else {
-					SMT.runWinTouchTuioServer(true, "127.0.0.1", port);
-					deviceMap.put(port, TouchSource.WM_TOUCH);
-				}
-
-				// LEAP:
-				TuioClient c3 = new TuioClient(++port);
-				c3.connect();
-				while (!c3.isConnected()) {
-					c3 = new TuioClient(++port);
+					while (!c2.isConnected()) {
+						c2 = new TuioClient(++port);
+						c2.connect();
+					}
+					c2.addTuioListener(new SMTProxyTuioListener(port, listener));
+					if(debug){
+						System.out.println("TuioClient listening on port: " + port);
+					}
+					if (System.getProperty("os.arch").equals("x86")) {
+						SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
+						deviceMap.put(port, TouchSource.WM_TOUCH);
+					}
+					else {
+						SMT.runWinTouchTuioServer(true, "127.0.0.1", port);
+						deviceMap.put(port, TouchSource.WM_TOUCH);
+					}
+	
+					// LEAP:
+					TuioClient c3 = new TuioClient(++port);
 					c3.connect();
+					while (!c3.isConnected()) {
+						c3 = new TuioClient(++port);
+						c3.connect();
+					}
+					c3.addTuioListener(new SMTProxyTuioListener(port, listener));
+					if(debug){
+						System.out.println("TuioClient listening on port: " + port);
+					}
+					SMT.runLeapTuioServer(port);
+					deviceMap.put(port, TouchSource.LEAP);
+					
+					tuioClientList.add(c2);
+					tuioClientList.add(c3);
 				}
-				c3.addTuioListener(new SMTProxyTuioListener(port, listener));
-				if(debug){
-					System.out.println("TuioClient listening on port: " + port);
-				}
-				SMT.runLeapTuioServer(port);
-				deviceMap.put(port, TouchSource.LEAP);
-
+				
 				// MOUSE:
 				TuioClient c4 = new TuioClient(++port);
 				c4.connect();
@@ -438,8 +443,6 @@ public class SMT {
 				deviceMap.put(port, TouchSource.MOUSE);
 				parent.registerMethod("mouseEvent", mtt);
 
-				tuioClientList.add(c2);
-				tuioClientList.add(c3);
 				tuioClientList.add(c4);
 			}
 			break;
