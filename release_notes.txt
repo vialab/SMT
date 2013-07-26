@@ -1,3 +1,23 @@
+SMTv3.7 Release Notes
+_____________________
+
+	API Additions:
+		-Added SMT.debug to toggle debug messages
+		-Added ImageZone constructor that takes a URL
+		-Allow partial matching for methods to allow numerical suffixes
+		-Added default draw/touch methods, so that new Zones don't start as invisible and non-interactive
+		
+	API Changes:
+		-TouchClient renamed to SMT, although TouchClient still exists as an alias
+		
+	Bug Fixes:
+		-OS X no longer has intermittent flashing on the screen, and by default uses the faster picking mode
+		-Windows executables no longer try to run on non-windows systems
+		-Greatly reduced memory usage (x15)
+		-Greatly reduced start up time per Zone (20ms per Zone)
+		-Fixed drag(), hSwipe(), etc when zone is rotated, and to use the original offset instead of relative movement
+
+
 SMTv3.6.1 Release Notes
 _____________________
 

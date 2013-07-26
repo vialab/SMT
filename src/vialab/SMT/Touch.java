@@ -6,7 +6,6 @@ import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import processing.core.PApplet;
-import processing.core.PVector;
 import TUIO.*;
 
 /**

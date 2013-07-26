@@ -7,7 +7,7 @@ It has online
 
 --------------------------------------------
 
-Version 3.6.1
+Version 3.7
 
 Research Website: http://vialab.science.uoit.ca/portfolio/smt-toolkit
 
