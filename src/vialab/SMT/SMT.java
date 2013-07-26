@@ -1377,12 +1377,14 @@ public class SMT {
 					}
 
 					try {
-						tuioServer.exitValue();
-						if(!SMT.inShutdown){
-							System.err
-									.println(prematureShutdownError);
-							break;
+						int r = tuioServer.exitValue();
+						if(SMT.debug){
+							System.out.println(label + " return value=" + r);
 						}
+						if(!SMT.inShutdown){
+							System.err.println(prematureShutdownError);
+						}
+						break;
 					}
 					catch (IllegalThreadStateException e) {
 						// still running... sleep time
@@ -1412,7 +1414,7 @@ public class SMT {
 			loadFile(temp, is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
 
 			new TouchSourceThread("WM_TOUCH", loadFile(temp, is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe").getAbsolutePath() + " " + parent.frame.getTitle() + " "
-										+ address + " " + port, "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679)").start();
+										+ address + " " + port, "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting you computer.").start();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
