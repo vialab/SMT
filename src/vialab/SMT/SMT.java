@@ -1297,17 +1297,9 @@ public class SMT {
 	 * @return A temp file directory with a unique name
 	 * @throws IOException
 	 */
-	private static File tempDir() throws IOException{
-		File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
-	
-		if (!(temp.delete())) {
-			throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
-		}
-	
-		if (!(temp.mkdir())) {
-			throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
-		}
-		
+	private static File tempDir(){
+		File temp = new File(System.getProperty("java.io.tmpdir") + "/SMT");
+		temp.mkdir();
 		temp.deleteOnExit();
 		return temp;
 	}
