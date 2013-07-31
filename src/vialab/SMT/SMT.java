@@ -81,6 +81,7 @@ public class SMT {
 	private static class MainZone extends Zone{
 		MainZone(int x, int y, int w, int h){
 			super(x, y, w, h);
+			this.setDirect(true);
 		}
 		
 		protected void drawImpl() {
@@ -1307,6 +1308,7 @@ public class SMT {
 			throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
 		}
 		
+		temp.deleteOnExit();
 		return temp;
 	}
 	
@@ -1411,7 +1413,7 @@ public class SMT {
 			loadFile(temp, is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
 
 			new TouchSourceThread("WM_TOUCH", loadFile(temp, is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe").getAbsolutePath() + " " + parent.frame.getTitle() + " "
-										+ address + " " + port, "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting you computer.").start();
+										+ address + " " + port, "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting your computer.").start();
 		}
 		catch (IOException e) {
 			e.printStackTrace();

@@ -140,8 +140,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * The direct flag controls whether rendering directly onto
 	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
 	 * drawing into an image we have assured size(can't draw outside of zone),
-	 * and background() will work for just the zone, but we lose a large amount
-	 * of performance.
+	 * but we lose a large amount of performance.
 	 */
 	protected boolean direct = !false; // don't use indirect rendering yet by
 										// default, still has sampling issues
@@ -252,19 +251,20 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            controls rendering directly onto screen/pickBuffer, or not
 	 */
 	public void setDirect(boolean direct) {
-		this.direct = direct;
 		if(direct){
 			this.vertices = null;
 			this.tessGeo = null;
 			this.texCache = null;
 			this.inGeo = null;
 		}
-		else{
+		else if(!this.direct){
+			//only reallocate if we are setting to indirect and we were not indirect already
 			this.vertices = new float[512][VERTEX_FIELD_COUNT];
 			this.tessGeo = newTessGeometry(IMMEDIATE);
 			this.texCache = newTexCache();
 			this.inGeo = newInGeometry(IMMEDIATE);
 		}
+		this.direct = direct;
 	}
 
 	/**
@@ -364,6 +364,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		setDirect(direct);
 		
 		applet = SMT.parent;
+		
+		setParent(applet);
 
 		if (applet == null) {
 			System.err
@@ -489,7 +491,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * This function [re]creates the PGraphics for the zone, for advanced use
 	 * only, override when something needs to be done when the PGraphics is
-	 * recreated, ie. during a zone resize
+	 * recreated
 	 */
 	protected void init() {
 		if (pg != null) {
@@ -715,21 +717,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		matrix.preApply((PMatrix3D) (zonePG.getMatrix()));
 		zonePG.popMatrix();
 		zonePG.pushMatrix();
-
-		if (direct) {
-			if (getParent() == null) {
-				drawPG = (PGraphicsOpenGL) applet.g;
-			}
-			else {
-				drawPG = getParent().drawPG;
-			}
-			pg = drawPG;
-			pg.pushMatrix();
-			pg.applyMatrix(matrix);
-		}
-		else {
-			super.beginDraw();
-		}
+		
+		drawPG = (PGraphicsOpenGL) applet.g;
+		pg = drawPG;
+		pg.pushMatrix();
+		pg.applyMatrix(matrix);
 		pg.pushStyle();
 
 		noLights();
@@ -751,12 +743,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void endPickDraw() {
 		pickDraw = false;
 
-		if (!direct) {
-			super.endDraw();
-		}
-		else {
-			pg.popMatrix();
-		}
+		pg.popMatrix();
 		pg.popStyle();
 		pg = zonePG;
 	}
@@ -1728,7 +1715,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		popStyle();
 		if (drawChildren) {
-			drawDirectChildren(pg, picking);
+			if(picking){
+				drawChildren(picking);
+			}else{
+				drawDirectChildren(picking);
+			}
 		}
 
 		applet.g = temp;
@@ -1739,59 +1730,60 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			endDraw();
 		}
-		if (!direct) {
-			drawIndirectImage(pg, drawChildren, picking);
-		}
-	}
-
-	protected void drawIndirectImage(PGraphics img, boolean drawChildren, boolean picking) {
-		if (img != null) {
-			img.flush();
-			applet.g.pushMatrix();
-			// apply parent matrices from farthest ancestor to parent
-			LinkedList<Zone> ancestors = new LinkedList<Zone>();
-			Zone parent = this.getParent();
-			while (parent != null) {
-				ancestors.addFirst(parent);
-				parent = parent.getParent();
+		//we only do direct drawing in pickdraw for performance and because the pickDraw is done on
+		//another framebuffer and only one can be active at a time, which would not allow indirect
+		//rendering without first prerendering the content.
+		if(!picking){
+			if (!direct) {
+				drawIndirectImage(picking);
 			}
-			for (Zone zone : ancestors) {
-				applet.g.applyMatrix(zone.matrix);
-			}
-			applet.g.applyMatrix(matrix);
-			applet.g.image(img.get(), 0, 0);
-			applet.g.popMatrix();
-
+			
 			if (drawChildren) {
-				drawIndirectChildren(applet.g, picking);
+				drawIndirectChildren(picking);
 			}
 		}
-
 	}
 
-	protected void drawDirectChildren(PGraphics pg, boolean picking) {
+	protected void drawIndirectImage(boolean picking) {
+		applet.g.pushMatrix();
+		// apply parent matrices from farthest ancestor to parent
+		LinkedList<Zone> ancestors = new LinkedList<Zone>();
+		Zone parent = this.getParent();
+		while (parent != null) {
+			ancestors.addFirst(parent);
+			parent = parent.getParent();
+		}
+		for (Zone zone : ancestors) {
+			applet.g.applyMatrix(zone.matrix);
+		}
+		applet.g.applyMatrix(matrix);
+		applet.g.image(this, 0, 0);
+		applet.g.popMatrix();
+	}
+
+	protected void drawDirectChildren(boolean picking) {
 		for (Zone child : children) {
 			if (child.direct) {
-				drawChild(child, pg, picking);
+				drawChild(child, picking);
 			}
 		}
 	}
 
-	protected void drawIndirectChildren(PGraphics g, boolean picking) {
+	protected void drawIndirectChildren(boolean picking) {
 		for (Zone child : children) {
 			if (!child.direct) {
-				drawChild(child, g, picking);
+				drawChild(child, picking);
 			}
 		}
 	}
 
-	protected void drawChildren(PGraphics g, boolean picking) {
+	protected void drawChildren(boolean picking) {
 		for (Zone child : children) {
-			drawChild(child, g, picking);
+			drawChild(child, picking);
 		}
 	}
 
-	protected void drawChild(Zone child, PGraphics pg, boolean picking) {
+	protected void drawChild(Zone child, boolean picking) {
 		child.draw(true, picking);
 	}
 
@@ -2438,126 +2430,126 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	@Override
 	public void fill(float arg0, float arg1, float arg2, float arg3) {
 		if (!pickDraw) {
-			pg.fill(arg0, arg1, arg2, arg3);
+			super.fill(arg0, arg1, arg2, arg3);
 		}
 	}
 
 	@Override
 	public void fill(float arg0, float arg1, float arg2) {
 		if (!pickDraw) {
-			pg.fill(arg0, arg1, arg2);
+			super.fill(arg0, arg1, arg2);
 		}
 	}
 
 	@Override
 	public void fill(float arg0, float arg1) {
 		if (!pickDraw) {
-			pg.fill(arg0, arg1);
+			super.fill(arg0, arg1);
 		}
 	}
 
 	@Override
 	public void fill(float arg0) {
 		if (!pickDraw) {
-			pg.fill(arg0);
+			super.fill(arg0);
 		}
 	}
 
 	@Override
 	public void fill(int arg0, float arg1) {
 		if (!pickDraw) {
-			pg.fill(arg0, arg1);
+			super.fill(arg0, arg1);
 		}
 	}
 
 	@Override
 	public void fill(int arg0) {
 		if (!pickDraw) {
-			pg.fill(arg0);
+			super.fill(arg0);
 		}
 	}
 
 	@Override
 	public void stroke(float arg0, float arg1, float arg2, float arg3) {
 		if (!pickDraw) {
-			pg.stroke(arg0, arg1, arg2, arg3);
+			super.stroke(arg0, arg1, arg2, arg3);
 		}
 	}
 
 	@Override
 	public void stroke(float arg0, float arg1, float arg2) {
 		if (!pickDraw) {
-			pg.stroke(arg0, arg1, arg2);
+			super.stroke(arg0, arg1, arg2);
 		}
 	}
 
 	@Override
 	public void stroke(float arg0, float arg1) {
 		if (!pickDraw) {
-			pg.stroke(arg0, arg1);
+			super.stroke(arg0, arg1);
 		}
 	}
 
 	@Override
 	public void stroke(float arg0) {
 		if (!pickDraw) {
-			pg.stroke(arg0);
+			super.stroke(arg0);
 		}
 	}
 
 	@Override
 	public void stroke(int arg0, float arg1) {
 		if (!pickDraw) {
-			pg.stroke(arg0, arg1);
+			super.stroke(arg0, arg1);
 		}
 	}
 
 	@Override
 	public void stroke(int arg0) {
 		if (!pickDraw) {
-			pg.stroke(arg0);
+			super.stroke(arg0);
 		}
 	}
 
 	@Override
 	public void tint(float arg0, float arg1, float arg2, float arg3) {
 		if (!pickDraw) {
-			pg.tint(arg0, arg1, arg2, arg3);
+			super.tint(arg0, arg1, arg2, arg3);
 		}
 	}
 
 	@Override
 	public void tint(float arg0, float arg1, float arg2) {
 		if (!pickDraw) {
-			pg.tint(arg0, arg1, arg2);
+			super.tint(arg0, arg1, arg2);
 		}
 	}
 
 	@Override
 	public void tint(float arg0, float arg1) {
 		if (!pickDraw) {
-			pg.tint(arg0, arg1);
+			super.tint(arg0, arg1);
 		}
 	}
 
 	@Override
 	public void tint(float arg0) {
 		if (!pickDraw) {
-			pg.tint(arg0);
+			super.tint(arg0);
 		}
 	}
 
 	@Override
 	public void tint(int arg0, float arg1) {
 		if (!pickDraw) {
-			pg.tint(arg0, arg1);
+			super.tint(arg0, arg1);
 		}
 	}
 
 	@Override
 	public void tint(int arg0) {
 		if (!pickDraw) {
-			pg.tint(arg0);
+			super.tint(arg0);
 		}
 	}
 
@@ -2698,12 +2690,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void background(float arg0, float arg1, float arg2, float arg3) {
 		if(direct){
 			pushStyle();
+			noStroke();
 			fill(arg0, arg1, arg2, arg3);
 			rect(0,0,width,height);
 			popStyle();
 		}
 		else{
-			pg.background(arg0, arg1, arg2, arg3);
+			super.background(arg0, arg1, arg2, arg3);
 		}
 	}
 
@@ -2711,12 +2704,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void background(float arg0, float arg1, float arg2) {
 		if(direct){
 			pushStyle();
+			noStroke();
 			fill(arg0, arg1, arg2);
 			rect(0,0,width,height);
 			popStyle();
 		}
 		else{
-			pg.background(arg0, arg1, arg2);
+			super.background(arg0, arg1, arg2);
 		}
 	}
 
@@ -2724,12 +2718,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void background(float arg0, float arg1) {
 		if(direct){
 			pushStyle();
+			noStroke();
 			fill(arg0, arg1);
 			rect(0,0,width,height);
 			popStyle();
 		}
 		else{
-			pg.background(arg0, arg1);
+			super.background(arg0, arg1);
 		}
 	}
 
@@ -2737,12 +2732,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void background(float arg0) {
 		if(direct){
 			pushStyle();
+			noStroke();
 			fill(arg0);
 			rect(0,0,width,height);
 			popStyle();
 		}
 		else{
-			pg.background(arg0);
+			super.background(arg0);
 		}
 	}
 
@@ -2750,12 +2746,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void background(int arg0, float arg1) {
 		if(direct){
 			pushStyle();
+			noStroke();
 			fill(arg0, arg1);
 			rect(0,0,width,height);
 			popStyle();
 		}
 		else{
-			pg.background(arg0, arg1);
+			super.background(arg0, arg1);
 		}
 	}
 
@@ -2763,12 +2760,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void background(int arg0) {
 		if(direct){
 			pushStyle();
+			noStroke();
 			fill(arg0);
 			rect(0,0,width,height);
 			popStyle();
 		}
 		else{
-			pg.background(arg0);
+			super.background(arg0);
 		}
 	}
 
@@ -2776,11 +2774,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void background(PImage arg0) {
 		if(direct){
 			pushStyle();
+			noStroke();
 			image(arg0,0,0,width,height);
 			popStyle();
 		}
 		else{
-			pg.background(arg0);
+			super.background(arg0);
 		}
 	}
 
