@@ -257,8 +257,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			this.texCache = null;
 			this.inGeo = null;
 		}
-		else if(!this.direct){
-			//only reallocate if we are setting to indirect and we were not indirect already
+		else if(this.direct){
+			//only reallocate if we are setting to indirect (past the if) and we were not indirect already (currently direct)
 			this.vertices = new float[512][VERTEX_FIELD_COUNT];
 			this.tessGeo = newTessGeometry(IMMEDIATE);
 			this.texCache = newTexCache();
@@ -718,10 +718,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		zonePG.popMatrix();
 		zonePG.pushMatrix();
 		
-		drawPG = (PGraphicsOpenGL) applet.g;
-		pg = drawPG;
-		pg.pushMatrix();
-		pg.applyMatrix(matrix);
+		if (direct) {
+			if (getParent() == null) {
+				drawPG = (PGraphicsOpenGL) applet.g;
+			}
+			else {
+				drawPG = getParent().drawPG;
+			}
+			pg = drawPG;
+			pg.pushMatrix();
+			pg.applyMatrix(matrix);
+		}
+		else {
+			super.beginDraw();
+		}
+
 		pg.pushStyle();
 
 		noLights();
@@ -742,8 +753,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void endPickDraw() {
 		pickDraw = false;
+		if (!direct) {
+			super.endDraw();
+		}
+		else {
+			pg.popMatrix();
+		}
 
-		pg.popMatrix();
 		pg.popStyle();
 		pg = zonePG;
 	}
