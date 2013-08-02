@@ -151,10 +151,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	
 	protected boolean drawImpl;
 
-	protected PGraphicsOpenGL drawPG;
-
-	protected PGraphicsOpenGL zonePG;
-
 	private boolean touchUDM;
 
 	MouseJoint mJoint;
@@ -258,7 +254,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			this.inGeo = null;
 		}
 		else if(this.direct){
-			//only reallocate if we are setting to indirect (past the if) and we were not indirect already (currently direct)
+			//only reallocate if we are setting to indirect (past the if) and are currently direct
 			this.vertices = new float[512][VERTEX_FIELD_COUNT];
 			this.tessGeo = newTessGeometry(IMMEDIATE);
 			this.texCache = newTexCache();
@@ -497,22 +493,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		if (pg != null) {
 			// save and pop the matrix to finish the matrix loading cycle for
 			// the current zonePG, as we are about to change it
-			matrix.preApply((PMatrix3D) zonePG.getMatrix());
-			zonePG.popMatrix();
+			matrix.preApply((PMatrix3D) getMatrix());
+			popMatrix();
 		}
 
 		setSize(width, height);
 		
-		// pgraphics for the zone
-		zonePG = this;
-		// pgraphics for drawing
-		drawPG = zonePG;
-		// pgraphics that all methods call be default
-		pg = zonePG;
+		// pgraphics that all methods call by default
+		pg = this;
 
 		// push and clear the matrix to [re]start the matrix loading cycle
-		zonePG.pushMatrix();
-		//zonePG.setMatrix(new PMatrix3D());
+		pushMatrix();
 	}
 
 	/**
@@ -677,17 +668,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	@Override
 	public void beginDraw() {
 		if (direct) {
-			if (getParent() == null) {
-				drawPG = (PGraphicsOpenGL) applet.g;
-			}
-			else {
-				drawPG = getParent().drawPG;
-			}
-			pg = drawPG;
+			pg = (PGraphicsOpenGL) applet.g;
 			pg.pushMatrix();
 			pg.applyMatrix(matrix);
 		}
 		else {
+			pg = this;
 			super.beginDraw();
 			background(0, 0, 0, 0);
 		}
@@ -699,14 +685,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	@Override
 	public void endDraw() {
-		if (!direct) {
-			super.endDraw();
-		}
-		else {
+		if (direct) {
 			pg.popMatrix();
 		}
+		else {
+			super.endDraw();
+		}
 		pg.popStyle();
-		pg = zonePG;
+		pg = this;
 	}
 
 	/**
@@ -714,25 +700,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void beginPickDraw() {
 		// update with changes from zonePG
-		matrix.preApply((PMatrix3D) (zonePG.getMatrix()));
-		zonePG.popMatrix();
-		zonePG.pushMatrix();
+		matrix.preApply((PMatrix3D) (getMatrix()));
+		popMatrix();
+		pushMatrix();
 		
-		if (direct) {
-			if (getParent() == null) {
-				drawPG = (PGraphicsOpenGL) applet.g;
-			}
-			else {
-				drawPG = getParent().drawPG;
-			}
-			pg = drawPG;
-			pg.pushMatrix();
-			pg.applyMatrix(matrix);
-		}
-		else {
-			super.beginDraw();
-		}
-
+		pg = (PGraphicsOpenGL) applet.g;
+		pg.pushMatrix();
+		pg.applyMatrix(matrix);
 		pg.pushStyle();
 
 		noLights();
@@ -753,15 +727,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void endPickDraw() {
 		pickDraw = false;
-		if (!direct) {
-			super.endDraw();
-		}
-		else {
-			pg.popMatrix();
-		}
-
+		
+		pg.popMatrix();
 		pg.popStyle();
-		pg = zonePG;
+		pg = this;
 	}
 
 	/**
@@ -774,7 +743,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur before touch commands
 	 */
 	public void beginTouch() {
-		zonePG.pushMatrix();
+		pushMatrix();
 	}
 
 	/**
@@ -787,8 +756,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur after touch commands
 	 */
 	public void endTouch() {
-		matrix.preApply((PMatrix3D) zonePG.getMatrix());
-		zonePG.popMatrix();
+		matrix.preApply((PMatrix3D) getMatrix());
+		popMatrix();
 	}
 
 	protected int getPickColor() {
@@ -1730,6 +1699,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			}
 		}
 		popStyle();
+		
+		if(picking){
+			//dont let children draw into parent when picking
+			applet.g = temp;
+		}
+		
 		if (drawChildren) {
 			if(picking){
 				drawChildren(picking);
@@ -1737,8 +1712,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				drawDirectChildren(picking);
 			}
 		}
-
-		applet.g = temp;
+		
+		if(!picking){
+			//make sure children draw into parent by not resetting applet.g 
+			//untill after children draw when not picking
+			applet.g = temp;
+		}
 
 		if (picking) {
 			endPickDraw();
@@ -1751,28 +1730,18 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		//rendering without first prerendering the content.
 		if(!picking){
 			if (!direct) {
-				drawIndirectImage(picking);
+				drawIndirectImage();
 			}
 			
 			if (drawChildren) {
-				drawIndirectChildren(picking);
+				drawIndirectChildren();
 			}
 		}
 	}
 
-	protected void drawIndirectImage(boolean picking) {
+	protected void drawIndirectImage() {
 		applet.g.pushMatrix();
-		// apply parent matrices from farthest ancestor to parent
-		LinkedList<Zone> ancestors = new LinkedList<Zone>();
-		Zone parent = this.getParent();
-		while (parent != null) {
-			ancestors.addFirst(parent);
-			parent = parent.getParent();
-		}
-		for (Zone zone : ancestors) {
-			applet.g.applyMatrix(zone.matrix);
-		}
-		applet.g.applyMatrix(matrix);
+		applet.g.applyMatrix(getGlobalMatrix());
 		applet.g.image(this, 0, 0);
 		applet.g.popMatrix();
 	}
@@ -1785,10 +1754,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	protected void drawIndirectChildren(boolean picking) {
+	protected void drawIndirectChildren() {
 		for (Zone child : children) {
 			if (!child.direct) {
-				drawChild(child, picking);
+				drawChild(child, false);
 			}
 		}
 	}

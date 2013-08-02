@@ -1286,7 +1286,7 @@ public class SMT {
 
 		world.step(1f / parent.frameRate, 8, 3);
 
-		for (Zone z : sketch.children) {
+		for (Zone z : getZones()) {
 			if (z.physics) {
 				z.setMatrixFromBody();
 			}
