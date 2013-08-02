@@ -142,8 +142,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * drawing into an image we have assured size(can't draw outside of zone),
 	 * but we lose a large amount of performance.
 	 */
-	protected boolean direct = !false; // don't use indirect rendering yet by
-										// default, still has sampling issues
+	protected boolean direct = true;
 
 	protected boolean touchImpl;
 
@@ -194,6 +193,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	private float offsetY;
 
 	private HashSet<Long> dragSeenTouch = new HashSet<Long>();
+
+	private PGraphicsOpenGL drawPG;
 
 	boolean warnDraw() {
 		return true;
@@ -252,13 +253,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			this.tessGeo = null;
 			this.texCache = null;
 			this.inGeo = null;
-		}
-		else if(this.direct){
-			//only reallocate if we are setting to indirect (past the if) and are currently direct
-			this.vertices = new float[512][VERTEX_FIELD_COUNT];
-			this.tessGeo = newTessGeometry(IMMEDIATE);
-			this.texCache = newTexCache();
-			this.inGeo = newInGeometry(IMMEDIATE);
+			drawPG = null;
+		}else{
+			drawPG = (PGraphicsOpenGL) applet.createGraphics(width, height, OPENGL);
 		}
 		this.direct = direct;
 	}
@@ -356,8 +353,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
-
-		setDirect(direct);
 		
 		applet = SMT.parent;
 		
@@ -376,8 +371,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		this.width = width;
 
 		this.rntRadius = Math.min(width, height) / 4;
-
-		// matrix.translate(x, y);
 
 		init();
 		resetMatrix();
@@ -501,6 +494,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		
 		// pgraphics that all methods call by default
 		pg = this;
+		
+		setDirect(direct);
 
 		// push and clear the matrix to [re]start the matrix loading cycle
 		pushMatrix();
@@ -673,7 +668,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			pg.applyMatrix(matrix);
 		}
 		else {
-			pg = this;
+			pg = drawPG;
 			super.beginDraw();
 			background(0, 0, 0, 0);
 		}
@@ -1742,7 +1737,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void drawIndirectImage() {
 		applet.g.pushMatrix();
 		applet.g.applyMatrix(getGlobalMatrix());
-		applet.g.image(this, 0, 0);
+		applet.g.image(drawPG, 0, 0);
 		applet.g.popMatrix();
 	}
 
