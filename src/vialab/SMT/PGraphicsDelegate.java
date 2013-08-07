@@ -22,6 +22,14 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL{
 	protected PGraphics pg;
 
 	@Override
+	public boolean save(String arg0) {
+		if(pg == this){
+			return super.save(arg0);
+		}
+		return pg.save(arg0);
+	}
+	
+	@Override
 	public void beginContour() {
 		if(pg == this){
 			super.beginContour();
