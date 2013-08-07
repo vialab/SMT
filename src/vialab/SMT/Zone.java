@@ -194,7 +194,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	private HashSet<Long> dragSeenTouch = new HashSet<Long>();
 
-	private PGraphicsOpenGL drawPG;
+	private PGraphics drawPG;
 
 	boolean warnDraw() {
 		return true;
@@ -255,7 +255,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			this.inGeo = null;
 			drawPG = null;
 		}else{
-			drawPG = (PGraphicsOpenGL) applet.createGraphics(width, height, OPENGL);
+			drawPG = applet.createGraphics(width, height, renderer);
 		}
 		this.direct = direct;
 	}
@@ -670,7 +670,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			pg = drawPG;
 			super.beginDraw();
-			background(0, 0, 0, 0);
 		}
 		pg.pushStyle();
 	}
@@ -1664,6 +1663,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void draw(boolean drawChildren, boolean picking) {
+		//prerender indirect children
+		if(!picking){
+			drawIndirectChildren();
+		}
+		
 		if (picking) {
 			beginPickDraw();
 		}
@@ -1701,11 +1705,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		
 		if (drawChildren) {
-			if(picking){
-				drawChildren(picking);
-			}else{
-				drawDirectChildren(picking);
-			}
+			drawChildren(picking);
 		}
 		
 		if(!picking){
@@ -1720,23 +1720,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			endDraw();
 		}
-		//we only do direct drawing in pickdraw for performance and because the pickDraw is done on
-		//another framebuffer and only one can be active at a time, which would not allow indirect
-		//rendering without first prerendering the content.
-		if(!picking){
-			if (!direct) {
-				drawIndirectImage();
-			}
-			
-			if (drawChildren) {
-				drawIndirectChildren();
-			}
-		}
 	}
 
 	protected void drawIndirectImage() {
 		applet.g.pushMatrix();
-		applet.g.applyMatrix(getGlobalMatrix());
+		applet.g.applyMatrix(matrix);
 		applet.g.image(drawPG, 0, 0);
 		applet.g.popMatrix();
 	}
@@ -1752,7 +1740,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void drawIndirectChildren() {
 		for (Zone child : children) {
 			if (!child.direct) {
-				drawChild(child, false);
+				child.draw(true, false);
 			}
 		}
 	}
@@ -1764,7 +1752,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void drawChild(Zone child, boolean picking) {
-		child.draw(true, picking);
+		if(!picking && !child.direct) {
+			child.drawIndirectImage();
+		}else{
+			child.draw(true, picking);
+		}
 	}
 
 	/**

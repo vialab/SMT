@@ -19,7 +19,7 @@ import processing.opengl.PGraphicsOpenGL;
  */
 public abstract class PGraphicsDelegate extends PGraphicsOpenGL{
 
-	protected PGraphicsOpenGL pg;
+	protected PGraphics pg;
 
 	@Override
 	public void beginContour() {

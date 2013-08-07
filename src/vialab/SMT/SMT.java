@@ -91,7 +91,7 @@ public class SMT {
 		}
 	}
 	
-	static Zone sketch;
+	public static Zone sketch;
 
 	static float box2dScale = 0.1f;
 
@@ -1253,9 +1253,6 @@ public class SMT {
 		sketch.touch();
 
 		updateStep();
-
-		// clear the background to get rid of anything from pre-draw
-		parent.g.background(255);
 	}
 
 	/**
