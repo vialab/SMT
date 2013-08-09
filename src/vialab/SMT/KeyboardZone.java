@@ -56,6 +56,7 @@ public class KeyboardZone extends Zone {
 
 		@Override
 		public void drawImpl() {
+			textMode(SHAPE);
 			if (deactivated) {
 				drawImpl(color(255, alpha), color(175, alpha));
 			}
@@ -115,6 +116,26 @@ public class KeyboardZone extends Zone {
 		public void touchMovedImpl(Touch touch) {
 			if (!keyDown) {
 				keyDown();
+			}
+		}
+		
+		@Override
+		public void assign(Touch... touches) {
+			//setModified on our indirect parent if this key transitioned from buttonUp to buttondown
+			boolean prevDown = isButtonDown();
+			super.assign(touches);
+			if(prevDown != isButtonDown()){
+				getParent().setModified(true);
+			}
+		}
+		
+		@Override
+		public void unassign(long id) {
+			//setModified on our indirect parent if this key transitioned from buttonDown to buttonUp
+			boolean prevDown = isButtonDown();
+			super.unassign(id);
+			if(prevDown != isButtonDown()){
+				getParent().setModified(true);
 			}
 		}
 
@@ -355,6 +376,7 @@ public class KeyboardZone extends Zone {
 		SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
 				this.children.toArray(new Zone[children.size()]));
 
+		setDirect(false);
 		for (Zone zone : this.children) {
 			zone.setDirect(true);
 		}
@@ -397,6 +419,7 @@ public class KeyboardZone extends Zone {
 
 	@Override
 	public void drawImpl() {
+		smooth(8);
 		fill(backgroundColor, alpha);
 		rect(0, 0, width, height);
 

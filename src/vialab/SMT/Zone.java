@@ -256,6 +256,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			drawPG = null;
 		}else{
 			drawPG = applet.createGraphics(width, height, renderer);
+			setModified();
 		}
 		this.direct = direct;
 	}
@@ -1739,8 +1740,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected void drawIndirectChildren() {
 		for (Zone child : children) {
-			if (!child.direct) {
+			if (!child.direct && child.isModified()) {
 				child.draw(true, false);
+				child.setModified(false);
 			}
 		}
 	}
