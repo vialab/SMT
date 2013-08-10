@@ -196,6 +196,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	private PGraphics drawPG;
 
+	private boolean firstDraw;
+
 	boolean warnDraw() {
 		return true;
 	}
@@ -257,6 +259,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}else{
 			drawPG = applet.createGraphics(width, height, renderer);
 			setModified();
+			firstDraw = true;
 		}
 		this.direct = direct;
 	}
@@ -671,6 +674,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		else {
 			pg = drawPG;
 			super.beginDraw();
+			if(firstDraw){
+				//clear the background on the first draw so the default background is transparent
+				background(0, 0);
+				firstDraw = false;
+			}
 		}
 		pg.pushStyle();
 	}
