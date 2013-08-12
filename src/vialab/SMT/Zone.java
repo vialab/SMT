@@ -794,11 +794,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				}
 			}
 			else {
-				System.err.println("Error: Added a Zone to itself or an ancestor");
+				System.err.println("Warning: Added a Zone to itself or an ancestor");
 			}
 		}
 		else {
-			System.err.println("Error: Added a null Zone");
+			System.err.println("Warning: Added a null Zone");
 		}
 		return false;
 	}
@@ -820,8 +820,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Removes this zone from its parent
 	 */
 	public void removeFromParent() {
-		if(parent != null){
+		if(parent != null && parent.children.contains(this)){
 			parent.remove(this);
+		}else if (SMT.debug){
+			System.err.println("Warning: removeFromParent where parent is null or this zone is not a child of");
 		}
 	}
 
@@ -838,11 +840,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				return children.remove(child);
 			}
 			else{
-				System.err.println("Error: Removed a Zone that was not a child");
+				System.err.println("Warning: Removed a Zone that was not a child");
 			}
 		}
 		else {
-			System.err.println("Error: Removed a null Zone");
+			System.err.println("Warning: Removed a null Zone");
 		}
 		return false;
 	}
