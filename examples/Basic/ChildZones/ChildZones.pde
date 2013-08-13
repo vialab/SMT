@@ -23,7 +23,7 @@ void touchParent(Zone z) {
 }
 
 void drawParent(Zone z) {
-  background(0, 255, 0);
+  background(144, 202, 119);
   fill(0);
   text("Parent",z.width/2, z.height/2);
 }
@@ -33,7 +33,7 @@ void touchChild(Zone z) {
 }
 
 void drawChild(Zone z) {
-  background(255, 0, 0);
+  background(228, 135, 67);
   fill(0);
   text("Child",z.width/2, z.height/2);
 }
