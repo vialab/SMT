@@ -1028,10 +1028,9 @@ public class SMT {
 	 *            - the width of the pickBuffer image to draw
 	 * @param h
 	 *            - the height of the pickBuffer image to draw
-	 * @deprecated
 	 */
 	public static void drawPickBuffer(int x, int y, int w, int h) {
-		// parent.g.image(picker.image, x, y, w, h);
+		 parent.g.image(picker.pg, x, y, w, h);
 	}
 
 	/**
