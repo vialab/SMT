@@ -160,6 +160,14 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><strong><a href="../../../vialab/SMT/TextureZone.html" title="class in vialab.SMT">TextureZone</a></strong></code>
+<div class="block">TextureZone renders a Zone like a texture, requiring a call to setModified(true); to update it's contents
+ It also uses defaults that look much better such as a higher smoothing level and vector accurate text,
+ which would normally be too slow to draw every frame.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><strong><a href="../../../vialab/SMT/TextZone.html" title="class in vialab.SMT">TextZone</a></strong></code>
 <div class="block">TextZone displays text which is selectable by touch.</div>
 </td>
@@ -177,6 +185,10 @@
 <td class="colFirst"><code>protected <a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></code></td>
 <td class="colLast"><span class="strong">Zone.</span><code><strong><a href="../../../vialab/SMT/Zone.html#parent">parent</a></strong></code>&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></code></td>
+<td class="colLast"><span class="strong">SMT.</span><code><strong><a href="../../../vialab/SMT/SMT.html#sketch">sketch</a></strong></code>&nbsp;</td>
+</tr>
 </tbody>
 </table>
 <table border="0" cellpadding="3" cellspacing="0" summary="Use table, listing fields, and an explanation">
@@ -189,12 +201,6 @@
 <tr class="altColor">
 <td class="colFirst"><code>protected java.util.concurrent.CopyOnWriteArrayList&lt;<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&gt;</code></td>
 <td class="colLast"><span class="strong">Zone.</span><code><strong><a href="../../../vialab/SMT/Zone.html#children">children</a></strong></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected static java.util.concurrent.CopyOnWriteArrayList&lt;<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&gt;</code></td>
-<td class="colLast"><span class="strong">SMT.</span><code><strong><a href="../../../vialab/SMT/SMT.html#zoneList">zoneList</a></strong></code>
-<div class="block">The main zone list</div>
-</td>
 </tr>
 </tbody>
 </table>
@@ -368,16 +374,15 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><span class="strong">Zone.</span><code><strong><a href="../../../vialab/SMT/Zone.html#drawChild(vialab.SMT.Zone, processing.core.PGraphics, boolean)">drawChild</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;child,
-         processing.core.PGraphics&nbsp;pg,
+<td class="colLast"><span class="strong">Zone.</span><code><strong><a href="../../../vialab/SMT/Zone.html#drawChild(vialab.SMT.Zone, boolean)">drawChild</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;child,
          boolean&nbsp;picking)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code>float</code></td>
 <td class="colLast"><span class="strong">Touch.</span><code><strong><a href="../../../vialab/SMT/Touch.html#getLocalX(vialab.SMT.Zone)">getLocalX</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;z)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code>float</code></td>
 <td class="colLast"><span class="strong">Touch.</span><code><strong><a href="../../../vialab/SMT/Touch.html#getLocalY(vialab.SMT.Zone)">getLocalY</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;z)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -429,16 +434,20 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="strong">Zone.</span><code><strong><a href="../../../vialab/SMT/Zone.html#isAncestor(vialab.SMT.Zone)">isAncestor</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><span class="strong">Zone.</span><code><strong><a href="../../../vialab/SMT/Zone.html#putChildOnTop(vialab.SMT.Zone)">putChildOnTop</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone)</code>
 <div class="block">Changes the ordering of the child zones, placing the given one on top</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><span class="strong">SMT.</span><code><strong><a href="../../../vialab/SMT/SMT.html#putZoneOnTop(vialab.SMT.Zone)">putZoneOnTop</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><span class="strong">SMT.</span><code><strong><a href="../../../vialab/SMT/SMT.html#remove(vialab.SMT.Zone...)">remove</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
 <div class="block">This removes the zone given from the SMT, meaning it will not be
@@ -446,38 +455,31 @@
  to add(zone);</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">Zone.</span><code><strong><a href="../../../vialab/SMT/Zone.html#remove(vialab.SMT.Zone)">remove</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;child)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">TabZone.</span><code><strong><a href="../../../vialab/SMT/TabZone.html#remove(vialab.SMT.Zone)">remove</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone)</code>
 <div class="block">Used to remove a tab from the TabZone.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">PieMenuZone.</span><code><strong><a href="../../../vialab/SMT/PieMenuZone.html#remove(vialab.SMT.Zone)">remove</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;z)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="strong">KeyboardZone.</span><code><strong><a href="../../../vialab/SMT/KeyboardZone.html#remove(vialab.SMT.Zone)">remove</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;z)</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><span class="strong">SMT.</span><code><strong><a href="../../../vialab/SMT/SMT.html#removeChild(java.lang.String, vialab.SMT.Zone...)">removeChild</a></strong>(java.lang.String&nbsp;parentName,
            <a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
 <div class="block">This removes a set of zones to a parent Zone</div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><code>static void</code></td>
-<td class="colLast"><span class="strong">SMT.</span><code><strong><a href="../../../vialab/SMT/SMT.html#removeChild(vialab.SMT.Zone, vialab.SMT.Zone...)">removeChild</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;parent,
-           <a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
-<div class="block">This removes a set of zones to a parent Zone</div>
-</td>
-</tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><span class="strong">SMT.</span><code><strong><a href="../../../vialab/SMT/SMT.html#removeChild(vialab.SMT.Zone, vialab.SMT.Zone...)">removeChild</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;parent,
@@ -486,6 +488,13 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><span class="strong">SMT.</span><code><strong><a href="../../../vialab/SMT/SMT.html#removeChild(vialab.SMT.Zone, vialab.SMT.Zone...)">removeChild</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;parent,
+           <a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>...&nbsp;zones)</code>
+<div class="block">This removes a set of zones to a parent Zone</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><span class="strong">Touch.</span><code><strong><a href="../../../vialab/SMT/Touch.html#unassignZone(vialab.SMT.Zone)">unassignZone</a></strong>(<a href="../../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&nbsp;zone)</code>&nbsp;</td>
 </tr>

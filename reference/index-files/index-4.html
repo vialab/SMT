@@ -70,6 +70,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/ButtonZone.html#deactivatedTextColor">deactivatedTextColor</a></span> - Variable in class vialab.SMT.<a href="../vialab/SMT/ButtonZone.html" title="class in vialab.SMT">ButtonZone</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/SMT.html#debug">debug</a></span> - Static variable in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/SMT.html#defaultRenderer">defaultRenderer</a></span> - Static variable in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
 <dd>
 <div class="block">The renderer to use as a default for zones, can be P3D, P2D, OPENGL, etc,
@@ -81,16 +83,11 @@
 <div class="block">The direct flag controls whether rendering directly onto
  parent/screen/pickBuffer (direct), or into an image (not direct) If
  drawing into an image we have assured size(can't draw outside of zone),
- and background() will work for just the zone, but we lose a large amount
- of performance.</div>
+ but we lose a large amount of performance.</div>
 </dd>
 <dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#directionalLight(float, float, float, float, float, float)">directionalLight(float, float, float, float, float, float)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/Zone.html#disableScalingLimit()">disableScalingLimit()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#displayable()">displayable()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/PGraphicsDelegate.html#dispose()">dispose()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/PGraphicsDelegate.html" title="class in vialab.SMT">PGraphicsDelegate</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/Zone.html#drag()">drag()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>
@@ -152,9 +149,9 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/CheckBoxZone.html#drawCheckmark()">drawCheckmark()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/CheckBoxZone.html" title="class in vialab.SMT">CheckBoxZone</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawChild(vialab.SMT.Zone, processing.core.PGraphics, boolean)">drawChild(Zone, PGraphics, boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawChild(vialab.SMT.Zone, boolean)">drawChild(Zone, boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawChildren(processing.core.PGraphics, boolean)">drawChildren(PGraphics, boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawChildren(boolean)">drawChildren(boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/SlideRevealZone.html#drawCoverRect()">drawCoverRect()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/SlideRevealZone.html" title="class in vialab.SMT">SlideRevealZone</a></dt>
 <dd>&nbsp;</dd>
@@ -163,7 +160,7 @@
 <div class="block">Draws all Touch objects and their path history, with some data to try to
  help with debugging</div>
 </dd>
-<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawDirectChildren(processing.core.PGraphics, boolean)">drawDirectChildren(PGraphics, boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawDirectChildren(boolean)">drawDirectChildren(boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawForPickBuffer()">drawForPickBuffer()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
@@ -201,13 +198,15 @@
 </dd>
 <dt><span class="strong"><a href="../vialab/SMT/TextZone.html#drawImpl()">drawImpl()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/TextZone.html" title="class in vialab.SMT">TextZone</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawImpl">drawImpl</a></span> - Variable in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawImpl()">drawImpl()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>
 <div class="block">Override to specify a default behavior for draw</div>
 </dd>
-<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawIndirectChildren(processing.core.PGraphics, boolean)">drawIndirectChildren(PGraphics, boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawIndirectChildren()">drawIndirectChildren()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawIndirectImage(processing.core.PGraphics, boolean, boolean)">drawIndirectImage(PGraphics, boolean, boolean)</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
+<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawIndirectImage()">drawIndirectImage()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/SliderZone.html#drawKnob()">drawKnob()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/SliderZone.html" title="class in vialab.SMT">SliderZone</a></dt>
 <dd>&nbsp;</dd>
@@ -215,11 +214,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/SliderZone.html#drawMinMaxCur()">drawMinMaxCur()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/SliderZone.html" title="class in vialab.SMT">SliderZone</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawPG">drawPG</a></span> - Variable in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="../vialab/SMT/SMT.html#drawPickBuffer(int, int, int, int)">drawPickBuffer(int, int, int, int)</a></span> - Static method in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
 <dd>
-<div class="block"><span class="strong">Deprecated.</span>&nbsp;</div>
+<div class="block">Draws a texture of the pickBuffer at the given x,y position with given
+ width and height</div>
 </dd>
 <dt><span class="strong"><a href="../vialab/SMT/Zone.html#drawRntCircle()">drawRntCircle()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></dt>
 <dd>
@@ -231,10 +229,6 @@
 </dd>
 <dt><span class="strong"><a href="../vialab/SMT/SliderZone.html#drawTicks()">drawTicks()</a></span> - Method in class vialab.SMT.<a href="../vialab/SMT/SliderZone.html" title="class in vialab.SMT">SliderZone</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="../vialab/SMT/SMT.html#drawTouchPoints">drawTouchPoints</a></span> - Static variable in class vialab.SMT.<a href="../vialab/SMT/SMT.html" title="class in vialab.SMT">SMT</a></dt>
-<dd>
-<div class="block">Flag for drawing touch points</div>
-</dd>
 </dl>
 <a href="index-1.html">A</a>&nbsp;<a href="index-2.html">B</a>&nbsp;<a href="index-3.html">C</a>&nbsp;<a href="index-4.html">D</a>&nbsp;<a href="index-5.html">E</a>&nbsp;<a href="index-6.html">F</a>&nbsp;<a href="index-7.html">G</a>&nbsp;<a href="index-8.html">H</a>&nbsp;<a href="index-9.html">I</a>&nbsp;<a href="index-10.html">K</a>&nbsp;<a href="index-11.html">L</a>&nbsp;<a href="index-12.html">M</a>&nbsp;<a href="index-13.html">N</a>&nbsp;<a href="index-14.html">O</a>&nbsp;<a href="index-15.html">P</a>&nbsp;<a href="index-16.html">Q</a>&nbsp;<a href="index-17.html">R</a>&nbsp;<a href="index-18.html">S</a>&nbsp;<a href="index-19.html">T</a>&nbsp;<a href="index-20.html">U</a>&nbsp;<a href="index-21.html">V</a>&nbsp;<a href="index-22.html">W</a>&nbsp;<a href="index-23.html">X</a>&nbsp;<a href="index-24.html">Y</a>&nbsp;<a href="index-25.html">Z</a>&nbsp;</div>
 <!-- ======= START OF BOTTOM NAVBAR ====== -->

@@ -126,6 +126,10 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#debug">debug</a></strong></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#defaultRenderer">defaultRenderer</a></strong></code>
 <div class="block">The renderer to use as a default for zones, can be P3D, P2D, OPENGL, etc,
@@ -133,71 +137,61 @@ extends java.lang.Object</pre>
  renderer</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected static <a href="../../vialab/SMT/TouchDraw.html" title="enum in vialab.SMT">TouchDraw</a></code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#drawTouchPoints">drawTouchPoints</a></strong></code>
-<div class="block">Flag for drawing touch points</div>
-</td>
-</tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected static java.util.ArrayList&lt;java.lang.Class&lt;?&gt;&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#extraClassList">extraClassList</a></strong></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>protected static boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#inShutdown">inShutdown</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static vialab.SMT.SMTTuioListener</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#listener">listener</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected static vialab.SMT.SMTTouchManager</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#manager">manager</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static processing.core.PApplet</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#parent">parent</a></strong></code>
 <div class="block">Processing PApplet</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected static vialab.SMT.SMTZonePicker</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#picker">picker</a></strong></code>
 <div class="block">Matrix used to test if the zone has gone off the screen</div>
 </td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><code>static processing.core.PGraphics</code></td>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a></code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#sketch">sketch</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected static java.lang.reflect.Method</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#touch">touch</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static java.util.LinkedList&lt;TUIO.TuioClient&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#tuioClientList">tuioClientList</a></strong></code>
 <div class="block">Tuio Client that listens for Tuio Messages via port 3333 UDP</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected static java.util.LinkedList&lt;java.io.BufferedReader&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#tuioServerErrList">tuioServerErrList</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static java.util.LinkedList&lt;java.io.BufferedWriter&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#tuioServerInList">tuioServerInList</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected static java.util.LinkedList&lt;java.lang.Process&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#tuioServerList">tuioServerList</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static java.util.LinkedList&lt;java.io.BufferedReader&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#tuioServerOutList">tuioServerOutList</a></strong></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#warnUncalledMethods">warnUncalledMethods</a></strong></code>
 <div class="block">This controls whether we give a warning for uncalled methods which use
@@ -206,15 +200,9 @@ extends java.lang.Object</pre>
  prefix).</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static java.lang.Boolean</code></td>
 <td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#warnUnimplemented">warnUnimplemented</a></strong></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected static java.util.concurrent.CopyOnWriteArrayList&lt;<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../vialab/SMT/SMT.html#zoneList">zoneList</a></strong></code>
-<div class="block">The main zone list</div>
-</td>
 </tr>
 </table>
 </li>
@@ -322,7 +310,8 @@ extends java.lang.Object</pre>
               int&nbsp;y,
               int&nbsp;w,
               int&nbsp;h)</code>
-<div class="block"><strong>Deprecated.</strong>&nbsp;&nbsp;</div>
+<div class="block">Draws a texture of the pickBuffer at the given x,y position with given
+ width and height</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -581,6 +570,15 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Field Detail</h3>
+<a name="sketch">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>sketch</h4>
+<pre>public static&nbsp;<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a> sketch</pre>
+</li>
+</ul>
 <a name="tuioServerList">
 <!--   -->
 </a>
@@ -600,15 +598,6 @@ extends java.lang.Object</pre>
 <div class="block">Processing PApplet</div>
 </li>
 </ul>
-<a name="sketch">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>sketch</h4>
-<pre>public static&nbsp;processing.core.PGraphics sketch</pre>
-</li>
-</ul>
 <a name="tuioClientList">
 <!--   -->
 </a>
@@ -617,26 +606,6 @@ extends java.lang.Object</pre>
 <h4>tuioClientList</h4>
 <pre>protected static&nbsp;java.util.LinkedList&lt;TUIO.TuioClient&gt; tuioClientList</pre>
 <div class="block">Tuio Client that listens for Tuio Messages via port 3333 UDP</div>
-</li>
-</ul>
-<a name="zoneList">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>zoneList</h4>
-<pre>protected static&nbsp;java.util.concurrent.CopyOnWriteArrayList&lt;<a href="../../vialab/SMT/Zone.html" title="class in vialab.SMT">Zone</a>&gt; zoneList</pre>
-<div class="block">The main zone list</div>
-</li>
-</ul>
-<a name="drawTouchPoints">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>drawTouchPoints</h4>
-<pre>protected static&nbsp;<a href="../../vialab/SMT/TouchDraw.html" title="enum in vialab.SMT">TouchDraw</a> drawTouchPoints</pre>
-<div class="block">Flag for drawing touch points</div>
 </li>
 </ul>
 <a name="picker">
@@ -739,22 +708,22 @@ extends java.lang.Object</pre>
 <pre>protected static&nbsp;java.util.LinkedList&lt;java.io.BufferedWriter&gt; tuioServerInList</pre>
 </li>
 </ul>
-<a name="extraClassList">
+<a name="inShutdown">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>extraClassList</h4>
-<pre>protected static&nbsp;java.util.ArrayList&lt;java.lang.Class&lt;?&gt;&gt; extraClassList</pre>
+<h4>inShutdown</h4>
+<pre>protected static&nbsp;boolean inShutdown</pre>
 </li>
 </ul>
-<a name="inShutdown">
+<a name="debug">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>inShutdown</h4>
-<pre>protected static&nbsp;boolean inShutdown</pre>
+<h4>debug</h4>
+<pre>public static&nbsp;boolean debug</pre>
 </li>
 </ul>
 </li>
@@ -1125,7 +1094,6 @@ extends java.lang.Object</pre>
                   int&nbsp;y,
                   int&nbsp;w,
                   int&nbsp;h)</pre>
-<div class="block"><span class="strong">Deprecated.</span>&nbsp;<i></i></div>
 <div class="block">Draws a texture of the pickBuffer at the given x,y position with given
  width and height</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>x</code> - - the x position to draw the pickBuffer image at</dd><dd><code>y</code> - - the y position to draw the pickBuffer image at</dd><dd><code>w</code> - - the width of the pickBuffer image to draw</dd><dd><code>h</code> - - the height of the pickBuffer image to draw</dd></dl>
