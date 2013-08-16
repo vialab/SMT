@@ -183,7 +183,7 @@ public class SliderZone extends Zone {
 	protected void drawMinMaxCur() {
 		fill(0);
 		textAlign(CENTER);
-		text(currentValue, width / 2, height*2/10);
+		text(currentValue, width / 2, height*3/10);
 		text(minValue, width/10, height*9/10);
 		text(maxValue, width*9/10, height*9/10);
 	}
@@ -193,15 +193,15 @@ public class SliderZone extends Zone {
 		for (int i = minValue; i <= maxValue; i++) {
 			if (i % majorTickSpacing == 0) {
 				// draw major tick
-				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height / 2,
+				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
 						((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10),
-						height * 3 / 4);
+						height * 5 / 8);
 			}
 			else if (i % minorTickSpacing == 0) {
 				// draw minor tick
-				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height / 2,
+				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
 						((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10),
-						height * 5 / 8);
+						height / 2);
 			}
 		}
 	}

@@ -59,22 +59,17 @@ public class SlideRevealZone extends Zone {
 	}
 
 	protected void drawHiddenText() {
-		textSize(12);
 		fill(0);
 		text(revealText, 5, 20, width, height);
 	}
 
 	protected void drawCoverRect() {
-		textSize(12);
+		rectMode(CORNERS);
 		fill(255);
 		float childxpos = toZoneVector(getChild(0).getOrigin()).x;
-		rect(childxpos, 0, width - childxpos, height);
+		rect(childxpos, 0, width, height);
 		fill(0);
-		int txtSize = (int) textWidth("Slide To Right");
-		if (childxpos + txtSize + getChild(0).width < width) {
-			text("Slide To Right", childxpos + txtSize, 20, width - childxpos - txtSize
-					- getChild(0).width, 20);
-		}
+		text("Slide To Right", childxpos + getChild(0).width * 1.1f, height*3/8, width, height);
 	}
 
 	/**
