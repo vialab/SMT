@@ -707,37 +707,16 @@ public class SMT {
 	 * 
 	 * @param zones
 	 *            - Zone: The zones to add to the sketch/application
+	 * @return Whether all Zones were sucessfully added to the root Zone
 	 */
-	public static void add(Zone... zones) {
+	public static boolean add(Zone... zones) {
+		boolean r = true;
 		for (Zone zone : zones) {
-			//no-op if the zone is already a child of the root Zone, or if the
-			//zone is the root zone (to prevent parenting to itself)
-			if(!SMT.sketch.children.contains(zone) && SMT.sketch != zone){
-				if (zone != null) {
-					if(zone.parent == null){
-						zone.parent = SMT.sketch;
-						addToZoneList(zone);
-					}
-					
-					picker.add(zone);
-	
-					// make sure the matrix is up to date, these calls should not
-					// occur if we do not call begin/endTouch once per
-					// frame and once at Zone initialization
-					zone.endTouch();
-					zone.beginTouch();
-				}
-				else {
-					System.err.println("Error: Added a null Zone");
-				}
+			if(SMT.sketch.add(zone)){
+				r = false;
 			}
 		}
-	}
-
-	private static void addToZoneList(Zone zone) {
-		if (!sketch.children.contains(zone)) {
-			sketch.children.add(zone);
-		}
+		return r;
 	}
 
 	/**
@@ -957,42 +936,11 @@ public class SMT {
 	public static boolean remove(Zone... zones) {
 		boolean r = true;
 		for (Zone zone : zones) {
-			//no-op if the zone is not a child of the root Zone
-			if(SMT.sketch.children.contains(zone)){
-				if (zone != null) {
-					zone.parent=null;
-					picker.remove(zone);
-					if (!removeFromZoneList(zone)) {
-						r = false;
-					}
-				}
-				else {
-					r = false;
-					System.err.println("Error: Removed a null Zone");
-				}
+			if(!SMT.sketch.remove(zone)){
+				r = false;
 			}
 		}
 		return r;
-	}
-
-	private static boolean removeFromZoneList(Zone zone) {
-		for (Zone child : zone.children) {
-			removeFromZoneList(child);
-		}
-
-		// clear the touches from the Zone, so that it doesn't get pulled in by
-		// the touches such as when putZoneOnTop() is called
-		zone.unassignAll();
-
-		// destroy the Zones Body, so it does not collide with other Zones any
-		// more
-		if (zone.zoneBody != null) {
-			world.destroyBody(zone.zoneBody);
-			zone.zoneBody = null;
-			zone.zoneFixture = null;
-			zone.mJoint = null;
-		}
-		return sketch.children.remove(zone);
 	}
 
 	/**

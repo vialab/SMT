@@ -175,8 +175,12 @@ void pressExitButton(Zone zone){
 }
 
 void pressToTitleButton(Zone zone){
-  SMT.remove(board);
-  SMT.remove(options);
+  if(zone == board){
+    SMT.remove(board);
+  }
+  else if(zone == options){
+    SMT.remove(options);
+  }
   SMT.add(title);
 }
 

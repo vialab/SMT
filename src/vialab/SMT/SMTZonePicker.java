@@ -82,9 +82,6 @@ class SMTZonePicker {
 	}
 
 	public Zone remove(Zone zone) {
-		for (Zone child : zone.children) {
-			this.remove(child);
-		}
 		activePickColors.remove(zone.getPickColor());
 		Zone removed = zonesByPickColor.remove(zone.getPickColor());
 		zone.setPickColor(-1);

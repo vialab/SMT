@@ -787,7 +787,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				zone.removeFromParent();
 				zone.parent = this;
 				
-				SMT.add(zone);
+				SMT.picker.add(zone);
+				
+				// make sure the matrix is up to date, these calls should not
+				// occur if we do not call begin/endTouch once per
+				// frame and once at Zone initialization
+				zone.endTouch();
+				zone.beginTouch();
 				
 				if (!children.contains(zone)) {
 					return children.add(zone);
@@ -835,7 +841,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public boolean remove(Zone child) {
 		if (child != null){
 			if(children.contains(child)) {
-				SMT.remove(child);
+				child.cleanUp();
 				child.parent = null;
 				return children.remove(child);
 			}
@@ -847,6 +853,30 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			System.err.println("Warning: Removed a null Zone");
 		}
 		return false;
+	}
+	
+	/**
+	 * This cleans up (unassign touches, remove from picker, and remove zoneBody) the Zone and its children
+	 */
+	private void cleanUp() {
+		for (Zone child : getChildren()) {
+			child.cleanUp();
+		}
+		
+		SMT.picker.remove(this);
+
+		// clear the touches from the Zone, so that it doesn't get pulled in by
+		// the touches such as when putZoneOnTop() is called
+		unassignAll();
+
+		// destroy the Zones Body, so it does not collide with other Zones any
+		// more
+		if (zoneBody != null) {
+			SMT.world.destroyBody(zoneBody);
+			zoneBody = null;
+			zoneFixture = null;
+			mJoint = null;
+		}
 	}
 
 	/**
