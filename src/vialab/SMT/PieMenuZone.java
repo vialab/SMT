@@ -202,8 +202,10 @@ public class PieMenuZone extends Zone {
 			selected = -1;
 		}
 		currentSlices.remove(s);
-		// remove from Zone children
-		super.remove(s);
+		// remove from Zone children, but only if it is not already removed (another remove would give a warning)
+		if(children.contains(s)) {
+			super.remove(s);
+		}
 	}
 
 	public void setDisabled(String name, boolean disabled) {
