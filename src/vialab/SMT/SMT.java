@@ -43,26 +43,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.World;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
-import processing.core.PImage;
-
-//import android.view.*;
 
 import TUIO.*;
 
@@ -710,13 +699,7 @@ public class SMT {
 	 * @return Whether all Zones were sucessfully added to the root Zone
 	 */
 	public static boolean add(Zone... zones) {
-		boolean r = true;
-		for (Zone zone : zones) {
-			if(SMT.sketch.add(zone)){
-				r = false;
-			}
-		}
-		return r;
+		return SMT.sketch.add(zones);
 	}
 
 	/**
@@ -729,25 +712,7 @@ public class SMT {
 	 * @return The array of zones created from the XML File
 	 */
 	public static Zone[] add(String xmlFilename) {
-		List<Zone> zoneList = new ArrayList<Zone>();
-		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(parent.createInput(xmlFilename));
-
-			NodeList zones = doc.getElementsByTagName("zone");
-			add(zones, zoneList);
-		}
-		catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		catch (SAXException e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		return zoneList.toArray(new Zone[zoneList.size()]);
+		return SMT.sketch.addXMLZone(xmlFilename);
 	}
 
 	/**
@@ -758,11 +723,13 @@ public class SMT {
 	 * @param zones
 	 *            The zones to add to the parent as children
 	 */
-	public static void addChild(Zone parent, Zone... zones) {
-		for (Zone z : zones) {
-			if (parent != null) {
-				parent.add(z);
-			}
+	public static boolean addChild(Zone parent, Zone... zones) {
+		if (parent != null) {
+			return parent.add(zones);
+		}
+		else {
+			System.err.println("Warning: parent specified in addChild() is null");
+			return false;
 		}
 	}
 
@@ -774,12 +741,8 @@ public class SMT {
 	 * @param zones
 	 *            The zones to add to the parent as children
 	 */
-	public static void addChild(String parentName, Zone... zones) {
-		for (Zone z : zones) {
-			if (get(parentName) != null) {
-				get(parentName).add(z);
-			}
-		}
+	public static boolean addChild(String parentName, Zone... zones) {
+		return addChild(get(parentName), zones);
 	}
 
 	/**
@@ -790,11 +753,13 @@ public class SMT {
 	 * @param zones
 	 *            The zones to add to the parent as children
 	 */
-	public static void removeChild(Zone parent, Zone... zones) {
-		for (Zone z : zones) {
-			if (parent != null) {
-				parent.remove(z);
-			}
+	public static boolean removeChild(Zone parent, Zone... zones) {
+		if (parent != null) {
+			return parent.remove(zones);
+		}
+		else {
+			System.err.println("Warning: parent specified in removeChild() is null");
+			return false;
 		}
 	}
 
@@ -806,12 +771,8 @@ public class SMT {
 	 * @param zones
 	 *            The zones to add to the parent as children
 	 */
-	public static void removeChild(String parentName, Zone... zones) {
-		for (Zone z : zones) {
-			if (get(parentName) != null) {
-				get(parentName).remove(z);
-			}
-		}
+	public static boolean removeChild(String parentName, Zone... zones) {
+		return removeChild(get(parentName), zones);
 	}
 
 	/**
@@ -845,72 +806,6 @@ public class SMT {
 		}
 	}
 
-	private static void add(NodeList zones, List<Zone> zoneList) {
-		for (int i = 0; i < zones.getLength(); i++) {
-			Node zoneNode = zones.item(i);
-			if (zoneNode.getNodeType() == Node.ELEMENT_NODE
-					&& zoneNode.getNodeName().equalsIgnoreCase("zone")) {
-				add(zoneNode, zoneList);
-			}
-		}
-	}
-
-	private static void add(Node node, List<Zone> zoneList) {
-		NamedNodeMap map = node.getAttributes();
-		Node nameNode = map.getNamedItem("name");
-		Node xNode = map.getNamedItem("x");
-		Node yNode = map.getNamedItem("y");
-		Node widthNode = map.getNamedItem("width");
-		Node heightNode = map.getNamedItem("height");
-
-		Node imgNode = map.getNamedItem("img");
-
-		Zone zone;
-
-		String name = null;
-		int x, y, width, height;
-		if (nameNode != null) {
-			name = nameNode.getNodeValue();
-		}
-
-		if (imgNode != null) {
-			String imgFilename = imgNode.getNodeValue();
-			PImage img = parent.loadImage(imgFilename);
-
-			if (xNode != null && yNode != null) {
-				x = Integer.parseInt(xNode.getNodeValue());
-				y = Integer.parseInt(yNode.getNodeValue());
-				if (widthNode != null && heightNode != null) {
-					width = Integer.parseInt(widthNode.getNodeValue());
-					height = Integer.parseInt(heightNode.getNodeValue());
-					zone = new ImageZone(name, img, x, y, width, height);
-				}
-				else {
-					zone = new ImageZone(name, img, x, y);
-				}
-			}
-			else {
-				zone = new ImageZone(name, img);
-			}
-		}
-		else {
-			if (xNode != null && yNode != null && widthNode != null && heightNode != null) {
-				x = Integer.parseInt(xNode.getNodeValue());
-				y = Integer.parseInt(yNode.getNodeValue());
-				width = Integer.parseInt(widthNode.getNodeValue());
-				height = Integer.parseInt(heightNode.getNodeValue());
-				zone = new Zone(name, x, y, width, height);
-			}
-			else {
-				zone = new Zone(name);
-			}
-		}
-
-		zoneList.add(zone);
-		add(zone);
-		add(node.getChildNodes(), zoneList);
-	}
-
 	/**
 	 * This removes the zone given from the SMT, meaning it will not be
 	 * drawn anymore or be assigned touches, but can be added back with a call
@@ -934,13 +829,11 @@ public class SMT {
 	 * @return Whether all of the zones were removed successfully
 	 */
 	public static boolean remove(Zone... zones) {
-		boolean r = true;
-		for (Zone zone : zones) {
-			if(!SMT.sketch.remove(zone)){
-				r = false;
-			}
-		}
-		return r;
+		return SMT.sketch.remove(zones);
+	}
+	
+	public static void clearZones(){
+		SMT.sketch.clearChildren();
 	}
 
 	/**

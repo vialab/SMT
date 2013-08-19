@@ -21,6 +21,7 @@
 package vialab.SMT;
 
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +35,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -43,6 +48,11 @@ import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.joints.MouseJoint;
 import org.jbox2d.dynamics.joints.MouseJointDef;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -775,6 +785,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void removePickColor() {
 		pickColor = -1;
 	}
+	
+	public boolean add(Zone... zones){
+		boolean r = true;
+		for (Zone z : zones) {
+			if(!add(z)){
+				r = false;
+			}
+		}
+		return r;
+	}
 
 	/**
 	 * @param zone
@@ -808,6 +828,104 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		return false;
 	}
+	
+	/**
+	 * This adds zones by creating them from XML specs, the XML needs "zone"
+	 * tags, and currently supports the following variables: name, x, y, width,
+	 * height, img
+	 * 
+	 * @param xmlFilename
+	 *            The XML file to read in for zone configuration
+	 * @return The array of zones created from the XML File
+	 */
+	public Zone[] addXMLZone(String xmlFilename) {
+		List<Zone> zoneList = new ArrayList<Zone>();
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(applet.createInput(xmlFilename));
+
+			NodeList zones = doc.getElementsByTagName("zone");
+			add(zones, zoneList);
+		}
+		catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		catch (SAXException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return zoneList.toArray(new Zone[zoneList.size()]);
+	}
+	
+	private void add(NodeList zones, List<Zone> zoneList) {
+		for (int i = 0; i < zones.getLength(); i++) {
+			Node zoneNode = zones.item(i);
+			if (zoneNode.getNodeType() == Node.ELEMENT_NODE
+					&& zoneNode.getNodeName().equalsIgnoreCase("zone")) {
+				add(zoneNode, zoneList);
+			}
+		}
+	}
+
+	private void add(Node node, List<Zone> zoneList) {
+		NamedNodeMap map = node.getAttributes();
+		Node nameNode = map.getNamedItem("name");
+		Node xNode = map.getNamedItem("x");
+		Node yNode = map.getNamedItem("y");
+		Node widthNode = map.getNamedItem("width");
+		Node heightNode = map.getNamedItem("height");
+
+		Node imgNode = map.getNamedItem("img");
+
+		Zone zone;
+
+		String name = null;
+		int x, y, width, height;
+		if (nameNode != null) {
+			name = nameNode.getNodeValue();
+		}
+
+		if (imgNode != null) {
+			String imgFilename = imgNode.getNodeValue();
+			PImage img = applet.loadImage(imgFilename);
+
+			if (xNode != null && yNode != null) {
+				x = Integer.parseInt(xNode.getNodeValue());
+				y = Integer.parseInt(yNode.getNodeValue());
+				if (widthNode != null && heightNode != null) {
+					width = Integer.parseInt(widthNode.getNodeValue());
+					height = Integer.parseInt(heightNode.getNodeValue());
+					zone = new ImageZone(name, img, x, y, width, height);
+				}
+				else {
+					zone = new ImageZone(name, img, x, y);
+				}
+			}
+			else {
+				zone = new ImageZone(name, img);
+			}
+		}
+		else {
+			if (xNode != null && yNode != null && widthNode != null && heightNode != null) {
+				x = Integer.parseInt(xNode.getNodeValue());
+				y = Integer.parseInt(yNode.getNodeValue());
+				width = Integer.parseInt(widthNode.getNodeValue());
+				height = Integer.parseInt(heightNode.getNodeValue());
+				zone = new Zone(name, x, y, width, height);
+			}
+			else {
+				zone = new Zone(name);
+			}
+		}
+
+		zoneList.add(zone);
+		add(zone);
+		add(node.getChildNodes(), zoneList);
+	}
+	
 	/**
 	 * @param zone
 	 * @return Whether the given zone is an ancestor of this one.
@@ -831,6 +949,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}else if (SMT.debug){
 			System.err.println("Warning: removeFromParent where parent is null or this zone is not a child of");
 		}
+	}
+	
+	public boolean remove(Zone... zones){
+		boolean r = true;
+		for (Zone z : zones) {
+			if(!remove(z)){
+				r = false;
+			}
+		}
+		return r;
 	}
 
 	/**
@@ -882,7 +1010,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * This disconnects this zone from its children and vice versa
 	 */
-	public void clearZones() {
+	public void clearChildren() {
 		for (Zone zone : children) {
 			this.remove(zone);
 		}
