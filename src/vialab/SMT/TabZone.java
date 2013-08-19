@@ -92,10 +92,10 @@ public class TabZone extends Zone {
 
 	private void tabActive(Tab tab) {
 		// make sure no other tabs will be drawn
-		for (Zone zone : this.Tabs.values()) {
-			SMT.remove(zone);
+		for (Zone child : getChildren()) {
+			super.remove(child);
 		}
-		SMT.add(Tabs.get(tab));
+		super.add(Tabs.get(tab));
 		this.currentTab = tab;
 	}
 
