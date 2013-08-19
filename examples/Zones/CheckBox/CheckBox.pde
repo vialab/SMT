@@ -1,6 +1,6 @@
 /**
  *  This examples show the use of the CheckBoxZone, and its state.
- *  It also shows use of getZone() to do a class cast to access
+ *  It also shows use of get() to do a class cast to access
  *  the CheckBoxZone specific variable.
  */
 

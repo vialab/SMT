@@ -9,8 +9,8 @@ void setup() {
   size(800, 800, P3D);
   SMT.init(this, TouchSource.MULTIPLE);
   SMT.add(new TabZone("Tab"));
-  SMT.getZone("Tab").add(new Zone("BlackSquare",100,100,100,100));
-  SMT.getZone("Tab").add(new Zone("WhiteSquare",500,100,100,100));
+  SMT.get("Tab").add(new Zone("BlackSquare",100,100,100,100));
+  SMT.get("Tab").add(new Zone("WhiteSquare",500,100,100,100));
 }
 void draw() {
   background(79, 129, 189);
