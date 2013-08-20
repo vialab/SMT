@@ -397,6 +397,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		zoneFixtureDef.shape = zoneShape;
 		zoneFixtureDef.density = 1.0f;
 		zoneFixtureDef.friction = 0.3f;
+		
+		zoneBody = SMT.world.createBody(zoneBodyDef);
+		zoneFixture = zoneBody.createFixture(zoneFixtureDef);
 	}
 
 	/**
@@ -2703,7 +2706,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	public void addPhysicsMouseJoint() {
-		if (mJoint == null && physics) {
+		if (zoneBody != null && mJoint == null && physics) {
 			mJointDef = new MouseJointDef();
 			mJointDef.maxForce = 1000000.0f;
 			mJointDef.frequencyHz = applet.frameRate;
