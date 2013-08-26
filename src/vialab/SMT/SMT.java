@@ -1131,7 +1131,7 @@ public class SMT {
 	}
 	
 	/**
-	 * @return A temp file directory with a unique name
+	 * @return A temp file directory
 	 * @throws IOException
 	 */
 	private static File tempDir(){
@@ -1287,47 +1287,7 @@ public class SMT {
 	 * events
 	 */
 	public static void runExe(final String path) {
-		Thread serverThread = new Thread() {
-			@Override
-			public void run() {
-				int max_failures = 3;
-				for (int i = 0; i < max_failures; i++) {
-					try {
-						Process tuioServer = Runtime.getRuntime().exec(path);
-						BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
-								tuioServer.getErrorStream()));
-						BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
-								tuioServer.getInputStream()));
-						BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
-								tuioServer.getOutputStream()));
-
-						tuioServerList.add(tuioServer);
-						tuioServerErrList.add(tuioServerErr);
-						tuioServerOutList.add(tuioServerOut);
-						tuioServerInList.add(tuioServerIn);
-
-						while (true) {
-							if (tuioServerErr.ready() && debug) {
-								System.err.println(path + ": " + tuioServerErr.readLine());
-							}
-							if (tuioServerOut.ready() && debug) {
-								System.out.println(path + ": " + tuioServerOut.readLine());
-							}
-							Thread.sleep(1000);
-						}
-					}
-					catch (IOException e) {
-						System.err.println(e.getMessage());
-						break;
-					}
-					catch (Exception e) {
-						System.err.println("Exe stopped!, restarting.");
-					}
-				}
-				System.out.println("Stopped trying to run exe.");
-			}
-		};
-		serverThread.start();
+		new TouchSourceThread(path, path, path + " Process died").start();
 	}
 
 	/**
