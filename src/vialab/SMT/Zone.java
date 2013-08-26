@@ -74,6 +74,13 @@ import TUIO.TuioTime;
  */
 public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
+	
+	/**
+	 * Changing the return of this method from the default of false will stop the redraw from occuring
+	 * every frame for indirect Zones, and instead only will redraw if setModified(true) is called on it.
+	 */
+	protected boolean updateOnlyWhenModified(){ return false;}
+	
 	public boolean stealChildrensTouch = false;
 	
 	public boolean physics = false;
@@ -397,9 +404,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		zoneFixtureDef.shape = zoneShape;
 		zoneFixtureDef.density = 1.0f;
 		zoneFixtureDef.friction = 0.3f;
-		
-		zoneBody = SMT.world.createBody(zoneBodyDef);
-		zoneFixture = zoneBody.createFixture(zoneFixtureDef);
 	}
 
 	/**
@@ -1918,7 +1922,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	protected void drawIndirectChildren() {
 		for (Zone child : children) {
-			if (!child.direct && child.isModified()) {
+			//redraw if updateOnlyWhenModified returns false (the default), or if the child 
+			//has been modified, for indirect Zones
+			if (!child.direct && (!this.updateOnlyWhenModified() || child.isModified())) {
 				child.draw(true, false);
 				child.setModified(false);
 			}

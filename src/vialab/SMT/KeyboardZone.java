@@ -13,6 +13,40 @@ import processing.core.PFont;
  * listen/receive the keyboard input.
  */
 public class KeyboardZone extends Zone {
+	
+	private IndirectDrawingChildZone indirectDrawingChild;
+	
+	//This inner Class is set indirect and draws the KeyZones into itself
+	//allowing the keyboardZone to have children outside of itself, which is
+	//used when we add Zones to the KeyboardZones to auto listen to its
+	//key events
+	class IndirectDrawingChildZone extends Zone{
+		
+		protected boolean updateOnlyWhenModified(){return true;}
+		
+		IndirectDrawingChildZone(int width, int height){
+			super(0, 0, width, height);
+		}
+		
+		boolean warnDraw(){
+			return false;
+		}
+		
+		protected void touchImpl(){}
+		
+		protected void pickDrawImpl(){}
+
+		@Override
+		public void drawImpl() {
+			KeyboardZone kb = (KeyboardZone) getParent();
+			smooth(8);
+			fill(kb.backgroundColor, kb.alpha);
+			rect(0, 0, width, height);
+			
+			//update Modifiers from key state changes
+			updateModifiersFromKeys();
+		}
+	};
 
 	public int keyColor = 200;
 
@@ -125,7 +159,7 @@ public class KeyboardZone extends Zone {
 			boolean prevDown = isButtonDown();
 			super.assign(touches);
 			if(prevDown != isButtonDown()){
-				getParent().setModified(true);
+				indirectDrawingChild.setModified(true);
 			}
 		}
 		
@@ -135,7 +169,7 @@ public class KeyboardZone extends Zone {
 			boolean prevDown = isButtonDown();
 			super.unassign(id);
 			if(prevDown != isButtonDown()){
-				getParent().setModified(true);
+				indirectDrawingChild.setModified(true);
 			}
 		}
 
@@ -364,20 +398,24 @@ public class KeyboardZone extends Zone {
 			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor, PFont font) {
 		super(name, x, y, width, height);
 
+		indirectDrawingChild = new IndirectDrawingChildZone(width, height);
+		this.add(indirectDrawingChild);
+		
 		int KEYS_PER_ROW = 15;
 		int DEFAULT_KEY_WIDTH = (width * 9 / 10) / KEYS_PER_ROW;
 		int fontSize = (this.height / NUM_KEYBOARD_ROWS) * 16 / 50;
 
 		for (Keys k : Keys.values()) {
-			this.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH),
+			indirectDrawingChild.add(new KeyZone(0, 0, (int) (k.keyWidthRatio * DEFAULT_KEY_WIDTH),
 					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k, fontSize, font));
 		}
 
 		SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
-				this.children.toArray(new Zone[children.size()]));
+				indirectDrawingChild.getChildren());
 
-		setDirect(false);
-		for (Zone zone : this.children) {
+		
+		indirectDrawingChild.setDirect(false);
+		for (Zone zone : indirectDrawingChild.children) {
 			zone.setDirect(true);
 		}
 
@@ -406,24 +444,10 @@ public class KeyboardZone extends Zone {
 				keyZone.fontSize = ((this.height * 9 / 10) / NUM_KEYBOARD_ROWS) * 16 / 50;
 			}
 		}
-		SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
-				this.children.toArray(new Zone[children.size()]));
-	}
-
-	@Override
-	protected void init() {
-		super.init();
-		SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
-				this.children.toArray(new Zone[children.size()]));
-	}
-
-	@Override
-	public void drawImpl() {
-		smooth(8);
-		fill(backgroundColor, alpha);
-		rect(0, 0, width, height);
-
-		updateModifiersFromKeys();
+		if(indirectDrawingChild != null){
+			SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+					indirectDrawingChild.getChildren());
+		}
 	}
 
 	protected void updateModifiersFromKeys() {
@@ -435,7 +459,7 @@ public class KeyboardZone extends Zone {
 		boolean altDown = false;
 		boolean ctrlDown = false;
 		boolean metaDown = false;
-		for (Zone k : this.children) {
+		for (Zone k : indirectDrawingChild.children) {
 			if (k instanceof KeyZone) {
 				KeyZone key = (KeyZone) k;
 				if (key.isButtonDown()) {

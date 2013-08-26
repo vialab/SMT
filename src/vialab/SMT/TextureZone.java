@@ -7,6 +7,11 @@ package vialab.SMT;
  * its bounds, and only when a call to setModified(true) is made on the parent TextureZone
  */
 public class TextureZone extends Zone {
+	
+	@Override
+	protected boolean updateOnlyWhenModified() {
+		return true;
+	}
 
 	public TextureZone() {
 		this(null);
