@@ -9,14 +9,25 @@ import vialab.SMT.*;
 void setup(){
   size(displayWidth, displayHeight, P3D);
   SMT.init(this, TouchSource.MULTIPLE);
-  Zone z =new ContainerZone("ViewPort", displayWidth/4, displayHeight/4, displayWidth/2, displayHeight/2);
-  z.setDirect(false);
-  z.add(new ImageZone("0.jpg"));
-  SMT.add(z);
+  SMT.add(new ContainerZone("ViewPort", displayWidth/4, displayHeight/4, displayWidth/2, displayHeight/2));
+  SMT.get("ViewPort").setDirect(false);
+  SMT.addChild("ViewPort", new Zone("MovingZone", 0, 0, displayWidth/2, displayHeight/2));
+  SMT.addChild("MovingZone",new ImageZone(loadImage("0.jpg"), 50, 50, 50, 50));
+  SMT.addChild("MovingZone",new ImageZone(loadImage("0.jpg"), 150, 50, 50, 50));
 }
 
-void touchImageZone(Zone z){
-  z.drag();
+void drawViewPort(Zone z){
+  fill(0);
+  rect(0, 0, z.width, z.height);
+}
+
+void drawMovingZone(Zone z){
+  fill(0);
+  rect(0, 0, z.width, z.height);
+}
+
+void touchMovingZone(Zone z){
+  z.hSwipe();
 }
 
 void draw(){
