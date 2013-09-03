@@ -247,7 +247,7 @@ public class SMT {
 	 *            Class<?> - Classes that should be checked for method
 	 *            definitions similar to PApplet for drawZoneName(), etc, but
 	 *            PApplet takes precedence.
-	 */
+	 **/
 	public static void init(PApplet parent, TouchSource source, Class<?>... extraClasses) {
 		init(parent, 3333, source, extraClasses);
 	}
@@ -1151,6 +1151,7 @@ public class SMT {
 		BufferedInputStream src = new BufferedInputStream(
 				SMT.class.getResourceAsStream("/resources/"+resource));
 		final File exeTempFile = new File(dir.getAbsolutePath() + "\\"+resource);
+
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
 		byte[] tempexe = new byte[4 * 1024];
 		int rc;
@@ -1313,7 +1314,7 @@ public class SMT {
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Zone> T get(String name, Class<T> type) {
+	public static <T extends Zone> T get( String name, Class<T> type) {
 		for (Zone z : getZones()) {
 			if (z.name != null && z.name.equals(name)) {
 				return (T) z;
