@@ -1,4 +1,4 @@
-#dependencies
+#variables definitions
 source_files = src/vialab/SMT/AndroidToTUIO.java\
 	src/vialab/SMT/ButtonZone.java \
 	src/vialab/SMT/CheckBoxZone.java \
@@ -65,3 +65,7 @@ class_files = \
 	bin/vialab/SMT/TouchSource.class \
 	bin/vialab/SMT/TouchState.class \
 	bin/vialab/SMT/Zone.class
+
+#dependencies
+#note: weakness in every class file depends on every java file
+$(class_files): $(source_files)

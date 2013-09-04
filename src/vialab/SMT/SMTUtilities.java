@@ -163,7 +163,7 @@ public final class SMTUtilities {
 	 * @param methodPrefix   - String: The prefix to look for on a method
 	 * @param zone       - Zone: The Zone whose name is used as the method suffix
 	 * @param warnMissing - boolean: If True, shows a warning when the method does not exist for the given Zone
-	 * @param parameters  - Class<?>: The parameters that the method will have (use getClass() on an
+	 * @param parameters  - Class< ?>: The parameters that the method will have (use getClass() on an
 	 *            object to get its class to use here)
 	 * 
 	 * @return A Method, which can be called by invoke(Method, parameters... )

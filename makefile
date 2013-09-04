@@ -15,8 +15,7 @@ dest = -d bin
 include dependencies.mk
 
 #compilation definitions
-#note: weakness in every class file depends on every java file
-$(class_files): $(source_files)
+$(class_files):
 	javac $(cp) $(dest) $(subst bin,src,$(subst class,java,$@))
 
 #basic commands

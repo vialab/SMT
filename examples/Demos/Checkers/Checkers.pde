@@ -53,12 +53,16 @@ void setup() {
 void draw() {
   background(79, 129, 189);
   fill(245,245,220);
-  rect((displayWidth-1000)/2,(displayHeight-1000)/2,1000,1000);
+  rect(
+    (displayWidth-1000)/2,
+    (displayHeight-1000)/2,1000,1000);
   fill(150,75,0);
   for(int i=0; i<8; i++){
     for(int j=0; j<8; j++){
       if((i+j)%2==1){
-        rect(((displayWidth-1000)/2)+i*125,((displayHeight-1000)/2)+j*125,125,125);
+        rect(
+          ((displayWidth-1000)/2)+i*125,
+          ((displayHeight-1000)/2)+j*125,125,125);
       }  
     }
   }
