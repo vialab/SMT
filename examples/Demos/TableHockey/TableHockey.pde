@@ -4,6 +4,7 @@
  */
 
 //standard library imports
+import java.awt.Line2D
 import java.util.Vector;
 
 //SMT library imports
@@ -27,8 +28,10 @@ void setup(){
 	SMT.init( this, TouchSource.MULTIPLE);
 
 	//create pucks
-	pucks.add( new Puck( 0, 0, 100));
-	pucks.add( new Puck( 0, 0, 100));
+	Puck temp = new Puck( 100, 100, 30);
+	pucks.add( temp);
+	temp = new Puck( 100, 400, 30);
+	pucks.add( temp);
 
 	//add pucks to smt
 	for( Puck puck : pucks){
@@ -36,13 +39,11 @@ void setup(){
 	}
 
 	//start up the physics engine
-	//physics.start();
+	physics.start();
 }
 
 void draw(){
-	print("tick\n");
 	background( 0, 0, 0);
-	physics.tick();
 }
 
 void stop(){
@@ -50,62 +51,89 @@ void stop(){
 	super.stop();
 }
 
-//utility functions
-private float getTime(){
-	return (float) System.currentTimeMillis()/1000;
-}
-
 //classes
 class Puck extends Zone {
 	//static fields
 	final static String name = "Puck";
 	//fields
-	float radius;
-	PVector velocity;
+	public float radius;
+	public float mass;
+	public PVector velocity;
+	public PVector position;
 
 	//constructor
-	Puck(int x, int y, int radius) {
-		super(name, x, y, radius*2, radius*2 );
+	public Puck(int x, int y, int radius) {
+		super(name, 0, 0, radius*2, radius*2 );
 		this.radius = radius;
-		velocity = new PVector( 10, 10);
+		this.mass = 1;
+		velocity = new PVector( 0, 0);
+		position = new PVector( x, y);
 	}
 
-	//methods
-	void drawImpl(){
+	//SMT override methods
+	public void drawImpl(){
 		fill( 150, 50, 50);
-		ellipse( this.radius, this.radius, this.width, this.height);
+		ellipse(
+			position.x, position.y,
+			this.width, this.height);
 	}
-	void pickDrawImpl() {
-		ellipse( this.radius, this.radius, this.width, this.height);
+	public void pickDrawImpl() {
+		ellipse(
+			position.x, position.y,
+			this.width, this.height);
 	}
-	void touchImpl(){
+	public void touchImpl(){
 		Touch touch = getActiveTouch(0);
 		assert( touch != null);
 
-		float dx = touch.x - this.x;
-		float dy = touch.y - this.y;
+		float dx = touch.x - position.x;
+		float dy = touch.y - position.y;
 
-		drag();
+		velocity.x = dx * 20;
+		velocity.y = dy * 20;
 	}
 } //
 
 class Physics extends Thread {
 	//constants
-	public final int ticksPerSecond = 50;
-	public final float secondsPerTick = 1/ticksPerSecond;
+	public final int ticksPerSecond = 60;
+	public final long nanosecondsPerSecond = 1000000000;
+	public double secondsPerTick;
 	//public variables
 	public boolean terminate = false;
 	//private variables
-	private float time;
-	private float time_old;
-	private float dtime;
+	private long second;
+	private long time;
+	private long time_old;
+	private double dtime;
+	private int ticks;
+	private Vector<Line2D.Double> walls;
 
+	//constructor
 	public Physics(){
-		time = getTime();
-		time_old = time;
-		dtime = 0;
+		//basic initialization
+		secondsPerTick = 1.0/ticksPerSecond;
+		time = System.nanoTime();
+		second = time/nanosecondsPerSecond;
+		updateTime();
+
+		//initialize walls list
+		walls = new Vector<Line2D.Double>();
+		walls.add( new Line2D.Double(
+			0, 0,
+			display_width, 0));
+		walls.add( new Line2D.Double(
+			display_width, 0,
+			display_width, display_height));
+		walls.add( new Line2D.Double(
+			display_width, display_height,
+			0, display_height));
+		walls.add( new Line2D.Double(
+			0, display_height,
+			0, 0));
 	}
 
+	//methods
 	public void run(){
 		while( !terminate){
 			tick();
@@ -115,24 +143,70 @@ class Physics extends Thread {
 	public void tick(){
 		updateTime();
 		for( Puck puck : pucks){
-			puck.translate(
-				puck.velocity.x * dtime,
-				puck.velocity.y * dtime);
+			PVector step = new PVector( puck.velocity.x, puck.velocity.y);
+			step.x *= dtime;
+			step.y *= dtime;
+			puck.position.add( step);
+		}
+		for( int index = 0; index < pucks.size(); index++){
+			Puck puck = pucks.get( index);
+			handlePuckCollisions( puck, index);
+		}
+		for( Puck puck : pucks){
+			handleWallCollisions( puck);
+		}
+		applyTickLimit();
+	}
+
+	//collision functions
+	public void handlePuckCollisions( Puck puck, int index){
+		for( int i = index + 1; i < pucks.size(); i++){
+
+			Puck other = pucks.get( i);
+			PVector difference = PVector.sub(
+				other.position, puck.position);
+			println( String.format("%f %f", difference.x, difference.y));
 		}
 	}
 
+	public void handleWallCollisions( Puck puck){
+		for( Line2D.Double wall : walls){
+			//get puck to wall distance
+			Pvector distanceVector = pointToLineVector( wall, puck.position);
+		}
+
+	}
+	public PVector pointToLineVector( Line2D.Double line, PVector point){
+			PVector pa = new PVector(
+				line.x1 - point.x,
+				line.y1 - point.y);
+			//store these
+			PVector l = new PVector( line.x2 - line.x1, line.y2 - line.x1);
+			PVector perp = new PVector( -l.y, l.x);
+	}
+
+	//utility functions
+	void updateTime(){
+		time_old = time;
+		time = System.nanoTime();
+		dtime = (time - time_old)/1e9;
+		if( second != time/nanosecondsPerSecond){
+			println( String.format("tps: %d", ticks));
+			ticks = 0;
+			second = time/nanosecondsPerSecond;
+		}
+		ticks++;
+	}
+
 	void applyTickLimit(){
-		updateTime();
 		try {
-			float timeLeft = secondsPerTick - dtime;
+			long time2 = System.nanoTime();
+			double dtime2 = (time2 - time)/1e9;
+			double timeLeft = secondsPerTick - dtime2;
+			//println(timeLeft);
 			if( timeLeft > 0){
-				Thread.sleep( round( timeLeft));
+				Thread.sleep( Math.round( timeLeft*1000));
 			}
 		} catch( InterruptedException e){}
-	}
-	void updateTime(){
-			time_old = time;
-			time = getTime();
-			dtime = time - time_old;
 	}
 }
