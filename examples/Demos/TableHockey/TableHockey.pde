@@ -4,7 +4,7 @@
  */
 
 //standard library imports
-import java.awt.Line2D
+import java.awt.geom.Line2D;
 import java.util.Vector;
 
 //SMT library imports
@@ -29,6 +29,16 @@ void setup(){
 
 	//create pucks
 	Puck temp = new Puck( 100, 100, 30);
+	pucks.add( temp);
+	temp = new Puck( 100, 400, 30);
+	pucks.add( temp);
+	temp = new Puck( 100, 400, 30);
+	pucks.add( temp);
+	temp = new Puck( 100, 400, 30);
+	pucks.add( temp);
+	temp = new Puck( 100, 400, 30);
+	pucks.add( temp);
+	temp = new Puck( 100, 400, 30);
 	pucks.add( temp);
 	temp = new Puck( 100, 400, 30);
 	pucks.add( temp);
@@ -165,25 +175,27 @@ class Physics extends Thread {
 			Puck other = pucks.get( i);
 			PVector difference = PVector.sub(
 				other.position, puck.position);
-			println( String.format("%f %f", difference.x, difference.y));
+			//println( String.format("%f %f", difference.x, difference.y));
 		}
 	}
 
 	public void handleWallCollisions( Puck puck){
 		for( Line2D.Double wall : walls){
 			//get puck to wall distance
-			Pvector distanceVector = pointToLineVector( wall, puck.position);
+			//PVector distanceVector = pointToLineVector( wall, puck.position);
 		}
 
 	}
-	public PVector pointToLineVector( Line2D.Double line, PVector point){
+	/*public PVector pointToLineVector( Line2D.Double line, PVector point){
 			PVector pa = new PVector(
-				line.x1 - point.x,
-				line.y1 - point.y);
+				(float) (line.x1 - point.x),
+				(float) (line.y1 - point.y));
 			//store these
-			PVector l = new PVector( line.x2 - line.x1, line.y2 - line.x1);
+			PVector l = new PVector(
+				(float) (line.x2 - line.x1),
+				(float) (line.y2 - line.x1));
 			PVector perp = new PVector( -l.y, l.x);
-	}
+	}*/
 
 	//utility functions
 	void updateTime(){
