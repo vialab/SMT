@@ -233,38 +233,38 @@ public class KeyboardZone extends Zone {
 
 	private enum Keys {
 		KEY_BACK_QUOTE('~', '`', KeyEvent.VK_BACK_QUOTE, false), KEY_1('!', '1', KeyEvent.VK_1,
-				false), KEY_2('@', '2', KeyEvent.VK_2, false), KEY_3('#', '3', KeyEvent.VK_3, false), KEY_4(
-				'$', '4', KeyEvent.VK_4, false), KEY_5('%', '5', KeyEvent.VK_5, false), KEY_6('^',
-				'6', KeyEvent.VK_6, false), KEY_7('$', '7', KeyEvent.VK_7, false), KEY_8('*', '8',
-				KeyEvent.VK_8, false), KEY_9('(', '9', KeyEvent.VK_9, false), KEY_0(')', '0',
-				KeyEvent.VK_0, false), KEY_MINUS('_', '-', KeyEvent.VK_MINUS, false), KEY_EQUALS(
-				'+', '=', KeyEvent.VK_EQUALS, false), KEY_BACKSPACE('\b', KeyEvent.VK_BACK_SPACE,
-				false, "Backspace", 2.0f), KEY_TAB('\t', KeyEvent.VK_TAB, false, "Tab", 1.5f), KEY_Q(
-				'q', KeyEvent.VK_Q, false), KEY_W('w', KeyEvent.VK_W, false), KEY_E('e',
-				KeyEvent.VK_E, false), KEY_R('r', KeyEvent.VK_R, false), KEY_T('t', KeyEvent.VK_T,
-				false), KEY_Y('y', KeyEvent.VK_Y, false), KEY_U('u', KeyEvent.VK_U, false), KEY_I(
-				'i', KeyEvent.VK_I, false), KEY_O('o', KeyEvent.VK_O, false), KEY_P('p',
-				KeyEvent.VK_P, false), KEY_OPEN_BRACKET('{', '[', KeyEvent.VK_OPEN_BRACKET, false), KEY_CLOSE_BRACKET(
-				'}', ']', KeyEvent.VK_CLOSE_BRACKET, false), KEY_BACK_SLASH('|', '\\',
-				KeyEvent.VK_BACK_SLASH, false, 1.5f), KEY_CAPS_LOCK('\u21EA',
-				KeyEvent.VK_CAPS_LOCK, false, "Caps Lock", 1.75f), KEY_A('a', KeyEvent.VK_A, false), KEY_S(
-				's', KeyEvent.VK_S, false), KEY_D('d', KeyEvent.VK_D, false), KEY_F('f',
-				KeyEvent.VK_F, false), KEY_G('g', KeyEvent.VK_G, false), KEY_H('h', KeyEvent.VK_H,
-				false), KEY_J('j', KeyEvent.VK_J, false), KEY_K('k', KeyEvent.VK_K, false), KEY_L(
-				'l', KeyEvent.VK_L, false), KEY_SEMICOLON(':', ';', KeyEvent.VK_SEMICOLON, false), KEY_QUOTE(
-				'"', '\'', KeyEvent.VK_QUOTE, false), KEY_ENTER('\n', KeyEvent.VK_ENTER, false,
-				"Enter", 2.25f), KEY_SHIFT_LEFT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT, true,
-				"Shift", 2.3f), KEY_Z('z', KeyEvent.VK_Z, false), KEY_X('x', KeyEvent.VK_X, false), KEY_C(
-				'c', KeyEvent.VK_C, false), KEY_V('v', KeyEvent.VK_V, false), KEY_B('b',
-				KeyEvent.VK_B, false), KEY_N('n', KeyEvent.VK_N, false), KEY_M('m', KeyEvent.VK_M,
-				false), KEY_COMMA('<', ',', KeyEvent.VK_COMMA, false), KEY_PERIOD('>', '.',
-				KeyEvent.VK_PERIOD, false), KEY_SLASH('?', '/', KeyEvent.VK_SLASH, false), KEY_SHIFT_RIGHT(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT, true, "Shift", 2.7f), KEY_CTRL_LEFT(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true, "Control", 1.5f), KEY_ALT_LEFT(
-				KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_SPACE(' ',
-				KeyEvent.VK_SPACE, false, "Space", 9.6f), KEY_ALT_RIGHT(KeyEvent.CHAR_UNDEFINED,
-				KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_CTRL_RIGHT(KeyEvent.CHAR_UNDEFINED,
-				KeyEvent.VK_CONTROL, true, "Control", 1.5f);
+			false), KEY_2('@', '2', KeyEvent.VK_2, false), KEY_3('#', '3', KeyEvent.VK_3, false), KEY_4(
+			'$', '4', KeyEvent.VK_4, false), KEY_5('%', '5', KeyEvent.VK_5, false), KEY_6('^',
+			'6', KeyEvent.VK_6, false), KEY_7('$', '7', KeyEvent.VK_7, false), KEY_8('*', '8',
+			KeyEvent.VK_8, false), KEY_9('(', '9', KeyEvent.VK_9, false), KEY_0(')', '0',
+			KeyEvent.VK_0, false), KEY_MINUS('_', '-', KeyEvent.VK_MINUS, false), KEY_EQUALS(
+			'+', '=', KeyEvent.VK_EQUALS, false), KEY_BACKSPACE('\b', KeyEvent.VK_BACK_SPACE,
+			false, "Backspace", 2.0f), KEY_TAB('\t', KeyEvent.VK_TAB, false, "Tab", 1.5f), KEY_Q(
+			'q', KeyEvent.VK_Q, false), KEY_W('w', KeyEvent.VK_W, false), KEY_E('e',
+			KeyEvent.VK_E, false), KEY_R('r', KeyEvent.VK_R, false), KEY_T('t', KeyEvent.VK_T,
+			false), KEY_Y('y', KeyEvent.VK_Y, false), KEY_U('u', KeyEvent.VK_U, false), KEY_I(
+			'i', KeyEvent.VK_I, false), KEY_O('o', KeyEvent.VK_O, false), KEY_P('p',
+			KeyEvent.VK_P, false), KEY_OPEN_BRACKET('{', '[', KeyEvent.VK_OPEN_BRACKET, false), KEY_CLOSE_BRACKET(
+			'}', ']', KeyEvent.VK_CLOSE_BRACKET, false), KEY_BACK_SLASH('|', '\\',
+			KeyEvent.VK_BACK_SLASH, false, 1.5f), KEY_CAPS_LOCK('\u21EA',
+			KeyEvent.VK_CAPS_LOCK, false, "Caps Lock", 1.75f), KEY_A('a', KeyEvent.VK_A, false), KEY_S(
+			's', KeyEvent.VK_S, false), KEY_D('d', KeyEvent.VK_D, false), KEY_F('f',
+			KeyEvent.VK_F, false), KEY_G('g', KeyEvent.VK_G, false), KEY_H('h', KeyEvent.VK_H,
+			false), KEY_J('j', KeyEvent.VK_J, false), KEY_K('k', KeyEvent.VK_K, false), KEY_L(
+			'l', KeyEvent.VK_L, false), KEY_SEMICOLON(':', ';', KeyEvent.VK_SEMICOLON, false), KEY_QUOTE(
+			'"', '\'', KeyEvent.VK_QUOTE, false), KEY_ENTER('\n', KeyEvent.VK_ENTER, false,
+			"Enter", 2.25f), KEY_SHIFT_LEFT(KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT, true,
+			"Shift", 2.3f), KEY_Z('z', KeyEvent.VK_Z, false), KEY_X('x', KeyEvent.VK_X, false), KEY_C(
+			'c', KeyEvent.VK_C, false), KEY_V('v', KeyEvent.VK_V, false), KEY_B('b',
+			KeyEvent.VK_B, false), KEY_N('n', KeyEvent.VK_N, false), KEY_M('m', KeyEvent.VK_M,
+			false), KEY_COMMA('<', ',', KeyEvent.VK_COMMA, false), KEY_PERIOD('>', '.',
+			KeyEvent.VK_PERIOD, false), KEY_SLASH('?', '/', KeyEvent.VK_SLASH, false), KEY_SHIFT_RIGHT(
+			KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_SHIFT, true, "Shift", 2.7f), KEY_CTRL_LEFT(
+			KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_CONTROL, true, "Control", 1.5f), KEY_ALT_LEFT(
+			KeyEvent.CHAR_UNDEFINED, KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_SPACE(' ',
+			KeyEvent.VK_SPACE, false, "Space", 9.6f), KEY_ALT_RIGHT(KeyEvent.CHAR_UNDEFINED,
+			KeyEvent.VK_ALT, true, "Alt", 1.2f), KEY_CTRL_RIGHT(KeyEvent.CHAR_UNDEFINED,
+			KeyEvent.VK_CONTROL, true, "Control", 1.5f);
 
 		// KEY_DELETE('\u007F', KeyEvent.VK_DELETE, false, "Delete");
 
@@ -313,7 +313,7 @@ public class KeyboardZone extends Zone {
 
 	private ArrayList<KeyListener> keyListeners = new ArrayList<KeyListener>();
 
-    
+		
 	public KeyboardZone() {
 		this(null, true);
 	}
@@ -380,20 +380,20 @@ public class KeyboardZone extends Zone {
 		this(name, x, y, width, height, keysSentToApplet, alpha, backgroundColor, keyColor, keyPressedColor, textColor, null);
 	}
 
-    /**
-     * @param name    - String: The name of the zone
-     * @param x       - int: X-coordinate of the upper left corner of the zone
+		/**
+		 * @param name    - String: The name of the zone
+		 * @param x       - int: X-coordinate of the upper left corner of the zone
 	 * @param y       - int: Y-coordinate of the upper left corner of the zone
 	 * @param width   - int: Width of the zone
 	 * @param height  - int: Height of the zone
-     * @param keysSentToApplet  - boolean: Sets if the key input is sent to Applet
-     * @param alpha   - int: Transparency level for keyboard
-     * @param backgroundColor   - int: Background colour of the keyboard
-     * @param keyColor   - int: Colour of the keyboard keys
-     * @param keyPressedColor   - int: Colour of the keyboard keys when they are pressed down
-     * @param textColor   - int: Colour of the text in the keyboard keys
-     * @param font        - PFont: Font used to display text in the keyboard keys
-     */
+		 * @param keysSentToApplet  - boolean: Sets if the key input is sent to Applet
+		 * @param alpha   - int: Transparency level for keyboard
+		 * @param backgroundColor   - int: Background colour of the keyboard
+		 * @param keyColor   - int: Colour of the keyboard keys
+		 * @param keyPressedColor   - int: Colour of the keyboard keys when they are pressed down
+		 * @param textColor   - int: Colour of the text in the keyboard keys
+		 * @param font        - PFont: Font used to display text in the keyboard keys
+		 */
 	public KeyboardZone(String name, int x, int y, int width, int height, boolean keysSentToApplet,
 			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor, PFont font) {
 		super(name, x, y, width, height);

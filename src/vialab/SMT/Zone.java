@@ -73,41 +73,29 @@ import TUIO.TuioTime;
  * @version 1.0
  */
 public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
-
-	
 	/**
 	 * Changing the return of this method from the default of false will stop the redraw from occuring
 	 * every frame for indirect Zones, and instead only will redraw if setModified(true) is called on it.
 	 */
-	protected boolean updateOnlyWhenModified(){ return false;}
-	
-	public boolean stealChildrensTouch = false;
-	
+	protected boolean updateOnlyWhenModified(){ return false;}	
+	public boolean stealChildrensTouch = false;	
 	public boolean physics = false;
-
 	BodyDef zoneBodyDef = new BodyDef();
-
 	Body zoneBody;
-
 	PolygonShape zoneShape = new PolygonShape();
-
 	FixtureDef zoneFixtureDef = new FixtureDef();
-
 	Fixture zoneFixture;
-
-	/** Processing PApplet */
+	
+	//Processing PApplet
 	protected static PApplet applet;
-
-	/** The zone's transformation matrix */
+	
+	//The zone's transformation matrix
 	protected PMatrix3D matrix = new PMatrix3D();
-
 	protected PMatrix3D backupMatrix = null;
-
-	/** The zone's inverse transformation matrix */
+	
+	//The zone's inverse transformation matrix
 	protected PMatrix3D inverse = new PMatrix3D();
-
 	public int x, y;
-
 	public int height, width;
 
 	// A LinkedHashMap will allow insertion order to be maintained.
@@ -126,31 +114,18 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	// private boolean pickInitialized = false;
 
 	protected Zone parent = null;
-
 	protected float rntRadius;
-
 	protected Method drawMethod = null;
-
 	protected Method pickDrawMethod = null;
-
 	protected Method touchMethod = null;
-
 	protected Method keyPressedMethod = null;
-
 	protected Method keyReleasedMethod = null;
-
 	protected Method keyTypedMethod = null;
-
 	protected Method touchUpMethod = null;
-
 	protected Method touchDownMethod = null;
-
 	protected Method touchMovedMethod = null;
-
 	protected Method pressMethod = null;
-
 	protected String name = null;
-
 	protected String renderer = null;
 
 	/**
@@ -160,29 +135,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * but we lose a large amount of performance.
 	 */
 	protected boolean direct = true;
-
 	protected boolean touchImpl;
-
 	protected boolean pickImpl;
-	
 	protected boolean drawImpl;
-
 	private boolean touchUDM;
-
 	MouseJoint mJoint;
-
 	private MouseJointDef mJointDef;
-
 	private boolean pickDraw = false;
-
 	boolean press;
-
 	private Object boundObject = null;
-
 	protected int maxWidth, maxHeight;
-
 	protected int minWidth, minHeight;
-
 	protected boolean scalingLimit = false;
 
 	public void enableScalingLimit(int maxW, int maxH, int minW, int minH) {
@@ -198,50 +161,37 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	private List<Touch> touchDownList = new ArrayList<Touch>();
-
 	private List<Touch> touchUpList = new ArrayList<Touch>();
-
 	private List<Touch> touchMovedList = new ArrayList<Touch>();
-
 	private List<Touch> pressList = new ArrayList<Touch>();
-
 	private float offsetX;
-
 	private float offsetY;
-
 	private HashSet<Long> dragSeenTouch = new HashSet<Long>();
-
 	private PGraphics drawPG;
-
 	private boolean firstDraw;
 
 	boolean warnDraw() {
 		return true;
 	}
-
 	boolean warnTouch() {
 		return true;
 	}
-
 	boolean warnKeys() {
 		return false;
 	}
-
 	boolean warnPick() {
 		return false;
 	}
-
 	boolean warnTouchUDM() {
 		return false;
 	}
-
 	boolean warnPress() {
 		return false;
 	}
 
 	/**
 	 * Check state of the direct flag.
-	 * <P>
+	 * 
 	 * The direct flag controls whether rendering directly onto
 	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
 	 * drawing into an image we have assured size(cant draw outside of zone),
@@ -256,7 +206,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * Change state of the direct flag.
-	 * <P>
+	 * 
 	 * The direct flag controls whether rendering directly onto
 	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
 	 * drawing into an image we have assured size(cant draw outside of zone),
@@ -283,7 +233,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are 1
-	 * 
 	 */
 	public Zone() {
 		this(null);
@@ -291,8 +240,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * Zone constructor, with a name, (x,y) position is (0,0) , width and height
-	 * are 1
-	 * 
+	 *   are 1
 	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
 	 */
 	public Zone(String name) {
@@ -301,8 +249,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * Zone constructor, with a name, (x,y) position is (0,0) , width and height
-	 * are 1
-	 * 
+	 *   are 1
 	 * @param name  - String: Name of the zone, used in the draw, touch ,etc methods
 	 * @param renderer - String: The PGraphics renderer that draws the Zone
 	 */
@@ -311,47 +258,33 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @param x
-	 *            The x position of the zone
-	 * @param y
-	 *            The y position of the zone
-	 * @param width
-	 *            of the zone
-	 * @param height
-	 *            of the zone
+	 * @param x The x position of the zone
+	 * @param y The y position of the zone
+	 * @param width The width of the zone
+	 * @param height The height of the zone
 	 */
 	public Zone(int x, int y, int width, int height) {
 		this(x, y, width, height, SMT.defaultRenderer);
 	}
 
 	/**
-	 * @param x
-	 *            The x position of the zone
-	 * @param y
-	 *            The y position of the zone
-	 * @param width
-	 *            of the zone
-	 * @param height
-	 *            of the zone
-	 * @param renderer
-	 *            The renderer that draws the zone
+	 * @param x The x position of the zone
+	 * @param y The y position of the zone
+	 * @param width The width of the zone
+	 * @param height The height of the zone
+	 * @param renderer The renderer that draws the zone
 	 */
 	public Zone(int x, int y, int width, int height, String renderer) {
 		this(null, x, y, width, height, renderer);
 	}
 
 	/**
-	 * @param name
-	 *            The name of the zone, used for the reflection methods
-	 *            (drawname(),touchname(),etc)
-	 * @param x
-	 *            The x position of the zone
-	 * @param y
-	 *            The y position of the zone
-	 * @param width
-	 *            of the zone
-	 * @param height
-	 *            of the zone
+	 * @param name The name of the zone, used for the reflection methods
+	 *   (drawname(),touchname(),etc)
+	 * @param x The x position of the zone
+	 * @param y The y position of the zone
+	 * @param width The width of the zone
+	 * @param height The height of the zone
 	 */
 	public Zone(String name, int x, int y, int width, int height) {
 		this(name, x, y, width, height, SMT.defaultRenderer);
@@ -359,26 +292,23 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * @param name
-	 *            The name of the zone, used for the reflection methods
-	 *            (drawname(),touchname(),etc)
+	 *   The name of the zone, used for the reflection methods
+	 *   (drawname(),touchname(),etc)
 	 * @param x
-	 *            The x position of the zone
+	 *   The x position of the zone
 	 * @param y
-	 *            The y position of the zone
+	 *   The y position of the zone
 	 * @param width
-	 *            of the zone
+	 *   The width of the zone
 	 * @param height
-	 *            of the zone
+	 *   The height of the zone
 	 * @param renderer
-	 *            The renderer that draws the zone
+	 *   The renderer that draws the zone
 	 */
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
 		super();
-		
 		applet = SMT.parent;
-		
 		setParent(applet);
-
 		if (applet == null) {
 			System.err
 					.println("Error: Instantiation of Zone before SMT.init(). Expect serious issues if you see this message.");
@@ -407,8 +337,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @param name
-	 *            The new name of the zone
+	 * @param name The new name of the zone
 	 */
 	public void setName(String name) {
 		this.name = name == null ? this.getClass().getSimpleName() : name;
@@ -416,8 +345,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	/**
-	 * @param name
-	 *            The name of the zone to load the methods from
+	 * @param name The name of the zone to load the methods from
 	 */
 	protected void loadMethods(String name) {
 		if (SMT.warnUnimplemented != null) {
@@ -436,19 +364,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * @param name
-	 *            The name of the zone to load methods from, used as a suffix
-	 * @param warnDraw
-	 *            Display a warning when the draw method doesn't exist
+	 *   The name of the zone to load methods from, used as a suffix
+	 * @param warn
+	 *   Display a warning when the draw method doesn't exist
 	 * @param warnTouch
-	 *            Display a warning when the touch method doesn't exist
-	 * @param warnKeys
-	 *            Display a warning when the keyTyped/keyPressed/keyReleased
-	 *            methods don't exist
-	 * @param warnPick
-	 *            Display a warning when the pickDraw method doesn't exist
-	 * @param warnTouchUDM
-	 *            Display a warning when the touchUp/touchDown/touchMoved
-	 *            methods don't exist
+	 *   Display a warning when the touch method doesn't exist
+	 * @param warn
+	 *   Display a warning when the keyTyped/keyPressed/keyReleased
+	 *   methods don't exist
+	 * @param warn
+	 *   Display a warning when the pickDraw method doesn't exist
+	 * @param warn
+	 *   Display a warning when the touchUp/touchDown/touchMoved
+	 *   methods don't exist
 	 */
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM, boolean warnPress) {

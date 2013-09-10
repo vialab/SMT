@@ -21,9 +21,6 @@ $(class_files):
 #basic commands
 build: $(class_files)
 
-test: build
-	processing-shell examples/Demos/TableHockey
-
 #extra commands
 library/SMT.jar: build
 	jar cmf manifest library/SMT.jar bin/* resources/
@@ -35,3 +32,17 @@ export: library/SMT.jar
 		referense release_notes.txt resources src
 docs:
 	javadoc -d documentation $(source_files)
+
+git-prepare:
+	git add -A
+	git add -u
+
+#test commands
+test: build
+	processing-shell test/SwipeKeyboard
+
+test-tablehockey: build
+	processing-shell examples/Demos/TableHockey
+
+test-swipekeyboard: build
+	processing-shell test/SwipeKeyboard
