@@ -30,7 +30,7 @@ source_files = src/vialab/SMT/AndroidToTUIO.java\
 	src/vialab/SMT/TouchPair.java \
 	src/vialab/SMT/TouchSource.java \
 	src/vialab/SMT/TouchState.java \
-	src/vialab/SMT/Zone.java
+	src/vialab/SMT/Zone.java \
 
 class_files = \
 	bin/vialab/SMT/AndroidToTUIO.class \
@@ -66,6 +66,37 @@ class_files = \
 	bin/vialab/SMT/TouchState.class \
 	bin/vialab/SMT/Zone.class
 
+class_files2 = \
+	bin/vialab/SMT/SwipeKeyboard.class \
+	bin/vialab/SMT/event/SwipeKeyEvent.class \
+	bin/vialab/SMT/event/SwipeKeyListener.class \
+	bin/vialab/SMT/test/TestSwipeKeyboard.class \
+	bin/vialab/SMT/zone/SwipeKeyZone.class
+
 #dependencies
-#note: weakness in every class file depends on every java file
+
+#temporary build solution
+#note: weak in that every class file depends on every java file
 $(class_files): $(source_files)
+
+#event package
+bin/vialab/SMT/event/SwipeKeyListener.class: \
+		src/vialab/SMT/event/SwipeKeyListener.java
+
+bin/vialab/SMT/event/SwipeKeyEvent.class: \
+		src/vialab/SMT/event/SwipeKeyEvent.java
+
+#test package
+bin/vialab/SMT/test/TestSwipeKeyboard.class: \
+		src/vialab/SMT/test/TestSwipeKeyboard.java \
+	bin/vialab/SMT/zone/SwipeKeyZone.class
+
+#zone package
+bin/vialab/SMT/zone/SwipeKeyZone.class: src/vialab/SMT/zone/SwipeKeyZone.java \
+	bin/vialab/SMT/Zone.class
+
+#top level package
+bin/vialab/SMT/SwipeKeyboard.class: src/vialab/SMT/SwipeKeyboard.java \
+	bin/vialab/SMT/Zone.class \
+	bin/vialab/SMT/event/SwipeKeyListener.class \
+	bin/vialab/SMT/zone/SwipeKeyZone.class

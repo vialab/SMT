@@ -14,7 +14,7 @@ final int fps_limit = 60;
 
 //objects
 SwipeKeyboard keyboard;
-KeyZone key;
+SwipeKeyZone key;
 
 //other
 int display_halfWidth;
@@ -29,6 +29,14 @@ void setup(){
 	size( display_width, display_height, P3D);
 	//smt library setup
 	SMT.init( this, TouchSource.MULTIPLE);
+
+	//add key test
+	key = new SwipeKeyZone();
+	SMT.add( key);
+
+	//add keyboard test
+	keyboard = new SwipeKeyboard();
+	//SMT.add( keyboard);
 }
 
 void draw(){

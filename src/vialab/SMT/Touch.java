@@ -237,7 +237,7 @@ public class Touch extends TuioCursor {
 	public void unassignZone(Zone zone) {
 		if (zone != null) {
 			assignedZones.remove(zone);
-			zone.unassign(this);
+			zone.unassign( this.sessionID);
 			this.startTimeMillis = this.originalTimeMillis;
 		}
 	}
