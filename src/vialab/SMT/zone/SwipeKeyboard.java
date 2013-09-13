@@ -1,22 +1,26 @@
-package vialab.SMT;
+package vialab.SMT.zone;
 
 //standard library imports
 import java.awt.event.*;
 import java.util.Vector;
 
 //smt imports
+import vialab.SMT.*;
 import vialab.SMT.event.*;
-import vialab.SMT.zone.*;
 
 public class SwipeKeyboard extends Zone implements SwipeKeyListener{
-	//Private fields
+	//debug fields
+	private static final boolean debug = false;
+
+	//private fields
 	private Vector<SwipeKeyZone> keys;
+	private Vector<Touch> touches;
 	SwipeKeyZone key1;
 	SwipeKeyZone key2;
 	SwipeKeyZone key3;
 	SwipeKeyZone key4;
 
-	//Constructors
+	//constructors
 	public SwipeKeyboard(){
 		keys = new Vector<SwipeKeyZone>();
 		//add key test
@@ -28,15 +32,16 @@ public class SwipeKeyboard extends Zone implements SwipeKeyListener{
 		key2.translate( 20 + 120 * 1, 20);
 		key3.translate( 20 + 120 * 2, 20);
 		key4.translate( 20 + 120 * 3, 20);
-		SMT.add( key1);
-		SMT.add( key2);
-		SMT.add( key3);
-		SMT.add( key4);
-		this.add( key1);
-		this.add( key2);
-		this.add( key3);
-		this.add( key4);
-		
+		keys.add( key1);
+		keys.add( key2);
+		keys.add( key3);
+		keys.add( key4);
+		for( SwipeKeyZone key : keys){
+			SMT.add( key);
+			this.add( key);
+			key.addSwipeKeyListener( this);
+		}
+
 		//other
 		this.translate( 10, 10);
 	}
@@ -64,13 +69,20 @@ public class SwipeKeyboard extends Zone implements SwipeKeyListener{
 	}
 
 	//SwipeKeyListener handles
-	public void swipeStarted( SwipeKeyEvent swipeKeyEvent){
-		System.out.printf("Swipe Started: %s\n", swipeKeyEvent.getKeyChar());
+	public void swipeStarted( SwipeKeyEvent event){
+		if( debug) System.out.printf( "Swipe Started: %s TouchID: %d\n",
+			event.getKeyChar(), event.getTouch().sessionID);
 	}
-	public void swipeHit( SwipeKeyEvent swipeKeyEvent){
-		System.out.printf("Swipe Hit: %s\n", swipeKeyEvent.getKeyChar());
+	public void swipeHit( SwipeKeyEvent event){
+		if( debug) System.out.printf( "Swipe Hit: %s TouchID: %d\n",
+			event.getKeyChar(), event.getTouch().sessionID);
 	}
-	public void swipeEnded( SwipeKeyEvent swipeKeyEvent){
-		System.out.printf("Swipe Ended: %s\n", swipeKeyEvent.getKeyChar());
+	public void swipeEnded( SwipeKeyEvent event){
+		if( debug) System.out.printf( "Swipe Ended: %s TouchID: %d\n",
+			event.getKeyChar(), event.getTouch().sessionID);
+	}
+
+	//subclasses
+	private class Anchor extends Zone {
 	}
 }

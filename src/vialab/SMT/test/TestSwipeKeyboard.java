@@ -23,7 +23,6 @@ import vialab.SMT.zone.*;
 
 //SMT library imports
 
-
 /**
  * Test program for the experimental SwipeKeyboard class
  * by Kalev Kalda Sikes

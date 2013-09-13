@@ -244,7 +244,7 @@ public class SMT {
 	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 * @param extraClasses
-	 *            Class<?> - Classes that should be checked for method
+	 *            Class< ?> - Classes that should be checked for method
 	 *            definitions similar to PApplet for drawZoneName(), etc, but
 	 *            PApplet takes precedence.
 	 **/

@@ -1,31 +1,30 @@
 package vialab.SMT;
 
+//standard library imports
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+//processing imports
 import processing.core.PApplet;
+//tuio imports
 import TUIO.*;
+
+//local imports
+import vialab.SMT.event.*;
 
 /**
  * Touch has state information of one touch and extends TuioCursor.
- * 
  * @see <a href=http://www.tuio.org/api/java/TUIO/TuioCursor.html>TuioCursor
  *      Javadoc</a>
  */
 public class Touch extends TuioCursor {
 
-	boolean isJointCursor = false;
-
-	private CopyOnWriteArrayList<Zone> assignedZones = new CopyOnWriteArrayList<Zone>();
-
-	long originalTimeMillis;
-
-	long startTimeMillis;
-
 	/** Processing PApplet */
 	static PApplet applet = SMT.parent;
+
+	//Public Fields
 	/** The individual cursor ID number that is assigned to each TuioCursor. */
 	public int cursorID;
 	/** Reflects the current state of the TuioComponent. */
@@ -69,8 +68,17 @@ public class Touch extends TuioCursor {
 	 */
 	public boolean isDown;
 
+	//Private Fields
 	private TuioTime prevUpdateTime;
+	boolean isJointCursor = false;
+	private CopyOnWriteArrayList<Zone> assignedZones =
+		new CopyOnWriteArrayList<Zone>();
+	long originalTimeMillis;
+	long startTimeMillis;
+	private Vector<TouchListener> listeners;
 
+
+	//Constructors
 	/**
 	 * This constructor takes the attributes of the provided TuioCursor and
 	 * assigns these values to the newly created Touch.
@@ -107,6 +115,8 @@ public class Touch extends TuioCursor {
 		path = getPath();
 		this.sessionID = getSessionID();
 		state = getTuioState();
+		//private fields
+		listeners = new Vector<TouchListener>();
 	}
 
 	/**
@@ -134,6 +144,8 @@ public class Touch extends TuioCursor {
 		path = getPath();
 		this.sessionID = getSessionID();
 		state = getTuioState();
+		//private fields
+		listeners = new Vector<TouchListener>();
 	}
 
 	/**
@@ -201,11 +213,12 @@ public class Touch extends TuioCursor {
 	 *         specified index, returns null if invalid index
 	 */
 	public Point getPointOnPath(int index) {
-		if (index < 0 || index >= path.size()) {
+		if (index < 0 || index >= path.size())
 			return null;
-		}
-		return new Point(path.get(index).getScreenX(applet.width), path.get(index).getScreenY(
-				applet.height));
+		else
+			return new Point(
+				path.get(index).getScreenX( applet.width),
+				path.get(index).getScreenY( applet.height));
 	}
 
 	/**
@@ -250,6 +263,54 @@ public class Touch extends TuioCursor {
 	}
 
 	/**
+	 * @param t
+	 *            Touch to calculate distance from
+	 * @return The distance between this and the given Touch
+	 */
+	float distance(Touch t) {
+		return (float) getCurrentPoint().distance(t.getCurrentPoint());
+	}
+
+	//accessor methods
+	@Override
+	public float getX() {
+		return x;
+	}
+
+	@Override
+	public float getY() {
+		return y;
+	}
+	
+	/**
+	 * @param z
+	 * @return the x position of this Touch in local coordinates of the given zone
+	 */
+	public float getLocalX(Zone z){
+		return z.getLocalX(this);
+	}
+	
+	/**
+	 * @param z
+	 * @return the y position of this Touch in local coordinates of the given zone
+	 */
+	public float getLocalY(Zone z){
+		return z.getLocalY(this);
+	}
+
+	public TouchSource getTouchSource() {
+		// bottom 48 bits of sessionID are used for actual IDs, top 16 bits for
+		// partitioning by port, 0th partition/non partitioned will be used only
+		// by the main tuiolistener, all others use the port number for the
+		// partition index, and so can be used to find the port, and so the
+		// device it came from
+		if (sessionID >> 48 == 0) {
+			return SMT.deviceMap.get(SMT.mainListenerPort);
+		}
+		return SMT.deviceMap.get((int) (sessionID >> 48));
+	}
+
+	/**
 	 * @return All the points on the path
 	 */
 	public Point[] getPathPoints() {
@@ -278,64 +339,40 @@ public class Touch extends TuioCursor {
 			TuioPoint tp = path.get(i);
 			// once the TuioTimes are greater than the prevUpdateTime we have
 			// got all of the new Points
-			if (prevUpdateTime != null
-					&& tp.getTuioTime().getTotalMilliseconds() <= prevUpdateTime
+			if (prevUpdateTime != null &&
+					tp.getTuioTime().getTotalMilliseconds() <= prevUpdateTime
 							.getTotalMilliseconds()) {
 				if (join) {
 					// one further back if we want to join it up
-					points.add(new Point(tp.getScreenX(applet.width), tp.getScreenY(applet.height)));
+					points.add(new Point(
+						tp.getScreenX(applet.width),
+						tp.getScreenY(applet.height)));
 				}
 				break;
 			}
-			points.add(new Point(tp.getScreenX(applet.width), tp.getScreenY(applet.height)));
+			points.add(new Point(
+				tp.getScreenX(applet.width),
+				tp.getScreenY(applet.height)));
 		}
 		return points.toArray(new Point[points.size()]);
 	}
 
-	@Override
-	public float getX() {
-		return x;
+	//event invocation methods
+	public void invokeTouchDownEvent(){
+		TouchEvent event = new TouchEvent( this, TouchEvent.TouchType.DOWN, this);
+		for( TouchListener listener : listeners)
+			listener.handleTouchDown( event);
+	}
+	public void invokeTouchUpEvent(){
+		TouchEvent event = new TouchEvent( this, TouchEvent.TouchType.UP, this);
+		for( TouchListener listener : listeners)
+			listener.handleTouchUp( event);
+	}
+	public void invokeTouchMovedEvent(){
+		TouchEvent event = new TouchEvent( this, TouchEvent.TouchType.MOVED, this);
+		for( TouchListener listener : listeners)
+			listener.handleTouchMoved( event);
 	}
 
-	@Override
-	public float getY() {
-		return y;
-	}
-
-	/**
-	 * @param t
-	 *            Touch to calculate distance from
-	 * @return The distance between this and the given Touch
-	 */
-	float distance(Touch t) {
-		return (float) getCurrentPoint().distance(t.getCurrentPoint());
-	}
-
-	public TouchSource getTouchSource() {
-		// bottom 48 bits of sessionID are used for actual IDs, top 16 bits for
-		// partitioning by port, 0th partition/non partitioned will be used only
-		// by the main tuiolistener, all others use the port number for the
-		// partition index, and so can be used to find the port, and so the
-		// device it came from
-		if (sessionID >> 48 == 0) {
-			return SMT.deviceMap.get(SMT.mainListenerPort);
-		}
-		return SMT.deviceMap.get((int) (sessionID >> 48));
-	}
-	
-	/**
-	 * @param z
-	 * @return the x position of this Touch in local coordinates of the given zone
-	 */
-	public float getLocalX(Zone z){
-		return z.getLocalX(this);
-	}
-	
-	/**
-	 * @param z
-	 * @return the y position of this Touch in local coordinates of the given zone
-	 */
-	public float getLocalY(Zone z){
-		return z.getLocalY(this);
-	}	
+	//private utility functions
 }

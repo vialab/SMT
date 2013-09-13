@@ -18,14 +18,11 @@ include dependencies.mk
 
 #compilation definitions
 $(class_files):
-	javac $(cp) $(dest) $(version) $(warnings)\
-		$(subst bin,src,$(subst class,java,$@))
-$(class_files2):
-	javac $(cp) $(dest) $(version) $(warnings)\
+	javac $(cp) $(dest) $(version) $(warnings) \
 		$(subst bin,src,$(subst class,java,$@))
 
 #basic commands
-build: $(class_files) $(class_files2)
+build: $(class_files)
 
 #extra commands
 library/SMT.jar: build
@@ -37,8 +34,8 @@ jar: library/SMT.jar
 export: library/SMT.jar
 	zip -r SMT.zip examples library library.properties \
 		referense release_notes.txt resources src
-docs:
-	javadoc -d documentation $(source_files)
+#docs:
+#	javadoc -d documentation $(source_files)
 
 git-prepare:
 	git add -A
@@ -50,6 +47,5 @@ test: test-swipekeyboard
 test-tablehockey: build
 	processing-shell examples/Demos/TableHockey
 
-test-swipekeyboard: build \
-		bin/vialab/SMT/test/TestSwipeKeyboard.class
+test-swipekeyboard: build
 	java $(cp) vialab.SMT.test.TestSwipeKeyboard

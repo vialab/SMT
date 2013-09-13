@@ -10,19 +10,22 @@ public class SwipeKeyEvent extends java.util.EventObject {
 	private int keyCode;
 	private char keyChar;
 	private int keyLocation;
+	private Touch touch;
 
 	//constants
+	// used integer constants instead of enum to allow easier extension.
 	public static final int SWIPE_STARTED = 1;
 	public static final int SWIPE_HIT = 2;
 	public static final int SWIPE_ENDED = 3;
 
 	public SwipeKeyEvent( Object source, int id, int keyCode, char keyChar,
-			int keyLocation){
+			int keyLocation, Touch touch){
 		super( source);
 		this.id = id;
 		this.keyCode = keyCode;
 		this.keyChar = keyChar;
 		this.keyLocation = keyLocation;
+		this.touch = touch;
 	}
 	/*KeyEvent( Component source, int id, long when, int modifiers,
 			int keyCode, char keyChar)
@@ -35,5 +38,8 @@ public class SwipeKeyEvent extends java.util.EventObject {
 	}
 	public int getKeyCode(){
 		return keyCode;
+	}
+	public Touch getTouch(){
+		return touch;
 	}
 }

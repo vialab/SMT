@@ -13,6 +13,7 @@ import vialab.SMT.*;
 import vialab.SMT.event.*;
 
 public class SwipeKeyZone extends Zone {
+
 	//private major fields
 	private Vector<SwipeKeyListener> listeners;
 	private int keyCode;
@@ -28,7 +29,7 @@ public class SwipeKeyZone extends Zone {
 	private Dimension halfDimension;
 
 	//debug fields
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 
 	//Constructors
 	public SwipeKeyZone( int keyCode){
@@ -101,11 +102,13 @@ public class SwipeKeyZone extends Zone {
 	public void touchDownImpl( Touch touch) {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchDown");
 		if( bufferTouchEvent == TouchEvent.ASSIGN)
-			invokeSwipeStarted();
+			invokeSwipeStarted( touch);
 		bufferTouchEvent = TouchEvent.TOUCH_DOWN;
 	}
 	public void touchUpImpl( Touch touch) {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchUp");
+		if( bufferTouchEvent == TouchEvent.UNASSIGN)
+			invokeSwipeEnded( touch);
 		bufferTouchEvent = TouchEvent.TOUCH_UP;
 	}
 	@Override
@@ -118,6 +121,9 @@ public class SwipeKeyZone extends Zone {
 	//entered detection
 	public void assign(Iterable<? extends Touch> touches) {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "assign");
+		for( Touch touch : touches ){
+			invokeSwipeHit( touch);
+		}
 		bufferTouchEvent = TouchEvent.ASSIGN;
 		super.assign( touches);
 	}
@@ -130,20 +136,23 @@ public class SwipeKeyZone extends Zone {
 	}
 
 	//event invocation functions
-	public void invokeSwipeStarted(){
-		SwipeKeyEvent event = constructKeyEvent( SwipeKeyEvent.SWIPE_STARTED);
+	public void invokeSwipeStarted( Touch touch){
+		SwipeKeyEvent event = constructKeyEvent(
+			SwipeKeyEvent.SWIPE_STARTED, touch);
 		for( SwipeKeyListener listener : listeners){
 			listener.swipeStarted( event);
 		}
 	}
-	public void invokeSwipeHit( SwipeKeyEvent swipeKeyEvent){
-		SwipeKeyEvent event = constructKeyEvent( SwipeKeyEvent.SWIPE_HIT);
+	public void invokeSwipeHit( Touch touch){
+		SwipeKeyEvent event = constructKeyEvent(
+			SwipeKeyEvent.SWIPE_HIT, touch);
 		for( SwipeKeyListener listener : listeners){
 			listener.swipeHit( event);
 		}
 	}
-	public void invokeSwipeEnded( SwipeKeyEvent swipeKeyEvent){
-		SwipeKeyEvent event = constructKeyEvent( SwipeKeyEvent.SWIPE_ENDED);
+	public void invokeSwipeEnded( Touch touch){
+		SwipeKeyEvent event = constructKeyEvent(
+			SwipeKeyEvent.SWIPE_ENDED, touch);
 		for( SwipeKeyListener listener : listeners){
 			listener.swipeEnded( event);
 		}
@@ -173,9 +182,9 @@ public class SwipeKeyZone extends Zone {
 	}
 
 	//utility functions
-	private SwipeKeyEvent constructKeyEvent( int id){
+	private SwipeKeyEvent constructKeyEvent( int id, Touch touch){
 		return new SwipeKeyEvent(
-			this, id, this.keyCode, this.keyChar, this.keyLocation);
+			this, id, this.keyCode, this.keyChar, this.keyLocation, touch);
 	}
 
 	//enums
