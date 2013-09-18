@@ -90,6 +90,8 @@ public class Touch extends TuioCursor {
 		this.updateTouch(tuioCursor);
 		this.startTimeMillis = System.currentTimeMillis();
 		this.originalTimeMillis = this.startTimeMillis;
+		//private fields
+		listeners = new Vector<TouchListener>();
 	}
 
 	/**
@@ -375,4 +377,10 @@ public class Touch extends TuioCursor {
 	}
 
 	//private utility functions
+	public void addTouchListener( TouchListener listener){
+		listeners.add( listener);
+	}
+	public void removeTouchListener( TouchListener listener){
+		listeners.remove( listener);
+	}
 }

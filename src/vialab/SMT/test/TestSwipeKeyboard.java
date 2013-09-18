@@ -48,12 +48,13 @@ public class TestSwipeKeyboard extends PApplet {
 		//processing library setup
 		frameRate( fps_limit);
 		size( window_width, window_height, P3D);
+		textMode( SHAPE);
 		frame.setTitle("Swipe Keyboard Test");
 		//smt library setup
 		SMT.init( this, TouchSource.MULTIPLE);
 
 		//add keyboard test
-		keyboard = new SwipeKeyboard();
+		keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);
 		SMT.add( keyboard);
 	}
 

@@ -11,13 +11,13 @@ freshen: clean build
 cp = -cp src:bin:lib/*
 dest = -d bin
 version = -source 1.6 -target 1.6
-warnings = -nowarn
+warnings = -Xlint:deprecation -Xlint:-options
 
-#files
+#include files
 include dependencies.mk
 
 #compilation definitions
-$(class_files):
+$(class_files): bin/%.class : src/%.java
 	javac $(cp) $(dest) $(version) $(warnings) \
 		$(subst bin,src,$(subst class,java,$@))
 
@@ -48,4 +48,4 @@ test-tablehockey: build
 	processing-shell examples/Demos/TableHockey
 
 test-swipekeyboard: build
-	java $(cp) vialab.SMT.test.TestSwipeKeyboard
+	optirun java $(cp) vialab.SMT.test.TestSwipeKeyboard

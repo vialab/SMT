@@ -20,6 +20,7 @@
  */
 package vialab.SMT;
 
+import java.awt.Dimension;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -95,8 +96,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	
 	//The zone's inverse transformation matrix
 	protected PMatrix3D inverse = new PMatrix3D();
+	//properties
 	public int x, y;
 	public int height, width;
+	protected Dimension dimension;
+	protected Dimension halfDimension;
 
 	// A LinkedHashMap will allow insertion order to be maintained.
 	// A synchronised one will prevent concurrent modification (which can happen
@@ -104,15 +108,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/** All of the currently active touches for this zone */
 	private Map<Long, Touch> activeTouches = Collections
 			.synchronizedMap(new LinkedHashMap<Long, Touch>());
-
 	protected CopyOnWriteArrayList<Zone> children = new CopyOnWriteArrayList<Zone>();
-
 	protected int pickColor = -1;
-
 	protected TuioTime lastUpdate = TuioTime.getSessionTime();
-
 	// private boolean pickInitialized = false;
-
 	protected Zone parent = null;
 	protected float rntRadius;
 	protected Method drawMethod = null;
@@ -316,11 +315,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 		this.renderer = renderer;
 
+		//initialize properties
 		this.x = x;
 		this.y = y;
-		this.height = height;
 		this.width = width;
-
+		this.height = height;
+		this.dimension = new Dimension( width, height);
+		this.halfDimension = new Dimension( width/2, height/2);
 		this.rntRadius = Math.min(width, height) / 4;
 
 		init();
@@ -866,12 +867,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return Whether the given zone is an ancestor of this one.
 	 */
 	public boolean isAncestor(Zone zone) {
-		Zone ancestor = zone;
-		while((ancestor = ancestor.getParent()) != null){
-			if(ancestor == zone){
+		for(
+				Zone ancestor = zone.getParent();
+				ancestor != null;
+				ancestor = ancestor.getParent())
+			if(ancestor == zone)
 				return true;
-			}
-		}
 		return false;
 	}
 
@@ -879,20 +880,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Removes this zone from its parent
 	 */
 	public void removeFromParent() {
-		if(parent != null && parent.children.contains(this)){
+		if(parent != null && parent.children.contains(this))
 			parent.remove(this);
-		}else if (SMT.debug){
+		else if (SMT.debug)
 			System.err.println("Warning: removeFromParent where parent is null or this zone is not a child of");
-		}
 	}
 	
 	public boolean remove(Zone... zones){
 		boolean r = true;
-		for (Zone z : zones) {
-			if(!remove(z)){
+		for (Zone z : zones)
+			if(!remove(z))
 				r = false;
-			}
-		}
 		return r;
 	}
 
@@ -907,14 +905,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				child.cleanUp();
 				child.parent = null;
 				return children.remove(child);
-			}
-			else{
+			} else
 				System.err.println("Warning: Removed a Zone that was not a child");
-			}
-		}
-		else {
+		} else
 			System.err.println("Warning: Removed a null Zone");
-		}
 		return false;
 	}
 	
@@ -922,9 +916,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * This cleans up (unassign touches, remove from picker, and remove zoneBody) the Zone and its children
 	 */
 	private void cleanUp() {
-		for (Zone child : getChildren()) {
+		for (Zone child : getChildren())
 			child.cleanUp();
-		}
 		
 		SMT.picker.remove(this);
 
@@ -997,20 +990,22 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * Changes the coordinates and size of the zone.
 	 * 
-	 * @param xIn
+	 * @param x
 	 *            int - The zone's new x-coordinate.
-	 * @param yIn
+	 * @param y
 	 *            int - The zone's new y-coordinate.
-	 * @param wIn
+	 * @param w
 	 *            int - The zone's new width.
-	 * @param hIn
+	 * @param h
 	 *            int - The zone's new height.
 	 */
-	public void setData(int xIn, int yIn, int wIn, int hIn) {
-		this.x = xIn;
-		this.y = yIn;
-		this.width = wIn;
-		this.height = hIn;
+	public void setData(int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.dimension = new Dimension( width, height);
+		this.halfDimension = new Dimension( width/2, height/2);
 		init();
 		resetMatrix();
 	}
@@ -1022,22 +1017,18 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param y
 	 */
 	public void setLocation(float x, float y) {
-		if (getParent() == null) {
-			this.x = (int) x;
-			this.y = (int) y;
+		this.x = Math.round( x);
+		this.y = Math.round( y);
+		if (getParent() == null)
 			resetMatrix();
-		}
 		else {
-			this.x = (int) x;
-			this.y = (int) y;
 			this.matrix.reset();
 			this.matrix.translate(x, y);
 			// If we are in our own touch (which we can tell by if backupMatrix
 			// is set), we need to apply our parents matrix too after the reset,
 			// since it was applied before and will be inverted.
-			if (backupMatrix != null) {
+			if (backupMatrix != null)
 				this.matrix.preApply(getParent().matrix);
-			}
 		}
 	}
 	
@@ -1046,6 +1037,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		super.setSize(width, height);
 		this.width = width;
 		this.height = height;
+		this.dimension = new Dimension( width, height);
+		this.halfDimension = new Dimension( width / 2, height / 2);
+	}
+
+	public void setWidth( int width){
+		super.setSize( width, dimension.height);
+		this.width = width;
+		this.dimension.width = width;
+		this.halfDimension.width = width / 2;
+	}
+	public void setHeight( int height){
+		super.setSize( dimension.width, height);
+		this.height = height;
+		this.dimension.height = height;
+		this.halfDimension.height = height / 2;
 	}
 
 	/**
@@ -1116,15 +1122,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public boolean contains(float x, float y) {
 		PVector mouse = new PVector(x, y);
 		PVector world = this.toZoneVector(mouse);
-
-		return (world.x > 0) && (world.x < this.width) && (world.y > 0) && (world.y < this.height);
+		return
+			(world.x > 0) && (world.x < this.width) &&
+			(world.y > 0) && (world.y < this.height);
 	}
 
 	/**
 	 * Translates the zone, its group, and its children
 	 */
 	public void drag() {
-		drag(true, true);
+		drag( true, true);
 	}
 
 	/**
@@ -1136,8 +1143,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param dragY
 	 *            Whether to drag along the y-axis
 	 */
-	public void drag(boolean dragX, boolean dragY) {
-		drag(dragX, dragX, dragY, dragY);
+	public void drag( boolean dragX, boolean dragY) {
+		drag( dragX, dragX, dragY, dragY);
 	}
 
 	/**
@@ -1153,9 +1160,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param dragDown
 	 *            Allow dragging Down
 	 */
-	public void drag(boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown) {
-		drag(dragLeft, dragRight, dragUp, dragDown, Integer.MIN_VALUE, Integer.MAX_VALUE,
-				Integer.MIN_VALUE, Integer.MAX_VALUE);
+	public void drag(
+			boolean dragLeft, boolean dragRight,
+			boolean dragUp, boolean dragDown) {
+		drag(
+			dragLeft, dragRight, dragUp, dragDown,
+			Integer.MIN_VALUE, Integer.MAX_VALUE,
+			Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 
 	/**
@@ -1179,12 +1190,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param downLimit
 	 *            Limit on how far to be able to drag down
 	 */
-	public void drag(boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown,
+	public void drag(
+			boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown,
 			int leftLimit, int rightLimit, int upLimit, int downLimit) {
 		if (!activeTouches.isEmpty()) {
 			List<TouchPair> pairs = getTouchPairs(1);
-			drag(pairs.get(0), dragLeft, dragRight, dragUp, dragDown, leftLimit, rightLimit,
-					upLimit, downLimit);
+			drag( pairs.get(0),
+				dragLeft, dragRight, dragUp, dragDown,
+				leftLimit, rightLimit, upLimit, downLimit);
 		}
 	}
 
@@ -1205,9 +1218,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param downLimit
 	 *            Limit on how far to be able to drag down
 	 */
-	public void drag(boolean dragX, boolean dragY, int leftLimit, int rightLimit, int upLimit,
-			int downLimit) {
-		drag(dragX, dragX, dragY, dragY, leftLimit, rightLimit, upLimit, downLimit);
+	public void drag(
+			boolean dragX, boolean dragY,
+			int leftLimit, int rightLimit, int upLimit, int downLimit) {
+		drag(
+			dragX, dragX, dragY, dragY,
+			leftLimit, rightLimit, upLimit, downLimit);
 	}
 
 	/**
@@ -1219,8 +1235,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param to
 	 *            The Touch to drag to
 	 */
-	public void drag(Touch from, Touch to) {
-		drag(from, to, true, true);
+	public void drag( Touch from, Touch to) {
+		drag( from, to, true, true);
 	}
 
 	/**
@@ -1306,8 +1322,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param downLimit
 	 *            Limit on how far to be able to drag down
 	 */
-	protected void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp,
-			boolean dragDown, int leftLimit, int rightLimit, int upLimit, int downLimit) {
+	protected void drag(
+			TouchPair pair,
+			boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown,
+			int leftLimit, int rightLimit, int upLimit, int downLimit) {
 		if (pair.matches()) {
 			lastUpdate = maxTime(pair);
 			return;
@@ -1315,45 +1333,34 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		float tx = pair.to.x;
 		float ty = pair.to.y;
 		if(getParent() != null){
-			tx = getParent().getLocalX(pair.to);
-			ty = getParent().getLocalY(pair.to);
+			tx = getParent().getLocalX( pair.to);
+			ty = getParent().getLocalY( pair.to);
 		}
 		
 		if(!dragSeenTouch.contains(pair.from.sessionID)){
 			//the first time we see a touch we use its position for the offset
 			//of the Zone from the touch
-			offsetX = pair.from.x-getLocalX();
-			offsetY = pair.from.y-getLocalY();
+			offsetX = pair.from.x - getLocalX();
+			offsetY = pair.from.y - getLocalY();
 			if(getParent() != null){
-				offsetX = getParent().getLocalX(pair.from)-getLocalX();
-				offsetY = getParent().getLocalY(pair.from)-getLocalY();
+				offsetX = getParent().getLocalX( pair.from) - getLocalX();
+				offsetY = getParent().getLocalY( pair.from) - getLocalY();
 			}
 			dragSeenTouch.add(pair.from.sessionID);
 		}
-				
-		if(!dragUp){
+		
+		if(!dragUp)
 			upLimit = (int) getLocalY();
-		}
-		
-		if(!dragDown){
+		if(!dragDown)
 			downLimit = (int) getLocalY();
-		}
-		
-		if(!dragLeft){
+		if(!dragLeft)
 			leftLimit = (int) getLocalX();
-		}
-		
-		if(!dragRight){
+		if(!dragRight)
 			rightLimit = (int) getLocalX();
-		}
-		
-		if(dragUp || dragDown){
-			setY(Math.max(upLimit,Math.min(downLimit-height, ty-offsetY)));
-		}
-		
-		if(dragLeft || dragRight){
-			setX(Math.max(leftLimit,Math.min(rightLimit-width, tx-offsetX)));
-		}
+		if(dragUp || dragDown)
+			setY( Math.max( upLimit, Math.min( downLimit - height, ty - offsetY)));
+		if(dragLeft || dragRight)
+			setX( Math.max( leftLimit, Math.min( rightLimit - width, tx - offsetX)));
 		
 		lastUpdate = maxTime(pair);
 	}
@@ -1392,14 +1399,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param dragY
 	 *            Whether to drag along the y-axis
 	 */
-	public void drag(int fromX, int fromY, int toX, int toY, boolean dragX, boolean dragY) {
-		if (dragX) {
+	public void drag(
+			int fromX, int fromY, int toX, int toY, boolean dragX, boolean dragY) {
+		if (dragX)
 			translate(toX - fromX, 0);
-		}
-
-		if (dragY) {
+		if (dragY)
 			translate(0, toY - fromY);
-		}
 	}
 
 	/**
@@ -2715,61 +2720,57 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return the x position of the touch in local coordinates
 	 */
 	public float getLocalX() {
-		if(getParent() == null){
-			return getOrigin().x;
-		}
-		return getParent().toZoneVector(getOrigin()).x;
+		return
+			getParent() == null ?
+				getOrigin().x :
+				getParent().toZoneVector( getOrigin()).x;
 	}
 
 	/**
 	 * @return the y position of zone in parent coordinates
 	 */
 	public float getLocalY() {
-		if(getParent() == null){
-			return getOrigin().y;
-		}
-		return getParent().toZoneVector(getOrigin()).y;
+		return
+			getParent() == null ?
+				getOrigin().y :
+				getParent().toZoneVector(getOrigin()).y;
 	}
 	
 	/**
 	 * @return the x position of zone in parent coordinates
 	 */
-	public float getLocalX(Touch t) {
-		return  toZoneVector(new PVector(t.x, t.y)).x;
+	public float getLocalX( Touch t) {
+		return toZoneVector( new PVector( t.x, t.y)).x;
 	}
 
 	/**
 	 * @param t
 	 * @return the y position of the touch in local coordinates
 	 */
-	public float getLocalY(Touch t) {
-		return toZoneVector(new PVector(t.x, t.y)).y;
+	public float getLocalY( Touch t) {
+		return toZoneVector( new PVector( t.x, t.y)).y;
 	}
 	
 	/**
 	 * Sets the local x position
-	 * @param f
+	 * @param x
 	 */
-	public void setX(float f) {
-		if (getParent() == null) {
-			setLocation(f, getOrigin().y);
-		}
-		else {
-			setLocation(f, getParent().toZoneVector(getOrigin()).y);
-		}
+	public void setX(float x) {
+		if (getParent() == null)
+			setLocation( x, getOrigin().y);
+		else
+			setLocation( x, getParent().toZoneVector(getOrigin()).y);
 	}
 
 	/**
 	 * Sets the local y position
 	 * @param f
 	 */
-	public void setY(float f) {
-		if (getParent() == null) {
-			setLocation(getOrigin().x, f);
-		}
-		else {
-			setLocation(getParent().toZoneVector(getOrigin()).x, f);
-		}
+	public void setY(float y) {
+		if (getParent() == null)
+			setLocation( getOrigin().x, y);
+		else
+			setLocation( getParent().toZoneVector(getOrigin()).x, y);
 	}
 	
 	@Override
@@ -2781,9 +2782,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else{
+		else
 			super.background(arg0, arg1, arg2, arg3);
-		}
 	}
 
 	@Override
@@ -2795,9 +2795,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else{
+		else
 			super.background(arg0, arg1, arg2);
-		}
 	}
 
 	@Override
@@ -2809,9 +2808,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else{
+		else
 			super.background(arg0, arg1);
-		}
 	}
 
 	@Override
@@ -2823,9 +2821,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else{
+		else
 			super.background(arg0);
-		}
 	}
 
 	@Override
@@ -2837,9 +2834,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else{
+		else
 			super.background(arg0, arg1);
-		}
 	}
 
 	@Override
@@ -2851,9 +2847,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else{
+		else
 			super.background(arg0);
-		}
 	}
 
 	@Override
@@ -2864,9 +2859,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			image(arg0,0,0,width,height);
 			popStyle();
 		}
-		else{
+		else
 			super.background(arg0);
-		}
 	}
 
 	public void pressRegister(Touch touch) {
