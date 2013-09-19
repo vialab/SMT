@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.Vector;
 
+//processing imports
+import processing.core.PVector;
+
 //smt imports
 import vialab.SMT.*;
 import vialab.SMT.event.*;
@@ -23,6 +26,13 @@ public class SwipeKeyboard extends Zone
 	private Vector<SwipeKeyEvent> swipeStack;
 	private Vector<Touch> touches;
 
+	//private drawing fields
+	private boolean drawBackground = false;
+	protected PVector position;
+	protected int cornerRounding_topLeft;
+	protected int cornerRounding_topRight;
+	protected int cornerRounding_bottomLeft;
+	protected int cornerRounding_bottomRight;
 
 	//constructors
 	public SwipeKeyboard(){
@@ -34,27 +44,26 @@ public class SwipeKeyboard extends Zone
 		keys = new Vector<KeyZone>();
 		swipeKeys = new Vector<SwipeKeyZone>();
 
+		//drawing fields
+		position = new PVector( 0, 0);
+		cornerRounding_topLeft = 0;
+		cornerRounding_topRight = 0;
+		cornerRounding_bottomLeft = 0;
+		cornerRounding_bottomRight = 0;
+
 		//setup layout
 		layout.setup( this);
 		for( AnchorZone anchor : anchors)
 			this.add( anchor);
-		for( KeyZone key : keys){
-			SMT.add( key);
+		for( KeyZone key : keys)
 			this.add( key);
-			key.addKeyListener( this);
-		}
-		for( SwipeKeyZone key : swipeKeys){
-			SMT.add( key);
+		for( SwipeKeyZone key : swipeKeys)
 			this.add( key);
-			key.addKeyListener( this);
-			key.addSwipeKeyListener( this);
-		}
 
 		//other
 		swipe_inProgress = false;
 		touches = new Vector<Touch>();
 		swipeStack = new Vector<SwipeKeyEvent>();
-		this.translate( 10, 10);
 	}
 
 	//public access functions
@@ -63,14 +72,26 @@ public class SwipeKeyboard extends Zone
 	}
 	public void addKey( KeyZone key){
 		this.keys.add( key);
+		key.addKeyListener( this);
 	}
 	public void addSwipeKey( SwipeKeyZone key){
 		this.swipeKeys.add( key);
+		key.addSwipeKeyListener( this);
 	}
 
 	//SMT overrides
 	@Override
-	public void drawImpl() {}
+	public void drawImpl() {
+		if( drawBackground){
+			fill( 0, 0, 0, 200);
+			noStroke();
+			rect(
+				position.x, position.y,
+				dimension.width, dimension.height,
+				cornerRounding_topLeft, cornerRounding_topRight,
+				cornerRounding_bottomRight, cornerRounding_bottomLeft);
+		}
+	}
 	@Override
 	public void pickDrawImpl() {}
 	@Override
@@ -78,7 +99,25 @@ public class SwipeKeyboard extends Zone
 		rst();
 	}
 
+	//KeyListner handles
+	@Override
+	public void keyPressed( KeyEvent event){
+		//if( debug)
+		System.out.printf( "Key Down: %s\n", event.getKeyChar());
+	}
+	@Override
+	public void keyReleased( KeyEvent event){
+		//if( debug)
+		System.out.printf( "Key Up: %s\n", event.getKeyChar());
+	}
+	@Override
+	public void keyTyped( KeyEvent event){
+		//if( debug)
+		System.out.printf( "Key Typed: %s\n", event.getKeyChar());
+	}
+
 	//SwipeKeyListener handles
+	@Override
 	public void swipeStarted( SwipeKeyEvent event){
 		Touch touch = event.getTouch();
 		if( debug) System.out.printf( "Swipe Started: %s TouchID: %d\n",
@@ -88,6 +127,7 @@ public class SwipeKeyboard extends Zone
 		swipe_inProgress = true;
 		swipeStack.add( event);
 	}
+	@Override
 	public void swipeHit( SwipeKeyEvent event){
 		Touch touch = event.getTouch();
 		if( debug) System.out.printf( "Swipe Hit: %s TouchID: %d\n",
@@ -95,6 +135,7 @@ public class SwipeKeyboard extends Zone
 		if( swipe_inProgress)
 			swipeStack.add( event);
 	}
+	@Override
 	public void swipeEnded( SwipeKeyEvent event){
 		/*Touch touch = event.getTouch();
 		if( debug) System.out.printf( "Swipe Ended: %s TouchID: %d\n",
@@ -129,6 +170,24 @@ public class SwipeKeyboard extends Zone
 		//match search
 		//match rank
 		//invoke wordTyped
+	}
+
+	//public methods
+	public void setBackgroundEnabled( boolean enabled){
+		drawBackground = enabled;
+	}
+	public void setCornerRounding( int rounding){
+		cornerRounding_topLeft = rounding;
+		cornerRounding_topRight = rounding;
+		cornerRounding_bottomLeft = rounding;
+		cornerRounding_bottomRight = rounding;
+	}
+	public void setCornerRounding(
+			int topLeft, int topRight, int bottomLeft, int bottomRight){
+		cornerRounding_topLeft = topLeft;
+		cornerRounding_topRight = topRight;
+		cornerRounding_bottomLeft = bottomLeft;
+		cornerRounding_bottomRight = bottomRight;
 	}
 
 	//subclasses

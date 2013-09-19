@@ -11,7 +11,8 @@ freshen: clean build
 cp = -cp src:bin:lib/*
 dest = -d bin
 version = -source 1.6 -target 1.6
-warnings = -Xlint:deprecation -Xlint:-options
+#warnings = -Xlint:-options
+warnings = -Xlint:-deprecation -Xlint:-options
 
 #include files
 include dependencies.mk
@@ -45,7 +46,7 @@ git-prepare:
 test: test-swipekeyboard
 
 test-tablehockey: build
-	processing-shell examples/Demos/TableHockey
+	optirun processing-shell examples/Demos/TableHockey
 
 test-swipekeyboard: build
 	optirun java $(cp) vialab.SMT.test.TestSwipeKeyboard

@@ -97,7 +97,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	//The zone's inverse transformation matrix
 	protected PMatrix3D inverse = new PMatrix3D();
 	//properties
+	@Deprecated
 	public int x, y;
+	@Deprecated
 	public int height, width;
 	protected Dimension dimension;
 	protected Dimension halfDimension;
@@ -1091,6 +1093,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public int getHeight() {
 		return (int) PVector.sub(fromZoneVector(new PVector(0, this.height)), this.getOrigin())
 				.mag();
+	}
+
+	public Dimension getSize(){
+		return dimension;
+	}
+
+	public Dimension getHalfSize(){
+		return halfDimension;
 	}
 
 	/**

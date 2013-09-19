@@ -1,6 +1,7 @@
 package vialab.SMT.zone;
 
 //standard library imports
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
 //local imports
@@ -9,7 +10,7 @@ import vialab.SMT.zone.*;
 
 public class CondensedLayout extends SwipeKeyboardLayout{
 	//fields
-	public static final int padding = 2;
+	public static final int padding = 10;
 	public boolean enableArrowKeys;
 
 	//constructor
@@ -26,6 +27,20 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 			KeyEvent.CHAR_UNDEFINED, KeyEvent.KEY_LOCATION_LEFT);
 		KeyZone key_backspace = new KeyZone( "key backspace",
 			KeyEvent.VK_BACK_SPACE);
+		KeyZone key_nums = new KeyZone( "key nums", KeyEvent.VK_NUM_LOCK);
+		KeyZone key_comma = new KeyZone( "key comma", KeyEvent.VK_COMMA, ',');
+		KeyZone key_space = new KeyZone( "key space", KeyEvent.VK_SPACE, ' ');
+		KeyZone key_period = new KeyZone( "key period", KeyEvent.VK_PERIOD, '.');
+		KeyZone key_meta = new KeyZone( "key special", KeyEvent.VK_META); 
+		KeyZone key_enter = new KeyZone( "key enter", KeyEvent.VK_ENTER, '\n');
+
+		//key labels
+		key_shift.setLabel( "^");
+		key_backspace.setLabel( "<");
+		key_nums.setLabel( "#");
+		key_space.setLabel( "___");
+		key_meta.setLabel( "@");
+		key_enter.setLabel( "<_|");
 
 		//swipe keys
 		SwipeKeyZone key_q = new SwipeKeyZone( "key q", KeyEvent.VK_Q, 'Q');
@@ -56,15 +71,24 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		SwipeKeyZone key_m = new SwipeKeyZone( "key m", KeyEvent.VK_M, 'M');
 
 		//mess with key sizes
+		key_shift.setWidth( 100 + 30 + padding);
+		key_backspace.setWidth( 100 + 70);
+		key_nums.setWidth( 100 + 3 * padding);
+		key_space.setWidth( 100 + 410);
+		key_enter.setWidth( 100 + 90 + 2 * padding);
 
 		//create rows
 		Vector<KeyRow> rows = new Vector<KeyRow>();
 		KeyRow row1 = new KeyRow();
 		KeyRow row2 = new KeyRow();
 		KeyRow row3 = new KeyRow();
+		KeyRow row4 = new KeyRow();
 		rows.add( row1);
 		rows.add( row2);
 		rows.add( row3);
+		rows.add( row4);
+		row1.add( key_q);
+		row1.add( key_w);
 		row1.add( key_e);
 		row1.add( key_r);
 		row1.add( key_t);
@@ -82,6 +106,7 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		row2.add( key_j);
 		row2.add( key_k);
 		row2.add( key_l);
+		row3.add( key_shift);
 		row3.add( key_z);
 		row3.add( key_x);
 		row3.add( key_c);
@@ -89,22 +114,53 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		row3.add( key_b);
 		row3.add( key_n);
 		row3.add( key_m);
-
-		//spread rows
-		row2.translate( 0, row1.height);
-		row3.translate( 0, row1.height + row2.height);
+		row3.add( key_backspace);
+		row4.add( key_nums);
+		row4.add( key_comma);
+		row4.add( key_space);
+		row4.add( key_period);
+		//row4.add( key_meta);
+		row4.add( key_enter);
 		
 		//center rows
 		int width = 0;
+		int height = padding;
 		for( KeyRow row : rows)
 			width = Math.max( row.width, width);
-		width += padding;
+		width += 2 * padding;
 		for( KeyRow row : rows)
-			row.translate( (row.width - width)/2, 0);
+			row.translate( ( width - row.width) / 2, 0);
+		//spread rows vertically
+		for( KeyRow row : rows){
+			row.translate( 0, height);
+			height += row.height + padding;
+		}
+
+		//set keyboard properties
+		keyboard.setSize( width, height);
+
+		//create anchors
+		AnchorZone anchor_topLeft = new AnchorZone();
+		AnchorZone anchor_topRight = new AnchorZone();
+		AnchorZone anchor_bottomLeft = new AnchorZone();
+		AnchorZone anchor_bottomRight = new AnchorZone();
+
+		//send anchors to corners
+		Dimension halfDim = anchor_topLeft.getHalfSize();
+		anchor_topLeft.translate( - halfDim.width, - halfDim.height);
+		anchor_topRight.translate( width - halfDim.width, height - halfDim.height);
+		anchor_bottomLeft.translate( - halfDim.width, height - halfDim.height);
+		anchor_bottomRight.translate( width - halfDim.width, - halfDim.height);
 
 		//add keys to keyboard
 		keyboard.addKey( key_shift);
 		keyboard.addKey( key_backspace);
+		keyboard.addKey( key_nums);
+		keyboard.addKey( key_comma);
+		keyboard.addKey( key_space);
+		keyboard.addKey( key_period);
+		//keyboard.addKey( key_meta);
+		keyboard.addKey( key_enter);
 
 		//add swipe keys to keyboard
 		keyboard.addSwipeKey( key_q);
@@ -133,6 +189,16 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		keyboard.addSwipeKey( key_b);
 		keyboard.addSwipeKey( key_n);
 		keyboard.addSwipeKey( key_m);
+
+		//add anchors to keyboard
+		keyboard.addAnchor( anchor_topLeft);
+		keyboard.addAnchor( anchor_topRight);
+		keyboard.addAnchor( anchor_bottomLeft);
+		keyboard.addAnchor( anchor_bottomRight);
+
+		//other options
+		keyboard.setBackgroundEnabled( true);
+		keyboard.setCornerRounding( 20);
 	}
 
 	//private classes
@@ -143,14 +209,15 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		public KeyRow(){
 			super();
 			width = 0;
-			height = padding;
+			height = 0;
 		}
 		public boolean add( KeyZone key){
 			super.add( key);
-			key.translate( width, padding);
+			Dimension keydim = key.getSize();
 			if( width != 0) width += padding;
-			width += key.width;
-			height = Math.max( key.height + padding, height);
+			key.translate( width, 0);
+			width += keydim.width;
+			height = Math.max( keydim.height, height);
 			return true;
 		}
 		public void translate( int dx, int dy){

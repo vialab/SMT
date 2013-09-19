@@ -37,12 +37,12 @@ public class SwipeKeyZone extends KeyZone {
 
 	//SMT overrides
 	public void touchDownImpl( Touch touch) {
-		if( bufferTouchEvent == TouchEvent.ASSIGN)
+		if( touchEventBuffer[0] == TouchEvent.ASSIGN)
 			invokeSwipeStarted( touch);
 		super.touchDownImpl( touch);
 	}
 	public void touchUpImpl( Touch touch) {
-		if( bufferTouchEvent == TouchEvent.UNASSIGN)
+		if( touchEventBuffer[0] == TouchEvent.UNASSIGN)
 			invokeSwipeEnded( touch);
 		super.touchUpImpl( touch);
 	}
@@ -53,9 +53,8 @@ public class SwipeKeyZone extends KeyZone {
 
 	//entered detection
 	public void assign(Iterable<? extends Touch> touches) {
-		for( Touch touch : touches ){
+		for( Touch touch : touches )
 			invokeSwipeHit( touch);
-		}
 		super.assign( touches);
 	}
 

@@ -31,7 +31,7 @@ public class KeyZone extends Zone {
 	private static final boolean debug = false;
 
 	//private utility fields
-	protected TouchEvent bufferTouchEvent;
+	protected TouchEvent[] touchEventBuffer;
 
 	//Constructors
 	public KeyZone( int keyCode){
@@ -80,13 +80,14 @@ public class KeyZone extends Zone {
 
 		//other initialization
 		keyListeners = new Vector<KeyListener>();
+		touchEventBuffer = new TouchEvent[ 5];
 	}
 
 	//SMT Overrides
 	@Override
 	public void drawImpl() {
 		//draw key
-		fill( 255, 255, 255, 200);
+		fill( 20, 20, 20, 255);
 		strokeWeight(4);
 		stroke( 50, 50, 50, 255);
 		rect(
@@ -95,8 +96,8 @@ public class KeyZone extends Zone {
 			cornerRounding_topLeft, cornerRounding_topRight,
 			cornerRounding_bottomRight, cornerRounding_bottomLeft);
 		//draw text
-		fill( 20, 20, 20, 255);
-		textSize( Math.round( dimension.height * 0.7));
+		fill( 255, 255, 255, 200);
+		textSize( Math.round( dimension.height * 0.6));
 		textAlign( CENTER);
 		float halfAscent = textAscent()/2;
 		float halfDescent = textDescent()/2;
@@ -114,31 +115,36 @@ public class KeyZone extends Zone {
 	}
 	public void touchDownImpl( Touch touch) {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchDown");
-		bufferTouchEvent = TouchEvent.TOUCH_DOWN;
+		if( touchEventBuffer[0] == TouchEvent.ASSIGN)
+			invokeKeyPressedEvent();
+		bufferTouchEvent( TouchEvent.TOUCH_DOWN);
 	}
 	public void touchUpImpl( Touch touch) {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchUp");
-		bufferTouchEvent = TouchEvent.TOUCH_UP;
+		if( touchEventBuffer[1] == TouchEvent.TOUCH_DOWN &&
+				touchEventBuffer[0] == TouchEvent.UNASSIGN)
+			invokeKeyReleasedEvent();
+		bufferTouchEvent( TouchEvent.TOUCH_UP);
 	}
 	@Override
 	public void touchImpl() {}
 	@Override
 	public void pressImpl( Touch touch) {
-		/*if( debug) System.out.printf("%s %s %s\n", name, keyChar, "press");
-		bufferTouchEvent = TouchEvent.PRESS;*/
+		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "press");
+		//bufferTouchEvent( TouchEvent.PRESS);
 	}
 
 	//entered detection
 	public void assign(Iterable<? extends Touch> touches) {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "assign");
-		bufferTouchEvent = TouchEvent.ASSIGN;
+		bufferTouchEvent( TouchEvent.ASSIGN);
 		super.assign( touches);
 	}
 
 	//exited detection
 	public void unassign(Touch touch) {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "unassign");
-		bufferTouchEvent = TouchEvent.UNASSIGN;
+		bufferTouchEvent( TouchEvent.UNASSIGN);
 		super.unassign( touch);
 	}
 
@@ -156,6 +162,7 @@ public class KeyZone extends Zone {
 		}
 	}
 	public void invokeKeyTypedEvent(){
+		System.out.println("asdf");
 		KeyEvent event = constructKeyEvent( KeyEvent.KEY_TYPED);
 		for( KeyListener listener : keyListeners){
 			listener.keyTyped( event);
@@ -191,6 +198,13 @@ public class KeyZone extends Zone {
 		return new KeyEvent(
 			this.applet, id, System.currentTimeMillis(), 0,
 			this.keyCode, this.keyChar, this.keyLocation);
+	}
+
+	//private utility functions
+	private void bufferTouchEvent( TouchEvent event){
+		for( int i = 1; i < touchEventBuffer.length; i++)
+			touchEventBuffer[ i] = touchEventBuffer[ i - 1];
+		touchEventBuffer[ 0] = event;
 	}
 
 	//enums
