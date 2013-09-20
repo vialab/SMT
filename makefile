@@ -10,6 +10,8 @@ freshen: clean build
 #variables
 cp = -cp src:bin:lib/*
 dest = -d bin
+docscp = -classpath src:bin:lib/*
+documentation = -d documentation
 version = -source 1.6 -target 1.6
 #warnings = -Xlint:-options
 warnings = -Xlint:-deprecation -Xlint:-options
@@ -35,8 +37,11 @@ jar: library/SMT.jar
 export: library/SMT.jar
 	zip -r SMT.zip examples library library.properties \
 		referense release_notes.txt resources src
-#docs:
-#	javadoc -d documentation $(source_files)
+
+docs:
+	javadoc $(docscp) $(documentation) $(source_files)
+docs-test: docs
+	chromium-browser documentation/index.html
 
 git-prepare:
 	git add -A

@@ -189,14 +189,6 @@ public class SMT {
 	 * @param parent
 	 *            - PApplet: The Processing PApplet, usually just 'this' when
 	 *            using the Processing IDE
-	 * 
-	 * @param port
-	 *            - int: The port to listen on
-	 * 
-	 * @param source
-	 *            -int: The source of touch events to listen to. One of:
-	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
-	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
 	public static void init(PApplet parent) {
 		init(parent, 3333);
@@ -824,8 +816,7 @@ public class SMT {
 	 * drawn anymore or be assigned touches, but can be added back with a call
 	 * to add(zone);
 	 * 
-	 * @param zone
-	 *            The zone to remove
+	 * @param zones  The zones to remove
 	 * @return Whether all of the zones were removed successfully
 	 */
 	public static boolean remove(Zone... zones) {

@@ -167,8 +167,6 @@ public class TabZone extends Zone {
 	 * toString().
 	 * 
 	 * @param zone     - Zone: Zone to add to the TabZone
-	 * @param tabName  - String: The Tab name for use in reflection methods: drawTabName(), touchTabName(), etc
-	 * @param tabText - String: The text to display on the Tab
 	 * @return Whether the zone was added
 	 */
 	@Override

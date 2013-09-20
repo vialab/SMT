@@ -213,3 +213,49 @@ class_files = \
 	bin/vialab/SMT/zone/SwipeKeyboard.class \
 	bin/vialab/SMT/zone/SwipeKeyboardLayout.class \
 	bin/vialab/SMT/zone/SwipeKeyZone.class
+
+source_files = \
+	src/vialab/SMT/AndroidToTUIO.java \
+	src/vialab/SMT/ButtonZone.java \
+	src/vialab/SMT/CheckBoxZone.java \
+	src/vialab/SMT/ContainerZone.java \
+	src/vialab/SMT/event/SwipeKeyEvent.java \
+	src/vialab/SMT/event/SwipeKeyListener.java \
+	src/vialab/SMT/event/TouchEvent.java \
+	src/vialab/SMT/event/TouchListener.java \
+	src/vialab/SMT/Finger.java \
+	src/vialab/SMT/ImageZone.java \
+	src/vialab/SMT/KeyboardZone.java \
+	src/vialab/SMT/LeftPopUpMenuZone.java \
+	src/vialab/SMT/MouseToTUIO.java \
+	src/vialab/SMT/PatternUnlockZone.java \
+	src/vialab/SMT/PGraphicsDelegate.java \
+	src/vialab/SMT/PieMenuZone.java \
+	src/vialab/SMT/ShapeZone.java \
+	src/vialab/SMT/Simulation.java \
+	src/vialab/SMT/SlideRevealZone.java \
+	src/vialab/SMT/SliderZone.java \
+	src/vialab/SMT/SMT.java \
+	src/vialab/SMT/SMTProxyTuioListener.java \
+	src/vialab/SMT/SMTTouchManager.java \
+	src/vialab/SMT/SMTTuioListener.java \
+	src/vialab/SMT/SMTUtilities.java \
+	src/vialab/SMT/SMTZonePicker.java \
+	src/vialab/SMT/TabZone.java \
+	src/vialab/SMT/test/TestSwipeKeyboard.java \
+	src/vialab/SMT/TextureZone.java \
+	src/vialab/SMT/TextZone.java \
+	src/vialab/SMT/TouchClient.java \
+	src/vialab/SMT/TouchDraw.java \
+	src/vialab/SMT/TouchPair.java \
+	src/vialab/SMT/TouchSource.java \
+	src/vialab/SMT/TouchState.java \
+	src/vialab/SMT/Zone.java \
+	src/vialab/SMT/zone/AnchorZone.java \
+	src/vialab/SMT/zone/ArrowKeysLayout.java \
+	src/vialab/SMT/zone/CondensedLayout.java \
+	src/vialab/SMT/zone/ExtendedLayout.java \
+	src/vialab/SMT/zone/KeyZone.java \
+	src/vialab/SMT/zone/SwipeKeyboard.java \
+	src/vialab/SMT/zone/SwipeKeyboardLayout.java \
+	src/vialab/SMT/zone/SwipeKeyZone.java

@@ -142,7 +142,7 @@ public final class SMTUtilities {
 	 * Use this method when creating Classes extending Zone, to acquires a
 	 * Method which can be called by invoke(Method, Zone)
 	 * 
-     * @parm callingClass    - Class<?>: The class
+	 * @param callingClass    - Class< ?>: The class
 	 * @param methodPrefix   - String: The prefix to look for on a method
 	 * @param zone       - Zone: The Zone whose name is used as the method suffix
 	 * @param warnMissing - boolean: If True, shows a warning when the method does not exist for the
@@ -159,7 +159,7 @@ public final class SMTUtilities {
 	 * Use this method when creating Classes extending Zone, to acquires a
 	 * Method which can be called by invoke(Method, Zone)
 	 * 
-     * @parm callingClass    - Class<?>: The class
+	 * @param callingClass    - Class< ?>: The class
 	 * @param methodPrefix   - String: The prefix to look for on a method
 	 * @param zone       - Zone: The Zone whose name is used as the method suffix
 	 * @param warnMissing - boolean: If True, shows a warning when the method does not exist for the given Zone

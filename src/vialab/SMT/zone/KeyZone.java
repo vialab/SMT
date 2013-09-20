@@ -12,7 +12,7 @@ import processing.core.PVector;
 import vialab.SMT.*;
 import vialab.SMT.event.*;
 
-/** @class SwipeKeyZone
+/**
  * This class defines a zone that represents a key in a keyboard.
  **/
 public class KeyZone extends Zone {
@@ -282,7 +282,6 @@ public class KeyZone extends Zone {
 	///////////////////////////////////
 	/**
 	 * Creates a KeyPressed event and sends it to all listeners for handling.
-	 * @param touch The touch involved in the event
 	 */
 	public void invokeKeyPressedEvent(){
 		KeyEvent event = constructKeyEvent( KeyEvent.KEY_PRESSED);
@@ -292,7 +291,6 @@ public class KeyZone extends Zone {
 	}
 	/**
 	 * Creates a KeyReleased event and sends it to all listeners for handling.
-	 * @param touch The touch involved in the event
 	 */
 	public void invokeKeyReleasedEvent(){
 		KeyEvent event = constructKeyEvent( KeyEvent.KEY_RELEASED);
@@ -302,7 +300,6 @@ public class KeyZone extends Zone {
 	}
 	/**
 	 * Creates a KeyTyped event and sends it to all listeners for handling.
-	 * @param touch The touch involved in the event
 	 */
 	public void invokeKeyTypedEvent(){
 		System.out.println("asdf");

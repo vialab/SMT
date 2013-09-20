@@ -368,17 +368,20 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * @param name
 	 *   The name of the zone to load methods from, used as a suffix
-	 * @param warn
+	 * @param warnDraw
 	 *   Display a warning when the draw method doesn't exist
 	 * @param warnTouch
 	 *   Display a warning when the touch method doesn't exist
-	 * @param warn
+	 * @param warnKeys
 	 *   Display a warning when the keyTyped/keyPressed/keyReleased
 	 *   methods don't exist
-	 * @param warn
+	 * @param warnPick
 	 *   Display a warning when the pickDraw method doesn't exist
-	 * @param warn
+	 * @param warnTouchUDM
 	 *   Display a warning when the touchUp/touchDown/touchMoved
+	 *   methods don't exist
+	 * @param warnPress
+	 *   Display a warning when the touchPress
 	 *   methods don't exist
 	 */
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
@@ -996,9 +999,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *            int - The zone's new x-coordinate.
 	 * @param y
 	 *            int - The zone's new y-coordinate.
-	 * @param w
+	 * @param width
 	 *            int - The zone's new width.
-	 * @param h
+	 * @param height
 	 *            int - The zone's new height.
 	 */
 	public void setData(int x, int y, int width, int height) {
@@ -2726,7 +2729,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 	
 	/**
-	 * @param t
 	 * @return the x position of the touch in local coordinates
 	 */
 	public float getLocalX() {
@@ -2747,6 +2749,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 	
 	/**
+	 * @param t
 	 * @return the x position of zone in parent coordinates
 	 */
 	public float getLocalX( Touch t) {
@@ -2774,7 +2777,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * Sets the local y position
-	 * @param f
+	 * @param y
 	 */
 	public void setY(float y) {
 		if (getParent() == null)

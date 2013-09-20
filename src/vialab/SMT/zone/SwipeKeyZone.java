@@ -12,7 +12,7 @@ import processing.core.PVector;
 import vialab.SMT.*;
 import vialab.SMT.event.*;
 
-/** @class SwipeKeyZone
+/**
  * This class defines a zone that represents a key in a swipe keyboard.
  **/
 public class SwipeKeyZone extends KeyZone {
