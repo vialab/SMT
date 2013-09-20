@@ -2,13 +2,20 @@ package vialab.SMT;
 
  /**
   * Used to set the input device.
-  * <P>
-  * TUIO_DEVICE - Use Pure TUIO back end, no emulation here, any TUIO packets on port 3333 will taken as multi-touch input.<P>
-  * MOUSE - Use a mouse to emulate multi-touch, left click is a touch, right click a hold, and right click the held cursor again to remove.<P>
-  * WM_TOUCH - Use Windows Touch back end, for Windows devices that support multi-touch.<P>
-  * ANDROID - Use Android back end, only available using processing for Android, which currently doesn't work.<P>
-  * SMART - Use SMART SDK back end, when running on SMART hardware, such as the SMART Table.<P>
-  * LEAP - Use Leap SDK back end, for the Leap Motion, using the finger positions.<P>
+  * 
+  * 
+  * TUIO_DEVICE - Use Pure TUIO back end, no emulation here, any TUIO packets on port 3333 will taken as multi-touch input.
+  * 
+  * MOUSE - Use a mouse to emulate multi-touch, left click is a touch, right click a hold, and right click the held cursor again to remove.
+  * 
+  * WM_TOUCH - Use Windows Touch back end, for Windows devices that support multi-touch.
+  * 
+  * ANDROID - Use Android back end, only available using processing for Android, which currently doesn't work.
+  * 
+  * SMART - Use SMART SDK back end, when running on SMART hardware, such as the SMART Table.
+  * 
+  * LEAP - Use Leap SDK back end, for the Leap Motion, using the finger positions.
+  * 
   * MULTIPLE - Runs all back-ends that do not interfere with each other, which currently excludes SMART.
   *
   */

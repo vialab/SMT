@@ -12,32 +12,94 @@ import processing.core.PVector;
 import vialab.SMT.*;
 import vialab.SMT.event.*;
 
+/**
+ * A Zone that provides swipe keyboard functionality.
+ */
 public class SwipeKeyboard extends Zone
 		implements SwipeKeyListener, KeyListener, TouchListener{
-	//debug fields
+	///////////////////
+	// debug fields //
+	///////////////////
+	/**
+	 * Enables and disables debug print statements
+	 */
 	private static final boolean debug = false;
 
-	//public fields
+	////////////////////
+	// public fields //
+	////////////////////
+	/**
+	 * A list of all the anchors contained by this keyboard
+	 */
 	private Vector<AnchorZone> anchors;
+	/**
+	 * A list of all the keys contained by this keyboard
+	 */
 	private Vector<KeyZone> keys;
+	/**
+	 * A list of all the swipeKeys contained by this keyboard
+	 */
 	private Vector<SwipeKeyZone> swipeKeys;
-	//private fields
+
+	/////////////////////
+	// private fields //
+	/////////////////////
+	/**
+	 * Indicates whether a swipe is currently in progress.
+	 */
 	private boolean swipe_inProgress;
+	/**
+	 * The stack of swipeKeyEvents to be resolved once the current swipe finishes.
+	 * Should be empty if there is no swipe in progress.
+	 */
 	private Vector<SwipeKeyEvent> swipeStack;
+	/**
+	 * A list of all touches currently invovled in the current swipe.
+	 * Should be empty if there is no swipe in progress.
+	 */
 	private Vector<Touch> touches;
 
-	//private drawing fields
+	/////////////////////////////
+	// private drawing fields //
+	/////////////////////////////
+	/**
+	 * Indicates whether the keyboard's background should be drawn.
+	 */
 	private boolean drawBackground = false;
+	/**
+	 * The location of the keyboard.
+	 */
 	protected PVector position;
+	/**
+	 * The degree of rounding of the top left corner of this key.
+	 */
 	protected int cornerRounding_topLeft;
+	/**
+	 * The degree of rounding of the top right corner of this key.
+	 */
 	protected int cornerRounding_topRight;
+	/**
+	 * The degree of rounding of the bottom left corner of this key.
+	 */
 	protected int cornerRounding_bottomLeft;
+	/**
+	 * The degree of rounding of the bottom right corner of this key.
+	 */
 	protected int cornerRounding_bottomRight;
 
-	//constructors
+	///////////////////
+	// constructors //
+	///////////////////
+	/**
+	 * The default constructor for the keyboard. Uses the prototype Layout
+	 */
 	public SwipeKeyboard(){
-		this( prototypeLayout);
+		this( condensedLayout);
 	}
+	/**
+	 * The main constructor for the keyboard.
+	 * @param  layout The desired keyboard layout.
+	 */
 	public SwipeKeyboard( SwipeKeyboardLayout layout){
 		super( "Swipe Keyboard");
 		anchors = new Vector<AnchorZone>();
@@ -66,20 +128,39 @@ public class SwipeKeyboard extends Zone
 		swipeStack = new Vector<SwipeKeyEvent>();
 	}
 
-	//public access functions
+	//////////////////////////////
+	// public access functions //
+	//////////////////////////////
+	/**
+	 * Adds an anchor to the keyboard.
+	 * @param anchor The anchor to be added to this keyboard.
+	 */
 	public void addAnchor( AnchorZone anchor){
 		this.anchors.add( anchor);
 	}
+	/**
+	 * Adds an key to the keyboard.
+	 * @param key The key to be added to this keyboard.
+	 */
 	public void addKey( KeyZone key){
 		this.keys.add( key);
 		key.addKeyListener( this);
 	}
+	/**
+	 * Adds an swipe key to the keyboard.
+	 * @param key The swipe key to be added to this keyboard.
+	 */
 	public void addSwipeKey( SwipeKeyZone key){
 		this.swipeKeys.add( key);
 		key.addSwipeKeyListener( this);
 	}
 
-	//SMT overrides
+	////////////////////
+	// SMT overrides //
+	////////////////////
+	/**
+	 * Draws the keyboard.
+	 */
 	@Override
 	public void drawImpl() {
 		if( drawBackground){
@@ -92,31 +173,57 @@ public class SwipeKeyboard extends Zone
 				cornerRounding_bottomRight, cornerRounding_bottomLeft);
 		}
 	}
+	/**
+	 * Draws the touch selection area of the keyboard.
+	 */
 	@Override
 	public void pickDrawImpl() {}
+	/**
+	 * Overrides the Zone touch method to define rotate and stretch behavior.
+	 */
 	@Override
 	public void touchImpl() {
 		rst();
 	}
 
-	//KeyListner handles
+	/////////////////////////
+	// KeyListener handles //
+	/////////////////////////
+	/**
+	 * Listens to the occurrance of a KeyPressed event and responds accordingly.
+	 * @param event The KeyPressed event that has occured.
+	 */
 	@Override
 	public void keyPressed( KeyEvent event){
 		//if( debug)
 		System.out.printf( "Key Down: %s\n", event.getKeyChar());
 	}
+	/**
+	 * Listens to the occurrance of a KeyReleased event and responds accordingly.
+	 * @param event The KeyReleased event that has occured.
+	 */
 	@Override
 	public void keyReleased( KeyEvent event){
 		//if( debug)
 		System.out.printf( "Key Up: %s\n", event.getKeyChar());
 	}
+	/**
+	 * Listens to the occurrance of a KeyTyped event and responds accordingly.
+	 * @param event The KeyTyped event that has occured.
+	 */
 	@Override
 	public void keyTyped( KeyEvent event){
 		//if( debug)
 		System.out.printf( "Key Typed: %s\n", event.getKeyChar());
 	}
 
-	//SwipeKeyListener handles
+	///////////////////////////////
+	// SwipeKeyListener handles //
+	///////////////////////////////
+	/**
+	 * Listens to the occurrance of a SwipeStarted event and responds accordingly.
+	 * @param event The SwipeStarted that has occured.
+	 */
 	@Override
 	public void swipeStarted( SwipeKeyEvent event){
 		Touch touch = event.getTouch();
@@ -127,6 +234,10 @@ public class SwipeKeyboard extends Zone
 		swipe_inProgress = true;
 		swipeStack.add( event);
 	}
+	/**
+	 * Listens to the occurrance of a SwipeHit event and responds accordingly.
+	 * @param event The SwipeHit that has occured.
+	 */
 	@Override
 	public void swipeHit( SwipeKeyEvent event){
 		Touch touch = event.getTouch();
@@ -135,6 +246,10 @@ public class SwipeKeyboard extends Zone
 		if( swipe_inProgress)
 			swipeStack.add( event);
 	}
+	/**
+	 * Listens to the occurrance of a SwipeEnded event and responds accordingly.
+	 * @param event The SwipeEnded that has occured.
+	 */
 	@Override
 	public void swipeEnded( SwipeKeyEvent event){
 		/*Touch touch = event.getTouch();
@@ -142,9 +257,21 @@ public class SwipeKeyboard extends Zone
 			event.getKeyChar(), touch.getSessionID());*/
 	}
 
-	//touch listener handles
+	/////////////////////////////
+	// touch listener handles //
+	/////////////////////////////
+	/**
+	 * Listens to the occurrance of a TouchDown event and responds accordingly.
+	 * @param event The TouchDown that has occured.
+	 */
+	@Override
 	public void handleTouchDown( TouchEvent event){
 	}
+	/**
+	 * Listens to the occurrance of a TouchUp event and responds accordingly.
+	 * @param event The TouchUp that has occured.
+	 */
+	@Override
 	public void handleTouchUp( TouchEvent event){
 		Touch touch = event.getTouch();
 		if( debug)
@@ -155,10 +282,21 @@ public class SwipeKeyboard extends Zone
 			resolveSwipe();
 		}
 	}
+	/**
+	 * Listens to the occurrance of a TouchMoved event and responds accordingly.
+	 * @param event The TouchMoved that has occured.
+	 */
+	@Override
 	public void handleTouchMoved( TouchEvent event){
 	}
 
-	//private utility methods
+	//////////////////////////////
+	// private utility methods //
+	//////////////////////////////
+	/**
+	 * Converts the current stack of swipe events into a string and sends that
+	 * string to all swipe listeners for processing.
+	 */
 	private void resolveSwipe(){
 		String swipe = new String();
 		//load string
@@ -167,21 +305,42 @@ public class SwipeKeyboard extends Zone
 		swipeStack.clear();
 		System.out.printf("Swipe Finished: %s\n", swipe);
 		//preprocess swipe string
-		//match search
-		//match rank
-		//invoke wordTyped
+		// convert to lower case
+		// remove dupplicates
 	}
 
-	//public methods
+	/////////////////////
+	// public methods //
+	/////////////////////
+	/**
+	 * Defines whether or not the background of the keyboard should be drawn.
+	 * @param enabled True, if the background should be drawn, or false, if it
+	 *                should not be.
+	 */
 	public void setBackgroundEnabled( boolean enabled){
 		drawBackground = enabled;
 	}
+	/**
+	 * Sets the degree of rounding of the key's corners.
+	 * @param rounding The pixel radius of the rounding effect.
+	 */
 	public void setCornerRounding( int rounding){
 		cornerRounding_topLeft = rounding;
 		cornerRounding_topRight = rounding;
 		cornerRounding_bottomLeft = rounding;
 		cornerRounding_bottomRight = rounding;
 	}
+	/**
+	 * Sets the degree of rounding of the key's corners.
+	 * @param topLeft     The pixel radius of the top left corner's rounding
+	 *                    effect.
+	 * @param topRight    The pixel radius of the top right corner's rounding
+	 *                    effect.
+	 * @param bottomLeft  The pixel radius of the bottom left corner's rounding
+	 *                    effect.
+	 * @param bottomRight The pixel radius of the bottom right corner's rounding
+	 *                    effect.
+	 */
 	public void setCornerRounding(
 			int topLeft, int topRight, int bottomLeft, int bottomRight){
 		cornerRounding_topLeft = topLeft;
@@ -190,17 +349,34 @@ public class SwipeKeyboard extends Zone
 		cornerRounding_bottomRight = bottomRight;
 	}
 
-	//subclasses
-	//layouts
+	//////////////
+	// layouts //
+	//////////////
+	/**
+	 * A keyboard ayout that provides just the arrow keys.
+	 */
 	public static final SwipeKeyboardLayout arrowKeysLayout =
 			new ArrowKeysLayout();
+	/**
+	 * A keyboard layout that provides only the basic key set.
+	 */
 	public static final SwipeKeyboardLayout condensedLayout =
 			new CondensedLayout();
+	/**
+	 * A keyboard layout that provides an extended key set.
+	 */
 	public static final SwipeKeyboardLayout extendedLayout =
 			new ExtendedLayout();
-
+	/**
+	 * A prototype keyboard layout designed to prove feasibility.
+	 */
 	public static final SwipeKeyboardLayout prototypeLayout =
 			new SwipeKeyboardLayout(){
+		/**
+		 * Defines all the actions required to set a keyboard's layout, including
+		 * creation, organization, and linking of keys.
+		 * @param  keyboard The keyboard to be set up.
+		 */
 		public void setup( SwipeKeyboard keyboard){
 			//anchors
 			AnchorZone anchor_topLeft = new AnchorZone();

@@ -8,7 +8,7 @@ import TUIO.TuioTime;
 /**
  * This class exists to all multiple tuio streams to be merged into one, by
  * being a proxy listener, and changing sessionId to
- * (port<<48+0x0000ffffffffffffl&sessionId) to give each of them their own space
+ * (port << 48+0x0000ffffffffffffl & sessionId) to give each of them their own space
  * for 2^48 ids
  */
 class SMTProxyTuioListener implements TuioListener {

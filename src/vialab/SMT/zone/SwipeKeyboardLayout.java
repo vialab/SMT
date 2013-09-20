@@ -1,9 +1,15 @@
 package vialab.SMT.zone;
+/**
+ * Class that defines how the keys of a swipe keyboard are laid out and set up.
+ */
 public abstract class SwipeKeyboardLayout {
-	//static layouts
-	//public static final Layout testLayout;
-	//private fields
-	private int padding = 0;
-	//public methods
+	/////////////////////
+	// public methods //
+	/////////////////////
+	/**
+	 * Defines all the actions required to set a keyboard's layout, including
+	 * creation, organization, and linking of keys.
+	 * @param  keyboard The keyboard to be set up.
+	 */
 	public abstract void setup( SwipeKeyboard keyboard);
 }

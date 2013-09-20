@@ -8,17 +8,43 @@ import java.util.Vector;
 import vialab.SMT.*;
 import vialab.SMT.zone.*;
 
+/**
+ * A keyboard layout that provides only the basic key set.
+ */
 public class CondensedLayout extends SwipeKeyboardLayout{
-	//fields
+	/////////////
+	// fields //
+	/////////////
+	/**
+	 * The amount of padding between keys, and along the border of the keyboard.
+	 */
 	public static final int padding = 10;
+	/**
+	 * Defines whether the arrow keys should be added to the right side of the
+	 * keyboard.
+	 */
 	public boolean enableArrowKeys;
 
-	//constructor
+	//////////////////
+	// constructor //
+	//////////////////
+	/**
+	 * Initialized the keyboard layout object.
+	 */
 	public CondensedLayout(){
-		enableArrowKeys = true;
+		//the code to use this field has not be developed yet.
+		//The feature is thus disabled.
+		enableArrowKeys = false;
 	}
 
-	//methods
+	//////////////
+	// methods //
+	//////////////
+	/**
+	 * Defines all the actions required to set a keyboard's layout, including
+	 * creation, organization, and linking of keys.
+	 * @param  keyboard The keyboard to be set up.
+	 */
 	@Override
 	public void setup( SwipeKeyboard keyboard){
 		//initialize keys
@@ -201,16 +227,34 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		keyboard.setCornerRounding( 20);
 	}
 
-	//private classes
+	//////////////////////
+	// private classes //
+	//////////////////////
+	/**
+	 * Represents a row of keys.
+	 */
 	private class KeyRow extends Vector<KeyZone> {
-		public int x, y;
+		/**
+		 * The width of the row.
+		 */
 		public int width;
+		/**
+		 * The height of the row.
+		 */
 		public int height;
+		/**
+		 * Initializes the row.
+		 */
 		public KeyRow(){
 			super();
 			width = 0;
 			height = 0;
 		}
+		/**
+		 * Adds a key to the row, and re-positions it to the end of the row
+		 * @param  key The key to be added.
+		 * @return     true (as specified by Collection.add(E))
+		 */
 		public boolean add( KeyZone key){
 			super.add( key);
 			Dimension keydim = key.getSize();
@@ -220,9 +264,12 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 			height = Math.max( keydim.height, height);
 			return true;
 		}
+		/**
+		 * Translates every key in the row.
+		 * @param dx The desired change in the x direction.
+		 * @param dy The desired change in the y direction.
+		 */
 		public void translate( int dx, int dy){
-			x += dx;
-			y += dy;
 			for( KeyZone key : this)
 				key.translate( dx, dy);
 		}

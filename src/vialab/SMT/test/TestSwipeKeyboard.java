@@ -29,19 +29,19 @@ import vialab.SMT.zone.*;
  */
 public class TestSwipeKeyboard extends PApplet {
 
-	//constants
+	// constants
 	final int window_width = 1200;
 	final int window_height = 800;
 	final int fps_limit = 60;
 
-	//objects
+	// objects
 	SwipeKeyboard keyboard;
 
-	//other
+	// other
 	int window_halfWidth;
 	int window_halfHeight;
 
-	//main functions
+	// main functions
 	public void setup(){
 		window_halfWidth = window_width / 2;
 		window_halfHeight = window_height / 2;
@@ -70,6 +70,7 @@ public class TestSwipeKeyboard extends PApplet {
 		super.stop();
 	}
 
+	// program entry point
   static public void main( String[] passedArgs) {
     String[] appletArgs = new String[] { "vialab.SMT.test.TestSwipeKeyboard"};
     if (passedArgs != null) {

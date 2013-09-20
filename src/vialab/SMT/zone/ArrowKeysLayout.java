@@ -5,8 +5,16 @@ import java.awt.event.KeyEvent;
 //local imports
 import vialab.SMT.zone.*;
 
+/**
+ * A keyboard ayout that provides just the arrow keys.
+ */
 public class ArrowKeysLayout extends SwipeKeyboardLayout{
 	public static final int base_width = 100;
+	/**
+	 * Defines all the actions required to set a keyboard's layout, including
+	 * creation, organization, and linking of keys.
+	 * @param  keyboard The keyboard to be set up.
+	 */
 	public void setup( SwipeKeyboard keyboard){
 		//anchor
 		AnchorZone anchor = new AnchorZone();
