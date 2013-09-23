@@ -21,8 +21,8 @@ include dependencies.mk
 
 #compilation definitions
 $(class_files): bin/%.class : src/%.java
-	javac $(cp) $(dest) $(version) $(warnings) \
-		$(subst bin,src,$(subst class,java,$@))
+	javac $(cp) $(dest) $(version) $(warnings) $<
+#		$(subst bin,src,$(subst class,java,$@))
 
 #basic commands
 build: $(class_files)
