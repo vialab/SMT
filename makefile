@@ -50,8 +50,17 @@ git-prepare:
 #test commands
 test: test-swipekeyboard
 
-test-tablehockey: build
-	optirun processing-shell examples/Demos/TableHockey
-
 test-swipekeyboard: build
 	optirun java $(cp) vialab.SMT.test.TestSwipeKeyboard
+
+test-tablehockey: build jar
+	optirun processing-shell examples/Demos/TableHockey
+
+test-tutorial1: build jar
+	optirun processing-shell examples/Tutorial/One
+
+test-tutorial2: build jar
+	optirun processing-shell examples/Tutorial/Two
+
+test-tutorial3: build jar
+	optirun processing-shell examples/Tutorial/Three
