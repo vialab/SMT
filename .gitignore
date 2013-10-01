@@ -1,2 +1,3 @@
-documentation
-resources
+documentation/*
+resources/*
+library/SMT.jar
