@@ -22,7 +22,6 @@ include dependencies.mk
 #compilation definitions
 $(class_files): bin/%.class : src/%.java
 	javac $(cp) $(dest) $(version) $(warnings) $<
-#		$(subst bin,src,$(subst class,java,$@))
 
 #basic commands
 build: $(class_files)
@@ -51,16 +50,16 @@ git-prepare:
 test: test-swipekeyboard
 
 test-swipekeyboard: build
-	optirun java $(cp) vialab.SMT.test.TestSwipeKeyboard
+	java $(cp) vialab.SMT.test.TestSwipeKeyboard
 
 test-tablehockey: build jar
-	optirun processing-shell examples/Demos/TableHockey
+	processing-shell examples/Demos/TableHockey
 
 test-tutorial1: build jar
-	optirun processing-shell examples/Tutorial/One
+	processing-shell examples/Tutorial/One
 
 test-tutorial2: build jar
-	optirun processing-shell examples/Tutorial/Two
+	processing-shell examples/Tutorial/Two
 
 test-tutorial3: build jar
-	optirun processing-shell examples/Tutorial/Three
+	processing-shell examples/Tutorial/Three

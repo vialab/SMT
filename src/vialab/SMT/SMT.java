@@ -273,13 +273,11 @@ public class SMT {
 		SMTUtilities.loadMethods(parent.getClass());
 
 		// As of now the toolkit only supports OpenGL
-		if (!parent.g.is3D()) {
-			System.out
-					.println("SMT only supports using OpenGL 3D renderers, please use either OPENGL, P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
-		}
+		/*if (!parent.g.is3D())
+			System.out.println(
+				"SMT only supports using OpenGL 3D renderers, please use either OPENGL, P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");*/
 
 		touch = SMTUtilities.getPMethod(parent, "touch");
-		
 		SMT.sketch = new MainZone(0,0,parent.width,parent.height);
 
 		// set Zone.applet so that it is consistently set at this time, not
