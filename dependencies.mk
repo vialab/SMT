@@ -85,8 +85,7 @@ bin/vialab/SMT/PatternUnlockZone.class: \
 	bin/vialab/SMT/ImageZone.class \
 	bin/vialab/SMT/Zone.class
 
-bin/vialab/SMT/PGraphicsDelegate.class: \
-	bin/vialab/SMT/Zone.class
+bin/vialab/SMT/PGraphicsDelegate.class:
 
 bin/vialab/SMT/PieMenuZone.class: \
 	bin/vialab/SMT/Zone.class

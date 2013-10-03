@@ -4,7 +4,7 @@
 import vialab.SMT.*;
 
 void setup() {
-  size(displayWidth, displayHeight, P3D);
+  size(displayWidth, displayHeight, JAVA2D);
   //SMT.init(this, TouchSource.ANDROID);
 }
 

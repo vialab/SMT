@@ -2,6 +2,7 @@ package vialab.SMT;
 
 import processing.core.PFont;
 import processing.core.PGraphics;
+import processing.core.PGraphicsJava2D;
 import processing.core.PImage;
 import processing.core.PMatrix;
 import processing.core.PMatrix2D;
@@ -10,14 +11,13 @@ import processing.core.PShape;
 import processing.core.PStyle;
 import processing.opengl.PGL;
 import processing.opengl.PShader;
-import processing.opengl.PGraphicsOpenGL;
 
 /**
  * PGraphicsDelegate wraps the Processing functions for use by Zone.
  * 
  * @see <a href="http://processing.org/reference">Processing Documentation</a>
  */
-public abstract class PGraphicsDelegate extends PGraphicsOpenGL{
+public abstract class PGraphicsDelegate extends PGraphicsJava2D{
 
 	protected PGraphics pg;
 
@@ -932,7 +932,6 @@ public abstract class PGraphicsDelegate extends PGraphicsOpenGL{
 	public PMatrix getMatrix() {
 		if(pg == this){
 			return super.getMatrix();
-			
 		}
 		return pg.getMatrix();
 	}

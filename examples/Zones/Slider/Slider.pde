@@ -5,7 +5,7 @@
 
 import vialab.SMT.*;
 void setup() {
-  size(400, 400, P3D);
+  size(400, 400, JAVA2D);
   SMT.init(this, TouchSource.MULTIPLE);
   SMT.add(new SliderZone("Slider",100,100,200,50,0,100));
 }

@@ -46,7 +46,7 @@ class Ball {
 }
 
 void setup() {
-  size(displayWidth, displayHeight, P3D);
+  size(displayWidth, displayHeight, JAVA2D);
   for (int i=0; i<NUM_BALLS; i++) {
     balls.add(new Ball());
   }
@@ -143,7 +143,7 @@ class reflectZone extends Zone {
   }
   PVector reflectionDirection(Ball b) {
     PVector newNormalDir= new PVector();
-    PMatrix3D inv=this.matrix.get();
+    PMatrix2D inv=this.matrix.get();
     inv.invert();
     inv.transpose();
     inv.mult(normalDir, newNormalDir);

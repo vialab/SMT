@@ -9,7 +9,7 @@
 import vialab.SMT.*;
 
 void setup() {
-  size(600, 600, P3D);
+  size(600, 600, JAVA2D);
   SMT.init(this, TouchSource.MULTIPLE);
   Zone z = new Zone("Pick1", 100, 200, 200, 200);
   //This zone automatically is only touchable where it draws

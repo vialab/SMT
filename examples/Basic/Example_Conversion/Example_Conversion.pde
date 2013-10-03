@@ -8,7 +8,7 @@
 //comment out these setup and draw methods to run SMT conversion of this processing code
 /*
 void setup() {
-  size(displayWidth, displayHeight, P3D);
+  size(displayWidth, displayHeight, JAVA2D);
 }
 
 void draw() {
@@ -25,7 +25,7 @@ void draw() {
 import vialab.SMT.*;
 
 void setup() {
-  size(displayWidth, displayHeight, P3D);
+  size(displayWidth, displayHeight, JAVA2D);
   
   //This provides the multi-touch functionality, and TouchSource selection
   //change MOUSE to SMART to switch from using the mouse for

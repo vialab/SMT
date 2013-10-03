@@ -8,8 +8,8 @@ import java.util.TreeSet;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PGraphics;
 import processing.opengl.PGL;
-import processing.opengl.PGraphicsOpenGL;
 
 import java.nio.ByteBuffer;
 
@@ -17,7 +17,7 @@ import javax.media.opengl.GL;
 
 class SMTZonePicker {
 	
-	PGraphicsOpenGL pg;
+	PGraphics pg;
 	
 	private final static int BG_PICK_COLOR = 0x00ffffff;
 	private final int START_PICK_COLOR = 0;
@@ -43,7 +43,7 @@ class SMTZonePicker {
 	public SMTZonePicker() {
 		this.applet = SMT.parent;
 		
-		this.pg = (PGraphicsOpenGL) applet.createGraphics(applet.width, applet.height, PConstants.OPENGL);
+		this.pg = applet.createGraphics(applet.width, applet.height);
 
 		// add the background color mapping to null
 		zonesByPickColor.put(BG_PICK_COLOR, null);

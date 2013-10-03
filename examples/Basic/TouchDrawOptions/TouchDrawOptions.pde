@@ -7,7 +7,7 @@
 import vialab.SMT.*;
 
 void setup() {
-  size(400, 400, P3D);
+  size(400, 400, JAVA2D);
   SMT.init(this, TouchSource.MULTIPLE);
   SMT.setTouchDraw(TouchDraw.DEBUG,100);
   //SMT.setTouchDraw(TouchDraw.NONE,100);

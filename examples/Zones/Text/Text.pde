@@ -6,7 +6,7 @@
 
 import vialab.SMT.*;
 void setup() {
-  size(400, 400, P3D);
+  size(400, 400, JAVA2D);
   SMT.init(this, TouchSource.MULTIPLE);
   SMT.add(new TextZone(0,0,200,200,true));
 }

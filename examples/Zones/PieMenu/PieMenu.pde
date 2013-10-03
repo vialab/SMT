@@ -20,7 +20,7 @@
 import vialab.SMT.*;
 
 void setup(){
-  size(800,800,P3D);
+  size(800,800,JAVA2D);
   SMT.init(this, TouchSource.MULTIPLE);
   PieMenuZone menu = new PieMenuZone("PieMenu", 400, 400, 355);
   SMT.add(menu);

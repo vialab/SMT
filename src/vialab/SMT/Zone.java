@@ -62,7 +62,6 @@ import processing.core.PImage;
 import processing.core.PMatrix2D;
 import processing.core.PVector;
 import processing.event.KeyEvent;
-import processing.opengl.PGraphicsOpenGL;
 import TUIO.TuioTime;
 
 /**
@@ -618,7 +617,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	@Override
 	public void beginDraw() {
 		if (direct) {
-			pg = (PGraphicsOpenGL) applet.g;
+			pg = (PGraphics) applet.g;
 			pg.pushMatrix();
 			pg.applyMatrix(matrix);
 		}
@@ -658,7 +657,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		popMatrix();
 		pushMatrix();
 		
-		pg = (PGraphicsOpenGL) applet.g;
+		pg = (PGraphics) applet.g;
 		pg.pushMatrix();
 		pg.applyMatrix(matrix);
 		pg.pushStyle();

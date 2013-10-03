@@ -17,7 +17,7 @@
  */
 import vialab.SMT.*;
 void setup() {
-  size(400, 400, P3D);
+  size(400, 400, JAVA2D);
   SMT.init(this, TouchSource.MULTIPLE);
   SMT.addMethodClasses(CustomZone.class);
   SMT.add(new Zone("MyZone1",0,0,200,200));

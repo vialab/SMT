@@ -9,7 +9,7 @@ import vialab.SMT.*;
 Zone z;
 
 void setup() {
-  size(displayWidth, displayHeight, P3D);
+  size(displayWidth, displayHeight, JAVA2D);
   SMT.init(this, TouchSource.MULTIPLE);
   z = new Zone("Test",0,0,50,50);
   SMT.add(z);

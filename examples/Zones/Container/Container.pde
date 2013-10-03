@@ -7,7 +7,7 @@
 
 import vialab.SMT.*;
 void setup() {
-  size(400, 400, P3D);
+  size(400, 400, JAVA2D);
   SMT.init(this, TouchSource.MULTIPLE);
   SMT.add(new ContainerZone("RotatedContainer",0,0,400,400));
   SMT.get("RotatedContainer").rotateAbout(PI/4,CENTER);

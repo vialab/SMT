@@ -11,7 +11,7 @@
 
 import vialab.SMT.*;
 void setup() {
-  size(400, 400, P3D);
+  size(400, 400, JAVA2D);
   SMT.init(this, TouchSource.MULTIPLE);
   SMT.add(new PatternUnlockZone(100,100,200,200));
 }

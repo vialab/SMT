@@ -3,7 +3,7 @@ import vialab.SMT.*;
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
-	size(displayWidth, displayHeight, P3D);
+	size(displayWidth, displayHeight, JAVA2D);
 	textMode( SHAPE);
 	SMT.init(this, TouchSource.MULTIPLE);
 

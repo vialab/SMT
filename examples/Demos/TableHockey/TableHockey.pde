@@ -38,7 +38,7 @@ void setup(){
 	display_halfHeight = display_height / 2;
 	//processing library setup
 	frameRate( fps_limit);
-	size( display_width, display_height, P3D);
+	size( display_width, display_height, JAVA2D);
 	//smt library setup
 	SMT.init( this, TouchSource.MULTIPLE);
 
@@ -72,8 +72,7 @@ void setup(){
 	SMT.add( enemy);
 
 	//add score text areas
-	add( new TextArea("asdf", 1, 4));
-
+	//add( new TextArea("asdf", 1, 4));
 
 	//start up the physics engine
 	try{

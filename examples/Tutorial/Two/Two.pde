@@ -6,7 +6,7 @@ color myZone_color;
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
-	size(displayWidth, displayHeight, P3D);
+	size(displayWidth, displayHeight, JAVA2D);
 	SMT.init(this, TouchSource.MULTIPLE);
 
 	//Make a new Zone

@@ -20,7 +20,7 @@ public void setup(){
 	window_halfHeight = window_height / 2;
 	//processing library setup
 	frameRate( fps_limit);
-	size( window_width, window_height, P3D);
+	size( window_width, window_height, JAVA2D);
 	textMode( SHAPE);
 	frame.setTitle("Swipe Keyboard Test");
 	//smt library setup
