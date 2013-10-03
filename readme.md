@@ -16,6 +16,8 @@ It provides an easy to use library for processing sketches to handle touch input
 
 SMT supports multiple input sources for Touch events: SmartSDK, Windows Touch (requires http://www.microsoft.com/en-au/download/details.aspx?id=30679), TUIO, Mouse Emulation, Android, and Leap Motion.
 
+SMT can be used in Windows, Mac and Linux environments.
+
 Installation Instructions:
 	1 - Install Processing 2.0+ if you do not have it already
 	2 - Processing Menu bar->sketch->Import Library->Add Library
