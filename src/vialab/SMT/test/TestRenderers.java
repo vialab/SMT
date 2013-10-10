@@ -16,15 +16,12 @@ import vialab.SMT.zone.*;
  * Test program for the experimental SwipeKeyboard class
  * by Kalev Kalda Sikes
  */
-public class TestSwipeKeyboard extends PApplet {
+public class TestRenderers extends PApplet {
 
 	// constants
 	final int window_width = 1200;
 	final int window_height = 800;
 	final int fps_limit = 60;
-
-	// objects
-	SwipeKeyboard keyboard;
 
 	// other
 	int window_halfWidth;
@@ -36,18 +33,11 @@ public class TestSwipeKeyboard extends PApplet {
 		window_halfHeight = window_height / 2;
 		//processing library setup
 		frameRate( fps_limit);
-		size( window_width, window_height, JAVA2D);
-		textMode( SHAPE);
-		frame.setTitle("Swipe Keyboard Test");
+		size( window_width, window_height, P2D);
+		frame.setTitle("Renderer Test");
 		//smt library setup
 		SMT.init( this, TouchSource.MULTIPLE);
-
-		//add keyboard test
-		//keyboard = new SwipeKeyboard();
-		keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);
-		keyboard.translate( 40, 300);
-		SMT.add( keyboard);
-		SMT.add( new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout));
+		SMT.add( new Zone( 100, 100, 400, 400));
 	}
 
 	public void draw(){
@@ -62,7 +52,7 @@ public class TestSwipeKeyboard extends PApplet {
 
 	// program entry point
   static public void main( String[] passedArgs) {
-    String[] appletArgs = new String[] { "vialab.SMT.test.TestSwipeKeyboard"};
+    String[] appletArgs = new String[] { "vialab.SMT.test.TestRenderers"};
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {

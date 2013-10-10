@@ -183,7 +183,7 @@ public class SwipeKeyboard extends Zone
 	 */
 	@Override
 	public void touchImpl() {
-		rotate();
+		rst();
 	}
 
 	/////////////////////////

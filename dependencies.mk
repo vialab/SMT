@@ -14,6 +14,7 @@ bin/vialab/SMT/event/TouchListener.class: \
 bin/vialab/SMT/test/TestSwipeKeyboard.class: \
 	bin/vialab/SMT/zone/SwipeKeyboard.class \
 	bin/vialab/SMT/TouchSource.class
+bin/vialab/SMT/test/TestRenderers.class:
 
 #zone package
 bin/vialab/SMT/zone/AnchorZone.class: \
@@ -196,6 +197,7 @@ class_files = \
 	bin/vialab/SMT/SMTZonePicker.class \
 	bin/vialab/SMT/TabZone.class \
 	bin/vialab/SMT/test/TestSwipeKeyboard.class \
+	bin/vialab/SMT/test/TestRenderers.class \
 	bin/vialab/SMT/TextureZone.class \
 	bin/vialab/SMT/TextZone.class \
 	bin/vialab/SMT/TouchClient.class \
@@ -242,6 +244,7 @@ source_files = \
 	src/vialab/SMT/SMTZonePicker.java \
 	src/vialab/SMT/TabZone.java \
 	src/vialab/SMT/test/TestSwipeKeyboard.java \
+	src/vialab/SMT/test/TestRenderers.java \
 	src/vialab/SMT/TextureZone.java \
 	src/vialab/SMT/TextZone.java \
 	src/vialab/SMT/TouchClient.java \

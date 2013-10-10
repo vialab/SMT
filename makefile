@@ -49,17 +49,18 @@ git-prepare:
 #test commands
 test: test-swipekeyboard
 
+test-renderers: build
+	java $(cp) vialab.SMT.test.TestRenderers
+
 test-swipekeyboard: build
 	java $(cp) vialab.SMT.test.TestSwipeKeyboard
 
-test-tablehockey: build jar
+test-tablehockey: jar
 	processing-shell examples/Demos/TableHockey
 
-test-tutorial1: build jar
+test-tutorial1: jar
 	processing-shell examples/Tutorial/One
-
-test-tutorial2: build jar
+test-tutorial2: jar
 	processing-shell examples/Tutorial/Two
-
-test-tutorial3: build jar
+test-tutorial3: jar
 	processing-shell examples/Tutorial/Three

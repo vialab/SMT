@@ -143,7 +143,7 @@ class reflectZone extends Zone {
   }
   PVector reflectionDirection(Ball b) {
     PVector newNormalDir= new PVector();
-    PMatrix2D inv=this.matrix.get();
+    PMatrix inv=this.matrix.get();
     inv.invert();
     inv.transpose();
     inv.mult(normalDir, newNormalDir);
