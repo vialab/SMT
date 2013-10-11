@@ -59,7 +59,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import processing.core.PMatrix2D;
+import processing.core.PMatrix;
 import processing.core.PVector;
 import processing.event.KeyEvent;
 import TUIO.TuioTime;
@@ -90,11 +90,11 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected static PApplet applet;
 	
 	//The zone's transformation matrix
-	protected PMatrix2D matrix = new PMatrix2D();
-	protected PMatrix2D backupMatrix = null;
+	protected PMatrix matrix = this.getIdentityMatrix();
+	protected PMatrix backupMatrix = null;
 	
 	//The zone's inverse transformation matrix
-	protected PMatrix2D inverse = new PMatrix2D();
+	protected PMatrix inverse = this.getIdentityMatrix();
 	//properties
 	@Deprecated
 	public int x, y;
@@ -440,7 +440,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		if (pg != null) {
 			// save and pop the matrix to finish the matrix loading cycle for
 			// the current zonePG, as we are about to change it
-			matrix.preApply((PMatrix2D) getMatrix());
+			matrix.preApply( getMatrix());
 			popMatrix();
 		}
 
@@ -653,7 +653,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void beginPickDraw() {
 		// update with changes from zonePG
-		matrix.preApply((PMatrix2D) (getMatrix()));
+		matrix.preApply( getMatrix());
 		popMatrix();
 		pushMatrix();
 		
@@ -709,7 +709,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur after touch commands
 	 */
 	public void endTouch() {
-		matrix.preApply((PMatrix2D) getMatrix());
+		matrix.preApply( getMatrix());
 		popMatrix();
 	}
 
@@ -1545,7 +1545,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			first.from = first.to;
 		}
 
-		// PMatrix2D matrix = new PMatrix2D();
 		if (translateX || translateY) {
 			if (translateX) {
 				translate(first.to.x, 0);
@@ -1973,8 +1972,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 					child.backupMatrix = null;
 
 					child.beginTouch();
-					PMatrix2D inverse = new PMatrix2D();
-					inverse.apply(matrix);
+					PMatrix inverse = matrix.get();
 					inverse.invert();
 					child.applyMatrix(inverse);
 					child.endTouch();
@@ -2065,7 +2063,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			return;
 		}
 
-		// PMatrix2D matrix = new PMatrix2D();
 		translate(pair.to.x, pair.to.y);
 
 		PVector centre = getCentre();
@@ -2107,8 +2104,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 				lastUpdate = maxTime(pair);
 				return;
 			}
-
-			// PMatrix2D matrix = new PMatrix2D();
 
 			PVector centre = getCentre();
 
@@ -2311,9 +2306,9 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return A PVector relative to the zone's coordinate space
 	 */
 	public PVector toZoneVector(PVector global) {
-		PMatrix2D temp = getGlobalMatrix();
+		PMatrix temp = getGlobalMatrix();
 		temp.invert();
-		return temp.mult(global, null);
+		return temp.mult( global, null);
 	}
 
 	/**
@@ -2331,10 +2326,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * Returns a matrix relative to global coordinate space
 	 * 
-	 * @return A PMatrix2D relative to the global coordinate space
+	 * @return A PMatrix relative to the global coordinate space
 	 */
-	public PMatrix2D getGlobalMatrix() {
-		PMatrix2D temp = new PMatrix2D();
+	public PMatrix getGlobalMatrix() {
+		PMatrix temp = this.getIdentityMatrix();
 		// list ancestors in order from most distant to closest, in order to
 		// apply their matrix's in order
 		LinkedList<Zone> ancestors = new LinkedList<Zone>();
@@ -2348,10 +2343,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		// already has its parents applied to it.
 		if (backupMatrix == null) {
 			for (Zone i : ancestors) {
-				temp.apply(i.matrix);
+				temp.apply( i.matrix);
 			}
 		}
-		temp.apply(matrix);
+		temp.apply( matrix);
 
 		return temp;
 	}
@@ -2497,16 +2492,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void setMatrixFromBody() {
 		// set global matrix from zoneBody, then get local matrix from global
 		// matrix
-		PMatrix2D ng = new PMatrix2D();
+		PMatrix ng = this.getIdentityMatrix();
 		// height-y to account for difference in coordinates
 		ng.translate(zoneBody.getPosition().x / SMT.box2dScale,
 				(applet.height - zoneBody.getPosition().y / SMT.box2dScale));
 		ng.rotate(zoneBody.getAngle());
 		ng.translate(-width / 2, -height / 2);
 		// ng=PM == (P-1)*ng=M
-		PMatrix2D M = new PMatrix2D(matrix);
+		PMatrix M = matrix.get();
 		M.invert();
-		PMatrix2D P = getGlobalMatrix();
+		PMatrix P = getGlobalMatrix();
 		P.apply(M);
 		P.invert();
 		ng.apply(P);
@@ -2710,7 +2705,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return The angle of the Zone in global coordinates
 	 */
 	public float getRotationAngle() {
-		PMatrix2D g = getGlobalMatrix();
+		PMatrix g = getGlobalMatrix();
 		float angle = PApplet.atan2(g.m10, g.m00);
 		return angle >= 0 ? angle : angle + 2 * PI;
 	}

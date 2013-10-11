@@ -10,6 +10,9 @@ bin/vialab/SMT/event/TouchEvent.class:
 bin/vialab/SMT/event/TouchListener.class: \
 	bin/vialab/SMT/event/TouchEvent.class
 
+#exception package
+bin/vialab/SMT/exception/UnsupportedRendererException.class:
+
 #test package
 bin/vialab/SMT/test/TestSwipeKeyboard.class: \
 	bin/vialab/SMT/zone/SwipeKeyboard.class \
@@ -86,7 +89,8 @@ bin/vialab/SMT/PatternUnlockZone.class: \
 	bin/vialab/SMT/ImageZone.class \
 	bin/vialab/SMT/Zone.class
 
-bin/vialab/SMT/PGraphicsDelegate.class:
+bin/vialab/SMT/PGraphicsDelegate.class: \
+	bin/vialab/SMT/exception/UnsupportedRendererException.class
 
 bin/vialab/SMT/PieMenuZone.class: \
 	bin/vialab/SMT/Zone.class
@@ -177,6 +181,7 @@ class_files = \
 	bin/vialab/SMT/event/SwipeKeyListener.class \
 	bin/vialab/SMT/event/TouchEvent.class \
 	bin/vialab/SMT/event/TouchListener.class \
+	bin/vialab/SMT/exception/UnsupportedRendererException.class \
 	bin/vialab/SMT/Finger.class \
 	bin/vialab/SMT/ImageZone.class \
 	bin/vialab/SMT/KeyboardZone.class \
@@ -224,6 +229,7 @@ source_files = \
 	src/vialab/SMT/event/SwipeKeyListener.java \
 	src/vialab/SMT/event/TouchEvent.java \
 	src/vialab/SMT/event/TouchListener.java \
+	src/vialab/SMT/exception/UnsupportedRendererException.java \
 	src/vialab/SMT/Finger.java \
 	src/vialab/SMT/ImageZone.java \
 	src/vialab/SMT/KeyboardZone.java \

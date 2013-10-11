@@ -1,8 +1,10 @@
 package vialab.SMT;
 
+//processing imports
 import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PGraphicsJava2D;
+import processing.core.PGraphicsOpenGL;
 import processing.core.PImage;
 import processing.core.PMatrix;
 import processing.core.PMatrix2D;
@@ -12,14 +14,37 @@ import processing.core.PStyle;
 import processing.opengl.PGL;
 import processing.opengl.PShader;
 
+//local imports
+import vialab.SMT.exception.UnsupportedRendererException;
+
 /**
  * PGraphicsDelegate wraps the Processing functions for use by Zone.
  * 
  * @see <a href="http://processing.org/reference">Processing Documentation</a>
  */
-public abstract class PGraphicsDelegate extends PGraphicsJava2D{
+public abstract class PGraphicsDelegate extends PGraphics{
 
 	protected PGraphics pg;
+	protected PGraphics defaultGraphics;
+
+	// constructor
+	protected PGraphicsDelegate(){
+		defaultGraphics =
+			( SMT.parent.g instanceof PGraphicsOpenGL ) ? new PGraphicsOpenGL() :
+			( SMT.parent.g instanceof PGraphicsJava2D ) ? new PGraphicsJava2D() :
+			null;
+		if( defaultGraphics == null)
+			throw new UnsupportedRendererException(
+				"SMT cannot detect the renderer currently being used. Try using JAVA2D, OPENGL, P2D, or P3D instead.");
+	}
+
+	// public methods
+	public PMatrix getIdentityMatrix(){
+		return ( this.getMatrix() instanceof PMatrix2D) ?
+			new PMatrix2D() : new PMatrix3D();
+	}
+
+	// override methods
 
 	@Override
 	public boolean save(String arg0) {
