@@ -4,7 +4,6 @@ package vialab.SMT;
 import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PGraphicsJava2D;
-import processing.core.PGraphicsOpenGL;
 import processing.core.PImage;
 import processing.core.PMatrix;
 import processing.core.PMatrix2D;
@@ -12,6 +11,7 @@ import processing.core.PMatrix3D;
 import processing.core.PShape;
 import processing.core.PStyle;
 import processing.opengl.PGL;
+import processing.opengl.PGraphicsOpenGL;
 import processing.opengl.PShader;
 
 //local imports
