@@ -13,6 +13,9 @@ bin/vialab/SMT/event/TouchListener.class: \
 #exception package
 bin/vialab/SMT/exception/UnsupportedRendererException.class:
 
+#experiments package
+bin/vialab/SMT/exp/RendererInfoExperiment.class:
+
 #test package
 bin/vialab/SMT/test/TestSwipeKeyboard.class: \
 	bin/vialab/SMT/zone/SwipeKeyboard.class \
@@ -182,6 +185,7 @@ class_files = \
 	bin/vialab/SMT/event/TouchEvent.class \
 	bin/vialab/SMT/event/TouchListener.class \
 	bin/vialab/SMT/exception/UnsupportedRendererException.class \
+	bin/vialab/SMT/exp/RendererInfoExperiment.class \
 	bin/vialab/SMT/Finger.class \
 	bin/vialab/SMT/ImageZone.class \
 	bin/vialab/SMT/KeyboardZone.class \

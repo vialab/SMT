@@ -60,6 +60,8 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PMatrix;
+import processing.core.PMatrix2D;
+import processing.core.PMatrix3D;
 import processing.core.PVector;
 import processing.event.KeyEvent;
 import TUIO.TuioTime;
@@ -189,6 +191,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		return false;
 	}
 
+	public void preApply( PMatrix other){
+		if( other instanceof PMatrix2D)
+			matrix.preApply( (PMatrix2D) other);
+		else
+			matrix.preApply( (PMatrix3D) other);
+	}
+
 	/**
 	 * Check state of the direct flag.
 	 * 
@@ -306,7 +315,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 *   The renderer that draws the zone
 	 */
 	public Zone(String name, int x, int y, int width, int height, String renderer) {
-		super();
 		applet = SMT.parent;
 		setParent(applet);
 		if (applet == null) {
@@ -440,7 +448,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		if (pg != null) {
 			// save and pop the matrix to finish the matrix loading cycle for
 			// the current zonePG, as we are about to change it
-			matrix.preApply( getMatrix());
+
+			preApply( getMatrix());
 			popMatrix();
 		}
 
@@ -453,6 +462,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 		// push and clear the matrix to [re]start the matrix loading cycle
 		pushMatrix();
+		
+		initCalled = true;
 	}
 
 	/**
@@ -653,7 +664,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void beginPickDraw() {
 		// update with changes from zonePG
-		matrix.preApply( getMatrix());
+		preApply( getMatrix());
 		popMatrix();
 		pushMatrix();
 		
@@ -709,7 +720,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Override this if something needs to occur after touch commands
 	 */
 	public void endTouch() {
-		matrix.preApply( getMatrix());
+		preApply( getMatrix());
 		popMatrix();
 	}
 
@@ -1032,7 +1043,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			// is set), we need to apply our parents matrix too after the reset,
 			// since it was applied before and will be inverted.
 			if (backupMatrix != null)
-				this.matrix.preApply(getParent().matrix);
+				this.preApply(getParent().matrix);
 		}
 	}
 	
@@ -2705,8 +2716,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return The angle of the Zone in global coordinates
 	 */
 	public float getRotationAngle() {
-		PMatrix g = getGlobalMatrix();
-		float angle = PApplet.atan2(g.m10, g.m00);
+		PMatrix global = getGlobalMatrix();
+		float angle = 0;
+		if( global instanceof PMatrix2D){
+			PMatrix2D global_cast = (PMatrix2D) global;
+			angle = PApplet.atan2(global_cast.m10, global_cast.m00);
+		}
+		else {
+			PMatrix3D global_cast = (PMatrix3D) global;
+			angle = PApplet.atan2(global_cast.m10, global_cast.m00);
+		}
 		return angle >= 0 ? angle : angle + 2 * PI;
 	}
 

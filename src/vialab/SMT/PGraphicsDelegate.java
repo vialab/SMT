@@ -1,10 +1,12 @@
 package vialab.SMT;
 
 //processing imports
+import java.awt.Image;
+
+import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PGraphicsJava2D;
-import processing.core.PGraphicsOpenGL;
 import processing.core.PImage;
 import processing.core.PMatrix;
 import processing.core.PMatrix2D;
@@ -12,6 +14,9 @@ import processing.core.PMatrix3D;
 import processing.core.PShape;
 import processing.core.PStyle;
 import processing.opengl.PGL;
+import processing.opengl.PGraphics2D;
+import processing.opengl.PGraphics3D;
+import processing.opengl.PGraphicsOpenGL;
 import processing.opengl.PShader;
 
 //local imports
@@ -24,19 +29,9 @@ import vialab.SMT.exception.UnsupportedRendererException;
  */
 public abstract class PGraphicsDelegate extends PGraphics{
 
+	protected boolean initCalled = false;
 	protected PGraphics pg;
 	protected PGraphics defaultGraphics;
-
-	// constructor
-	protected PGraphicsDelegate(){
-		defaultGraphics =
-			( SMT.parent.g instanceof PGraphicsOpenGL ) ? new PGraphicsOpenGL() :
-			( SMT.parent.g instanceof PGraphicsJava2D ) ? new PGraphicsJava2D() :
-			null;
-		if( defaultGraphics == null)
-			throw new UnsupportedRendererException(
-				"SMT cannot detect the renderer currently being used. Try using JAVA2D, OPENGL, P2D, or P3D instead.");
-	}
 
 	// public methods
 	public PMatrix getIdentityMatrix(){
@@ -44,2071 +39,1127 @@ public abstract class PGraphicsDelegate extends PGraphics{
 			new PMatrix2D() : new PMatrix3D();
 	}
 
-	// override methods
-
-	@Override
-	public boolean save(String arg0) {
-		if(pg == this){
-			return super.save(arg0);
-		}
-		return pg.save(arg0);
+	//private methods
+	private PGraphics getDelegate(){
+		delegateNullCheck();
+		System.out.printf(
+			"Returning %s\n",
+			 pg == this ? "defaultGraphics" : "pg");
+		System.out.printf("init called: %b\n", initCalled);
+		System.out.printf("pg is null: %b\n", pg == null);
+		return pg == this ? defaultGraphics : pg;
 	}
-	
-	@Override
-	public void beginContour() {
-		if(pg == this){
-			super.beginContour();
-			return;
-		}
-		pg.beginContour();
-	}
+	private void delegateNullCheck(){
+		if( defaultGraphics != null) return;
+		defaultGraphics = SMT.parent.createGraphics(
+			SMT.parent.g.width,
+			SMT.parent.g.height,
+			SMT.parent.g.getClass().getName());
 
-	@Override
-	public PGL beginPGL() {
-		if(pg == this){
-			return super.beginPGL();
-		}
-		return pg.beginPGL();
+		if( defaultGraphics == null)
+			throw new UnsupportedRendererException(
+				"SMT cannot detect the renderer currently being used. Try using JAVA2D, OPENGL, P2D, or P3D instead.");
 	}
 
-	@Override
-	public void blendMode(int mode) {
-		if(pg == this){
-			super.blendMode(mode);
-			return;
-		}
-		pg.blendMode(mode);
+	//override methods
+
+	public void ambient(int rgb) {
+		getDelegate().ambient(rgb);
 	}
 
-	@Override
-	public void endContour() {
-		if(pg == this){
-			super.endContour();
-			return;
-		}
-		pg.endContour();
+	public void ambient(float gray) {
+		getDelegate().ambient(gray);
 	}
 
-	@Override
-	public void endPGL() {
-		if(pg == this){
-			super.endPGL();
-			return;
-		}
-		pg.endPGL();
+	public void ambient(float v1, float v2, float v3) {
+		getDelegate().ambient(v1, v2, v3);
 	}
 
-	@Override
-	public void filter(PShader shader) {
-		if(pg == this){
-			super.filter(shader);
-			return;
-		}
-		pg.filter(shader);
+	public void ambientLight(float v1, float v2, float v3) {
+		getDelegate().ambientLight(v1, v2, v3);
 	}
 
-	@Override
-	public void noClip() {
-		if(pg == this){
-			super.noClip();
-			return;
-		}
-		pg.noClip();
+	public void ambientLight(float v1, float v2, float v3, float x, float y, float z) {
+		getDelegate().ambientLight(v1, v2, v3, x, y, z);
 	}
 
-	@Override
-	public void ortho(float left, float right, float bottom, float top) {
-		if(pg == this){
-			super.ortho(left, right, bottom, top);
-			return;
-		}
-		pg.ortho(left, right, bottom, top);
+	public void applyMatrix(PMatrix source) {
+		getDelegate().applyMatrix(source);
 	}
 
-	@Override
-	public void quadraticVertex(float cx, float cy, float cz, float x3, float y3, float z3) {
-		if(pg == this){
-			super.quadraticVertex(cx, cy, cz, x3, y3, z3);
-			return;
-		}
-		pg.quadraticVertex(cx, cy, cz, x3, y3, z3);
+	public void applyMatrix(PMatrix2D source) {
+		getDelegate().applyMatrix(source);
 	}
 
-	@Override
-	public void quadraticVertex(float cx, float cy, float x3, float y3) {
-		if(pg == this){
-			super.quadraticVertex(cx, cy, x3, y3);
-			return;
-		}
-		pg.quadraticVertex(cx, cy, x3, y3);
+	public void applyMatrix(PMatrix3D source) {
+		getDelegate().applyMatrix(source);
 	}
 
-	@Override
-	public void requestDraw() {
-		if(pg == this){
-			super.requestDraw();
-			return;
-		}
-		pg.requestDraw();
+	public void applyMatrix(float n00, float n01, float n02, float n10, float n11, float n12) {
+		getDelegate().applyMatrix(n00, n01, n02, n10, n11, n12);
 	}
 
-	@Override
-	public void resetShader() {
-		if(pg == this){
-			super.resetShader();
-			return;
-		}
-		pg.resetShader();
+	public void applyMatrix(float n00, float n01, float n02, float n03, float n10, float n11,
+			float n12, float n13, float n20, float n21, float n22, float n23, float n30, float n31,
+			float n32, float n33) {
+		getDelegate().applyMatrix(n00, n01, n02, n03, n10, n11, n12, n13, n20, n21, n22, n23, n30, n31, n32,
+				n33);
 	}
 
-	@Override
-	public void resetShader(int kind) {
-		if(pg == this){
-			super.resetShader(kind);
-			return;
-		}
-		pg.resetShader(kind);
+	public void arc(float a, float b, float c, float d, float start, float stop) {
+		getDelegate().arc(a, b, c, d, start, stop);
 	}
 
-	@Override
-	public void setFrameRate(float frameRate) {
-		if(pg == this){
-			super.setFrameRate(frameRate);
-			return;
-		}
-		pg.setFrameRate(frameRate);
-	}
-
-	@Override
-	public void shader(PShader shader, int kind) {
-		if(pg == this){
-			super.shader(shader, kind);
-			return;
-		}
-		pg.shader(shader, kind);
-	}
-
-	@Override
-	public void shader(PShader shader) {
-		if(pg == this){
-			super.shader(shader);
-			return;
-		}
-		pg.shader(shader);
-	}
-
-	@Override
-	public void shearX(float angle) {
-		if(pg == this){
-			super.shearX(angle);
-			return;
-		}
-		pg.shearX(angle);
-	}
-
-	@Override
-	public void shearY(float angle) {
-		if(pg == this){
-			super.shearY(angle);
-			return;
-		}
-		pg.shearY(angle);
-	}
-
-	@Override
-	public void smooth(int level) {
-		if(pg == this){
-			super.smooth(level);
-			return;
-		}
-		pg.smooth(level);
-	}
-
-	@Override
-	public void textureWrap(int wrap) {
-		if(pg == this){
-			super.textureWrap(wrap);
-			return;
-		}
-		pg.textureWrap(wrap);
-	}
-
-	@Override
 	public void arc(float a, float b, float c, float d, float start, float stop, int mode) {
-		if(pg == this){
-			super.arc(a, b, c, d, start, stop, mode);
-			return;
-		}
-		pg.arc(a, b, c, d, start, stop, mode);
+		getDelegate().arc(a, b, c, d, start, stop, mode);
 	}
 
-	@Override
-	public void clear() {
-		if(pg == this){
-			super.clear();
-			return;
-		}
-		pg.clear();
+	public void background(int rgb) {
+		getDelegate().background(rgb);
 	}
 
-	@Override
-	public void clip(float a, float b, float c, float d) {
-		if(pg == this){
-			super.clip(a, b, c, d);
-			return;
-		}
-		pg.clip(a, b, c, d);
+	public void background(float gray) {
+		getDelegate().background(gray);
 	}
 
-	@Override
-	public void noTexture() {
-		if(pg == this){
-			super.noTexture();
-			return;
-		}
-		pg.noTexture();
+	public void background(PImage image) {
+		getDelegate().background(image);
 	}
 
-	@Override
-	public void removeCache(PImage image) {
-		if(pg == this){
-			super.removeCache(image);
-			return;
-		}
-		pg.removeCache(image);
+	public void background(int rgb, float alpha) {
+		getDelegate().background(rgb, alpha);
 	}
 
-	@Override
-	public void setCache(PImage image, Object storage) {
-		if(pg == this){
-			super.setCache(image,storage);
-			return;
-		}
-		pg.setCache(image, storage);
+	public void background(float gray, float alpha) {
+		getDelegate().background(gray, alpha);
 	}
 
-	@Override
-	public void ambient(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.ambient(arg0, arg1, arg2);
-			return;
-		}
-		pg.ambient(arg0, arg1, arg2);
+	public void background(float v1, float v2, float v3) {
+		getDelegate().background(v1, v2, v3);
 	}
 
-	@Override
-	public void ambient(float arg0) {
-		if(pg == this){
-			super.ambient(arg0);
-			return;
-		}
-		pg.ambient(arg0);
+	public void background(float v1, float v2, float v3, float alpha) {
+		getDelegate().background(v1, v2, v3, alpha);
 	}
 
-	@Override
-	public void ambient(int arg0) {
-		if(pg == this){
-			super.ambient(arg0);
-			return;
-		}
-		pg.ambient(arg0);
-	}
-
-	@Override
-	public void ambientLight(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.ambientLight(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.ambientLight(arg0, arg1, arg2, arg3, arg4, arg5);
-	}
-
-	@Override
-	public void ambientLight(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.ambientLight(arg0, arg1, arg2);
-			return;
-		}
-		pg.ambientLight(arg0, arg1, arg2);
-	}
-
-	@Override
-	public void applyMatrix(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
-			float arg6, float arg7, float arg8, float arg9, float arg10, float arg11, float arg12,
-			float arg13, float arg14, float arg15) {
-		if(pg == this){
-			super.applyMatrix(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-					arg12, arg13, arg14, arg15);
-			return;
-		}
-		pg.applyMatrix(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-				arg12, arg13, arg14, arg15);
-	}
-
-	@Override
-	public void applyMatrix(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.applyMatrix(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.applyMatrix(arg0, arg1, arg2, arg3, arg4, arg5);
-	}
-
-	@Override
-	public void applyMatrix(PMatrix arg0) {
-		if(pg == this){
-			super.applyMatrix(arg0);
-			return;
-		}
-		pg.applyMatrix(arg0);
-	}
-
-	@Override
-	public void applyMatrix(PMatrix2D arg0) {
-		if(pg == this){
-			super.applyMatrix(arg0);
-			return;
-		}
-		pg.applyMatrix(arg0);
-	}
-
-	@Override
-	public void applyMatrix(PMatrix3D arg0) {
-		if(pg == this){
-			super.applyMatrix(arg0);
-			return;
-		}
-		pg.applyMatrix(arg0);
-	}
-
-	@Override
-	public void arc(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.arc(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.arc(arg0, arg1, arg2, arg3, arg4, arg5);
-	}
-
-	@Override
-	public void background(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.background(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.background(arg0, arg1, arg2, arg3);
-	}
-
-	@Override
-	public void background(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.background(arg0, arg1, arg2);
-			return;
-		}
-		pg.background(arg0, arg1, arg2);
-	}
-
-	@Override
-	public void background(float arg0, float arg1) {
-		if(pg == this){
-			super.background(arg0, arg1);
-			return;
-		}
-		pg.background(arg0, arg1);
-	}
-
-	@Override
-	public void background(float arg0) {
-		if(pg == this){
-			super.background(arg0);
-			return;
-		}
-		pg.background(arg0);
-	}
-
-	@Override
-	public void background(int arg0, float arg1) {
-		if(pg == this){
-			super.background(arg0, arg1);
-			return;
-		}
-		pg.background(arg0, arg1);
-	}
-
-	@Override
-	public void background(int arg0) {
-		if(pg == this){
-			super.background(arg0);
-			return;
-		}
-		pg.background(arg0);
-	}
-
-	@Override
-	public void background(PImage arg0) {
-		if(pg == this){
-			super.background(arg0);
-			return;
-		}
-		pg.background(arg0);
-	}
-
-	@Override
 	public void beginCamera() {
-		if(pg == this){
-			super.beginCamera();
-			return;
-		}
-		pg.beginCamera();
+		getDelegate().beginCamera();
 	}
 
-	@Override
+	public void beginContour() {
+		getDelegate().beginContour();
+	}
+
 	public void beginDraw() {
-		if(pg == this){
-			super.beginDraw();
-			return;
-		}
-		pg.beginDraw();
+		getDelegate().beginDraw();
 	}
 
-	@Override
-	public void beginRaw(PGraphics arg0) {
-		if(pg == this){
-			super.beginRaw(arg0);
-			return;
-		}
-		pg.beginRaw(arg0);
+	public PGL beginPGL() {
+		return getDelegate().beginPGL();
 	}
 
-	@Override
+	public void beginRaw(PGraphics rawGraphics) {
+		getDelegate().beginRaw(rawGraphics);
+	}
+
 	public void beginShape() {
-		if(pg == this){
-			super.beginShape();
-			return;
-		}
-		pg.beginShape();
+		getDelegate().beginShape();
 	}
 
-	@Override
-	public void beginShape(int arg0) {
-		if(pg == this){
-			super.beginShape(arg0);
-			return;
-		}
-		pg.beginShape(arg0);
+	public void beginShape(int kind) {
+		getDelegate().beginShape(kind);
 	}
 
-	@Override
-	public void bezier(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
-			float arg6, float arg7, float arg8, float arg9, float arg10, float arg11) {
-		if(pg == this){
-			super.bezier(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
-			return;
-		}
-		pg.bezier(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+	public void bezier(float x1, float y1, float x2, float y2, float x3, float y3, float x4,
+			float y4) {
+		getDelegate().bezier(x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
-	@Override
-	public void bezier(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
-			float arg6, float arg7) {
-		if(pg == this){
-			super.bezier(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-			return;
-		}
-		pg.bezier(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	public void bezier(float x1, float y1, float z1, float x2, float y2, float z2, float x3,
+			float y3, float z3, float x4, float y4, float z4) {
+		getDelegate().bezier(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4);
 	}
 
-	@Override
-	public void bezierDetail(int arg0) {
-		if(pg == this){
-			super.bezierDetail(arg0);
-			return;
-		}
-		pg.bezierDetail(arg0);
+	public void bezierDetail(int detail) {
+		getDelegate().bezierDetail(detail);
 	}
 
-	@Override
-	public float bezierPoint(float arg0, float arg1, float arg2, float arg3, float arg4) {
-		if(pg == this){
-			return super.bezierPoint(arg0, arg1, arg2, arg3, arg4);
-		}
-		return pg.bezierPoint(arg0, arg1, arg2, arg3, arg4);
+	public float bezierPoint(float a, float b, float c, float d, float t) {
+		return getDelegate().bezierPoint(a, b, c, d, t);
 	}
 
-	@Override
-	public float bezierTangent(float arg0, float arg1, float arg2, float arg3, float arg4) {
-		if(pg == this){
-			return super.bezierTangent(arg0, arg1, arg2, arg3, arg4);
-		}
-		return pg.bezierTangent(arg0, arg1, arg2, arg3, arg4);
+	public float bezierTangent(float a, float b, float c, float d, float t) {
+		return getDelegate().bezierTangent(a, b, c, d, t);
 	}
 
-	@Override
+	public void bezierVertex(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
+		getDelegate().bezierVertex(arg0, arg1, arg2, arg3, arg4, arg5);
+	}
+
 	public void bezierVertex(float arg0, float arg1, float arg2, float arg3, float arg4,
 			float arg5, float arg6, float arg7, float arg8) {
-		if(pg == this){
-			super.bezierVertex(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-			return;
-		}
-		pg.bezierVertex(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+		getDelegate().bezierVertex(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
 	}
 
-	@Override
-	public void bezierVertex(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.bezierVertex(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.bezierVertex(arg0, arg1, arg2, arg3, arg4, arg5);
+	public void blend(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, int mode) {
+		getDelegate().blend(sx, sy, sw, sh, dx, dy, dw, dh, mode);
 	}
 
-	@Override
-	public void blend(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6,
-			int arg7, int arg8) {
-		if(pg == this){
-			super.blend(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-			return;
-		}
-		pg.blend(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+	public void blend(PImage src, int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh,
+			int mode) {
+		getDelegate().blend(src, sx, sy, sw, sh, dx, dy, dw, dh, mode);
 	}
 
-	@Override
-	public void blend(PImage arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6,
-			int arg7, int arg8, int arg9) {
-		if(pg == this){
-			super.blend(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
-			return;
-		}
-		pg.blend(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+	public void blendMode(int mode) {
+		getDelegate().blendMode(mode);
 	}
 
-	@Override
-	public void box(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.box(arg0, arg1, arg2);
-			return;
-		}
-		pg.box(arg0, arg1, arg2);
+	public void box(float size) {
+		getDelegate().box(size);
 	}
 
-	@Override
-	public void box(float arg0) {
-		if(pg == this){
-			super.box(arg0);
-			return;
-		}
-		pg.box(arg0);
+	public void box(float w, float h, float d) {
+		getDelegate().box(w, h, d);
 	}
 
-	@Override
 	public void camera() {
-		if(pg == this){
-			super.camera();
-			return;
-		}
-		pg.camera();
+		getDelegate().camera();
 	}
 
-	@Override
-	public void camera(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
-			float arg6, float arg7, float arg8) {
-		if(pg == this){
-			super.camera(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-			return;
-		}
-		pg.camera(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+	public void camera(float eyeX, float eyeY, float eyeZ, float centerX, float centerY,
+			float centerZ, float upX, float upY, float upZ) {
+		getDelegate().camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 	}
 
-	@Override
-	public void colorMode(int arg0, float arg1, float arg2, float arg3, float arg4) {
-		if(pg == this){
-			super.colorMode(arg0, arg1, arg2, arg3, arg4);
-			return;
-		}
-		pg.colorMode(arg0, arg1, arg2, arg3, arg4);
+	public boolean canDraw() {
+		return getDelegate().canDraw();
 	}
 
-	@Override
-	public void colorMode(int arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.colorMode(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.colorMode(arg0, arg1, arg2, arg3);
+	public void clear() {
+		getDelegate().clear();
 	}
 
-	@Override
-	public void colorMode(int arg0, float arg1) {
-		if(pg == this){
-			super.colorMode(arg0, arg1);
-			return;
-		}
-		pg.colorMode(arg0, arg1);
+	public void clip(float arg0, float arg1, float arg2, float arg3) {
+		getDelegate().clip(arg0, arg1, arg2, arg3);
 	}
 
-	@Override
-	public void colorMode(int arg0) {
-		if(pg == this){
-			super.colorMode(arg0);
-			return;
-		}
-		pg.colorMode(arg0);
+	public Object clone() throws CloneNotSupportedException {
+		return getDelegate().clone();
 	}
 
-	@Override
-	public void copy(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7) {
-		if(pg == this){
-			super.copy(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-			return;
-		}
-		pg.copy(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	public void colorMode(int mode) {
+		getDelegate().colorMode(mode);
 	}
 
-	@Override
-	public void copy(PImage arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6,
-			int arg7, int arg8) {
-		if(pg == this){
-			super.copy(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-			return;
-		}
-		pg.copy(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+	public void colorMode(int mode, float max) {
+		getDelegate().colorMode(mode, max);
 	}
 
-	@Override
-	public void curve(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
-			float arg6, float arg7, float arg8, float arg9, float arg10, float arg11) {
-		if(pg == this){
-			super.curve(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
-			return;
-		}
-		pg.curve(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+	public void colorMode(int mode, float max1, float max2, float max3) {
+		getDelegate().colorMode(mode, max1, max2, max3);
 	}
 
-	@Override
-	public void curve(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
-			float arg6, float arg7) {
-		if(pg == this){
-			super.curve(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-			return;
-		}
-		pg.curve(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	public void colorMode(int mode, float max1, float max2, float max3, float maxA) {
+		getDelegate().colorMode(mode, max1, max2, max3, maxA);
 	}
 
-	@Override
-	public void curveDetail(int arg0) {
-		if(pg == this){
-			super.curveDetail(arg0);
-			return;
-		}
-		pg.curveDetail(arg0);
+	public void copy(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh) {
+		getDelegate().copy(sx, sy, sw, sh, dx, dy, dw, dh);
 	}
 
-	@Override
-	public void curveTightness(float arg0) {
-		if(pg == this){
-			super.curveTightness(arg0);
-			return;
-		}
-		pg.curveTightness(arg0);
+	public void copy(PImage src, int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh) {
+		getDelegate().copy(src, sx, sy, sw, sh, dx, dy, dw, dh);
 	}
 
-	@Override
-	public void curveVertex(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.curveVertex(arg0, arg1, arg2);
-			return;
-		}
-		pg.curveVertex(arg0, arg1, arg2);
+	public PShape createShape() {
+		return getDelegate().createShape();
 	}
 
-	@Override
-	public void curveVertex(float arg0, float arg1) {
-		if(pg == this){
-			super.curveVertex(arg0, arg1);
-			return;
-		}
-		pg.curveVertex(arg0, arg1);
+	public PShape createShape(PShape source) {
+		return getDelegate().createShape(source);
 	}
 
-	@Override
-	public void directionalLight(float arg0, float arg1, float arg2, float arg3, float arg4,
-			float arg5) {
-		if(pg == this){
-			super.directionalLight(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.directionalLight(arg0, arg1, arg2, arg3, arg4, arg5);
+	public PShape createShape(int type) {
+		return getDelegate().createShape(type);
 	}
 
-	@Override
-	public void edge(boolean arg0) {
-		if(pg == this){
-			super.edge(arg0);
-			return;
-		}
-		pg.edge(arg0);
+	public PShape createShape(int kind, float... p) {
+		return getDelegate().createShape(kind, p);
 	}
 
-	@Override
-	public void ellipse(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.ellipse(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.ellipse(arg0, arg1, arg2, arg3);
+	public void curve(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+		getDelegate().curve(x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
-	@Override
-	public void ellipseMode(int arg0) {
-		if(pg == this){
-			super.ellipseMode(arg0);
-			return;
-		}
-		pg.ellipseMode(arg0);
+	public void curve(float x1, float y1, float z1, float x2, float y2, float z2, float x3,
+			float y3, float z3, float x4, float y4, float z4) {
+		getDelegate().curve(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4);
 	}
 
-	@Override
-	public void emissive(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.emissive(arg0, arg1, arg2);
-			return;
-		}
-		pg.emissive(arg0, arg1, arg2);
+	public void curveDetail(int detail) {
+		getDelegate().curveDetail(detail);
 	}
 
-	@Override
-	public void emissive(float arg0) {
-		if(pg == this){
-			super.emissive(arg0);
-			return;
-		}
-		pg.emissive(arg0);
+	public float curvePoint(float a, float b, float c, float d, float t) {
+		return getDelegate().curvePoint(a, b, c, d, t);
 	}
 
-	@Override
-	public void emissive(int arg0) {
-		if(pg == this){
-			super.emissive(arg0);
-			return;
-		}
-		pg.emissive(arg0);
+	public float curveTangent(float a, float b, float c, float d, float t) {
+		return getDelegate().curveTangent(a, b, c, d, t);
 	}
 
-	@Override
+	public void curveTightness(float tightness) {
+		getDelegate().curveTightness(tightness);
+	}
+
+	public void curveVertex(float x, float y) {
+		getDelegate().curveVertex(x, y);
+	}
+
+	public void curveVertex(float x, float y, float z) {
+		getDelegate().curveVertex(x, y, z);
+	}
+
+	public void directionalLight(float v1, float v2, float v3, float nx, float ny, float nz) {
+		getDelegate().directionalLight(v1, v2, v3, nx, ny, nz);
+	}
+
+	public boolean displayable() {
+		return getDelegate().displayable();
+	}
+
+	public void dispose() {
+		getDelegate().dispose();
+	}
+
+	public void edge(boolean edge) {
+		getDelegate().edge(edge);
+	}
+
+	public void ellipse(float a, float b, float c, float d) {
+		getDelegate().ellipse(a, b, c, d);
+	}
+
+	public void ellipseMode(int mode) {
+		getDelegate().ellipseMode(mode);
+	}
+
+	public void emissive(int rgb) {
+		getDelegate().emissive(rgb);
+	}
+
+	public void emissive(float gray) {
+		getDelegate().emissive(gray);
+	}
+
+	public void emissive(float v1, float v2, float v3) {
+		getDelegate().emissive(v1, v2, v3);
+	}
+
 	public void endCamera() {
-		if(pg == this){
-			super.endCamera();
-			return;
-		}
-		pg.endCamera();
+		getDelegate().endCamera();
 	}
 
-	@Override
+	public void endContour() {
+		getDelegate().endContour();
+	}
+
 	public void endDraw() {
-		if(pg == this){
-			super.endDraw();
-			return;
-		}
-		pg.endDraw();
+		getDelegate().endDraw();
 	}
 
-	@Override
+	public void endPGL() {
+		getDelegate().endPGL();
+	}
+
 	public void endRaw() {
-		if(pg == this){
-			super.endRaw();
-			return;
-		}
-		pg.endRaw();
+		getDelegate().endRaw();
 	}
 
-	@Override
 	public void endShape() {
-		if(pg == this){
-			super.endShape();
-			return;
-		}
-		pg.endShape();
+		getDelegate().endShape();
 	}
 
-	@Override
-	public void endShape(int arg0) {
-		if(pg == this){
-			super.endShape(arg0);
-			return;
-		}
-		pg.endShape(arg0);
+	public void endShape(int mode) {
+		getDelegate().endShape(mode);
 	}
 
-	@Override
-	public void fill(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.fill(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.fill(arg0, arg1, arg2, arg3);
+	public boolean equals(Object obj) {
+		return getDelegate().equals(obj);
 	}
 
-	@Override
-	public void fill(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.fill(arg0, arg1, arg2);
-			return;
-		}
-		pg.fill(arg0, arg1, arg2);
+	public void fill(int rgb) {
+		getDelegate().fill(rgb);
 	}
 
-	@Override
-	public void fill(float arg0, float arg1) {
-		if(pg == this){
-			super.fill(arg0, arg1);
-			return;
-		}
-		pg.fill(arg0, arg1);
+	public void fill(float gray) {
+		getDelegate().fill(gray);
 	}
 
-	@Override
-	public void fill(float arg0) {
-		if(pg == this){
-			super.fill(arg0);
-			return;
-		}
-		pg.fill(arg0);
+	public void fill(int rgb, float alpha) {
+		getDelegate().fill(rgb, alpha);
 	}
 
-	@Override
-	public void fill(int arg0, float arg1) {
-		if(pg == this){
-			super.fill(arg0, arg1);
-			return;
-		}
-		pg.fill(arg0, arg1);
+	public void fill(float gray, float alpha) {
+		getDelegate().fill(gray, alpha);
 	}
 
-	@Override
-	public void fill(int arg0) {
-		if(pg == this){
-			super.fill(arg0);
-			return;
-		}
-		pg.fill(arg0);
+	public void fill(float v1, float v2, float v3) {
+		getDelegate().fill(v1, v2, v3);
 	}
 
-	@Override
-	public void filter(int arg0, float arg1) {
-		if(pg == this){
-			super.filter(arg0, arg1);
-			return;
-		}
-		pg.filter(arg0, arg1);
+	public void fill(float v1, float v2, float v3, float alpha) {
+		getDelegate().fill(v1, v2, v3, alpha);
 	}
 
-	@Override
+	public void filter(PShader shader) {
+		getDelegate().filter(shader);
+	}
+
 	public void filter(int arg0) {
-		if(pg == this){
-			super.filter(arg0);
-			return;
-		}
-		pg.filter(arg0);
+		getDelegate().filter(arg0);
 	}
 
-	@Override
+	public void filter(int arg0, float arg1) {
+		getDelegate().filter(arg0, arg1);
+	}
+
 	public void flush() {
-		if(pg == this){
-			super.flush();
-			return;
-		}
-		pg.flush();
+		getDelegate().flush();
 	}
 
-	@Override
-	public void frustum(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.frustum(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.frustum(arg0, arg1, arg2, arg3, arg4, arg5);
+	public void frustum(float left, float right, float bottom, float top, float near, float far) {
+		getDelegate().frustum(left, right, bottom, top, near, far);
 	}
-	
-	@Override
+
 	public PImage get() {
-		if(pg == this){
-			return super.get();
-		}
-		return pg.get();
+		return getDelegate().get();
 	}
 
-	@Override
-	public PImage get(int arg0, int arg1, int arg2, int arg3) {
-		if(pg == this){
-			return super.get(arg0, arg1, arg2, arg3);
-		}
-		return pg.get(arg0, arg1, arg2, arg3);
+	public int get(int x, int y) {
+		return getDelegate().get(x, y);
 	}
 
-	@Override
-	public int get(int arg0, int arg1) {
-		if(pg == this){
-			return super.get(arg0, arg1);
-		}
-		return pg.get(arg0, arg1);
+	public PImage get(int x, int y, int w, int h) {
+		return getDelegate().get(x, y, w, h);
 	}
 
-	@Override
+	public Object getCache(PImage image) {
+		return getDelegate().getCache(image);
+	}
+
+	public Image getImage() {
+		return getDelegate().getImage();
+	}
+
 	public PMatrix getMatrix() {
-		if(pg == this){
-			return super.getMatrix();
-		}
-		return pg.getMatrix();
+		return getDelegate().getMatrix();
 	}
 
-	@Override
-	public PMatrix2D getMatrix(PMatrix2D arg0) {
-		if(pg == this){
-			return super.getMatrix(arg0);
-		}
-		return pg.getMatrix(arg0);
+	public PMatrix2D getMatrix(PMatrix2D target) {
+		return getDelegate().getMatrix(target);
 	}
 
-	@Override
-	public PMatrix3D getMatrix(PMatrix3D arg0) {
-		if(pg == this){
-			return super.getMatrix(arg0);
-		}
-		return pg.getMatrix(arg0);
+	public PMatrix3D getMatrix(PMatrix3D target) {
+		return getDelegate().getMatrix(target);
 	}
 
-	@Override
+	public int getModifiedX1() {
+		return getDelegate().getModifiedX1();
+	}
+
+	public int getModifiedX2() {
+		return getDelegate().getModifiedX2();
+	}
+
+	public int getModifiedY1() {
+		return getDelegate().getModifiedY1();
+	}
+
+	public int getModifiedY2() {
+		return getDelegate().getModifiedY2();
+	}
+
+	public Object getNative() {
+		return getDelegate().getNative();
+	}
+
+	public PGraphics getRaw() {
+		return getDelegate().getRaw();
+	}
+
 	public PStyle getStyle() {
-		if(pg == this){
-			return super.getStyle();
-		}
-		return pg.getStyle();
+		return getDelegate().getStyle();
 	}
 
-	@Override
-	public PStyle getStyle(PStyle arg0) {
-		if(pg == this){
-			return super.getStyle(arg0);
-		}
-		return pg.getStyle(arg0);
+	public PStyle getStyle(PStyle s) {
+		return getDelegate().getStyle(s);
 	}
 
-	@Override
-	public void hint(int arg0) {
-		if(pg == this){
-			super.hint(arg0);
-			return;
-		}
-		pg.hint(arg0);
+	public int hashCode() {
+		return getDelegate().hashCode();
 	}
 
-	@Override
+	public boolean haveRaw() {
+		return getDelegate().haveRaw();
+	}
+
+	public void hint(int which) {
+		getDelegate().hint(which);
+	}
+
+	public void image(PImage arg0, float arg1, float arg2) {
+		getDelegate().image(arg0, arg1, arg2);
+	}
+
+	public void image(PImage img, float a, float b, float c, float d) {
+		getDelegate().image(img, a, b, c, d);
+	}
+
 	public void image(PImage arg0, float arg1, float arg2, float arg3, float arg4, int arg5,
 			int arg6, int arg7, int arg8) {
-		if(pg == this){
-			super.image(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-			return;
-		}
-		pg.image(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+		getDelegate().image(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
 	}
 
-	@Override
-	public void image(PImage arg0, float arg1, float arg2, float arg3, float arg4) {
-		if(pg == this){
-			super.image(arg0, arg1, arg2, arg3, arg4);
-			return;
-		}
-		pg.image(arg0, arg1, arg2, arg3, arg4);
-	}
-
-	@Override
-	public void image(PImage arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.image(arg0, arg1, arg2);
-			return;
-		}
-		pg.image(arg0, arg1, arg2);
-	}
-
-	@Override
 	public void imageMode(int arg0) {
-		if(pg == this){
-			super.imageMode(arg0);
-			return;
-		}
-		pg.imageMode(arg0);
+		getDelegate().imageMode(arg0);
 	}
 
-	@Override
-	public void init(int arg0, int arg1, int arg2) {
-		if(pg == this){
-			super.init(arg0, arg1, arg2);
-			return;
-		}
-		pg.init(arg0, arg1, arg2);
+	public void init(int width, int height, int format) {
+		getDelegate().init(width, height, format);
 	}
 
-	@Override
-	public void lightFalloff(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.lightFalloff(arg0, arg1, arg2);
-			return;
-		}
-		pg.lightFalloff(arg0, arg1, arg2);
+	public boolean is2D() {
+		return getDelegate().is2D();
 	}
 
-	@Override
-	public void lightSpecular(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.lightSpecular(arg0, arg1, arg2);
-			return;
-		}
-		pg.lightSpecular(arg0, arg1, arg2);
+	public boolean is3D() {
+		return getDelegate().is3D();
 	}
 
-	@Override
+	public boolean isGL() {
+		return getDelegate().isGL();
+	}
+
+	public boolean isLoaded() {
+		return getDelegate().isLoaded();
+	}
+
+	public boolean isModified() {
+		return getDelegate().isModified();
+	}
+
+	public int lerpColor(int c1, int c2, float amt) {
+		return getDelegate().lerpColor(c1, c2, amt);
+	}
+
+	public void lightFalloff(float constant, float linear, float quadratic) {
+		getDelegate().lightFalloff(constant, linear, quadratic);
+	}
+
+	public void lightSpecular(float v1, float v2, float v3) {
+		getDelegate().lightSpecular(v1, v2, v3);
+	}
+
 	public void lights() {
-		if(pg == this){
-			super.lights();
-			return;
-		}
-		pg.lights();
+		getDelegate().lights();
 	}
 
-	@Override
-	public void line(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.line(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.line(arg0, arg1, arg2, arg3, arg4, arg5);
+	public void line(float x1, float y1, float x2, float y2) {
+		getDelegate().line(x1, y1, x2, y2);
 	}
 
-	@Override
-	public void line(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.line(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.line(arg0, arg1, arg2, arg3);
+	public void line(float x1, float y1, float z1, float x2, float y2, float z2) {
+		getDelegate().line(x1, y1, z1, x2, y2, z2);
 	}
 
-	@Override
 	public void loadPixels() {
-		if(pg == this){
-			super.loadPixels();
-			return;
-		}
-		pg.loadPixels();
+		getDelegate().loadPixels();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	@Override
+	public PShader loadShader(String fragFilename) {
+		return getDelegate().loadShader(fragFilename);
+	}
+
+	public PShader loadShader(String fragFilename, String vertFilename) {
+		return getDelegate().loadShader(fragFilename, vertFilename);
+	}
+
+	public PShape loadShape(String filename) {
+		return getDelegate().loadShape(filename);
+	}
+
+	public PShape loadShape(String filename, String options) {
+		return getDelegate().loadShape(filename, options);
+	}
+
 	public void mask(int[] arg0) {
-		if(pg == this){
-			super.mask(arg0);
-			return;
-		}
-		pg.mask(arg0);
+		getDelegate().mask(arg0);
 	}
 
-	@Override
-	public void mask(PImage arg0) {
-		if(pg == this){
-			super.mask(arg0);
-			return;
-		}
-		pg.mask(arg0);
+	public void mask(PImage img) {
+		getDelegate().mask(img);
 	}
 
-	@Override
-	public float modelX(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			return super.modelX(arg0, arg1, arg2);
-		}
-		return pg.modelX(arg0, arg1, arg2);
+	public float modelX(float x, float y, float z) {
+		return getDelegate().modelX(x, y, z);
 	}
 
-	@Override
-	public float modelY(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			return super.modelY(arg0, arg1, arg2);
-		}
-		return pg.modelY(arg0, arg1, arg2);
+	public float modelY(float x, float y, float z) {
+		return getDelegate().modelY(x, y, z);
 	}
 
-	@Override
-	public float modelZ(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			return super.modelZ(arg0, arg1, arg2);
-		}
-		return pg.modelZ(arg0, arg1, arg2);
+	public float modelZ(float x, float y, float z) {
+		return getDelegate().modelZ(x, y, z);
 	}
 
-	@Override
+	public void noClip() {
+		getDelegate().noClip();
+	}
+
 	public void noFill() {
-		if(pg == this){
-			super.noFill();
-			return;
-		}
-		pg.noFill();
+		getDelegate().noFill();
 	}
 
-	@Override
 	public void noLights() {
-		if(pg == this){
-			super.noLights();
-			return;
-		}
-		pg.noLights();
+		getDelegate().noLights();
 	}
 
-	@Override
 	public void noSmooth() {
-		if(pg == this){
-			super.noSmooth();
-			return;
-		}
-		pg.noSmooth();
+		getDelegate().noSmooth();
 	}
 
-	@Override
 	public void noStroke() {
-		if(pg == this){
-			super.noStroke();
-			return;
-		}
-		pg.noStroke();
+		getDelegate().noStroke();
 	}
 
-	@Override
+	public void noTexture() {
+		getDelegate().noTexture();
+	}
+
 	public void noTint() {
-		if(pg == this){
-			super.noTint();
-			return;
-		}
-		pg.noTint();
+		getDelegate().noTint();
 	}
 
-	@Override
-	public void normal(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.normal(arg0, arg1, arg2);
-			return;
-		}
-		pg.normal(arg0, arg1, arg2);
+	public void normal(float nx, float ny, float nz) {
+		getDelegate().normal(nx, ny, nz);
 	}
 
-	@Override
 	public void ortho() {
-		if(pg == this){
-			super.ortho();
-			return;
-		}
-		pg.ortho();
+		getDelegate().ortho();
 	}
 
-	@Override
-	public void ortho(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.ortho(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.ortho(arg0, arg1, arg2, arg3, arg4, arg5);
+	public void ortho(float left, float right, float bottom, float top) {
+		getDelegate().ortho(left, right, bottom, top);
 	}
 
-	@Override
+	public void ortho(float left, float right, float bottom, float top, float near, float far) {
+		getDelegate().ortho(left, right, bottom, top, near, far);
+	}
+
 	public void perspective() {
-		if(pg == this){
-			super.perspective();
-			return;
-		}
-		pg.perspective();
+		getDelegate().perspective();
 	}
 
-	@Override
-	public void perspective(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.perspective(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.perspective(arg0, arg1, arg2, arg3);
+	public void perspective(float fovy, float aspect, float zNear, float zFar) {
+		getDelegate().perspective(fovy, aspect, zNear, zFar);
 	}
 
-	@Override
-	public void point(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.point(arg0, arg1, arg2);
-			return;
-		}
-		pg.point(arg0, arg1, arg2);
+	public void point(float x, float y) {
+		getDelegate().point(x, y);
 	}
 
-	@Override
-	public void point(float arg0, float arg1) {
-		if(pg == this){
-			super.point(arg0, arg1);
-			return;
-		}
-		pg.point(arg0, arg1);
+	public void point(float x, float y, float z) {
+		getDelegate().point(x, y, z);
 	}
 
-	@Override
-	public void pointLight(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.pointLight(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.pointLight(arg0, arg1, arg2, arg3, arg4, arg5);
+	public void pointLight(float v1, float v2, float v3, float x, float y, float z) {
+		getDelegate().pointLight(v1, v2, v3, x, y, z);
 	}
 
-	@Override
 	public void popMatrix() {
-		if(pg == this){
-			super.popMatrix();
-			return;
-		}
-		pg.popMatrix();
+		getDelegate().popMatrix();
 	}
 
-	@Override
 	public void popStyle() {
-		if(pg == this){
-			super.popStyle();
-			return;
-		}
-		pg.popStyle();
+		getDelegate().popStyle();
 	}
 
-	@Override
 	public void printCamera() {
-		if(pg == this){
-			super.printCamera();
-			return;
-		}
-		pg.printCamera();
+		getDelegate().printCamera();
 	}
 
-	@Override
 	public void printMatrix() {
-		if(pg == this){
-			super.printMatrix();
-			return;
-		}
-		pg.printMatrix();
+		getDelegate().printMatrix();
 	}
 
-	@Override
 	public void printProjection() {
-		if(pg == this){
-			super.printProjection();
-			return;
-		}
-		pg.printProjection();
+		getDelegate().printProjection();
 	}
 
-	@Override
 	public void pushMatrix() {
-		if(pg == this){
-			super.pushMatrix();
-			return;
-		}
-		pg.pushMatrix();
+		getDelegate().pushMatrix();
 	}
 
-	@Override
 	public void pushStyle() {
-		if(pg == this){
-			super.pushStyle();
-			return;
-		}
-		pg.pushStyle();
+		getDelegate().pushStyle();
 	}
 
-	@Override
-	public void quad(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
-			float arg6, float arg7) {
-		if(pg == this){
-			super.quad(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-			return;
-		}
-		pg.quad(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	public void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+		getDelegate().quad(x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
-	@Override
+	public void quadraticVertex(float cx, float cy, float x3, float y3) {
+		getDelegate().quadraticVertex(cx, cy, x3, y3);
+	}
+
+	public void quadraticVertex(float cx, float cy, float cz, float x3, float y3, float z3) {
+		getDelegate().quadraticVertex(cx, cy, cz, x3, y3, z3);
+	}
+
 	public void rect(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.rect(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.rect(arg0, arg1, arg2, arg3);
+		getDelegate().rect(arg0, arg1, arg2, arg3);
 	}
 
-	@Override
-	public void rect(float arg0, float arg1, float arg2, float arg3, float arg4) {
-		if(pg == this){
-			super.rect(arg0, arg1, arg2, arg3, arg4);
-			return;
-		}
-		pg.rect(arg0, arg1, arg2, arg3, arg4);
+	public void rect(float a, float b, float c, float d, float r) {
+		getDelegate().rect(a, b, c, d, r);
 	}
 
-	@Override
 	public void rect(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
 			float arg6, float arg7) {
-		if(pg == this){
-			super.rect(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-			return;
-		}
-		pg.rect(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+		getDelegate().rect(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 	}
 
-	@Override
-	public void rectMode(int arg0) {
-		if(pg == this){
-			super.rectMode(arg0);
-			return;
-		}
-		pg.rectMode(arg0);
+	public void rectMode(int mode) {
+		getDelegate().rectMode(mode);
 	}
 
-	@Override
+	public void removeCache(PImage image) {
+		getDelegate().removeCache(image);
+	}
+
+	public void requestDraw() {
+		getDelegate().requestDraw();
+	}
+
+	public void requestFocus() {
+		getDelegate().requestFocus();
+	}
+
 	public void resetMatrix() {
-		if(pg == this){
-			super.resetMatrix();
-			return;
-		}
-		pg.resetMatrix();
+		getDelegate().resetMatrix();
 	}
 
-	@Override
-	public void rotate(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.rotate(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.rotate(arg0, arg1, arg2, arg3);
+	public void resetShader() {
+		getDelegate().resetShader();
 	}
 
-	@Override
-	public void rotate(float arg0) {
-		if(pg == this){
-			super.rotate(arg0);
-			return;
-		}
-		pg.rotate(arg0);
+	public void resetShader(int kind) {
+		getDelegate().resetShader(kind);
 	}
 
-	@Override
-	public void rotateX(float arg0) {
-		if(pg == this){
-			super.rotateX(arg0);
-			return;
-		}
-		pg.rotateX(arg0);
+	public void resize(int arg0, int arg1) {
+		getDelegate().resize(arg0, arg1);
 	}
 
-	@Override
-	public void rotateY(float arg0) {
-		if(pg == this){
-			super.rotateY(arg0);
-			return;
-		}
-		pg.rotateY(arg0);
+	public void rotate(float angle) {
+		getDelegate().rotate(angle);
 	}
 
-	@Override
-	public void rotateZ(float arg0) {
-		if(pg == this){
-			super.rotateZ(arg0);
-			return;
-		}
-		pg.rotateZ(arg0);
+	public void rotate(float angle, float x, float y, float z) {
+		getDelegate().rotate(angle, x, y, z);
 	}
 
-	@Override
-	public void scale(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.scale(arg0, arg1, arg2);
-			return;
-		}
-		pg.scale(arg0, arg1, arg2);
+	public void rotateX(float angle) {
+		getDelegate().rotateX(angle);
 	}
 
-	@Override
-	public void scale(float arg0, float arg1) {
-		if(pg == this){
-			super.scale(arg0, arg1);
-			return;
-		}
-		pg.scale(arg0, arg1);
+	public void rotateY(float angle) {
+		getDelegate().rotateY(angle);
 	}
 
-	@Override
-	public void scale(float arg0) {
-		if(pg == this){
-			super.scale(arg0);
-			return;
-		}
-		pg.scale(arg0);
+	public void rotateZ(float angle) {
+		getDelegate().rotateZ(angle);
 	}
 
-	@Override
-	public float screenX(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			return super.screenX(arg0, arg1, arg2);
-		}
-		return pg.screenX(arg0, arg1, arg2);
+	public boolean save(String arg0) {
+		return getDelegate().save(arg0);
 	}
 
-	@Override
-	public float screenX(float arg0, float arg1) {
-		if(pg == this){
-			return super.screenX(arg0, arg1);
-		}
-		return pg.screenX(arg0, arg1);
+	public void scale(float s) {
+		getDelegate().scale(s);
 	}
 
-	@Override
-	public float screenY(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			return super.screenY(arg0, arg1, arg2);
-		}
-		return pg.screenY(arg0, arg1, arg2);
+	public void scale(float x, float y) {
+		getDelegate().scale(x, y);
 	}
 
-	@Override
-	public float screenY(float arg0, float arg1) {
-		if(pg == this){
-			return super.screenY(arg0, arg1);
-		}
-		return pg.screenY(arg0, arg1);
+	public void scale(float x, float y, float z) {
+		getDelegate().scale(x, y, z);
 	}
 
-	@Override
-	public float screenZ(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			return super.screenZ(arg0, arg1, arg2);
-		}
-		return pg.screenZ(arg0, arg1, arg2);
+	public float screenX(float x, float y) {
+		return getDelegate().screenX(x, y);
 	}
 
-	@Override
-	public void set(int arg0, int arg1, int arg2) {
-		if(pg == this){
-			super.set(arg0, arg1, arg2);
-			return;
-		}
-		pg.set(arg0, arg1, arg2);
+	public float screenX(float x, float y, float z) {
+		return getDelegate().screenX(x, y, z);
 	}
 
-	@Override
-	public void set(int arg0, int arg1, PImage arg2) {
-		if(pg == this){
-			super.set(arg0, arg1, arg2);
-			return;
-		}
-		pg.set(arg0, arg1, arg2);
-	}
-	
-	@Override
-	public void setMatrix(PMatrix arg0) {
-		if(pg == this){
-			super.setMatrix(arg0);
-			return;
-		}
-		pg.setMatrix(arg0);
+	public float screenY(float x, float y) {
+		return getDelegate().screenY(x, y);
 	}
 
-	@Override
-	public void setMatrix(PMatrix2D arg0) {
-		if(pg == this){
-			super.setMatrix(arg0);
-			return;
-		}
-		pg.setMatrix(arg0);
+	public float screenY(float x, float y, float z) {
+		return getDelegate().screenY(x, y, z);
 	}
 
-	@Override
-	public void setMatrix(PMatrix3D arg0) {
-		if(pg == this){
-			super.setMatrix(arg0);
-			return;
-		}
-		pg.setMatrix(arg0);
+	public float screenZ(float x, float y, float z) {
+		return getDelegate().screenZ(x, y, z);
 	}
 
-	@Override
-	public void shape(PShape arg0, float arg1, float arg2, float arg3, float arg4) {
-		if(pg == this){
-			super.shape(arg0, arg1, arg2, arg3, arg4);
-			return;
-		}
-		pg.shape(arg0, arg1, arg2, arg3, arg4);
+	public void set(int x, int y, int c) {
+		getDelegate().set(x, y, c);
 	}
 
-	@Override
-	public void shape(PShape arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.shape(arg0, arg1, arg2);
-			return;
-		}
-		pg.shape(arg0, arg1, arg2);
+	public void set(int x, int y, PImage img) {
+		getDelegate().set(x, y, img);
 	}
 
-	@Override
-	public void shape(PShape arg0) {
-		if(pg == this){
-			super.shape(arg0);
-			return;
-		}
-		pg.shape(arg0);
+	public void setCache(PImage image, Object storage) {
+		getDelegate().setCache(image, storage);
 	}
 
-	@Override
-	public void shapeMode(int arg0) {
-		if(pg == this){
-			super.shapeMode(arg0);
-			return;
-		}
-		pg.shapeMode(arg0);
+	public void setFrameRate(float frameRate) {
+		getDelegate().setFrameRate(frameRate);
 	}
 
-	@Override
-	public void shininess(float arg0) {
-		if(pg == this){
-			super.shininess(arg0);
-			return;
-		}
-		pg.shininess(arg0);
+	public void setLoaded() {
+		getDelegate().setLoaded();
 	}
 
-	@Override
+	public void setLoaded(boolean l) {
+		getDelegate().setLoaded(l);
+	}
+
+	public void setMatrix(PMatrix source) {
+		getDelegate().setMatrix(source);
+	}
+
+	public void setMatrix(PMatrix2D source) {
+		getDelegate().setMatrix(source);
+	}
+
+	public void setMatrix(PMatrix3D source) {
+		getDelegate().setMatrix(source);
+	}
+
+	public void setModified() {
+		getDelegate().setModified();
+	}
+
+	public void setModified(boolean m) {
+		getDelegate().setModified(m);
+	}
+
+	public void setParent(PApplet parent) {
+		getDelegate().setParent(parent);
+	}
+
+	public void setPath(String path) {
+		getDelegate().setPath(path);
+	}
+
+	public void setPrimary(boolean primary) {
+		getDelegate().setPrimary(primary);
+	}
+
+	public void setSize(int w, int h) {
+		getDelegate().setSize(w, h);
+	}
+
+	public void shader(PShader shader) {
+		getDelegate().shader(shader);
+	}
+
+	public void shader(PShader shader, int kind) {
+		getDelegate().shader(shader, kind);
+	}
+
+	public void shape(PShape shape) {
+		getDelegate().shape(shape);
+	}
+
+	public void shape(PShape shape, float x, float y) {
+		getDelegate().shape(shape, x, y);
+	}
+
+	public void shape(PShape shape, float a, float b, float c, float d) {
+		getDelegate().shape(shape, a, b, c, d);
+	}
+
+	public void shapeMode(int mode) {
+		getDelegate().shapeMode(mode);
+	}
+
+	public void shearX(float angle) {
+		getDelegate().shearX(angle);
+	}
+
+	public void shearY(float angle) {
+		getDelegate().shearY(angle);
+	}
+
+	public void shininess(float shine) {
+		getDelegate().shininess(shine);
+	}
+
 	public void smooth() {
-		if(pg == this){
-			super.smooth();
-			return;
-		}
-		pg.smooth();
+		getDelegate().smooth();
 	}
 
-	@Override
-	public void specular(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.specular(arg0, arg1, arg2);
-			return;
-		}
-		pg.specular(arg0, arg1, arg2);
+	public void smooth(int level) {
+		getDelegate().smooth(level);
 	}
 
-	@Override
-	public void specular(float arg0) {
-		if(pg == this){
-			super.specular(arg0);
-			return;
-		}
-		pg.specular(arg0);
+	public void specular(int rgb) {
+		getDelegate().specular(rgb);
 	}
 
-	@Override
-	public void specular(int arg0) {
-		if(pg == this){
-			super.specular(arg0);
-			return;
-		}
-		pg.specular(arg0);
+	public void specular(float gray) {
+		getDelegate().specular(gray);
 	}
 
-	@Override
+	public void specular(float v1, float v2, float v3) {
+		getDelegate().specular(v1, v2, v3);
+	}
+
 	public void sphere(float arg0) {
-		if(pg == this){
-			super.sphere(arg0);
-			return;
-		}
-		pg.sphere(arg0);
+		getDelegate().sphere(arg0);
 	}
 
-	@Override
+	public void sphereDetail(int res) {
+		getDelegate().sphereDetail(res);
+	}
+
 	public void sphereDetail(int arg0, int arg1) {
-		if(pg == this){
-			super.sphereDetail(arg0, arg1);
-			return;
-		}
-		pg.sphereDetail(arg0, arg1);
+		getDelegate().sphereDetail(arg0, arg1);
 	}
 
-	@Override
-	public void sphereDetail(int arg0) {
-		if(pg == this){
-			super.sphereDetail(arg0);
-			return;
-		}
-		pg.sphereDetail(arg0);
+	public void spotLight(float v1, float v2, float v3, float x, float y, float z, float nx,
+			float ny, float nz, float angle, float concentration) {
+		getDelegate().spotLight(v1, v2, v3, x, y, z, nx, ny, nz, angle, concentration);
 	}
 
-	@Override
-	public void spotLight(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5,
-			float arg6, float arg7, float arg8, float arg9, float arg10) {
-		if(pg == this){
-			super.spotLight(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
-			return;
-		}
-		pg.spotLight(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+	public void stroke(int rgb) {
+		getDelegate().stroke(rgb);
 	}
 
-	@Override
-	public void stroke(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.stroke(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.stroke(arg0, arg1, arg2, arg3);
+	public void stroke(float gray) {
+		getDelegate().stroke(gray);
 	}
 
-	@Override
-	public void stroke(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.stroke(arg0, arg1, arg2);
-			return;
-		}
-		pg.stroke(arg0, arg1, arg2);
+	public void stroke(int rgb, float alpha) {
+		getDelegate().stroke(rgb, alpha);
 	}
 
-	@Override
-	public void stroke(float arg0, float arg1) {
-		if(pg == this){
-			super.stroke(arg0, arg1);
-			return;
-		}
-		pg.stroke(arg0, arg1);
+	public void stroke(float gray, float alpha) {
+		getDelegate().stroke(gray, alpha);
 	}
 
-	@Override
-	public void stroke(float arg0) {
-		if(pg == this){
-			super.stroke(arg0);
-			return;
-		}
-		pg.stroke(arg0);
+	public void stroke(float v1, float v2, float v3) {
+		getDelegate().stroke(v1, v2, v3);
 	}
 
-	@Override
-	public void stroke(int arg0, float arg1) {
-		if(pg == this){
-			super.stroke(arg0, arg1);
-			return;
-		}
-		pg.stroke(arg0, arg1);
+	public void stroke(float v1, float v2, float v3, float alpha) {
+		getDelegate().stroke(v1, v2, v3, alpha);
 	}
 
-	@Override
-	public void stroke(int arg0) {
-		if(pg == this){
-			super.stroke(arg0);
-			return;
-		}
-		pg.stroke(arg0);
+	public void strokeCap(int cap) {
+		getDelegate().strokeCap(cap);
 	}
 
-	@Override
-	public void strokeCap(int arg0) {
-		if(pg == this){
-			super.strokeCap(arg0);
-			return;
-		}
-		pg.strokeCap(arg0);
+	public void strokeJoin(int join) {
+		getDelegate().strokeJoin(join);
 	}
 
-	@Override
-	public void strokeJoin(int arg0) {
-		if(pg == this){
-			super.strokeJoin(arg0);
-			return;
-		}
-		pg.strokeJoin(arg0);
+	public void strokeWeight(float weight) {
+		getDelegate().strokeWeight(weight);
 	}
 
-	@Override
-	public void strokeWeight(float arg0) {
-		if(pg == this){
-			super.strokeWeight(arg0);
-			return;
-		}
-		pg.strokeWeight(arg0);
+	public void style(PStyle s) {
+		getDelegate().style(s);
 	}
 
-	@Override
-	public void style(PStyle arg0) {
-		if(pg == this){
-			super.style(arg0);
-			return;
-		}
-		pg.style(arg0);
+	public void text(char c, float x, float y) {
+		getDelegate().text(c, x, y);
 	}
 
-	@Override
-	public void text(char arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.text(arg0, arg1, arg2, arg3);
+	public void text(String str, float x, float y) {
+		getDelegate().text(str, x, y);
 	}
 
-	@Override
-	public void text(char arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2);
-			return;
-		}
-		pg.text(arg0, arg1, arg2);
+	public void text(int num, float x, float y) {
+		getDelegate().text(num, x, y);
 	}
 
-	@Override
-	public void text(char[] arg0, int arg1, int arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.text(arg0, arg1, arg2, arg3, arg4, arg5);
+	public void text(float num, float x, float y) {
+		getDelegate().text(num, x, y);
 	}
 
-	@Override
+	public void text(char c, float x, float y, float z) {
+		getDelegate().text(c, x, y, z);
+	}
+
+	public void text(String str, float x, float y, float z) {
+		getDelegate().text(str, x, y, z);
+	}
+
+	public void text(int num, float x, float y, float z) {
+		getDelegate().text(num, x, y, z);
+	}
+
+	public void text(float num, float x, float y, float z) {
+		getDelegate().text(num, x, y, z);
+	}
+
 	public void text(char[] arg0, int arg1, int arg2, float arg3, float arg4) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2, arg3, arg4);
-			return;
-		}
-		pg.text(arg0, arg1, arg2, arg3, arg4);
+		getDelegate().text(arg0, arg1, arg2, arg3, arg4);
 	}
 
-	@Override
-	public void text(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.text(arg0, arg1, arg2, arg3);
-	}
-
-	@Override
-	public void text(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2);
-			return;
-		}
-		pg.text(arg0, arg1, arg2);
-	}
-
-	@Override
-	public void text(int arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.text(arg0, arg1, arg2, arg3);
-	}
-
-	@Override
-	public void text(int arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2);
-			return;
-		}
-		pg.text(arg0, arg1, arg2);
-	}
-
-	@Override
 	public void text(String arg0, float arg1, float arg2, float arg3, float arg4) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2, arg3, arg4);
-			return;
-		}
-		pg.text(arg0, arg1, arg2, arg3, arg4);
+		getDelegate().text(arg0, arg1, arg2, arg3, arg4);
 	}
 
-	@Override
-	public void text(String arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.text(arg0, arg1, arg2, arg3);
+	public void text(char[] chars, int start, int stop, float x, float y, float z) {
+		getDelegate().text(chars, start, stop, x, y, z);
 	}
 
-	@Override
-	public void text(String arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.text(arg0, arg1, arg2);
-			return;
-		}
-		pg.text(arg0, arg1, arg2);
+	public void textAlign(int alignX) {
+		getDelegate().textAlign(alignX);
 	}
 
-	@Override
-	public void textAlign(int arg0, int arg1) {
-		if(pg == this){
-			super.textAlign(arg0, arg1);;
-			return;
-		}
-		pg.textAlign(arg0, arg1);
+	public void textAlign(int alignX, int alignY) {
+		getDelegate().textAlign(alignX, alignY);
 	}
 
-	@Override
-	public void textAlign(int arg0) {
-		if(pg == this){
-			super.textAlign(arg0);
-			return;
-		}
-		pg.textAlign(arg0);
-	}
-
-	@Override
 	public float textAscent() {
-		if(pg == this){
-			return super.textAscent();
-		}
-		return pg.textAscent();
+		return getDelegate().textAscent();
 	}
 
-	@Override
 	public float textDescent() {
-		if(pg == this){
-			return super.textDescent();
-		}
-		return pg.textDescent();
+		return getDelegate().textDescent();
 	}
 
-	@Override
-	public void textFont(PFont arg0, float arg1) {
-		if(pg == this){
-			super.textFont(arg0, arg1);
-			return;
-		}
-		pg.textFont(arg0, arg1);
+	public void textFont(PFont which) {
+		getDelegate().textFont(which);
 	}
 
-	@Override
-	public void textFont(PFont arg0) {
-		if(pg == this){
-			super.textFont(arg0);
-			return;
-		}
-		pg.textFont(arg0);
+	public void textFont(PFont which, float size) {
+		getDelegate().textFont(which, size);
 	}
 
-	@Override
-	public void textLeading(float arg0) {
-		if(pg == this){
-			super.textLeading(arg0);
-			return;
-		}
-		pg.textLeading(arg0);
+	public void textLeading(float leading) {
+		getDelegate().textLeading(leading);
 	}
 
-	@Override
 	public void textMode(int arg0) {
-		if(pg == this){
-			super.textMode(arg0);
-			return;
-		}
-		pg.textMode(arg0);
+		getDelegate().textMode(arg0);
 	}
 
-	@Override
-	public void textSize(float arg0) {
-		if(pg == this){
-			super.textSize(arg0);
-			return;
-		}
-		pg.textSize(arg0);
+	public void textSize(float size) {
+		getDelegate().textSize(size);
 	}
 
-	@Override
-	public float textWidth(char arg0) {
-		if(pg == this){
-			return super.textWidth(arg0);
-		}
-		return pg.textWidth(arg0);
+	public float textWidth(char c) {
+		return getDelegate().textWidth(c);
 	}
 
-	@Override
-	public float textWidth(char[] arg0, int arg1, int arg2) {
-		if(pg == this){
-			return super.textWidth(arg0, arg1, arg2);
-		}
-		return pg.textWidth(arg0, arg1, arg2);
+	public float textWidth(String str) {
+		return getDelegate().textWidth(str);
 	}
 
-	@Override
-	public float textWidth(String arg0) {
-		if(pg == this){
-			return super.textWidth(arg0);
-		}
-		return pg.textWidth(arg0);
+	public float textWidth(char[] chars, int start, int length) {
+		return getDelegate().textWidth(chars, start, length);
 	}
 
-	@Override
-	public void texture(PImage arg0) {
-		if(pg == this){
-			super.texture(arg0);
-			return;
-		}
-		pg.texture(arg0);
+	public void texture(PImage image) {
+		getDelegate().texture(image);
 	}
 
-	@Override
-	public void textureMode(int arg0) {
-		if(pg == this){
-			super.textureMode(arg0);
-			return;
-		}
-		pg.textureMode(arg0);
+	public void textureMode(int mode) {
+		getDelegate().textureMode(mode);
 	}
 
-	@Override
-	public void tint(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.tint(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.tint(arg0, arg1, arg2, arg3);
+	public void textureWrap(int wrap) {
+		getDelegate().textureWrap(wrap);
 	}
 
-	@Override
-	public void tint(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.tint(arg0, arg1, arg2);
-			return;
-		}
-		pg.tint(arg0, arg1, arg2);
+	public void tint(int rgb) {
+		getDelegate().tint(rgb);
 	}
 
-	@Override
-	public void tint(float arg0, float arg1) {
-		if(pg == this){
-			super.tint(arg0, arg1);
-			return;
-		}
-		pg.tint(arg0, arg1);
+	public void tint(float gray) {
+		getDelegate().tint(gray);
 	}
 
-	@Override
-	public void tint(float arg0) {
-		if(pg == this){
-			super.tint(arg0);
-			return;
-		}
-		pg.tint(arg0);
+	public void tint(int rgb, float alpha) {
+		getDelegate().tint(rgb, alpha);
 	}
 
-	@Override
-	public void tint(int arg0, float arg1) {
-		if(pg == this){
-			super.tint(arg0, arg1);
-			return;
-		}
-		pg.tint(arg0, arg1);
+	public void tint(float gray, float alpha) {
+		getDelegate().tint(gray, alpha);
 	}
 
-	@Override
-	public void tint(int arg0) {
-		if(pg == this){
-			super.tint(arg0);
-			return;
-		}
-		pg.tint(arg0);
+	public void tint(float v1, float v2, float v3) {
+		getDelegate().tint(v1, v2, v3);
 	}
 
-	@Override
-	public void translate(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.translate(arg0, arg1, arg2);
-			return;
-		}
-		pg.translate(arg0, arg1, arg2);
+	public void tint(float v1, float v2, float v3, float alpha) {
+		getDelegate().tint(v1, v2, v3, alpha);
 	}
 
-	@Override
-	public void translate(float arg0, float arg1) {
-		if(pg == this){
-			super.translate(arg0, arg1);
-			return;
-		}
-		pg.translate(arg0, arg1);
+	public String toString() {
+		return getDelegate().toString();
 	}
 
-	@Override
-	public void triangle(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5) {
-		if(pg == this){
-			super.triangle(arg0, arg1, arg2, arg3, arg4, arg5);
-			return;
-		}
-		pg.triangle(arg0, arg1, arg2, arg3, arg4, arg5);
+	public void translate(float x, float y) {
+		getDelegate().translate(x, y);
 	}
 
-	@Override
+	public void translate(float x, float y, float z) {
+		getDelegate().translate(x, y, z);
+	}
+
+	public void triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+		getDelegate().triangle(x1, y1, x2, y2, x3, y3);
+	}
+
 	public void updatePixels() {
-		if(pg == this){
-			super.updatePixels();
-			return;
-		}
-		pg.updatePixels();
+		getDelegate().updatePixels();
 	}
 
-	@Override
-	public void updatePixels(int arg0, int arg1, int arg2, int arg3) {
-		if(pg == this){
-			super.updatePixels(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.updatePixels(arg0, arg1, arg2, arg3);
+	public void updatePixels(int x, int y, int w, int h) {
+		getDelegate().updatePixels(x, y, w, h);
 	}
 
-	@Override
-	public void vertex(float arg0, float arg1, float arg2, float arg3, float arg4) {
-		if(pg == this){
-			super.vertex(arg0, arg1, arg2, arg3, arg4);
-			return;
-		}
-		pg.vertex(arg0, arg1, arg2, arg3, arg4);
+	public void vertex(float[] v) {
+		getDelegate().vertex(v);
 	}
 
-	@Override
-	public void vertex(float arg0, float arg1, float arg2, float arg3) {
-		if(pg == this){
-			super.vertex(arg0, arg1, arg2, arg3);
-			return;
-		}
-		pg.vertex(arg0, arg1, arg2, arg3);
-	}
-
-	@Override
-	public void vertex(float arg0, float arg1, float arg2) {
-		if(pg == this){
-			super.vertex(arg0, arg1, arg2);
-			return;
-		}
-		pg.vertex(arg0, arg1, arg2);
-	}
-
-	@Override
 	public void vertex(float arg0, float arg1) {
-		if(pg == this){
-			super.vertex(arg0, arg1);
-			return;
-		}
-		pg.vertex(arg0, arg1);
+		getDelegate().vertex(arg0, arg1);
 	}
 
-	@Override
-	public void vertex(float[] arg0) {
-		if(pg == this){
-			super.vertex(arg0);
-			return;
-		}
-		pg.vertex(arg0);
+	public void vertex(float arg0, float arg1, float arg2) {
+		getDelegate().vertex(arg0, arg1, arg2);
+	}
+
+	public void vertex(float x, float y, float u, float v) {
+		getDelegate().vertex(x, y, u, v);
+	}
+
+	public void vertex(float x, float y, float z, float u, float v) {
+		getDelegate().vertex(x, y, z, u, v);
 	}
 }

@@ -8,9 +8,9 @@ clean-specials:
 freshen: clean build
 
 #variables
-cp = -cp src:bin:lib/*
+cp = -cp src:bin:lib/*:lib/processing/*
 dest = -d bin
-docscp = -classpath src:bin:lib/*
+docscp = -classpath src:bin:lib/*:lib/processing/*
 documentation = -d documentation
 version = -source 1.6 -target 1.6
 #warnings = -Xlint:-options
@@ -47,7 +47,7 @@ git-prepare:
 	git add -u
 
 #test commands
-test: test-swipekeyboard
+test: test-renderers
 
 test-renderers: build
 	java $(cp) vialab.SMT.test.TestRenderers
@@ -64,3 +64,7 @@ test-tutorial2: jar
 	processing-shell examples/Tutorial/Two
 test-tutorial3: jar
 	processing-shell examples/Tutorial/Three
+
+#experiment commands
+exp: build
+	java $(cp) vialab.SMT.exp.RendererInfoExperiment
