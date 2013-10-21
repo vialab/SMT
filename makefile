@@ -42,7 +42,7 @@ docs:
 docs-test: docs
 	chromium-browser documentation/index.html
 
-git-prepare:
+git-prepare: clean
 	git add -A
 	git add -u
 
