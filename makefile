@@ -38,7 +38,7 @@ jar: library/SMT.jar
 export: build jar docs
 	mkdir SMT
 	cp -r examples library library.properties \
-		javadoc release_notes.txt readme.md src \
+		javadoc release_notes.md readme.md src \
 		SMT
 	zip -r SMT.zip SMT
 	rm -rf SMT
