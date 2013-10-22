@@ -5,13 +5,14 @@ clean: clean-specials
 	rm -rf bin/*
 clean-specials:
 	rm -rf library/SMT.jar SMT.zip
+	rm -rf reference/
 freshen: clean build
 
 #variables
-cp = -cp src:bin:lib/*
+cp = -cp src:bin:lib/*:lib/processing/*
 dest = -d bin
-docscp = -classpath src:bin:lib/*
-documentation = -d documentation
+docscp = -classpath src:bin:lib/*:lib/processing/*
+documentation = -d reference
 version = -source 1.6 -target 1.6
 #warnings = -Xlint:-options
 warnings = -Xlint:-deprecation -Xlint:-options
@@ -22,7 +23,6 @@ include dependencies.mk
 #compilation definitions
 $(class_files): bin/%.class : src/%.java
 	javac $(cp) $(dest) $(version) $(warnings) $<
-#		$(subst bin,src,$(subst class,java,$@))
 
 #basic commands
 build: $(class_files)
@@ -41,7 +41,7 @@ export: library/SMT.jar
 docs:
 	javadoc $(docscp) $(documentation) $(source_files)
 docs-test: docs
-	chromium-browser documentation/index.html
+	chromium-browser reference/index.html
 
 git-prepare:
 	git add -A
