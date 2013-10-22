@@ -33,6 +33,8 @@ class SMTTouchManager {
 	 * them.
 	 */
 	public void handleTouches( ) {
+		SMT.sketch.drawIndirectChildren(true);
+
 		PGraphics temp = applet.g;
 		applet.g = picker.pg;
 		applet.g.beginDraw( );

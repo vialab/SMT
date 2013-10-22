@@ -654,24 +654,36 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 */
 	protected void beginPickDraw() {
 		// update with changes from zonePG
-		matrix.preApply((PMatrix3D) (getMatrix()));
-		popMatrix();
-		pushMatrix();
-		
-		pg = (PGraphicsOpenGL) applet.g;
+		matrix.preApply((PMatrix3D) (pg.getMatrix()));
+		pg.popMatrix();
 		pg.pushMatrix();
-		pg.applyMatrix(matrix);
+
+		if (direct) {
+			if (getParent() == null) {
+				drawPG = (PGraphicsOpenGL) applet.g;
+			}
+			else {
+				drawPG = getParent().drawPG;
+			}
+			pg = drawPG;
+			pg.pushMatrix();
+			pg.applyMatrix(matrix);
+		}
+		else {
+			pg = drawPG;
+			super.beginDraw();
+		}
 		pg.pushStyle();
 
-		noLights();
-		noTint();
-		noStroke();
+		pg.noLights();
+		pg.noTint();
+		pg.noStroke();
 
 		// make sure the colorMode makes sense for the components given to it
-		colorMode(RGB, 255);
+		pg.colorMode(RGB, 255);
 		// extract the components using bitshifts with bitwise AND, to get RGB
 		// values 0-255
-		fill((pickColor & 0x00FF0000) >> 16, (pickColor & 0x0000FF00) >> 8, pickColor & 0x000000FF);
+		pg.fill((pickColor & 0x00FF0000) >> 16, (pickColor & 0x0000FF00) >> 8, pickColor & 0x000000FF);
 
 		pickDraw = true;
 	}
@@ -682,7 +694,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void endPickDraw() {
 		pickDraw = false;
 		
-		pg.popMatrix();
+		if (direct) {
+			pg.popMatrix();
+		}
+		else {
+			super.endDraw();
+		}
 		pg.popStyle();
 		pg = this;
 	}
@@ -1794,7 +1811,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void draw(boolean drawChildren, boolean picking) {
 		//prerender indirect children
 		if(!picking){
-			drawIndirectChildren();
+			drawIndirectChildren(picking);
 		}
 		
 		if (picking) {
@@ -1828,20 +1845,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		popStyle();
 		
-		if(picking){
-			//dont let children draw into parent when picking
-			applet.g = temp;
-		}
-		
 		if (drawChildren) {
 			drawChildren(picking);
 		}
 		
-		if(!picking){
-			//make sure children draw into parent by not resetting applet.g 
-			//untill after children draw when not picking
-			applet.g = temp;
-		}
+		//make sure children draw into parent by not resetting applet.g
+		//untill after children draw
+		applet.g = temp;
 
 		if (picking) {
 			endPickDraw();
@@ -1866,12 +1876,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	protected void drawIndirectChildren() {
+	protected void drawIndirectChildren(boolean picking) {
 		for (Zone child : children) {
 			//redraw if updateOnlyWhenModified returns false (the default), or if the child 
 			//has been modified, for indirect Zones
 			if (!child.direct && (!this.updateOnlyWhenModified() || child.isModified())) {
-				child.draw(true, false);
+				child.draw(true, picking);
 				child.setModified(false);
 			}
 		}
@@ -1884,7 +1894,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void drawChild(Zone child, boolean picking) {
-		if(!picking && !child.direct) {
+		if(!child.direct) {
 			child.drawIndirectImage();
 		}else{
 			child.draw(true, picking);
