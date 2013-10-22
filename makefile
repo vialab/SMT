@@ -5,7 +5,7 @@ clean: clean-specials
 	rm -rf bin/*
 clean-specials:
 	rm -rf library/SMT.jar SMT.zip
-	rm -rf javadoc/
+	rm -rf javadoc/ SMT/
 freshen: clean build
 
 #variables
@@ -36,11 +36,17 @@ library/SMT.jar: build
 jar: library/SMT.jar
 
 export: build jar docs
-	zip -r SMT.zip examples library library.properties \
-		javadoc release_notes.txt readme.md src
+	mkdir SMT
+	cp -r examples library library.properties \
+		javadoc release_notes.txt readme.md src \
+		SMT
+	zip -r SMT.zip SMT
+	rm -rf SMT
 
-docs:
+javadoc: $(source_files)
+	rm -rf javadoc
 	javadoc $(docscp) $(documentation) $(source_files)
+docs: javadoc
 docs-test: docs
 	chromium-browser javadoc/index.html
 
