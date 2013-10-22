@@ -4,7 +4,7 @@ freshen: clean build
 clean: clean-specials
 	rm -rf bin/*
 clean-specials:
-	rm -rf library/SMT.jar SMT.zip
+	rm -rf library/SMT.jar SMT.zip javadoc/
 freshen: clean build
 
 #variables
