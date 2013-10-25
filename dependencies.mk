@@ -14,6 +14,8 @@ bin/vialab/SMT/event/TouchListener.class: \
 bin/vialab/SMT/test/TestSwipeKeyboard.class: \
 	bin/vialab/SMT/zone/SwipeKeyboard.class \
 	bin/vialab/SMT/TouchSource.class
+bin/vialab/SMT/test/TestSwipeKeyboard.class: \
+	bin/vialab/SMT/Zone.class
 
 #zone package
 bin/vialab/SMT/zone/AnchorZone.class: \

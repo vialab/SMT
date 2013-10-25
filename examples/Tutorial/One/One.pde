@@ -17,6 +17,7 @@ void draw(){
 
 //Draw function for "MyZone"
 void drawMyZone(Zone zone){
+	fill( #88dd88);
 	rect(0, 0, 100, 100);
 }
 

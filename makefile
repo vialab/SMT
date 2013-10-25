@@ -55,10 +55,13 @@ git-prepare:
 	git add -u
 
 #test commands
-test: test-swipekeyboard
+test: test-zoneaccessors
 
 test-swipekeyboard: build
 	optirun java $(cp) vialab.SMT.test.TestSwipeKeyboard
+
+test-zoneaccessors: build
+	java $(cp) vialab.SMT.test.TestZoneAccessors
 
 test-tablehockey: build jar
 	optirun processing-shell examples/Demos/TableHockey
