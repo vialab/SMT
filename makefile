@@ -58,13 +58,16 @@ git-prepare:
 test: test-zoneaccessors
 
 test-swipekeyboard: build
-	optirun java $(cp) vialab.SMT.test.TestSwipeKeyboard
+	java $(cp) vialab.SMT.test.TestSwipeKeyboard
 
 test-zoneaccessors: build
 	java $(cp) vialab.SMT.test.TestZoneAccessors
 
+test-gets: build
+	java $(cp) vialab.SMT.test.TestGets
+
 test-tablehockey: build jar
-	optirun processing-shell examples/Demos/TableHockey
+	processing-shell examples/Demos/TableHockey
 
 test-tutorial1: build jar
 	optirun processing-shell examples/Tutorial/One

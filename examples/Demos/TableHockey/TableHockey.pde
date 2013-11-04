@@ -181,10 +181,10 @@ class Puck extends Zone {
 		}
 	}
 	public void pickDrawImpl() {
-		if( scored) return;
-		ellipse(
-			position.x, position.y,
-			this.width, this.height);
+		if( ! scored)
+			ellipse(
+				position.x, position.y,
+				this.width, this.height);
 	}
 	public void touchImpl(){
 		Touch touch = getActiveTouch(0);

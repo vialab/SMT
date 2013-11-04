@@ -29,6 +29,7 @@ class_files = \
 	bin/vialab/SMT/TabZone.class \
 	bin/vialab/SMT/test/TestSwipeKeyboard.class \
 	bin/vialab/SMT/test/TestZoneAccessors.class \
+	bin/vialab/SMT/test/TestGets.class \
 	bin/vialab/SMT/TextureZone.class \
 	bin/vialab/SMT/TextZone.class \
 	bin/vialab/SMT/Touch.class \
@@ -78,6 +79,7 @@ source_files = \
 	src/vialab/SMT/TabZone.java \
 	src/vialab/SMT/test/TestSwipeKeyboard.java \
 	src/vialab/SMT/test/TestZoneAccessors.java \
+	src/vialab/SMT/test/TestGets.java \
 	src/vialab/SMT/TextureZone.java \
 	src/vialab/SMT/TextZone.java \
 	src/vialab/SMT/Touch.java \
