@@ -58,15 +58,24 @@ public class TextZone extends Zone {
 			if (blur) {
 				if (!selected) {
 					textFont(sFont);
+					fill(txtRed, txtBlue, txtGreen, txtAlpha);
+				} else {
+					fill(selTxtRed, selTxtBlue, selTxtGreen, selTxtAlpha);
 				}
 				
 				// Render a background for the text
 				if (width > 0 && txtBkg) {
+					
+					if (selected) {
+						fill(selBkgRed, selBkgBlue, selBkgGreen, selBkgAlpha);
+					} else {
+						fill(bkgRed, bkgBlue, bkgGreen, bkgAlpha);
+					}
 					noStroke();
 					rect(0, 0, width, height);
 				}
 
-
+				
 				text(this.word, 0, 0, width, height);
 			}
 			else {
@@ -74,6 +83,8 @@ public class TextZone extends Zone {
 				if (width > 0 && txtBkg) {
 					if (selected) {
 						fill(selBkgRed, selBkgBlue, selBkgGreen, selBkgAlpha);
+					} else {
+						fill(bkgRed, bkgBlue, bkgGreen, bkgAlpha);
 					}
 					noStroke();
 					rect(0, 0, width, height);
