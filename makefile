@@ -67,13 +67,13 @@ test-gets: build
 	java $(cp) vialab.SMT.test.TestGets
 
 test-tablehockey: build jar
-	processing-shell examples/Demos/TableHockey
+	processing-shell examples/Demos/TableHockey --present
 
 test-tutorial1: build jar
-	optirun processing-shell examples/Tutorial/One
+	processing-shell examples/Tutorial/One --present
 
 test-tutorial2: build jar
-	optirun processing-shell examples/Tutorial/Two
+	processing-shell examples/Tutorial/Two --present
 
 test-tutorial3: build jar
-	optirun processing-shell examples/Tutorial/Three
+	processing-shell examples/Tutorial/Three --present
