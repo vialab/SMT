@@ -1901,6 +1901,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	void drawIndirectPick(){
+		//render the furthest indirect descendant first
+		for(Zone child: children){
+			child.drawIndirectPick();
+		}
+		drawIndirectChildren(true);
+	}
+
 	/**
 	 * Draws the rotation radius of the zone
 	 */
