@@ -466,7 +466,7 @@ public final class SMTUtilities {
 		for (TuioPoint tuioPoint : path) {
 			if (tuioTimeComparator.compare(tuioPoint.getTuioTime(), lastUpdate) <= 0) {
 				return new Touch(tuioPoint.getTuioTime(), cursor.getSessionID(),
-						cursor.getCursorID(), tuioPoint.getX(), tuioPoint.getY());
+					cursor.getCursorID(), tuioPoint.getX(), tuioPoint.getY());
 			}
 		}
 		return null;
