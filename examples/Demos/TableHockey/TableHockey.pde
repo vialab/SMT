@@ -11,8 +11,8 @@ import java.util.Vector;
 import vialab.SMT.*;
 
 //constants
-final int display_width = 1200;
-final int display_height = 800;
+int display_width = 1200;
+int display_height = 800;
 final int fps_limit = 60;
 final int puck_count = 10;
 
@@ -34,6 +34,8 @@ public int display_halfHeight;
 
 //main functions
 void setup(){
+	display_width = displayWidth;
+	display_height = displayHeight;
 	display_halfWidth = display_width / 2;
 	display_halfHeight = display_height / 2;
 	//processing library setup
@@ -181,10 +183,10 @@ class Puck extends Zone {
 		}
 	}
 	public void pickDrawImpl() {
-		if( scored) return;
-		ellipse(
-			position.x, position.y,
-			this.width, this.height);
+		if( ! scored)
+			ellipse(
+				position.x, position.y,
+				this.width, this.height);
 	}
 	public void touchImpl(){
 		Touch touch = getActiveTouch(0);

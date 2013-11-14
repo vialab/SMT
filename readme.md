@@ -1,7 +1,7 @@
 # Simple Multi-Touch Toolkit (SMT) for Processing
 
-Project Website: http://vialab.science.uoit.ca/smt/
-===================================================
+### Project Website: http://vialab.science.uoit.ca/smt/
+
 The website includes:
 	* Examples
 	* Processing style reference, with links to our javadocs
@@ -11,7 +11,7 @@ The website includes:
 
 --------------------------------------------
 
-##Version 3.7.1
+### Version 3.7.1
 
 Project Website: http://vialab.science.uoit.ca/smt/
 Research Portfolio: http://vialab.science.uoit.ca/portfolio/smt-toolkit
