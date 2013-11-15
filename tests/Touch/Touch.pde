@@ -27,9 +27,11 @@ void setup(){
 	//load texture and texture options
 	PImage tex1 = loadImage("resources/touch_texture.png");
 	PImage tex2 = loadImage("resources/touch_texture2.png");
+	PImage tex3 = loadImage("resources/touch_texture3.png");
 	textureMode( NORMAL);
-	SMT.add( new Prototype( tex1, 600, 400));
-	SMT.add( new Prototype( tex2, 200, 400));
+	SMT.add( new Prototype( tex1, 100, 100));
+	SMT.add( new Prototype( tex2, 500, 100));
+	SMT.add( new Prototype( tex3, 300, 100));
 }
 
 void draw(){
@@ -75,12 +77,17 @@ public class Prototype extends Zone{
 				radius * sin( theta)));}
 
 	public void drawImpl(){
+		noStroke();
 		beginShape( TRIANGLE_FAN);
 		texture( tex);
 		vertex( 0, 0, 0, 1);
 		for( PVector vert : vertices)
 			vertex( vert.x, vert.y, 0, 0);
 		endShape();}
+
+		/*noFill();
+		stroke( 200, 50, 50, 180);
+		ellipse( 0, 0, radius, radius);}*/
 
 	public void pickDrawImpl(){
 		ellipse( 0, 0, radius, radius);}
