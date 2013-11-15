@@ -55,20 +55,22 @@ git-prepare:
 	git add -u
 
 #test commands
-test: test-zoneaccessors
+test: test-touch
 
+# feature tests
 test-swipekeyboard: build
 	java $(cp) vialab.SMT.test.TestSwipeKeyboard
-
 test-zoneaccessors: build
 	java $(cp) vialab.SMT.test.TestZoneAccessors
-
 test-gets: build
 	java $(cp) vialab.SMT.test.TestGets
 
+# examples
 test-tablehockey: build jar
 	processing-shell examples/Demos/TableHockey --present
 
+
+# tutorials
 test-tutorial1: build jar
 	processing-shell examples/Tutorial/One --present
 
@@ -77,3 +79,9 @@ test-tutorial2: build jar
 
 test-tutorial3: build jar
 	processing-shell examples/Tutorial/Three --present
+
+# prototypes
+test-touch: build jar
+	processing-shell tests/Touch
+test-ripple: build jar
+	processing-shell tests/Ripple

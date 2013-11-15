@@ -16,15 +16,15 @@ void draw(){
 }
 
 //Draw function for "MyZone"
-void drawMyZone(Zone zone){
+void drawMyZone( Zone zone){
 	fill( #88dd88);
 	rect(0, 0, 100, 100);
 }
 
-void pickDrawMyZone(Zone zone){
+void pickDrawMyZone( Zone zone){
 	rect(0, 0, 100, 100);
 }
 //Touch function for "MyZone"
-void touchMyZone(Zone zone){
+void touchMyZone( Zone zone){
 	zone.drag();
 }
