@@ -624,8 +624,11 @@ public class SMT {
 					float weight = 10 - (path.length - j) / 5;
 					if (weight >= 1) {
 						parent.strokeWeight(weight);
-						parent.bezier(path[j].x, path[j].y, path[j - 1].x, path[j - 1].y,
-								path[j - 2].x, path[j - 2].y, path[j - 3].x, path[j - 3].y);
+						parent.bezier(
+							path[j].x, path[j].y,
+							path[j - 1].x, path[j - 1].y,
+							path[j - 2].x, path[j - 2].y,
+							path[j - 3].x, path[j - 3].y);
 					}
 				}
 			}
