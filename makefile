@@ -54,6 +54,13 @@ git-prepare:
 	git add -A
 	git add -u
 
+relink:
+	rm -f lib/*
+	ln -s /opt/processing/core/library/ lib/processing
+	ln -s ~/p/libs/libTUIO/libTUIO.jar lib/libTUIO.jar
+	ln -s ~/p/libs/android/android.jar lib/android.jar
+	ln -s ~/p/libs/jbox2d/jbox2d-library-2.1.2.2-jar-with-dependencies.jar lib/jbox2d.jar
+
 #test commands
 test: test-ripple
 
