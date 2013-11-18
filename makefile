@@ -55,7 +55,7 @@ git-prepare:
 	git add -u
 
 #test commands
-test: test-touch
+test: test-ripple
 
 # feature tests
 test-swipekeyboard: build

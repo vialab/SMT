@@ -25,7 +25,7 @@ void setup(){
 	SMT.init( this, TouchSource.MOUSE);
 
 	//load texture and texture options
-	tex = loadImage("resources/touch_texture2.png");
+	tex = loadImage("resources/ripple_texture.png");
 
 	//load zones
 	SMT.add( new Zone( "RippleTest", 100, 100, 1000, 600));
@@ -56,7 +56,7 @@ void drawRippleTest( Zone zone){
 	rect( 0, 0, zone.width, zone.height);}
 void pickDrawRippleTest( Zone zone){
 	rect( 100, 100, zone.width, zone.height);}
-void touchRippleTest( Zone zone){
+void touchDownRippleTest( Zone zone){
 	Touch touch = zone.getActiveTouch(0);
 	assert( touch != null);
 	SMT.add( new Prototype( tex, touch.x, touch.y));}
@@ -105,14 +105,10 @@ class Prototype extends Zone {
 		textureMode( NORMAL);
 		beginShape( TRIANGLE_FAN);
 		texture( tex);
-		vertex( 0, 0, 0, 1);
+		vertex( 0, 0, 1, 0);
 		for( PVector vert : vertices)
 			vertex( (float) step * vert.x, (float) step * vert.y, 0, 0);
-		endShape();
-
-		noFill();
-		stroke( 200, 50, 50, 180);
-		ellipse( 0, 0, (float) step * radius, (float) step * radius);}
+		endShape();}
 
 	public void pickDrawImpl(){}
 	public void touchImpl(){}
@@ -121,7 +117,7 @@ class Prototype extends Zone {
 		time_old = time;
 		time = System.nanoTime();
 		dtime = (time - time_old) / 1e9;
-		step += ani_period / dtime;
-		if( step > 1)
+		step += dtime / ani_period;
+		if( step >= 1)
 			SMT.remove( this);}
 }
