@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/libTUIO.jar"/>
 	<classpathentry kind="lib" path="lib/core.jar"/>
-	<classpathentry kind="lib" path="lib/opengl.jar"/>
 	<classpathentry kind="lib" path="lib/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all.jar"/>
 	<classpathentry kind="lib" path="lib/jbox2d-library-2.1.2.2-jar-with-dependencies.jar"/>
