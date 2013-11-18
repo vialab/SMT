@@ -55,7 +55,7 @@ void drawRippleTest( Zone zone){
 	stroke( 150, 220, 150);
 	rect( 0, 0, zone.width, zone.height);}
 void pickDrawRippleTest( Zone zone){
-	rect( 100, 100, zone.width, zone.height);}
+	rect( 0, 0, zone.width, zone.height);}
 void touchDownRippleTest( Zone zone){
 	Touch touch = zone.getActiveTouch(0);
 	assert( touch != null);
