@@ -928,7 +928,7 @@ public class SMT {
 	 * @return Touch[] containing all touches that are currently mapped
 	 */
 	public static Touch[] getTouches() {
-		return getTouchMap().values().toArray(new Touch[getTouchMap().values().size()]);
+		return getTouchMap().values().toArray(new Touch[0]);
 	}
 
 	/**
@@ -1053,7 +1053,7 @@ public class SMT {
 	 * @return number of current touches
 	 */
 	public static int getTouchCount() {
-		return listener.getTuioCursors().size();
+		return getTouches().length;
 	}
 
 	/**
