@@ -231,26 +231,6 @@ public class SMT {
 	 * @param parent
 	 *            PApplet - The Processing PApplet, usually just 'this' when
 	 *            using the Processing IDE
-	 * @param source
-	 *            enum TouchSource - The source of touch events to listen to.
-	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
-	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
-	 * @param extraClasses
-	 *            Class< ?> - Classes that should be checked for method
-	 *            definitions similar to PApplet for drawZoneName(), etc, but
-	 *            PApplet takes precedence.
-	 **/
-	public static void init(PApplet parent, TouchSource source, Class<?>... extraClasses) {
-		init(parent, 3333, source, extraClasses);
-	}
-
-	/**
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
-	 * 
-	 * @param parent
-	 *            PApplet - The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
 	 * 
 	 * @param port
 	 *            int - The port to listen on
@@ -260,8 +240,7 @@ public class SMT {
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	private static void init(final PApplet parent, int port, TouchSource source,
-			Class<?>... extraClasses) {
+	private static void init(final PApplet parent, int port, TouchSource source) {
 		if (parent == null) {
 			System.err
 					.println("Null parent PApplet, pass 'this' to SMT.init() instead of null");
@@ -313,117 +292,117 @@ public class SMT {
 		mainListenerPort = port;
 
 		switch (source) {
-		case ANDROID:
-			// this still uses the old method, should be re-implemented without
-			// the socket
-			att = new AndroidToTUIO(parent.width, parent.height, port);
-			deviceMap.put(port, source);
-			// parent.registerMethod("touchEvent", att); //when Processing
-			// supports this
-			break;
-		case MOUSE:
-			// this still uses the old method, should be re-implemented without
-			// the socket
-			mtt = new MouseToTUIO(parent.width, parent.height, port);
-			deviceMap.put(port, source);
-			parent.registerMethod("mouseEvent", mtt);
-			break;
-		case TUIO_DEVICE:
-			break;
-		case WM_TOUCH:
-			if (System.getProperty("os.arch").equals("x86")) {
-				SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
-			}
-			else {
-				SMT.runWinTouchTuioServer(true, "127.0.0.1", port);
-			}
-			deviceMap.put(port, source);
-			break;
-		case SMART:
-			SMT.runSmart2TuioServer();
-			deviceMap.put(port, source);
-			break;
-		case LEAP:
-			SMT.runLeapTuioServer(port);
-			deviceMap.put(port, source);
-			break;
-		case MULTIPLE:
-			// ANDROID
-			if (System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")) {
+			case ANDROID:
+				// this still uses the old method, should be re-implemented without
+				// the socket
 				att = new AndroidToTUIO(parent.width, parent.height, port);
-				deviceMap.put(port, TouchSource.ANDROID);
+				deviceMap.put(port, source);
 				// parent.registerMethod("touchEvent", att); //when Processing
 				// supports this
 				break;
-			}
-			else {
-				// TUIO_DEVICE:
-				// covered already by c
-				deviceMap.put(port, TouchSource.TUIO_DEVICE);
-
-				if(System.getProperty("os.name").startsWith("Windows")){
-					// WM_TOUCH:
-					TuioClient c2 = new TuioClient(++port);
-					c2.connect();
-					while (!c2.isConnected()) {
-						c2 = new TuioClient(++port);
-						c2.connect();
-					}
-					c2.addTuioListener(new SMTProxyTuioListener(port, listener));
-					if(debug){
-						System.out.println("TuioClient listening on port: " + port);
-					}
-					if (System.getProperty("os.arch").equals("x86")) {
-						SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
-						deviceMap.put(port, TouchSource.WM_TOUCH);
-					}
-					else {
-						SMT.runWinTouchTuioServer(true, "127.0.0.1", port);
-						deviceMap.put(port, TouchSource.WM_TOUCH);
-					}
-	
-					// LEAP:
-					TuioClient c3 = new TuioClient(++port);
-					c3.connect();
-					while (!c3.isConnected()) {
-						c3 = new TuioClient(++port);
-						c3.connect();
-					}
-					c3.addTuioListener(new SMTProxyTuioListener(port, listener));
-					if(debug){
-						System.out.println("TuioClient listening on port: " + port);
-					}
-					SMT.runLeapTuioServer(port);
-					deviceMap.put(port, TouchSource.LEAP);
-					
-					tuioClientList.add(c2);
-					tuioClientList.add(c3);
-				}
-				
-				// MOUSE:
-				TuioClient c4 = new TuioClient(++port);
-				c4.connect();
-				while (!c4.isConnected()) {
-					c4 = new TuioClient(++port);
-					c4.connect();
-				}
-				c4.addTuioListener(new SMTProxyTuioListener(port, listener));
-				if(debug){
-					System.out.println("TuioClient listening on port: " + port);
-				}
-
-				// this still uses the old method, should be re-implemented
-				// without
+			case MOUSE:
+				// this still uses the old method, should be re-implemented without
 				// the socket
 				mtt = new MouseToTUIO(parent.width, parent.height, port);
-				deviceMap.put(port, TouchSource.MOUSE);
+				deviceMap.put(port, source);
 				parent.registerMethod("mouseEvent", mtt);
+				break;
+			case TUIO_DEVICE:
+				break;
+			case WM_TOUCH:
+				if (System.getProperty("os.arch").equals("x86")) {
+					SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
+				}
+				else {
+					SMT.runWinTouchTuioServer(true, "127.0.0.1", port);
+				}
+				deviceMap.put(port, source);
+				break;
+			case SMART:
+				SMT.runSmart2TuioServer();
+				deviceMap.put(port, source);
+				break;
+			case LEAP:
+				SMT.runLeapTuioServer(port);
+				deviceMap.put(port, source);
+				break;
+			case MULTIPLE:
+				// ANDROID
+				if (System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")) {
+					att = new AndroidToTUIO(parent.width, parent.height, port);
+					deviceMap.put(port, TouchSource.ANDROID);
+					// parent.registerMethod("touchEvent", att); //when Processing
+					// supports this
+					break;
+				}
+				else {
+					// TUIO_DEVICE:
+					// covered already by c
+					deviceMap.put(port, TouchSource.TUIO_DEVICE);
 
-				tuioClientList.add(c4);
-			}
-			break;
-		default:
-			break;
+					if(System.getProperty("os.name").startsWith("Windows")){
+						// WM_TOUCH:
+						TuioClient c2 = new TuioClient(++port);
+						c2.connect();
+						while (!c2.isConnected()) {
+							c2 = new TuioClient(++port);
+							c2.connect();
+						}
+						c2.addTuioListener(new SMTProxyTuioListener(port, listener));
+						if(debug){
+							System.out.println("TuioClient listening on port: " + port);
+						}
+						if (System.getProperty("os.arch").equals("x86")) {
+							SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
+							deviceMap.put(port, TouchSource.WM_TOUCH);
+						}
+						else {
+							SMT.runWinTouchTuioServer(true, "127.0.0.1", port);
+							deviceMap.put(port, TouchSource.WM_TOUCH);
+						}
+		
+						// LEAP:
+						TuioClient c3 = new TuioClient(++port);
+						c3.connect();
+						while (!c3.isConnected()) {
+							c3 = new TuioClient(++port);
+							c3.connect();
+						}
+						c3.addTuioListener(new SMTProxyTuioListener(port, listener));
+						if(debug){
+							System.out.println("TuioClient listening on port: " + port);
+						}
+						SMT.runLeapTuioServer(port);
+						deviceMap.put(port, TouchSource.LEAP);
+						
+						tuioClientList.add(c2);
+						tuioClientList.add(c3);
+					}
+					
+					// MOUSE:
+					TuioClient c4 = new TuioClient(++port);
+					c4.connect();
+					while (!c4.isConnected()) {
+						c4 = new TuioClient(++port);
+						c4.connect();
+					}
+					c4.addTuioListener(new SMTProxyTuioListener(port, listener));
+					if(debug){
+						System.out.println("TuioClient listening on port: " + port);
+					}
+
+					// this still uses the old method, should be re-implemented
+					// without
+					// the socket
+					mtt = new MouseToTUIO(parent.width, parent.height, port);
+					deviceMap.put(port, TouchSource.MOUSE);
+					parent.registerMethod("mouseEvent", mtt);
+
+					tuioClientList.add(c4);
+				}
+				break;
+			default:
+				break;
 		}
 
 		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
@@ -432,7 +411,7 @@ public class SMT {
 		 * Disconnects the TuioClient when the PApplet is stopped. Shuts down
 		 * any threads, disconnect from the net, unload memory, etc.
 		 */
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		Runtime.getRuntime().addShutdownHook( new Thread( new Runnable() {
 			public void run() {
 				SMT.inShutdown  = true;
 				if (warnUncalledMethods) {
