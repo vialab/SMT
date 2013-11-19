@@ -603,8 +603,11 @@ public class SMT {
 					float weight = 10 - (path.length - j) / 5;
 					if (weight >= 1) {
 						parent.strokeWeight(weight);
-						parent.bezier(path[j].x, path[j].y, path[j - 1].x, path[j - 1].y,
-								path[j - 2].x, path[j - 2].y, path[j - 3].x, path[j - 3].y);
+						parent.bezier(
+							path[j].x, path[j].y,
+							path[j - 1].x, path[j - 1].y,
+							path[j - 2].x, path[j - 2].y,
+							path[j - 3].x, path[j - 3].y);
 					}
 				}
 			}
@@ -907,7 +910,7 @@ public class SMT {
 	 * @return Touch[] containing all touches that are currently mapped
 	 */
 	public static Touch[] getTouches() {
-		return getTouchMap().values().toArray(new Touch[getTouchMap().values().size()]);
+		return getTouchMap().values().toArray(new Touch[0]);
 	}
 
 	/**
@@ -1032,7 +1035,7 @@ public class SMT {
 	 * @return number of current touches
 	 */
 	public static int getTouchCount() {
-		return listener.getTuioCursors().size();
+		return getTouches().length;
 	}
 
 	/**
