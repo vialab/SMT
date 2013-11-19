@@ -72,23 +72,17 @@ public class SMT {
 			super(x, y, w, h);
 			this.setDirect(true);
 		}
-		
-		protected void drawImpl() {
-		}
-
-		protected void touchImpl() {
-		}
+		public void drawImpl(){}
+		public void pickDrawImpl(){}
+		public void touchImpl(){}
 	}
 	
 	public static Zone sketch;
-
 	static float box2dScale = 0.1f;
-
 	static World world;
-
 	private static int MAX_PATH_LENGTH = 50;
-
-	protected static LinkedList<Process> tuioServerList = new LinkedList<Process>();
+	protected static LinkedList<Process> tuioServerList =
+		new LinkedList<Process>();
 
 	/** Processing PApplet */
 	protected static PApplet parent;
@@ -106,13 +100,9 @@ public class SMT {
 	// private PMatrix3D mTest = new PMatrix3D();
 
 	protected static SMTZonePicker picker;
-
 	protected static SMTTuioListener listener;
-
 	protected static SMTTouchManager manager;
-
 	protected static Method touch;
-
 	protected static Boolean warnUnimplemented;
 
 	/**
@@ -120,7 +110,7 @@ public class SMT {
 	 * one of the reserved method prefixes (draw,pickDraw,touch,etc and any that
 	 * have been added by calls to SMTUtilities.getZoneMethod() with a unique
 	 * prefix).
-	 * <P>
+	 * <br/>
 	 * Default state is on.
 	 */
 	public static boolean warnUncalledMethods = true;
@@ -132,34 +122,36 @@ public class SMT {
 	 */
 	public static String defaultRenderer;
 
+	//default SMT.init() parameters
+	public static final int default_port = 3333;
+	public static final TouchSource default_touchsource =
+		TouchSource.TUIO_DEVICE;
+
 	/** TUIO adapter depending on which TouchSource is used */
 	static AndroidToTUIO att = null;
 	static MouseToTUIO mtt = null;
 
-	protected static LinkedList<BufferedReader> tuioServerErrList = new LinkedList<BufferedReader>();
-
-	protected static LinkedList<BufferedReader> tuioServerOutList = new LinkedList<BufferedReader>();
-
-	protected static LinkedList<BufferedWriter> tuioServerInList = new LinkedList<BufferedWriter>();
+	protected static LinkedList<BufferedReader> tuioServerErrList =
+		new LinkedList<BufferedReader>();
+	protected static LinkedList<BufferedReader> tuioServerOutList =
+		new LinkedList<BufferedReader>();
+	protected static LinkedList<BufferedWriter> tuioServerInList =
+		new LinkedList<BufferedWriter>();
 
 	static Body groundBody;
-
 	static boolean fastPicking = true;
-
-	static Map<Integer, TouchSource> deviceMap = Collections
-			.synchronizedMap(new LinkedHashMap<Integer, TouchSource>());
+	static Map<Integer, TouchSource> deviceMap =
+		Collections.synchronizedMap(
+			new LinkedHashMap<Integer, TouchSource>());
 
 	static int mainListenerPort;
-
 	protected static boolean inShutdown = false;
-	
 	public static boolean debug = false;
 
 	/**
 	 * Prevent SMT instantiation with protected constructor
 	 */
-	protected SMT() {
-	}
+	protected SMT() {}
 
 	public static void setFastPicking(boolean fastPicking) {
 		SMT.fastPicking = fastPicking;
@@ -191,7 +183,7 @@ public class SMT {
 	 *            using the Processing IDE
 	 */
 	public static void init(PApplet parent) {
-		init(parent, 3333);
+		init(parent, default_port);
 	}
 
 	/**
@@ -205,7 +197,7 @@ public class SMT {
 	 *            int - The port to listen on
 	 */
 	public static void init(PApplet parent, int port) {
-		init(parent, port, TouchSource.TUIO_DEVICE);
+		init(parent, port, default_touchsource);
 	}
 
 	/**
@@ -221,7 +213,7 @@ public class SMT {
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
 	public static void init(PApplet parent, TouchSource source) {
-		init(parent, 3333, source);
+		init(parent, default_port, source);
 	}
 
 	/**
@@ -240,26 +232,24 @@ public class SMT {
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	private static void init(final PApplet parent, int port, TouchSource source) {
-		if (parent == null) {
-			System.err
-					.println("Null parent PApplet, pass 'this' to SMT.init() instead of null");
+	private static void init(
+			final PApplet parent, int port, TouchSource source) {
+		if( parent == null) {
+			System.err.println(
+				"Null parent PApplet, pass 'this' to SMT.init() instead of null");
 			return;
 		}
 		
 		SMT.parent = parent;
-		
 		SMTUtilities.loadMethods(parent.getClass());
 
 		// As of now the toolkit only supports OpenGL
-		if (!parent.g.is3D()) {
-			System.out
-					.println("SMT only supports using OpenGL 3D renderers, please use either OPENGL, P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
-		}
+		if( ! parent.g.is3D())
+			System.out.println(
+				"SMT only supports using OpenGL 3D renderers, please use either OPENGL, P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
 
-		touch = SMTUtilities.getPMethod(parent, "touch");
-		
-		SMT.sketch = new MainZone(0,0,parent.width,parent.height);
+		touch = SMTUtilities.getPMethod( parent, "touch");
+		SMT.sketch = new MainZone( 0, 0, parent.width, parent.height);
 
 		// set Zone.applet so that it is consistently set at this time, not
 		// after a zone is constructed
@@ -271,66 +261,60 @@ public class SMT {
 		// handler = new GestureHandler();
 
 		picker = new SMTZonePicker();
-
 		defaultRenderer = parent.g.getClass().getName();
-
 		listener = new SMTTuioListener();
-		manager = new SMTTouchManager(listener, picker);
+		manager = new SMTTouchManager( listener, picker);
 
-		TuioClient c = new TuioClient(port);
-		c.connect();
-		while (!c.isConnected()) {
-			c = new TuioClient(++port);
-			c.connect();
+		TuioClient tuioClient = new TuioClient(port);
+		tuioClient.connect();
+		while (!tuioClient.isConnected()) {
+			tuioClient = new TuioClient(++port);
+			tuioClient.connect();
 		}
-		c.addTuioListener(listener);
-		tuioClientList.add(c);
+		tuioClient.addTuioListener(listener);
+		tuioClientList.add(tuioClient);
 
-		if(debug){
+		if(debug)
 			System.out.println("TuioClient listening on port: " + port);
-		}
 		mainListenerPort = port;
 
 		switch (source) {
 			case ANDROID:
 				// this still uses the old method, should be re-implemented without
 				// the socket
-				att = new AndroidToTUIO(parent.width, parent.height, port);
-				deviceMap.put(port, source);
+				att = new AndroidToTUIO( parent.width, parent.height, port);
+				deviceMap.put( port, source);
 				// parent.registerMethod("touchEvent", att); //when Processing
 				// supports this
 				break;
 			case MOUSE:
 				// this still uses the old method, should be re-implemented without
 				// the socket
-				mtt = new MouseToTUIO(parent.width, parent.height, port);
-				deviceMap.put(port, source);
-				parent.registerMethod("mouseEvent", mtt);
+				mtt = new MouseToTUIO( parent.width, parent.height, port);
+				deviceMap.put( port, source);
+				parent.registerMethod( "mouseEvent", mtt);
 				break;
 			case TUIO_DEVICE:
 				break;
 			case WM_TOUCH:
-				if (System.getProperty("os.arch").equals("x86")) {
-					SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
-				}
-				else {
-					SMT.runWinTouchTuioServer(true, "127.0.0.1", port);
-				}
-				deviceMap.put(port, source);
+					SMT.runWinTouchTuioServer(
+						! System.getProperty( "os.arch").equals("x86"),
+						"127.0.0.1", port);
+				deviceMap.put( port, source);
 				break;
 			case SMART:
 				SMT.runSmart2TuioServer();
-				deviceMap.put(port, source);
+				deviceMap.put( port, source);
 				break;
 			case LEAP:
-				SMT.runLeapTuioServer(port);
+				SMT.runLeapTuioServer( port);
 				deviceMap.put(port, source);
 				break;
 			case MULTIPLE:
 				// ANDROID
-				if (System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")) {
+				if ( System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")){
 					att = new AndroidToTUIO(parent.width, parent.height, port);
-					deviceMap.put(port, TouchSource.ANDROID);
+					deviceMap.put( port, TouchSource.ANDROID);
 					// parent.registerMethod("touchEvent", att); //when Processing
 					// supports this
 					break;
@@ -342,16 +326,16 @@ public class SMT {
 
 					if(System.getProperty("os.name").startsWith("Windows")){
 						// WM_TOUCH:
-						TuioClient c2 = new TuioClient(++port);
-						c2.connect();
-						while (!c2.isConnected()) {
-							c2 = new TuioClient(++port);
-							c2.connect();
+						TuioClient wm_tuioClient = new TuioClient( ++port);
+						wm_tuioClient.connect();
+						while (!wm_tuioClient.isConnected()) {
+							wm_tuioClient = new TuioClient(++port);
+							wm_tuioClient.connect();
 						}
-						c2.addTuioListener(new SMTProxyTuioListener(port, listener));
-						if(debug){
+						wm_tuioClient.addTuioListener(
+							new SMTProxyTuioListener(port, listener));
+						if(debug)
 							System.out.println("TuioClient listening on port: " + port);
-						}
 						if (System.getProperty("os.arch").equals("x86")) {
 							SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
 							deviceMap.put(port, TouchSource.WM_TOUCH);
@@ -362,47 +346,46 @@ public class SMT {
 						}
 		
 						// LEAP:
-						TuioClient c3 = new TuioClient(++port);
-						c3.connect();
-						while (!c3.isConnected()) {
-							c3 = new TuioClient(++port);
-							c3.connect();
+						TuioClient leap_tuioClient = new TuioClient(++port);
+						leap_tuioClient.connect();
+						while (!leap_tuioClient.isConnected()) {
+							leap_tuioClient = new TuioClient(++port);
+							leap_tuioClient.connect();
 						}
-						c3.addTuioListener(new SMTProxyTuioListener(port, listener));
-						if(debug){
+						leap_tuioClient.addTuioListener(
+							new SMTProxyTuioListener(port, listener));
+						if(debug)
 							System.out.println("TuioClient listening on port: " + port);
-						}
 						SMT.runLeapTuioServer(port);
 						deviceMap.put(port, TouchSource.LEAP);
 						
-						tuioClientList.add(c2);
-						tuioClientList.add(c3);
+						tuioClientList.add( wm_tuioClient);
+						tuioClientList.add( leap_tuioClient);
 					}
 					
 					// MOUSE:
-					TuioClient c4 = new TuioClient(++port);
-					c4.connect();
-					while (!c4.isConnected()) {
-						c4 = new TuioClient(++port);
-						c4.connect();
+					TuioClient mouse_tuioClient = new TuioClient(++port);
+					mouse_tuioClient.connect();
+					while (!mouse_tuioClient.isConnected()) {
+						mouse_tuioClient = new TuioClient(++port);
+						mouse_tuioClient.connect();
 					}
-					c4.addTuioListener(new SMTProxyTuioListener(port, listener));
-					if(debug){
+					mouse_tuioClient.addTuioListener(
+						new SMTProxyTuioListener(port, listener));
+					if(debug)
 						System.out.println("TuioClient listening on port: " + port);
-					}
 
 					// this still uses the old method, should be re-implemented
 					// without
 					// the socket
-					mtt = new MouseToTUIO(parent.width, parent.height, port);
+					mtt = new MouseToTUIO( parent.width, parent.height, port);
 					deviceMap.put(port, TouchSource.MOUSE);
-					parent.registerMethod("mouseEvent", mtt);
+					parent.registerMethod( "mouseEvent", mtt);
 
-					tuioClientList.add(c4);
+					tuioClientList.add( mouse_tuioClient);
 				}
 				break;
-			default:
-				break;
+			default: break;
 		}
 
 		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
@@ -414,44 +397,74 @@ public class SMT {
 		Runtime.getRuntime().addShutdownHook( new Thread( new Runnable() {
 			public void run() {
 				SMT.inShutdown  = true;
-				if (warnUncalledMethods) {
+				if( warnUncalledMethods)
 					SMTUtilities.warnUncalledMethods(parent);
-				}
-				for (TuioClient t : tuioClientList) {
-					if (t.isConnected()) {
+				for( TuioClient t : tuioClientList)
+					if( t.isConnected())
 						t.disconnect();
-					}
-				}
-				for (BufferedWriter w : tuioServerInList) {
-					try {
+				for( BufferedWriter w : tuioServerInList)
+					try{
 						w.newLine();
 						w.flush();
 					}
-					catch (IOException e) {}
-				}
+					catch( IOException e) {}
 				
-				try {
-					Thread.sleep(500);
-				}
-				catch (InterruptedException e) {}
+				try{ Thread.sleep( 500);}
+				catch( InterruptedException e){}
 
-				for (Process tuioServer : tuioServerList) {
-					if (tuioServer != null) {
+				for( Process tuioServer : tuioServerList)
+					if( tuioServer != null)
 						tuioServer.destroy();
-					}
-				}
+				if( debug)
+					System.out.println("SMT has completed shutdown");
 			}
 		}));
 
-		world = new World(new Vec2(0.0f, 0.0f), true);
+		world = new World( new Vec2( 0.0f, 0.0f), true);
 		// top
-		groundBody = createStaticBox(0, -10.0f, parent.width, 10.f);
+		groundBody = createStaticBox( 0, -10.0f, parent.width, 10.f);
 		// bottom
-		createStaticBox(0, parent.height + 10.0f, parent.width, 10.f);
+		createStaticBox( 0, parent.height + 10.0f, parent.width, 10.f);
 		// left
-		createStaticBox(-10.0f, 0, 10.0f, parent.height);
+		createStaticBox( -10.0f, 0, 10.0f, parent.height);
 		// right
-		createStaticBox(parent.width + 10.0f, 0, 10.0f, parent.height);
+		createStaticBox( parent.width + 10.0f, 0, 10.0f, parent.height);
+	}
+
+	// touch server connection functions
+	private void connect_android( int port){
+		att = new AndroidToTUIO( parent.width, parent.height, port);
+		deviceMap.put( port, TouchSource.ANDROID);
+	}
+	private void connect_leap( int port){
+		SMT.runLeapTuioServer( port);
+		deviceMap.put(port, TouchSource.LEAP);
+	}
+	private void connect_mouse( int port){
+		mtt = new MouseToTUIO( parent.width, parent.height, port);
+		deviceMap.put( port, TouchSource.MOUSE);
+		parent.registerMethod( "mouseEvent", mtt);
+	}
+	private void connect_smart( int port){
+		SMT.runSmart2TuioServer();
+		deviceMap.put( port, TouchSource.SMART);
+	}
+	private void connect_tuio( int port){
+		TuioClient tuioClient = new TuioClient(port);
+		tuioClient.connect();
+		while (!tuioClient.isConnected()) {
+			tuioClient = new TuioClient(++port);
+			tuioClient.connect();
+		}
+		tuioClient.addTuioListener(listener);
+		tuioClientList.add(tuioClient);
+		//TODO: should we add to the devicemap?
+	}
+	private void connect_windows( int port){
+		SMT.runWinTouchTuioServer(
+			! System.getProperty( "os.arch").equals("x86"),
+			"127.0.0.1", port);
+		deviceMap.put( port, TouchSource.WM_TOUCH);
 	}
 
 	/**
@@ -459,22 +472,21 @@ public class SMT {
 	 * will occur with Zones that have physics == true, keeping them on the
 	 * screen
 	 * 
-	 * @param x
-	 *            X-position
-	 * @param y
-	 *            Y-position
-	 * @param w
-	 *            Width
-	 * @param h
-	 *            Height
+	 * @param x X-position
+	 * @param y Y-position
+	 * @param w Width
+	 * @param h Height
 	 */
-	public static Body createStaticBox(float x, float y, float w, float h) {
+	public static Body createStaticBox( float x, float y, float w, float h) {
 		BodyDef boxDef = new BodyDef();
-		boxDef.position.set(SMT.box2dScale * (x + w / 2), SMT.box2dScale
-				* (parent.height - (y + h / 2)));
+		boxDef.position.set(
+			SMT.box2dScale * (x + w / 2),
+			SMT.box2dScale * (parent.height - (y + h / 2)));
 		Body box = world.createBody(boxDef);
 		PolygonShape boxShape = new PolygonShape();
-		boxShape.setAsBox(SMT.box2dScale * w / 2, SMT.box2dScale * h / 2);
+		boxShape.setAsBox(
+			SMT.box2dScale * w / 2,
+			SMT.box2dScale * h / 2);
 		box.createFixture(boxShape, 0.0f);
 		return box;
 	}
@@ -498,7 +510,7 @@ public class SMT {
 	 * @return zoneList
 	 */
 	public static Zone[] getZones() {
-		return getDescendents(sketch).toArray(new Zone[0]);
+		return getDescendents(sketch).toArray( new Zone[0]);
 	}
 
 	private static List<Zone> getDescendents(Zone parent) {
