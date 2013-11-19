@@ -52,5 +52,6 @@ public enum TouchSource {
 	 * Runs all back-ends that do not interfere with each other, which currently
 	 * excludes SMART
 	 */
-	MULTIPLE;
+	MULTIPLE,
+	AUTOMATIC;
 }

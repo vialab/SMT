@@ -311,6 +311,7 @@ public class SMT {
 				deviceMap.put(port, source);
 				break;
 			case MULTIPLE:
+			case AUTOMATIC:
 				// ANDROID
 				if ( System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")){
 					att = new AndroidToTUIO(parent.width, parent.height, port);
