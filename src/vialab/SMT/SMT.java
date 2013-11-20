@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -304,7 +305,6 @@ public class SMT {
 		}
 
 		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
-
 		addJVMShutdownHook();
 
 		world = new World( new Vec2( 0.0f, 0.0f), true);
@@ -323,6 +323,11 @@ public class SMT {
 		boolean os_android =
 			System.getProperty("java.vm.name")
 				.equalsIgnoreCase("dalvik");
+		String os_string = System.getProperty("os.name")
+			.toLowerCase();
+		boolean os_windows = os_string.contains("windows");
+		// run port scan
+		int[] open_ports = portscan( 3333, 3339);
 	}
 	private static void connect_android( int port){
 		// this still uses the old method, should be re-implemented without
@@ -350,10 +355,9 @@ public class SMT {
 	private static void connect_tuio( int port){
 		TuioClient tuioClient = new TuioClient(port);
 		tuioClient.connect();
-		while (!tuioClient.isConnected()) {
-			tuioClient = new TuioClient(++port);
-			tuioClient.connect();
-		}
+		if( ! tuioClient.isConnected())
+			throw new RuntimeException( String.format(
+				"Connection to tuio server on port %d failed.\n", port));
 		tuioClient.addTuioListener(listener);
 		tuioClientList.add(tuioClient);
 		//TODO: should we add to the devicemap?
@@ -363,6 +367,37 @@ public class SMT {
 			! System.getProperty( "os.arch").equals("x86"),
 			"127.0.0.1", port);
 		deviceMap.put( port, TouchSource.WM_TOUCH);
+	}
+
+	/**
+	 * Runs a port scan on localhost, ports floor to ceil, inclusive.
+	 * @param floor port to start the scan on
+	 * @param ceil last port to scan
+	 * @return an array of ports with running servers
+	 */
+	private static int[] portscan( int floor, int ceil){
+		String server = "127.0.0.1";
+		int count = 0;
+		int[] successes = new int[ ceil - floor + 1];
+		for( int port = floor; port <= ceil; port++)
+			try{
+				Socket socket = new Socket( server, port);
+				System.out.printf(
+					"%s has a server on port %d\n",
+					server, port);
+				successes[ count++] = port;
+				socket.close();
+			}
+			catch( java.io.IOException exception){
+				System.out.printf(
+					"%s does not have a server on port %d\n",
+					server, port);
+			}
+		//prepare result array
+		int[] result = new int[ count];
+		for( int i = 0; i < count; i++)
+			result[i] = successes[i];
+		return result;
 	}
 
 	/**
@@ -1187,13 +1222,16 @@ public class SMT {
 	private static void runLeapTuioServer(final int port) {
 		try {
 			File temp = tempDir();
-			
 			loadFile(temp, "Leap.dll");
-
-			new TouchSourceThread("LEAP", loadFile(temp, "motionLess.exe").getAbsolutePath() + " " + port, "LEAP Process died early, make sure Visual C++ 2010 Redistributable (x86) is installed (http://www.microsoft.com/en-ca/download/details.aspx?id=5555)").start();
+			new TouchSourceThread(
+				"LEAP",
+				loadFile(temp, "motionLess.exe")
+					.getAbsolutePath() + " " + port,
+				"LEAP Process died early, make sure Visual C++ 2010 Redistributable (x86) is installed (http://www.microsoft.com/en-ca/download/details.aspx?id=5555)")
+				.start();
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException exception) {
+			exception.printStackTrace();
 		}
 	}
 

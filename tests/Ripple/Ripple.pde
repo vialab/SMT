@@ -9,7 +9,6 @@ import vialab.SMT.*;
 int display_width = 1200;
 int display_height = 800;
 int fps_limit = 60;
-int puck_count = 10;
 //other
 int display_halfWidth;
 int display_halfHeight;
@@ -22,7 +21,7 @@ void setup(){
 	//processing library setup
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
-	SMT.init( this, TouchSource.MOUSE);
+	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//load texture and texture options
 	tex = loadImage("resources/ripple_texture.png");
