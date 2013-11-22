@@ -970,7 +970,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param index
 	 * @return The child at the given index, or null if the index is invalid
 	 */
-	public Zone getChild(int index) {
+	public Zone getChild( int index) {
 		try {
 			return children.get(index);
 		}

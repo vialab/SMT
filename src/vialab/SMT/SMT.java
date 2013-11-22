@@ -320,19 +320,37 @@ public class SMT {
 
 	// touch server connection functions
 	private static void connect_auto( int port){
+		//gather system variables
 		boolean os_android =
-			System.getProperty("java.vm.name")
-				.equalsIgnoreCase("dalvik");
-		String os_string = System.getProperty("os.name")
-			.toLowerCase();
-		boolean os_windows = os_string.contains("windows");
-		// run port scan
-		int[] open_ports = portscan( 3333, 3339);
+			System.getProperty( "java.vm.name")
+				.equalsIgnoreCase( "dalvik");
+		String os_string = System.getProperty( "os.name");
+		boolean os_windows = os_string.startsWith( "Windows");
+
+		//run port scan
+		int range = 8;
+		int[] open_ports = portscan( port, port + range);
+		int[] available_ports = new int[ range - open_ports.length];
+		int j = 0;
+		int k = port;
+		for( int i = 0; i < available_ports.length; i++){
+			while( k == open_ports[ j]){
+				j++;
+				k++;}
+			available_ports[i] = k;}nfassasfjjsl;ljkafsahoiewtgowahetpittehwiiiiiiiiiiiiiiieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+		//try to connect to tuio servers on the open ports
+
+
+		//try to connect to android touch
+		//try to connect to leap motion
+		//connect to mouse
+		connect_mouse( port);
 	}
 	private static void connect_android( int port){
 		// this still uses the old method, should be re-implemented without
 		// the socket
-		att = new AndroidToTUIO( parent.width, parent.height, port);
+		att = new AndroidToTUIO(
+			parent.width, parent.height, port);
 		deviceMap.put( port, TouchSource.ANDROID);
 		// when Processing supports this
 		// parent.registerMethod("touchEvent", att);
