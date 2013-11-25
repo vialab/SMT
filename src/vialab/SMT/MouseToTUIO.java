@@ -64,12 +64,9 @@ public class MouseToTUIO {
 	 * messages. Sets the screen to be full-screen if the boolean/flag is set to
 	 * true.
 	 * 
-	 * @param width
-	 *            int - width of the screen
-	 * @param height
-	 *            int - height of the screen
-	 * @param port
-	 *            int - port to connect to
+	 * @param width int - width of the screen
+	 * @param height int - height of the screen
+	 * @param port int - port to connect to
 	 */
 	public MouseToTUIO(int width, int height, int port) {
 		super();
@@ -81,8 +78,7 @@ public class MouseToTUIO {
 	/**
 	 * Updates the selected cursor
 	 * 
-	 * @param me
-	 *            MouseEvent - The mouse dragged event
+	 * @param me MouseEvent - The mouse dragged event
 	 */
 	public void mouseDragged(MouseEvent me) {
 		Point pt = new Point(me.getX(), me.getY());

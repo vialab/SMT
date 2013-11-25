@@ -69,12 +69,9 @@ class Simulation {
 	 * Constructor, resets the simulator and create a table the size of the
 	 * PApplet
 	 * 
-	 * @param width
-	 *            int - width of the screen
-	 * @param height
-	 *            int - height of the screen
-	 * @param port
-	 *            int - port to connect to
+	 * @param width int - width of the screen
+	 * @param height int - height of the screen
+	 * @param port int - port to connect to
 	 */
 	public Simulation(int width, int height, int port) {
 		super();

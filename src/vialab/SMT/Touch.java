@@ -306,10 +306,11 @@ public class Touch extends TuioCursor {
 		// by the main tuiolistener, all others use the port number for the
 		// partition index, and so can be used to find the port, and so the
 		// device it came from
-		if (sessionID >> 48 == 0) {
-			return SMT.deviceMap.get(SMT.mainListenerPort);
-		}
-		return SMT.deviceMap.get((int) (sessionID >> 48));
+		int port = (int) ( sessionID >> 48);
+		return SMT.deviceMap.get(
+			( port != 0) ?
+				port :
+				SMT.mainListenerPort);
 	}
 
 	/**

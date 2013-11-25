@@ -233,21 +233,19 @@ public class SMT {
 	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	private static void init(
-			final PApplet parent, int port, TouchSource source) {
-		if( parent == null) {
-			System.err.println(
+	public static void init(
+			final PApplet parent, int port, TouchSource... sources) {
+		if( parent == null)
+			throw new NullPointerException(
 				"Null parent PApplet, pass 'this' to SMT.init() instead of null");
-			return;
-		}
 		
 		SMT.parent = parent;
 		SMTUtilities.loadMethods(parent.getClass());
 
-		// As of now the toolkit only supports OpenGL
+		// This build of the toolkit cannot operate without OpenGL renderers
 		if( ! parent.g.is3D())
 			System.out.println(
-				"SMT only supports using OpenGL 3D renderers, please use either OPENGL, P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
+				"This build of SMT only supports using OpenGL renderers, please use either OPENGL or P3D in the size function; e.g: size( displayWidth, displayHeight, P3D);");
 
 		touch = SMTUtilities.getPMethod( parent, "touch");
 		SMT.sketch = new MainZone( 0, 0, parent.width, parent.height);
@@ -265,56 +263,86 @@ public class SMT {
 		defaultRenderer = parent.g.getClass().getName();
 		listener = new SMTTuioListener();
 		manager = new SMTTouchManager( listener, picker);
-
-		TuioClient tuioClient = new TuioClient(port);
-		tuioClient.connect();
-		while (!tuioClient.isConnected()) {
-			tuioClient = new TuioClient(++port);
-			tuioClient.connect();
-		}
-		tuioClient.addTuioListener(listener);
-		tuioClientList.add(tuioClient);
-
-		if(debug)
-			System.out.println("TuioClient listening on port: " + port);
 		mainListenerPort = port;
 
-		switch (source) {
-			case ANDROID:
-				connect_android( port);
-				break;
-			case MOUSE:
-				connect_mouse( port);
-				break;
-			case TUIO_DEVICE:
-				break;
-			case WM_TOUCH:
-				connect_windows( port);
-				break;
-			case SMART:
-				connect_smart( port);
-				break;
-			case LEAP:
-				connect_leap( port);
-				break;
-			case MULTIPLE:
-			case AUTOMATIC:
-				connect_auto( port);
-				break;
-			default: break;
+		//remove duplicate touch sources and stuff
+		boolean auto_enabled = false;
+		boolean tuio_enabled = false;
+		Vector<TouchSource> filteredSources = new Vector<TouchSource>();
+		for( TouchSource source : sources)
+			if( source == TouchSource.AUTOMATIC ||
+					source == TouchSource.MULTIPLE)
+				auto_enabled = true;
+			else if( source == TouchSource.TUIO_DEVICE)
+				tuio_enabled = true;
+			else if( ! filteredSources.contains( source))
+				filteredSources.add( source);
+
+		//the tuio adapter should always started first
+		// so it uses the parameter-specified port.
+		if( tuio_enabled || auto_enabled){
+			try{ connect_tuio( port);}
+			catch( TuioConnectionException exception){
+				System.out.printf(
+					"Opening a tuio listener on port %d failed. Tuio devices probably won't work.",
+					port);
+			}
+			//increment port regardless of success so tuio devices don't get mistaken for other sources
+			// if this connection failed, the port is probably going to be incremented anyways when openning a new listener.
+			port++;
 		}
+		//connect to every specified touch source
+		for( TouchSource source : filteredSources){
+			//open a new listener
+			TuioClient client = null;
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+
+			switch (source) {
+				case ANDROID:
+					//connect_auto will take care of this later - ignore
+					if( ! auto_enabled)
+						connect_android( port);
+					break;
+				case MOUSE:
+					//connect_auto will take care of this later - ignore
+					if( ! auto_enabled)
+						connect_mouse( port);
+					break;
+				case LEAP:
+					//connect_auto will take care of this later - ignore
+					if( ! auto_enabled)
+						connect_leap( port);
+					break;
+				case SMART:
+					connect_smart( port);
+					break;
+				case WM_TOUCH:
+					//connect_auto will take care of this later - ignore
+					if( ! auto_enabled)
+						connect_windows( port);
+					break;
+				default: break;
+			}
+			//increment the port so next source's client doesn't conflict
+			port++;
+		}
+		if( auto_enabled) connect_auto( port);
 
 		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
 		addJVMShutdownHook();
 
 		world = new World( new Vec2( 0.0f, 0.0f), true);
-		// top
+		//top
 		groundBody = createStaticBox( 0, -10.0f, parent.width, 10.f);
-		// bottom
+		//bottom
 		createStaticBox( 0, parent.height + 10.0f, parent.width, 10.f);
-		// left
+		//left
 		createStaticBox( -10.0f, 0, 10.0f, parent.height);
-		// right
+		//right
 		createStaticBox( parent.width + 10.0f, 0, 10.0f, parent.height);
 	}
 
@@ -327,95 +355,69 @@ public class SMT {
 		String os_string = System.getProperty( "os.name");
 		boolean os_windows = os_string.startsWith( "Windows");
 
-		//run port scan
-		int range = 8;
-		int[] open_ports = portscan( port, port + range);
-		int[] available_ports = new int[ range - open_ports.length];
-		int j = 0;
-		int k = port;
-		for( int i = 0; i < available_ports.length; i++){
-			while( k == open_ports[ j]){
-				j++;
-				k++;}
-			available_ports[i] = k;}nfassasfjjsl;ljkafsahoiewtgowahetpittehwiiiiiiiiiiiiiiieeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-		//try to connect to tuio servers on the open ports
-
-
-		//try to connect to android touch
-		//try to connect to leap motion
+		//connect to tuio devices
+		// already handled before this method call
+		//connect to android touch
+		//connect to leap motion
+		//connect to windows touch
 		//connect to mouse
 		connect_mouse( port);
 	}
 	private static void connect_android( int port){
-		// this still uses the old method, should be re-implemented without
-		// the socket
 		att = new AndroidToTUIO(
 			parent.width, parent.height, port);
 		deviceMap.put( port, TouchSource.ANDROID);
-		// when Processing supports this
-		// parent.registerMethod("touchEvent", att);
+		printConnectMessage( "android touch", port);
 	}
 	private static void connect_leap( int port){
 		SMT.runLeapTuioServer( port);
 		deviceMap.put(port, TouchSource.LEAP);
+		printConnectMessage( "leap motion", port);
 	}
 	private static void connect_mouse( int port){
-		// this still uses the old method, should be re-implemented without
-		// the socket
 		mtt = new MouseToTUIO( parent.width, parent.height, port);
-		deviceMap.put( port, TouchSource.MOUSE);
 		parent.registerMethod( "mouseEvent", mtt);
+		deviceMap.put( port, TouchSource.MOUSE);
+		printConnectMessage( "mouse emulation", port);
 	}
 	private static void connect_smart( int port){
 		SMT.runSmart2TuioServer();
 		deviceMap.put( port, TouchSource.SMART);
+		printConnectMessage( "not-so-smart table", port);
 	}
 	private static void connect_tuio( int port){
-		TuioClient tuioClient = new TuioClient(port);
-		tuioClient.connect();
-		if( ! tuioClient.isConnected())
-			throw new RuntimeException( String.format(
-				"Connection to tuio server on port %d failed.\n", port));
-		tuioClient.addTuioListener(listener);
-		tuioClientList.add(tuioClient);
-		//TODO: should we add to the devicemap?
+		TuioClient client = openTuioClient( port);
+		client.addTuioListener( listener);
+		tuioClientList.add( client);
+		deviceMap.put( port, TouchSource.TUIO_DEVICE);
+		printConnectMessage( "tuio devices", port);
 	}
 	private static void connect_windows( int port){
 		SMT.runWinTouchTuioServer(
 			! System.getProperty( "os.arch").equals("x86"),
 			"127.0.0.1", port);
 		deviceMap.put( port, TouchSource.WM_TOUCH);
+		printConnectMessage( "windows touch", port);
 	}
 
-	/**
-	 * Runs a port scan on localhost, ports floor to ceil, inclusive.
-	 * @param floor port to start the scan on
-	 * @param ceil last port to scan
-	 * @return an array of ports with running servers
-	 */
-	private static int[] portscan( int floor, int ceil){
-		String server = "127.0.0.1";
-		int count = 0;
-		int[] successes = new int[ ceil - floor + 1];
-		for( int port = floor; port <= ceil; port++)
-			try{
-				Socket socket = new Socket( server, port);
-				System.out.printf(
-					"%s has a server on port %d\n",
-					server, port);
-				successes[ count++] = port;
-				socket.close();
-			}
-			catch( java.io.IOException exception){
-				System.out.printf(
-					"%s does not have a server on port %d\n",
-					server, port);
-			}
-		//prepare result array
-		int[] result = new int[ count];
-		for( int i = 0; i < count; i++)
-			result[i] = successes[i];
-		return result;
+	// Connection utility methods
+	private static TuioClient openTuioClient( int port){
+		//try to open connection
+		TuioClient client = new TuioClient( port);
+		client.connect();
+		//return if connection succeeded
+		if( client.isConnected()){
+			client.addTuioListener(
+				new SMTProxyTuioListener( port, listener));
+			tuioClientList.add( client);
+			return client;}
+		else throw new TuioConnectionException(
+				String.format( "Listening on port %d failed.\n", port));
+	}
+
+	private static void printConnectMessage( String message, int port){
+		System.out.printf(
+			"Listening to %s using port %d\n", message, port);
 	}
 
 	/**
@@ -423,7 +425,7 @@ public class SMT {
 	 * any threads, disconnect from the net, unload memory, etc.
 	 */
 	private static void addJVMShutdownHook(){
-		Runtime.getRuntime().addShutdownHook( new Thread( new Runnable() {
+		Runtime.getRuntime().addShutdownHook( new Thread( new Runnable(){
 			public void run() {
 				SMT.inShutdown  = true;
 				if( warnUncalledMethods)

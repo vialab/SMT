@@ -58,7 +58,8 @@ void pickDrawRippleTest( Zone zone){
 void touchDownRippleTest( Zone zone){
 	Touch touch = zone.getActiveTouch(0);
 	assert( touch != null);
-	SMT.add( new Prototype( tex, touch.x, touch.y));}
+	SMT.add( new Prototype( tex, touch.x, touch.y));
+	System.out.println( touch.getTouchSource());}
 
 //subclasses
 class Prototype extends Zone {
