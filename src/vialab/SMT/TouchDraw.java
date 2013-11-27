@@ -30,5 +30,12 @@ public enum TouchDraw {
 	 * shows whether the touch was assigned or not with an inward or outward
 	 * ripple effect
 	 */
-	SMOOTH;
+	SMOOTH,
+
+	/**
+	 * Textured mode uses some nice textures and some fancy opengl.
+	 * It's kind of an upgrade from SMOOTH.
+	 */
+	AWESOME,
+	TEXTURED;
 }

@@ -284,7 +284,7 @@ public class SMT {
 			try{ connect_tuio( port);}
 			catch( TuioConnectionException exception){
 				System.out.printf(
-					"Opening a tuio listener on port %d failed. Tuio devices probably won't work.",
+					"Opening a tuio listener on port %d failed. Tuio devices probably won't work.\n",
 					port);
 			}
 			//increment port regardless of success so tuio devices don't get mistaken for other sources
@@ -348,19 +348,66 @@ public class SMT {
 
 	// touch server connection functions
 	private static void connect_auto( int port){
-		//gather system variables
+		//gather system information
 		boolean os_android =
 			System.getProperty( "java.vm.name")
 				.equalsIgnoreCase( "dalvik");
 		String os_string = System.getProperty( "os.name");
 		boolean os_windows = os_string.startsWith( "Windows");
 
+		//other variables
+		TuioClient client = null;
+
 		//connect to tuio devices
 		// already handled before this method call
+
 		//connect to android touch
-		//connect to leap motion
-		//connect to windows touch
+		if( os_android){
+			client = null; //just in case... aha
+			//open a new listener
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+			System.out.printf("Trying to connect to %s on port %d\n",
+				"android touch", port);
+			connect_android( port);
+		}
+
+		if( os_windows){
+			//connect to leap motion
+			client = null;
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+			System.out.printf("Trying to connect to %s on port %d\n",
+				"leap motion", port);
+			connect_leap( port);
+
+			//connect to windows touch
+			client = null;
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+			System.out.printf("Trying to connect to %s on port %d\n",
+				"windows touch", port);
+			connect_windows( port);
+		}
+
 		//connect to mouse
+		client = null;
+		while( client == null)
+			try{ client = openTuioClient( port);}
+			catch( TuioConnectionException exception){
+				port++;
+			}
+		System.out.printf("Trying to connect to %s on port %d\n",
+			"mouse emulation", port);
 		connect_mouse( port);
 	}
 	private static void connect_android( int port){
@@ -507,58 +554,26 @@ public class SMT {
 	}
 
 	/**
-	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
-	 * points if flag is set to true.
-	 * 
-	 * @param drawTouchPoints
-	 *            boolean - flag
-	 * @deprecated
+	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal.
+	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
 	 */
-	public static void setDrawTouchPoints(TouchDraw drawTouchPoints) {
-		setTouchDraw(drawTouchPoints);
+	public static void setTouchDraw( TouchDraw drawMethod) {
+		SMT.drawTouchPoints = drawMethod;
 	}
 
 	/**
-	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
-	 * points if flag is set to true. Sets the maximum path length to draw to be
-	 * max_path_length
-	 * 
-	 * @param drawTouchPoints
-	 *            boolean - flag
-	 * 
-	 * @param max_path_length
-	 *            int - sets maximum path length to draw
-	 * @deprecated
+	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal. Also sets the maximum path length to drawn.
+	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
+	 * @param maxPathLength The number of points on a touch's path to draw
 	 */
-	public static void setDrawTouchPoints(TouchDraw drawTouchPoints, int max_path_length) {
-		setTouchDraw(drawTouchPoints, max_path_length);
+	public static void setTouchDraw(TouchDraw drawMethod, int maxPathLength) {
+		SMT.drawTouchPoints = drawMethod;
+		SMT.MAX_PATH_LENGTH = maxPathLength;
 	}
 
-	/**
-	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
-	 * points if flag is set to true.
-	 * 
-	 * @param drawTouchPoints
-	 *            boolean - flag
-	 */
-	public static void setTouchDraw(TouchDraw drawTouchPoints) {
-		SMT.drawTouchPoints = drawTouchPoints;
-	}
+	public static void drawAwesomeTouchPoints() {
+		for( Touch touch : SMTTouchManager.currentTouchState);
 
-	/**
-	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
-	 * points if flag is set to true. Sets the maximum path length to draw to be
-	 * max_path_length
-	 * 
-	 * @param drawTouchPoints
-	 *            boolean - flag
-	 * 
-	 * @param max_path_length
-	 *            int - sets maximum path length to draw
-	 */
-	public static void setTouchDraw(TouchDraw drawTouchPoints, int max_path_length) {
-		SMT.drawTouchPoints = drawTouchPoints;
-		SMT.MAX_PATH_LENGTH = max_path_length;
 	}
 
 	/**
@@ -820,6 +835,10 @@ public class SMT {
 			break;
 		case SMOOTH:
 			drawSmoothTouchPoints();
+			break;
+		case AWESOME:
+		case TEXTURED:
+			drawAwesomeTouchPoints();
 			break;
 		case NONE:
 			break;

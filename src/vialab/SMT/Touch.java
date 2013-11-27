@@ -47,15 +47,12 @@ public class Touch extends TuioCursor {
 	/** The motion acceleration value. */
 	public float motionAcceleration;
 
-	/**
-	 * The start time of the TuioCursor/Touch
-	 */
+	/** The start time of the TuioCursor/Touch */
 	public TuioTime startTime;
-
-	/**
-	 * The current time of the TuioCursor/Touch
-	 */
+	/** The current time of the TuioCursor/Touch */
 	public TuioTime currentTime;
+	/** The current time of the TuioCursor/Touch */
+	public TuioTime assignedTime;
 	/**
 	 * A Vector of TuioPoints containing all the previous positions of the TUIO
 	 * component.
@@ -91,6 +88,7 @@ public class Touch extends TuioCursor {
 		this.startTimeMillis = System.currentTimeMillis();
 		this.originalTimeMillis = this.startTimeMillis;
 		//private fields
+		assignedTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -118,6 +116,7 @@ public class Touch extends TuioCursor {
 		this.sessionID = getSessionID();
 		state = getTuioState();
 		//private fields
+		assignedTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -147,6 +146,7 @@ public class Touch extends TuioCursor {
 		this.sessionID = getSessionID();
 		state = getTuioState();
 		//private fields
+		assignedTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -238,10 +238,10 @@ public class Touch extends TuioCursor {
 	public void assignZone(Zone zone) {
 		if (zone != null) {
 			assignedZones.add(zone);
-			if (!zone.isAssigned(this)) {
+			if (!zone.isAssigned(this))
 				zone.assign(this);
-			}
 			this.startTimeMillis = System.currentTimeMillis();
+			assignedTime = currentTime;
 		}
 	}
 
@@ -285,19 +285,19 @@ public class Touch extends TuioCursor {
 	}
 	
 	/**
-	 * @param z
+	 * @param zone
 	 * @return the x position of this Touch in local coordinates of the given zone
 	 */
-	public float getLocalX(Zone z){
-		return z.getLocalX(this);
+	public float getLocalX( Zone zone){
+		return zone.getLocalX(this);
 	}
 	
 	/**
-	 * @param z
+	 * @param zone
 	 * @return the y position of this Touch in local coordinates of the given zone
 	 */
-	public float getLocalY(Zone z){
-		return z.getLocalY(this);
+	public float getLocalY( Zone zone){
+		return zone.getLocalY(this);
 	}
 
 	public TouchSource getTouchSource() {
@@ -306,11 +306,11 @@ public class Touch extends TuioCursor {
 		// by the main tuiolistener, all others use the port number for the
 		// partition index, and so can be used to find the port, and so the
 		// device it came from
-		int port = (int) ( sessionID >> 48);
-		return SMT.deviceMap.get(
-			( port != 0) ?
-				port :
-				SMT.mainListenerPort);
+		int portbits = (int) ( sessionID >> 48);
+		int port = ( portbits != 0) ?
+				portbits : SMT.mainListenerPort;
+		System.out.printf( "port: %d\n", port);
+		return SMT.deviceMap.get( port);
 	}
 
 	/**
