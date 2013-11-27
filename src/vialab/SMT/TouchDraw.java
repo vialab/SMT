@@ -36,6 +36,5 @@ public enum TouchDraw {
 	 * Textured mode uses some nice textures and some fancy opengl.
 	 * It's kind of an upgrade from SMOOTH.
 	 */
-	AWESOME,
 	TEXTURED;
 }

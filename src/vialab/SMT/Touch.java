@@ -51,8 +51,10 @@ public class Touch extends TuioCursor {
 	public TuioTime startTime;
 	/** The current time of the TuioCursor/Touch */
 	public TuioTime currentTime;
-	/** The current time of the TuioCursor/Touch */
-	public TuioTime assignedTime;
+	/** The time at which the TuioCursor/Touch was assigned*/
+	public TuioTime assignTime;
+	/** The time at which the TuioCursor/Touch was unassigned */
+	public TuioTime unassignTime;
 	/**
 	 * A Vector of TuioPoints containing all the previous positions of the TUIO
 	 * component.
@@ -88,7 +90,8 @@ public class Touch extends TuioCursor {
 		this.startTimeMillis = System.currentTimeMillis();
 		this.originalTimeMillis = this.startTimeMillis;
 		//private fields
-		assignedTime = null;
+		assignTime = null;
+		unassignTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -116,7 +119,8 @@ public class Touch extends TuioCursor {
 		this.sessionID = getSessionID();
 		state = getTuioState();
 		//private fields
-		assignedTime = null;
+		assignTime = null;
+		unassignTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -146,7 +150,8 @@ public class Touch extends TuioCursor {
 		this.sessionID = getSessionID();
 		state = getTuioState();
 		//private fields
-		assignedTime = null;
+		assignTime = null;
+		unassignTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -241,7 +246,7 @@ public class Touch extends TuioCursor {
 			if (!zone.isAssigned(this))
 				zone.assign(this);
 			this.startTimeMillis = System.currentTimeMillis();
-			assignedTime = currentTime;
+			assignTime = currentTime;
 		}
 	}
 

@@ -53,6 +53,8 @@ import org.jbox2d.dynamics.World;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PImage;
+import processing.core.PVector;
 
 import TUIO.*;
 
@@ -553,32 +555,74 @@ public class SMT {
 		return descendents;
 	}
 
-	/**
-	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal.
+	/** Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal.
 	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
 	 */
 	public static void setTouchDraw( TouchDraw drawMethod) {
+		if( SMT.drawTouchPoints == drawMethod) return;
+		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
+			drawTexturedTouchPoints_setdown();
 		SMT.drawTouchPoints = drawMethod;
+		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
+			drawTexturedTouchPoints_setup();
 	}
 
-	/**
-	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal. Also sets the maximum path length to drawn.
+	/** Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal. Also sets the maximum path length to drawn.
 	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
 	 * @param maxPathLength The number of points on a touch's path to draw
 	 */
-	public static void setTouchDraw(TouchDraw drawMethod, int maxPathLength) {
-		SMT.drawTouchPoints = drawMethod;
+	public static void setTouchDraw( TouchDraw drawMethod, int maxPathLength){
+		setTouchDraw( drawMethod);
+		setMaxPathLength( maxPathLength);
+	}
+
+	/** Sets the maximum path length to drawn.
+	 * @param maxPathLength The number of points on a touch's path to draw
+	 */
+	public static void setMaxPathLength( int maxPathLength){
 		SMT.MAX_PATH_LENGTH = maxPathLength;
 	}
 
-	public static void drawAwesomeTouchPoints() {
-		for( Touch touch : SMTTouchManager.currentTouchState);
-
+	/** Sets the desired radius of a drawn touch
+	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
+	 * @param radius the desired radius of a drawn touch, in pixels
+	 */
+	public static void setTouchRadius( float radius){
+		touch_radius = radius;
+		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
+			drawTexturedTouchPoints_findVertices();
 	}
 
-	/**
-	 * Draws the touch points in the PApplet if flag is set to true.
-	 */
+
+	/** Implements the "Textured" touch draw method */
+	public static void drawTexturedTouchPoints() {
+		for( Touch touch : SMTTouchManager.currentTouchState);
+	}
+
+	// utility fields for the textured touch point draw method
+	private static PImage touch_texture = null;
+	private static float touch_radius = 100;
+	private static int touch_sections = 16;
+	private static Vector<PVector> touch_vertices = new Vector<PVector>();
+
+	// utility functions for textured touch point draw method
+	private static void drawTexturedTouchPoints_setup(){}
+	private static void drawTexturedTouchPoints_setdown(){}
+	private static void drawTexturedTouchPoints_findVertices(){
+		touch_vertices.clear();
+		float dtheta = PApplet.TWO_PI / touch_sections;
+		for( float theta = 0.0f; theta < PApplet.TWO_PI; theta += dtheta)
+			drawTexturedTouchPoints_addVert( theta);
+		drawTexturedTouchPoints_addVert( PApplet.TWO_PI);
+	}
+	private static void drawTexturedTouchPoints_addVert( float theta){
+		touch_vertices.add(
+			new PVector(
+				touch_radius * parent.cos( theta),
+				touch_radius * parent.sin( theta)));
+	}
+
+	/** Implements the "Smooth" touch draw method */
 	public static void drawSmoothTouchPoints() {
 		parent.pushStyle();
 		for (Touch t : SMTTouchManager.currentTouchState) {
@@ -626,27 +670,26 @@ public class SMT {
 		parent.popStyle();
 	}
 
-	/**
+	/** Implements the "Debug" touch draw method
 	 * Draws all Touch objects and their path history, with some data to try to
 	 * help with debugging
 	 */
 	public static void drawDebugTouchPoints() {
 		parent.pushStyle();
-		for (Touch t : SMTTouchManager.currentTouchState) {
+		for (Touch touch : SMTTouchManager.currentTouchState) {
 			parent.fill(255);
-			if (t.isJointCursor) {
+			if (touch.isJointCursor)
 				parent.fill(0, 255, 0);
-			}
 			parent.stroke(0);
-			parent.ellipse(t.x, t.y, 30, 30);
-			parent.line(t.x, t.y - 15, t.x, t.y + 15);
-			parent.line(t.x - 15, t.y, t.x + 15, t.y);
-			TuioPoint[] path = t.path.toArray(new TuioPoint[t.path.size()]);
+			parent.ellipse(touch.x, touch.y, 30, 30);
+			parent.line(touch.x, touch.y - 15, touch.x, touch.y + 15);
+			parent.line(touch.x - 15, touch.y, touch.x + 15, touch.y);
+			TuioPoint[] path = touch.path.toArray(new TuioPoint[touch.path.size()]);
 			TuioPoint lastText = null;
-			if (path.length > 3) {
+			if( path.length > 3) {
 				for (int j = 1 + Math.max(0, path.length - (SMT.MAX_PATH_LENGTH + 2)); j < path.length; j++) {
 					String pointText = "#" + j + " x:" + path[j].getScreenX(parent.width) + " y:"
-							+ path[j].getScreenY(parent.height) + " t:"
+							+ path[j].getScreenY(parent.height) + " touch:"
 							+ path[j].getTuioTime().getTotalMilliseconds() + "ms";
 					parent.fill(255);
 					parent.line(path[j].getScreenX(parent.width),
@@ -676,12 +719,9 @@ public class SMT {
 		parent.popStyle();
 	}
 
-	/**
-	 * Adds a zone(s) to the sketch/application.
-	 * 
-	 * @param zones
-	 *            - Zone: The zones to add to the sketch/application
-	 * @return Whether all Zones were sucessfully added to the root Zone
+	/** Adds a zone(s) to the sketch/application.
+	 * @param zones The zones to add to the sketch/application
+	 * @return Whether all zones were sucessfully added
 	 */
 	public static boolean add(Zone... zones) {
 		return SMT.sketch.add(zones);
@@ -691,9 +731,7 @@ public class SMT {
 	 * This adds zones by creating them from XML specs, the XML needs "zone"
 	 * tags, and currently supports the following variables: name, x, y, width,
 	 * height, img
-	 * 
-	 * @param xmlFilename
-	 *            The XML file to read in for zone configuration
+	 * @param xmlFilename The XML file to read in for zone configuration
 	 * @return The array of zones created from the XML File
 	 */
 	public static Zone[] add(String xmlFilename) {
@@ -702,11 +740,8 @@ public class SMT {
 
 	/**
 	 * This adds a set of zones to a parent Zone
-	 * 
-	 * @param parent
-	 *            The Zone to add the given zones to
-	 * @param zones
-	 *            The zones to add to the parent as children
+	 * @param parent The Zone to add the given zones to
+	 * @param zones The zones to add to the parent as children
 	 */
 	public static boolean addChild(Zone parent, Zone... zones) {
 		if (parent != null) {
@@ -836,9 +871,8 @@ public class SMT {
 		case SMOOTH:
 			drawSmoothTouchPoints();
 			break;
-		case AWESOME:
 		case TEXTURED:
-			drawAwesomeTouchPoints();
+			drawTexturedTouchPoints();
 			break;
 		case NONE:
 			break;
