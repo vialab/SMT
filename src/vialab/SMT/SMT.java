@@ -593,20 +593,41 @@ public class SMT {
 			drawTexturedTouchPoints_findVertices();
 	}
 
+	/** Sets the desired number of sections of a drawn touch. Higher amounts result in smoother circles, but have a small performance hit.
+	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
+	 * @param radius the desired number of sections of a drawn touch
+	 */
+	public static void setTouchSections( int sections){
+		touch_sections = sections;
+		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
+			drawTexturedTouchPoints_findVertices();
+	}
 
 	/** Implements the "Textured" touch draw method */
 	public static void drawTexturedTouchPoints() {
-		for( Touch touch : SMTTouchManager.currentTouchState);
+		for( Touch touch : SMTTouchManager.currentTouchState){
+			parent.noStroke();
+			parent.beginShape( parent.TRIANGLE_FAN);
+			parent.texture( touch_texture);
+			parent.vertex( touch.x , touch.y, 0, 1);
+			for( PVector vert : touch_vertices)
+				parent.vertex( touch.x + vert.x, touch.y + vert.y, 0, 0);
+			parent.endShape();
+		}
 	}
 
 	// utility fields for the textured touch point draw method
 	private static PImage touch_texture = null;
-	private static float touch_radius = 100;
-	private static int touch_sections = 16;
+	private static float touch_radius = 50;
+	private static int touch_sections = 24;
 	private static Vector<PVector> touch_vertices = new Vector<PVector>();
 
 	// utility functions for textured touch point draw method
-	private static void drawTexturedTouchPoints_setup(){}
+	private static void drawTexturedTouchPoints_setup(){
+		drawTexturedTouchPoints_findVertices();
+		if( touch_texture == null)
+			touch_texture = parent.loadImage("resources/touch_texture2.png");
+	}
 	private static void drawTexturedTouchPoints_setdown(){}
 	private static void drawTexturedTouchPoints_findVertices(){
 		touch_vertices.clear();

@@ -22,6 +22,7 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	SMT.init( this, TouchSource.AUTOMATIC);
+	SMT.setTouchDraw( TouchDraw.TEXTURED);
 
 	//load texture and texture options
 	tex = loadImage("resources/ripple_texture.png");
