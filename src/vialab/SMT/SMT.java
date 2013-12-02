@@ -83,7 +83,7 @@ public class SMT {
 	public static Zone sketch;
 	static float box2dScale = 0.1f;
 	static World world;
-	private static int MAX_PATH_LENGTH = 50;
+	protected static int MAX_PATH_LENGTH = 50;
 	protected static LinkedList<Process> tuioServerList =
 		new LinkedList<Process>();
 
@@ -150,6 +150,12 @@ public class SMT {
 	static int mainListenerPort;
 	protected static boolean inShutdown = false;
 	public static boolean debug = false;
+
+	// utility fields for the touch drawing methods
+	private static TexturedTouchDrawer texturedTouchDrawer = null;
+	private static TouchDrawer customTouchDrawer = null;
+	protected static float touch_radius = 50;
+	protected static int touch_sections = 24;
 
 	/**
 	 * Prevent SMT instantiation with protected constructor
@@ -402,15 +408,17 @@ public class SMT {
 		}
 
 		//connect to mouse
-		client = null;
-		while( client == null)
-			try{ client = openTuioClient( port);}
-			catch( TuioConnectionException exception){
-				port++;
-			}
-		System.out.printf("Trying to connect to %s on port %d\n",
-			"mouse emulation", port);
-		connect_mouse( port);
+		if( ! os_android){
+			client = null;
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+			System.out.printf("Trying to connect to %s on port %d\n",
+				"mouse emulation", port);
+			connect_mouse( port);
+		}
 	}
 	private static void connect_android( int port){
 		att = new AndroidToTUIO(
@@ -487,8 +495,8 @@ public class SMT {
 						writer.newLine();
 						writer.flush();
 					}
-					catch( IOException exception) {}
-				
+					catch( IOException exception){}
+
 				try{ Thread.sleep( 500);}
 				catch( InterruptedException exception){}
 
@@ -558,13 +566,32 @@ public class SMT {
 	/** Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal.
 	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
 	 */
-	public static void setTouchDraw( TouchDraw drawMethod) {
-		if( SMT.drawTouchPoints == drawMethod) return;
-		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
-			drawTexturedTouchPoints_setdown();
-		SMT.drawTouchPoints = drawMethod;
-		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
-			drawTexturedTouchPoints_setup();
+	public static void setTouchDraw(
+			TouchDraw drawMethod, TouchDrawer... drawers) {
+		if( drawMethod != TouchDraw.CUSTOM){
+			if( SMT.drawTouchPoints == drawMethod)
+				return;
+			SMT.drawTouchPoints = drawMethod;
+			//handle setup
+			if( SMT.drawTouchPoints == TouchDraw.TEXTURED){
+				if( texturedTouchDrawer == null)
+					texturedTouchDrawer = new TexturedTouchDrawer();
+				else texturedTouchDrawer.update();
+			}
+		}
+		else {
+			if( drawers.length == 0)
+				throw new RuntimeException(
+					"SMT.setTouchDraw() was given TouchDraw.CUSTOM, but no custom touch drawer. Try SMT.setTouchDraw( TouchDraw.CUSTOM, myTouchDrawer);");
+			if( drawers.length > 1)
+				System.err.println(
+					"[ SMT Warning ] SMT.setTouchDraw() expected one optional parameter, but was given multiple. The first one will be used.");
+			customTouchDrawer = drawers[0];
+			if( customTouchDrawer == null)
+				throw new NullPointerException(
+					"The first optional TouchDrawer parameter given to SMT.setTouchDraw() was null.");
+			SMT.drawTouchPoints = drawMethod;
+		}
 	}
 
 	/** Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal. Also sets the maximum path length to drawn.
@@ -590,7 +617,7 @@ public class SMT {
 	public static void setTouchRadius( float radius){
 		touch_radius = radius;
 		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
-			drawTexturedTouchPoints_findVertices();
+			texturedTouchDrawer.update();
 	}
 
 	/** Sets the desired number of sections of a drawn touch. Higher amounts result in smoother circles, but have a small performance hit.
@@ -600,47 +627,7 @@ public class SMT {
 	public static void setTouchSections( int sections){
 		touch_sections = sections;
 		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
-			drawTexturedTouchPoints_findVertices();
-	}
-
-	/** Implements the "Textured" touch draw method */
-	public static void drawTexturedTouchPoints() {
-		for( Touch touch : SMTTouchManager.currentTouchState){
-			parent.noStroke();
-			parent.beginShape( parent.TRIANGLE_FAN);
-			parent.texture( touch_texture);
-			parent.vertex( touch.x , touch.y, 0, 1);
-			for( PVector vert : touch_vertices)
-				parent.vertex( touch.x + vert.x, touch.y + vert.y, 0, 0);
-			parent.endShape();
-		}
-	}
-
-	// utility fields for the textured touch point draw method
-	private static PImage touch_texture = null;
-	private static float touch_radius = 50;
-	private static int touch_sections = 24;
-	private static Vector<PVector> touch_vertices = new Vector<PVector>();
-
-	// utility functions for textured touch point draw method
-	private static void drawTexturedTouchPoints_setup(){
-		drawTexturedTouchPoints_findVertices();
-		if( touch_texture == null)
-			touch_texture = parent.loadImage("resources/touch_texture2.png");
-	}
-	private static void drawTexturedTouchPoints_setdown(){}
-	private static void drawTexturedTouchPoints_findVertices(){
-		touch_vertices.clear();
-		float dtheta = PApplet.TWO_PI / touch_sections;
-		for( float theta = 0.0f; theta < PApplet.TWO_PI; theta += dtheta)
-			drawTexturedTouchPoints_addVert( theta);
-		drawTexturedTouchPoints_addVert( PApplet.TWO_PI);
-	}
-	private static void drawTexturedTouchPoints_addVert( float theta){
-		touch_vertices.add(
-			new PVector(
-				touch_radius * parent.cos( theta),
-				touch_radius * parent.sin( theta)));
+			texturedTouchDrawer.update();
 	}
 
 	/** Implements the "Smooth" touch draw method */
@@ -886,17 +873,22 @@ public class SMT {
 		sketch.draw();
 		
 		switch (drawTouchPoints) {
-		case DEBUG:
-			drawDebugTouchPoints();
-			break;
-		case SMOOTH:
-			drawSmoothTouchPoints();
-			break;
-		case TEXTURED:
-			drawTexturedTouchPoints();
-			break;
-		case NONE:
-			break;
+			case CUSTOM:
+				customTouchDrawer.draw( 
+					SMTTouchManager.currentTouchState, parent.g);
+				break;
+			case DEBUG:
+				drawDebugTouchPoints();
+				break;
+			case SMOOTH:
+				drawSmoothTouchPoints();
+				break;
+			case TEXTURED:
+				texturedTouchDrawer.draw( 
+					SMTTouchManager.currentTouchState, parent.g);
+				break;
+			case NONE:
+				break;
 		}
 	}
 

@@ -31,10 +31,12 @@ class_files = \
 	bin/vialab/SMT/test/TestZoneAccessors.class \
 	bin/vialab/SMT/test/TestGets.class \
 	bin/vialab/SMT/TextureZone.class \
+	bin/vialab/SMT/TexturedTouchDrawer.class \
 	bin/vialab/SMT/TextZone.class \
 	bin/vialab/SMT/Touch.class \
 	bin/vialab/SMT/TouchClient.class \
 	bin/vialab/SMT/TouchDraw.class \
+	bin/vialab/SMT/TouchDrawer.class \
 	bin/vialab/SMT/TouchPair.class \
 	bin/vialab/SMT/TouchSource.class \
 	bin/vialab/SMT/TouchState.class \
@@ -81,10 +83,12 @@ source_files = \
 	src/vialab/SMT/test/TestZoneAccessors.java \
 	src/vialab/SMT/test/TestGets.java \
 	src/vialab/SMT/TextureZone.java \
+	src/vialab/SMT/TexturedTouchDrawer.java \
 	src/vialab/SMT/TextZone.java \
 	src/vialab/SMT/Touch.java \
 	src/vialab/SMT/TouchClient.java \
 	src/vialab/SMT/TouchDraw.java \
+	src/vialab/SMT/TouchDrawer.java \
 	src/vialab/SMT/TouchPair.java \
 	src/vialab/SMT/TouchSource.java \
 	src/vialab/SMT/TouchState.java \

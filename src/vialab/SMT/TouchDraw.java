@@ -20,6 +20,11 @@ public enum TouchDraw {
 	NONE,
 
 	/**
+	 * Custom mode will simple use the user-specified TouchDrawer
+	 */
+	CUSTOM,
+
+	/**
 	 * Debug mode will show some debugging info near the touch path, and some
 	 * extra debug messages on the console
 	 */

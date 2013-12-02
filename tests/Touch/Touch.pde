@@ -23,6 +23,9 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	SMT.init( this, TouchSource.MOUSE);
+	SMT.setTouchDraw( TouchDraw.TEXTURED);
+	SMT.setTouchSections( 48);
+	SMT.setTouchRadius( 200);
 
 	//load texture and texture options
 	PImage tex1 = loadImage("resources/touch_texture.png");

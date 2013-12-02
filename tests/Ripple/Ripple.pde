@@ -38,16 +38,18 @@ void draw(){
 	rect( 0, 0, display_width, display_height);
 
 	//draw a bunch of random shit in random colours
+	int rect_width = 200;
+	int rect_height = 150;
 	fill( 200, 150, 100);
-	rect( 0, 0, 200, 150);
+	rect( 0 * rect_width, 0 * rect_height, rect_width, rect_height);
 	fill( 60, 180, 180);
-	rect( 200, 0, 200, 150);
+	rect( 1 * rect_width, 0 * rect_height, rect_width, rect_height);
 	fill( 255, 255, 255);
-	rect( 0, 150, 200, 150);
+	rect( 0 * rect_width, 1 * rect_height, rect_width, rect_height);
 	fill( 120, 120, 120);
-	rect( 200, 150, 200, 150);
+	rect( 1 * rect_width, 1 * rect_height, rect_width, rect_height);
 	fill( 40, 40, 40);
-	rect( 400, 0, 200, 150);
+	rect( 2 * rect_width, 0 * rect_height, rect_width, rect_height);
 }
 
 void drawRippleTest( Zone zone){
@@ -59,8 +61,11 @@ void pickDrawRippleTest( Zone zone){
 void touchDownRippleTest( Zone zone){
 	Touch touch = zone.getActiveTouch(0);
 	assert( touch != null);
-	SMT.add( new Prototype( tex, touch.x, touch.y));
+	//SMT.add( new Prototype( tex, touch.x, touch.y));
 	System.out.println( touch.getTouchSource());}
+void touchRippleTest( Zone zone){
+	System.out.println("touch");
+}
 
 //subclasses
 class Prototype extends Zone {
@@ -73,7 +78,7 @@ class Prototype extends Zone {
 	private long time_old;
 	private double dtime;
 	private double step;
-	private final double ani_period = 10.0;
+	private final double ani_period = 1.0;
 
 	public Prototype( PImage tex, int x, int y){
 		super( x, y, 0, 0);

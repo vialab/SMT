@@ -117,6 +117,7 @@ bin/vialab/SMT/SMT.class: \
 	bin/vialab/SMT/SMTTuioListener.class \
 	bin/vialab/SMT/SMTUtilities.class \
 	bin/vialab/SMT/SMTZonePicker.class \
+	bin/vialab/SMT/TexturedTouchDrawer.class \
 	bin/vialab/SMT/TouchDraw.class \
 	bin/vialab/SMT/TouchSource.class \
 	bin/vialab/SMT/TouchState.class \
@@ -147,6 +148,9 @@ bin/vialab/SMT/TabZone.class: \
 bin/vialab/SMT/TextureZone.class: \
 	bin/vialab/SMT/Zone.class
 
+bin/vialab/SMT/TexturedTouchDrawer.class: \
+	bin/vialab/SMT/TouchDrawer.class
+
 bin/vialab/SMT/TextZone.class: \
 	bin/vialab/SMT/Zone.class
 
@@ -158,6 +162,8 @@ bin/vialab/SMT/Touch.class: \
 bin/vialab/SMT/TouchClient.class:
 
 bin/vialab/SMT/TouchDraw.class:
+
+bin/vialab/SMT/TouchDrawer.class:
 
 bin/vialab/SMT/TouchPair.class:
 
