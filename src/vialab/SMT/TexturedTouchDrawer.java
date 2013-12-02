@@ -6,9 +6,14 @@ import java.util.Vector;
 //processing imports
 import processing.core.*;
 
-public class TexturedTouchDrawer implements TouchDrawer {
+//local imports
+import vialab.SMT.event.*;
+
+public class TexturedTouchDrawer
+		implements TouchDrawer, TouchListener {
 	private PImage touch_texture = null;
 	private Vector<PVector> vertices;
+	private Vector<Touch> deadTouches;
 	private int sections;
 	private float radius;
 
@@ -18,11 +23,13 @@ public class TexturedTouchDrawer implements TouchDrawer {
 		if( touch_texture == null)
 			touch_texture = SMT.parent.loadImage(
 				"resources/touch_texture.png");
+		deadTouches = new Vector<Touch>();
 	}
 
 	/** Implements the "Textured" touch draw method */
 	public void draw( Iterable<Touch> touches, PGraphics graphics){
 		for( Touch touch : touches){
+			touch.addTouchListener( this);
 			graphics.noStroke();
 			graphics.beginShape( PApplet.TRIANGLE_FAN);
 			graphics.texture( touch_texture);
@@ -30,6 +37,17 @@ public class TexturedTouchDrawer implements TouchDrawer {
 			for( PVector vert : vertices)
 				graphics.vertex( touch.x + vert.x, touch.y + vert.y, 0, 0);
 			graphics.endShape();
+			System.out.printf(
+				"%d, %d, %d\n",
+				touch.currentTime.getSeconds(),
+				touch.currentTime.getSessionTime().getSeconds(),
+				touch.currentTime.getSystemTime().getSeconds());
+		}
+		for( Touch touch : deadTouches){
+			System.out.printf(
+				"%d, %d\n",
+				touch.currentTime.getSeconds(),
+				touch.currentTime.getSessionTime().getSeconds());
 		}
 	}
 
@@ -53,4 +71,11 @@ public class TexturedTouchDrawer implements TouchDrawer {
 				radius * PApplet.sin( theta)));
 	}
 
+
+	//touch listener functions
+	public void handleTouchDown( TouchEvent touchEvent){}
+	public void handleTouchMoved( TouchEvent touchEvent){}
+	public void handleTouchUp( TouchEvent touchEvent){
+		deadTouches.add( touchEvent.getTouch());
+	}
 }

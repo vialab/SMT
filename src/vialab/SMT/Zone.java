@@ -79,8 +79,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * every frame for indirect Zones, and instead only will redraw if setModified(true) is called on it.
 	 */
 	protected boolean updateOnlyWhenModified(){ return false;}	
-	public boolean stealChildrensTouch = false;	
+	public boolean stealChildrensTouch = false;
+	/**
+	 * @deprecated use Zone.setPhysicsEnabled( boolean) instead
+	 */
+	@Deprecated
 	public boolean physics = false;
+	public boolean physics_enabled = false;
 	BodyDef zoneBodyDef = new BodyDef();
 	Body zoneBody;
 	PolygonShape zoneShape = new PolygonShape();
@@ -345,6 +350,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void setName(String name) {
 		this.name = name == null ? this.getClass().getSimpleName() : name;
 		loadMethods(this.name);
+	}
+
+	public void getPhysicsEnabled( boolean enabled){
+		return physics_enabled;
+	}
+	public void setPhysicsEnabled( boolean enabled){
+		physics = enabled;
+		physics_enabled = enabled;
 	}
 
 	/**
@@ -2534,7 +2547,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	public void toss() {
 		// enable physics on this zone to make sure it can move from the toss
-		physics = true;
+		setPhysicsEnabled( true);
 		Touch t = getActiveTouch(0);
 		if (zoneBody != null && mJoint != null) {
 			mJoint.setTarget(new Vec2(t.x * SMT.box2dScale, (applet.height - t.y)

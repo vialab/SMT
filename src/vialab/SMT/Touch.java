@@ -384,7 +384,8 @@ public class Touch extends TuioCursor {
 
 	//private utility functions
 	public void addTouchListener( TouchListener listener){
-		listeners.add( listener);
+		if( ! listeners.contains( listener))
+			listeners.add( listener);
 	}
 	public void removeTouchListener( TouchListener listener){
 		listeners.remove( listener);
