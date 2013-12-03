@@ -50,8 +50,12 @@ public final class SMTUtilities {
 	 * This scans all classes in the parent and SMT.extraClassList and puts the found methods into methodMap indexed by their name suffixed with parameters
 	 */
 	public static void loadMethods(Class<?> c){
-		for (Method m : c.getMethods()){
-			methodMap.put(nameParamToString(m.getName(),m.getParameterTypes()),m);
+		for (Method method : c.getMethods()){
+			methodMap.put(
+				nameParamToString(
+					method.getName(),
+					method.getParameterTypes()),
+				method);
 		}
 	}
 

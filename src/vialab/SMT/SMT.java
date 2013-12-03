@@ -1221,11 +1221,14 @@ public class SMT {
 		public void run() {
 			try {
 				Process tuioServer = Runtime.getRuntime().exec(execArg);
-				BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
+				BufferedReader tuioServerErr = new BufferedReader(
+					new InputStreamReader(
 						tuioServer.getErrorStream()));
-				BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
+				BufferedReader tuioServerOut = new BufferedReader(
+					new InputStreamReader(
 						tuioServer.getInputStream()));
-				BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
+				BufferedWriter tuioServerIn = new BufferedWriter(
+					new OutputStreamWriter(
 						tuioServer.getOutputStream()));
 
 				tuioServerList.add(tuioServer);
@@ -1234,34 +1237,33 @@ public class SMT {
 				tuioServerInList.add(tuioServerIn);
 
 				while (true) {
-					if (tuioServerErr.ready() && debug) {
-						System.err.println(label + ": " + tuioServerErr.readLine());
-					}
-					if (tuioServerOut.ready() && debug) {
-						System.out.println(label + ": " + tuioServerOut.readLine());
-					}
+					if (tuioServerErr.ready() && debug)
+						System.err.println(
+							label + ": " + tuioServerErr.readLine());
+					if (tuioServerOut.ready() && debug)
+						System.out.println(
+							label + ": " + tuioServerOut.readLine());
 
 					try {
 						int r = tuioServer.exitValue();
-						if(SMT.debug){
+						if(SMT.debug)
 							System.out.println(label + " return value=" + r);
-						}
-						if(!SMT.inShutdown){
+						if(!SMT.inShutdown)
 							System.err.println(prematureShutdownError);
-						}
 						break;
 					}
-					catch (IllegalThreadStateException e) {
+					catch( IllegalThreadStateException e) {
 						// still running... sleep time
 						Thread.sleep(100);
 					}
 				}
 			}
-			catch (IOException e) {
-				System.err.println(e.getMessage());
+			catch (IOException exception){
+				System.err.println( exception.getMessage());
 			}
-			catch (Exception e) {
-				System.err.println(label + " TUIO Server stopped!");
+			catch (Exception exception){
+				System.err.println(
+					label + " TUIO Server stopped!");
 			}
 		}
 	}
@@ -1281,8 +1283,8 @@ public class SMT {
 			new TouchSourceThread("WM_TOUCH", loadFile(temp, is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe").getAbsolutePath() + " " + parent.frame.getTitle() + " "
 										+ address + " " + port, "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting your computer.").start();
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException exception) {
+			exception.printStackTrace();
 		}
 	}
 
@@ -1293,10 +1295,12 @@ public class SMT {
 			loadFile(temp, "SMARTTableSDK.Core.dll");
 			loadFile(temp, "libTUIO.dll");
 
-			new TouchSourceThread("SMART", loadFile(temp, "SMARTtoTUIO2.exe").getAbsolutePath(), "SMART Process died").start();								
+			new TouchSourceThread(
+				"SMART", loadFile(temp, "SMARTtoTUIO2.exe").getAbsolutePath(),
+				"SMART Process died").start();								
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException exception) {
+			exception.printStackTrace();
 		}
 	}
 
@@ -1312,7 +1316,7 @@ public class SMT {
 			loadFile(temp, "Leap.dll");
 			new TouchSourceThread(
 				"LEAP",
-				loadFile(temp, "motionLess.exe")
+				loadFile( temp, "motionLess.exe")
 					.getAbsolutePath() + " " + port,
 				"LEAP Process died early, make sure Visual C++ 2010 Redistributable (x86) is installed (http://www.microsoft.com/en-ca/download/details.aspx?id=5555)")
 				.start();
@@ -1341,49 +1345,41 @@ public class SMT {
 	/**
 	 * This finds a zone by its name, returning the first zone with the given
 	 * name or null.
-	 * <P>
+	 * <br/>
 	 * This will throw ClassCastException if the Zone is not an instance of the
 	 * given class , and non-applicable type compile errors when the given class
 	 * does not extend Zone.
 	 * 
-	 * @param name
-	 *            The name of the zone to find
-	 * @param type
-	 *            a class type to cast the Zone to (e.g. Zone.class)
+	 * @param name The name of the zone to find
+	 * @param type a class type to cast the Zone to (e.g. Zone.class)
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	public static <T extends Zone> T get( String name, Class<T> type) {
-		for (Zone z : getZones()) {
-			if (z.name != null && z.name.equals(name)) {
-				return (T) z;
-			}
-		}
+		for( Zone zone : getZones())
+			if( zone.name != null && zone.name.equals(name))
+				return (T) zone;
 		return null;
 	}
 
 	/**
 	 * This finds a zone by its name, returning the first zone with the given
 	 * name or null
-	 * 
-	 * @param name
-	 *            The name of the zone to find
+	 * @param name The name of the zone to find
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
-	public static Zone get(String name) {
-		return get(name, Zone.class);
+	public static Zone get( String name) {
+		return get( name, Zone.class);
 	}
 
 	/**
 	 * This adds objects to check for drawZoneName, touchZoneName, etc methods
 	 * in, similar to PApplet
-	 * 
-	 * @param classes
-	 *            The additional objects to check in for methods
+	 * @param classes The additional objects to check in for methods
 	 */
 	public static void addMethodClasses(Class<?>... classes) {
-		for (Class<?> c : classes) {
+		for (Class<?> c : classes)
 			SMTUtilities.loadMethods(c);
-		}
 	}
 }
