@@ -1,0 +1,714 @@
+rm -rf library/SMT.jar SMT.zip
+rm -rf javadoc/ SMT/
+rm -rf bin/*
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/Finger.java
+make: Circular bin/vialab/SMT/MouseToTUIO.class <- bin/vialab/SMT/Simulation.class dependency dropped.
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/MouseToTUIO.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/Simulation.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/AndroidToTUIO.java
+make: Circular bin/vialab/SMT/ImageZone.class <- bin/vialab/SMT/Zone.class dependency dropped.
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/ImageZone.java
+src/vialab/SMT/ImageZone.java:147: warning: [deprecation] x in Zone has been deprecated
+		this(imgZone.name, imgZone.img, imgZone.x, imgZone.y, imgZone.width, imgZone.height);
+		                                       ^
+src/vialab/SMT/ImageZone.java:147: warning: [deprecation] y in Zone has been deprecated
+		this(imgZone.name, imgZone.img, imgZone.x, imgZone.y, imgZone.width, imgZone.height);
+		                                                  ^
+src/vialab/SMT/ImageZone.java:147: warning: [deprecation] width in Zone has been deprecated
+		this(imgZone.name, imgZone.img, imgZone.x, imgZone.y, imgZone.width, imgZone.height);
+		                                                             ^
+src/vialab/SMT/ImageZone.java:147: warning: [deprecation] height in Zone has been deprecated
+		this(imgZone.name, imgZone.img, imgZone.x, imgZone.y, imgZone.width, imgZone.height);
+		                                                                            ^
+src/vialab/SMT/ImageZone.java:165: warning: [deprecation] width in Zone has been deprecated
+		image(img, 0, 0, this.width, this.height);
+		                     ^
+src/vialab/SMT/ImageZone.java:165: warning: [deprecation] height in Zone has been deprecated
+		image(img, 0, 0, this.width, this.height);
+		                                 ^
+src/vialab/SMT/SMT.java:824: warning: [deprecation] width in Zone has been deprecated
+			if (currentX + zone.width > x + width) {
+			                   ^
+src/vialab/SMT/SMT.java:832: warning: [deprecation] width in Zone has been deprecated
+			currentX += zone.width + xSpace;
+			                ^
+src/vialab/SMT/SMT.java:833: warning: [deprecation] height in Zone has been deprecated
+			rowHeight = Math.max(rowHeight, zone.height);
+			                                    ^
+src/vialab/SMT/SMT.java:1139: warning: [deprecation] physics in Zone has been deprecated
+			if (z.physics) {
+			     ^
+src/vialab/SMT/SMT.java:1162: warning: [deprecation] physics in Zone has been deprecated
+			if (z.physics) {
+			     ^
+11 warnings
+make: Circular bin/vialab/SMT/PGraphicsDelegate.class <- bin/vialab/SMT/Zone.class dependency dropped.
+make: Circular bin/vialab/SMT/SMTUtilities.class <- bin/vialab/SMT/Zone.class dependency dropped.
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/Zone.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/ButtonZone.java
+src/vialab/SMT/ButtonZone.java:273: warning: [deprecation] width in Zone has been deprecated
+		rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight);
+		                                 ^
+src/vialab/SMT/ButtonZone.java:273: warning: [deprecation] height in Zone has been deprecated
+		rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight);
+		                                                           ^
+src/vialab/SMT/ButtonZone.java:282: warning: [deprecation] width in Zone has been deprecated
+			text(text, width / 2 - borderWeight, height / 2 - borderWeight);
+			           ^
+src/vialab/SMT/ButtonZone.java:282: warning: [deprecation] height in Zone has been deprecated
+			text(text, width / 2 - borderWeight, height / 2 - borderWeight);
+			                                     ^
+4 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/CheckBoxZone.java
+src/vialab/SMT/CheckBoxZone.java:39: warning: [deprecation] width in Zone has been deprecated
+		rect(0, 0, width, height, 10);
+		           ^
+src/vialab/SMT/CheckBoxZone.java:39: warning: [deprecation] height in Zone has been deprecated
+		rect(0, 0, width, height, 10);
+		                  ^
+src/vialab/SMT/CheckBoxZone.java:48: warning: [deprecation] width in Zone has been deprecated
+		line(width, 0, width / 3, height);
+		     ^
+src/vialab/SMT/CheckBoxZone.java:48: warning: [deprecation] width in Zone has been deprecated
+		line(width, 0, width / 3, height);
+		               ^
+src/vialab/SMT/CheckBoxZone.java:48: warning: [deprecation] height in Zone has been deprecated
+		line(width, 0, width / 3, height);
+		                          ^
+src/vialab/SMT/CheckBoxZone.java:49: warning: [deprecation] width in Zone has been deprecated
+		line(width / 3, height, 0, (float) (height * 2. / 3.));
+		     ^
+src/vialab/SMT/CheckBoxZone.java:49: warning: [deprecation] height in Zone has been deprecated
+		line(width / 3, height, 0, (float) (height * 2. / 3.));
+		                ^
+src/vialab/SMT/CheckBoxZone.java:49: warning: [deprecation] height in Zone has been deprecated
+		line(width / 3, height, 0, (float) (height * 2. / 3.));
+		                                    ^
+8 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/ContainerZone.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/event/SwipeKeyEvent.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/event/SwipeKeyListener.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/event/TouchListener.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/TextZone.java
+src/vialab/SMT/TextZone.java:24: warning: [deprecation] x in Zone has been deprecated
+			super(original.x, original.y, original.width, original.height);
+			              ^
+src/vialab/SMT/TextZone.java:24: warning: [deprecation] y in Zone has been deprecated
+			super(original.x, original.y, original.width, original.height);
+			                          ^
+src/vialab/SMT/TextZone.java:24: warning: [deprecation] width in Zone has been deprecated
+			super(original.x, original.y, original.width, original.height);
+			                                      ^
+src/vialab/SMT/TextZone.java:24: warning: [deprecation] height in Zone has been deprecated
+			super(original.x, original.y, original.width, original.height);
+			                                                      ^
+src/vialab/SMT/TextZone.java:67: warning: [deprecation] width in Zone has been deprecated
+				if (width > 0 && txtBkg) {
+				    ^
+src/vialab/SMT/TextZone.java:75: warning: [deprecation] width in Zone has been deprecated
+					rect(0, 0, width, height);
+					           ^
+src/vialab/SMT/TextZone.java:75: warning: [deprecation] height in Zone has been deprecated
+					rect(0, 0, width, height);
+					                  ^
+src/vialab/SMT/TextZone.java:79: warning: [deprecation] width in Zone has been deprecated
+				text(this.word, 0, 0, width, height);
+				                      ^
+src/vialab/SMT/TextZone.java:79: warning: [deprecation] height in Zone has been deprecated
+				text(this.word, 0, 0, width, height);
+				                             ^
+src/vialab/SMT/TextZone.java:83: warning: [deprecation] width in Zone has been deprecated
+				if (width > 0 && txtBkg) {
+				    ^
+src/vialab/SMT/TextZone.java:90: warning: [deprecation] width in Zone has been deprecated
+					rect(0, 0, width, height);
+					           ^
+src/vialab/SMT/TextZone.java:90: warning: [deprecation] height in Zone has been deprecated
+					rect(0, 0, width, height);
+					                  ^
+src/vialab/SMT/TextZone.java:100: warning: [deprecation] width in Zone has been deprecated
+				text(this.word, 0, 0, width, height);
+				                      ^
+src/vialab/SMT/TextZone.java:100: warning: [deprecation] height in Zone has been deprecated
+				text(this.word, 0, 0, width, height);
+				                             ^
+src/vialab/SMT/TextZone.java:380: warning: [deprecation] x in Zone has been deprecated
+		super(original.name, original.x, original.y, original.width, original.height);
+		                             ^
+src/vialab/SMT/TextZone.java:380: warning: [deprecation] y in Zone has been deprecated
+		super(original.name, original.x, original.y, original.width, original.height);
+		                                         ^
+src/vialab/SMT/TextZone.java:380: warning: [deprecation] width in Zone has been deprecated
+		super(original.name, original.x, original.y, original.width, original.height);
+		                                                     ^
+src/vialab/SMT/TextZone.java:380: warning: [deprecation] height in Zone has been deprecated
+		super(original.name, original.x, original.y, original.width, original.height);
+		                                                                     ^
+src/vialab/SMT/TextZone.java:507: warning: [deprecation] x in Zone has been deprecated
+			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
+			                                                   ^
+src/vialab/SMT/TextZone.java:507: warning: [deprecation] width in Zone has been deprecated
+			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
+			                                                                       ^
+src/vialab/SMT/TextZone.java:508: warning: [deprecation] y in Zone has been deprecated
+					currentWordZone.y, 0, (int) (fontSize * (20.0 / 16.0)));
+					               ^
+src/vialab/SMT/TextZone.java:512: warning: [deprecation] x in Zone has been deprecated
+			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
+			                                                   ^
+src/vialab/SMT/TextZone.java:512: warning: [deprecation] width in Zone has been deprecated
+			this.currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
+			                                                                       ^
+src/vialab/SMT/TextZone.java:513: warning: [deprecation] y in Zone has been deprecated
+					currentWordZone.y, 0, (int) (fontSize * (20.0 / 16.0)));
+					               ^
+src/vialab/SMT/TextZone.java:517: warning: [deprecation] y in Zone has been deprecated
+			this.currentWordZone = new WordZone(5, currentWordZone.y
+			                                                      ^
+src/vialab/SMT/TextZone.java:522: warning: [deprecation] x in Zone has been deprecated
+				currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
+				                                              ^
+src/vialab/SMT/TextZone.java:522: warning: [deprecation] width in Zone has been deprecated
+				currentWordZone = new WordZone(currentWordZone.x + currentWordZone.width,
+				                                                                  ^
+src/vialab/SMT/TextZone.java:523: warning: [deprecation] y in Zone has been deprecated
+						currentWordZone.y, 0, (int) (fontSize * (20.0 / 16.0)));
+						               ^
+src/vialab/SMT/TextZone.java:525: warning: [deprecation] x in Zone has been deprecated
+			if (currentWordZone.x + currentWordZone.width + fontSize > width
+			                   ^
+src/vialab/SMT/TextZone.java:525: warning: [deprecation] width in Zone has been deprecated
+			if (currentWordZone.x + currentWordZone.width + fontSize > width
+			                                       ^
+src/vialab/SMT/TextZone.java:525: warning: [deprecation] width in Zone has been deprecated
+			if (currentWordZone.x + currentWordZone.width + fontSize > width
+			                                                           ^
+src/vialab/SMT/TextZone.java:526: warning: [deprecation] x in Zone has been deprecated
+					&& currentWordZone.x != 0) {
+					                  ^
+src/vialab/SMT/TextZone.java:527: warning: [deprecation] y in Zone has been deprecated
+				this.currentWordZone.setData(0, currentWordZone.y
+				                                               ^
+src/vialab/SMT/TextZone.java:530: warning: [deprecation] x in Zone has been deprecated
+			if (currentWordZone.x + currentWordZone.width + fontSize <= width) {
+			                   ^
+src/vialab/SMT/TextZone.java:530: warning: [deprecation] width in Zone has been deprecated
+			if (currentWordZone.x + currentWordZone.width + fontSize <= width) {
+			                                       ^
+src/vialab/SMT/TextZone.java:530: warning: [deprecation] width in Zone has been deprecated
+			if (currentWordZone.x + currentWordZone.width + fontSize <= width) {
+			                                                            ^
+src/vialab/SMT/TextZone.java:537: warning: [deprecation] width in Zone has been deprecated
+		currentWordZone.width = (int) Math.ceil(textWidth(currentWordZone.word));
+		               ^
+37 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/KeyboardZone.java
+src/vialab/SMT/KeyboardZone.java:44: warning: [deprecation] width in Zone has been deprecated
+			rect(0, 0, width, height);
+			           ^
+src/vialab/SMT/KeyboardZone.java:44: warning: [deprecation] height in Zone has been deprecated
+			rect(0, 0, width, height);
+			                  ^
+src/vialab/SMT/KeyboardZone.java:109: warning: [deprecation] width in Zone has been deprecated
+					text("On", width / 2, height * 3 / 4);
+					           ^
+src/vialab/SMT/KeyboardZone.java:109: warning: [deprecation] height in Zone has been deprecated
+					text("On", width / 2, height * 3 / 4);
+					                      ^
+src/vialab/SMT/KeyboardZone.java:112: warning: [deprecation] width in Zone has been deprecated
+					text("Off", width / 2, height * 3 / 4);
+					            ^
+src/vialab/SMT/KeyboardZone.java:112: warning: [deprecation] height in Zone has been deprecated
+					text("Off", width / 2, height * 3 / 4);
+					                       ^
+src/vialab/SMT/KeyboardZone.java:122: warning: [deprecation] width in Zone has been deprecated
+			rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight);
+			                                 ^
+src/vialab/SMT/KeyboardZone.java:122: warning: [deprecation] height in Zone has been deprecated
+			rect(borderWeight, borderWeight, width - 2 * borderWeight, height - 2 * borderWeight);
+			                                                           ^
+src/vialab/SMT/KeyboardZone.java:133: warning: [deprecation] width in Zone has been deprecated
+					text(text.toUpperCase(), width / 2 - borderWeight, height / 2 - borderWeight);
+					                         ^
+src/vialab/SMT/KeyboardZone.java:133: warning: [deprecation] height in Zone has been deprecated
+					text(text.toUpperCase(), width / 2 - borderWeight, height / 2 - borderWeight);
+					                                                   ^
+src/vialab/SMT/KeyboardZone.java:136: warning: [deprecation] width in Zone has been deprecated
+					text(text, width / 2 - borderWeight, height / 2 - borderWeight);
+					           ^
+src/vialab/SMT/KeyboardZone.java:136: warning: [deprecation] height in Zone has been deprecated
+					text(text, width / 2 - borderWeight, height / 2 - borderWeight);
+					                                     ^
+src/vialab/SMT/KeyboardZone.java:431: warning: [deprecation] height in Zone has been deprecated
+		int fontSize = (this.height / NUM_KEYBOARD_ROWS) * 16 / 50;
+		                    ^
+src/vialab/SMT/KeyboardZone.java:435: warning: [deprecation] height in Zone has been deprecated
+					(this.height * 9 / 10) / NUM_KEYBOARD_ROWS, k, fontSize, font));
+					     ^
+src/vialab/SMT/KeyboardZone.java:463: warning: [deprecation] width in Zone has been deprecated
+		int DEFAULT_KEY_WIDTH = (width * 9 / 10) / KEYS_PER_ROW;
+		                         ^
+src/vialab/SMT/KeyboardZone.java:468: warning: [deprecation] height in Zone has been deprecated
+						(this.height * 9 / 10) / NUM_KEYBOARD_ROWS);
+						     ^
+src/vialab/SMT/KeyboardZone.java:469: warning: [deprecation] height in Zone has been deprecated
+				keyZone.fontSize = ((this.height * 9 / 10) / NUM_KEYBOARD_ROWS) * 16 / 50;
+				                         ^
+src/vialab/SMT/KeyboardZone.java:473: warning: [deprecation] width in Zone has been deprecated
+			SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+			         ^
+src/vialab/SMT/KeyboardZone.java:473: warning: [deprecation] height in Zone has been deprecated
+			SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+			                     ^
+src/vialab/SMT/KeyboardZone.java:473: warning: [deprecation] width in Zone has been deprecated
+			SMT.grid(width / 20, height / 20, (width * 9 / 10), 0, 0,
+			                                   ^
+20 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/LeftPopUpMenuZone.java
+src/vialab/SMT/LeftPopUpMenuZone.java:54: warning: [deprecation] height in Zone has been deprecated
+		triangle(0, height / 2, width, 0, width, height);
+		            ^
+src/vialab/SMT/LeftPopUpMenuZone.java:54: warning: [deprecation] width in Zone has been deprecated
+		triangle(0, height / 2, width, 0, width, height);
+		                        ^
+src/vialab/SMT/LeftPopUpMenuZone.java:54: warning: [deprecation] width in Zone has been deprecated
+		triangle(0, height / 2, width, 0, width, height);
+		                                  ^
+src/vialab/SMT/LeftPopUpMenuZone.java:54: warning: [deprecation] height in Zone has been deprecated
+		triangle(0, height / 2, width, 0, width, height);
+		                                         ^
+src/vialab/SMT/LeftPopUpMenuZone.java:64: warning: [deprecation] width in Zone has been deprecated
+			rect(0, 0, width, height);
+			           ^
+src/vialab/SMT/LeftPopUpMenuZone.java:64: warning: [deprecation] height in Zone has been deprecated
+			rect(0, 0, width, height);
+			                  ^
+6 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/PatternUnlockZone.java
+src/vialab/SMT/PatternUnlockZone.java:33: warning: [deprecation] width in Zone has been deprecated
+			ellipse(width / 2, height / 2, width*7/10, height*7/10);
+			        ^
+src/vialab/SMT/PatternUnlockZone.java:33: warning: [deprecation] height in Zone has been deprecated
+			ellipse(width / 2, height / 2, width*7/10, height*7/10);
+			                   ^
+src/vialab/SMT/PatternUnlockZone.java:33: warning: [deprecation] width in Zone has been deprecated
+			ellipse(width / 2, height / 2, width*7/10, height*7/10);
+			                               ^
+src/vialab/SMT/PatternUnlockZone.java:33: warning: [deprecation] height in Zone has been deprecated
+			ellipse(width / 2, height / 2, width*7/10, height*7/10);
+			                                           ^
+src/vialab/SMT/PatternUnlockZone.java:36: warning: [deprecation] width in Zone has been deprecated
+				ellipse(width / 2, height / 2, width / 2, height / 2);
+				        ^
+src/vialab/SMT/PatternUnlockZone.java:36: warning: [deprecation] height in Zone has been deprecated
+				ellipse(width / 2, height / 2, width / 2, height / 2);
+				                   ^
+src/vialab/SMT/PatternUnlockZone.java:36: warning: [deprecation] width in Zone has been deprecated
+				ellipse(width / 2, height / 2, width / 2, height / 2);
+				                               ^
+src/vialab/SMT/PatternUnlockZone.java:36: warning: [deprecation] height in Zone has been deprecated
+				ellipse(width / 2, height / 2, width / 2, height / 2);
+				                                          ^
+src/vialab/SMT/PatternUnlockZone.java:65: warning: [deprecation] width in Zone has been deprecated
+		rect(0, 0, width, height);
+		           ^
+src/vialab/SMT/PatternUnlockZone.java:65: warning: [deprecation] height in Zone has been deprecated
+		rect(0, 0, width, height);
+		                  ^
+src/vialab/SMT/PatternUnlockZone.java:77: warning: [deprecation] width in Zone has been deprecated
+		text(pass, width, height);
+		           ^
+src/vialab/SMT/PatternUnlockZone.java:77: warning: [deprecation] height in Zone has been deprecated
+		text(pass, width, height);
+		                  ^
+12 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/PieMenuZone.java
+src/vialab/SMT/PieMenuZone.java:47: warning: [deprecation] width in Zone has been deprecated
+				int imageSize = (width + height) / 2;
+				                 ^
+src/vialab/SMT/PieMenuZone.java:47: warning: [deprecation] height in Zone has been deprecated
+				int imageSize = (width + height) / 2;
+				                         ^
+src/vialab/SMT/PieMenuZone.java:49: warning: [deprecation] width in Zone has been deprecated
+					image(image, 0, 0, width, height);
+					                   ^
+src/vialab/SMT/PieMenuZone.java:49: warning: [deprecation] height in Zone has been deprecated
+					image(image, 0, 0, width, height);
+					                          ^
+src/vialab/SMT/PieMenuZone.java:65: warning: [deprecation] width in Zone has been deprecated
+					text(text, width / 2, height / 2 + imageSize / 2 + textAscent() + 1);
+					           ^
+src/vialab/SMT/PieMenuZone.java:65: warning: [deprecation] height in Zone has been deprecated
+					text(text, width / 2, height / 2 + imageSize / 2 + textAscent() + 1);
+					                      ^
+src/vialab/SMT/PieMenuZone.java:239: warning: [deprecation] width in Zone has been deprecated
+			ellipse(width / 2, height / 2, outerDiameter + 3, outerDiameter + 3);
+			        ^
+src/vialab/SMT/PieMenuZone.java:239: warning: [deprecation] height in Zone has been deprecated
+			ellipse(width / 2, height / 2, outerDiameter + 3, outerDiameter + 3);
+			                   ^
+src/vialab/SMT/PieMenuZone.java:272: warning: [deprecation] width in Zone has been deprecated
+					arc(width / 2, height / 2, outerDiameter, outerDiameter, s + 0.01f / op, e
+					    ^
+src/vialab/SMT/PieMenuZone.java:272: warning: [deprecation] height in Zone has been deprecated
+					arc(width / 2, height / 2, outerDiameter, outerDiameter, s + 0.01f / op, e
+					               ^
+src/vialab/SMT/PieMenuZone.java:278: warning: [deprecation] width in Zone has been deprecated
+					triangle(width / 2 + PApplet.cos(m + (-0.05f / op)) * (outerDiameter / 2)
+					         ^
+src/vialab/SMT/PieMenuZone.java:279: warning: [deprecation] height in Zone has been deprecated
+							* 0.9f, height / 2 + PApplet.sin(m + ((-0.05f) / op))
+							        ^
+src/vialab/SMT/PieMenuZone.java:280: warning: [deprecation] width in Zone has been deprecated
+							* (outerDiameter / 2) * 0.9f, width / 2 + PApplet.cos(m)
+							                              ^
+src/vialab/SMT/PieMenuZone.java:281: warning: [deprecation] height in Zone has been deprecated
+							* (outerDiameter / 2) * 0.95f, height / 2 + PApplet.sin(m)
+							                               ^
+src/vialab/SMT/PieMenuZone.java:283: warning: [deprecation] width in Zone has been deprecated
+							width / 2 + PApplet.cos(m + (0.05f / op)) * (outerDiameter / 2) * 0.9f,
+							^
+src/vialab/SMT/PieMenuZone.java:284: warning: [deprecation] height in Zone has been deprecated
+							height / 2 + PApplet.sin(m + (0.05f / op)) * (outerDiameter / 2) * 0.9f);
+							^
+src/vialab/SMT/PieMenuZone.java:295: warning: [deprecation] width in Zone has been deprecated
+					arc(width / 2, height / 2, outerDiameter * 0.85f, outerDiameter * 0.85f, s
+					    ^
+src/vialab/SMT/PieMenuZone.java:295: warning: [deprecation] height in Zone has been deprecated
+					arc(width / 2, height / 2, outerDiameter * 0.85f, outerDiameter * 0.85f, s
+					               ^
+src/vialab/SMT/PieMenuZone.java:299: warning: [deprecation] width in Zone has been deprecated
+					arc(width / 2, height / 2, outerDiameter, outerDiameter, s + 0.01f / op, e
+					    ^
+src/vialab/SMT/PieMenuZone.java:299: warning: [deprecation] height in Zone has been deprecated
+					arc(width / 2, height / 2, outerDiameter, outerDiameter, s + 0.01f / op, e
+					               ^
+src/vialab/SMT/PieMenuZone.java:304: warning: [deprecation] width in Zone has been deprecated
+				sl.setLocation(width / 2 - sl.width / 2 + PApplet.cos(m) * textdiam, height / 2
+				               ^
+src/vialab/SMT/PieMenuZone.java:304: warning: [deprecation] width in Zone has been deprecated
+				sl.setLocation(width / 2 - sl.width / 2 + PApplet.cos(m) * textdiam, height / 2
+				                             ^
+src/vialab/SMT/PieMenuZone.java:304: warning: [deprecation] height in Zone has been deprecated
+				sl.setLocation(width / 2 - sl.width / 2 + PApplet.cos(m) * textdiam, height / 2
+				                                                                     ^
+src/vialab/SMT/PieMenuZone.java:305: warning: [deprecation] height in Zone has been deprecated
+						- sl.height / 2 + PApplet.sin(m) * textdiam);
+						    ^
+src/vialab/SMT/PieMenuZone.java:306: warning: [deprecation] width in Zone has been deprecated
+				sl.width = imageSize;
+				  ^
+src/vialab/SMT/PieMenuZone.java:307: warning: [deprecation] height in Zone has been deprecated
+				sl.height = imageSize;
+				  ^
+src/vialab/SMT/PieMenuZone.java:313: warning: [deprecation] width in Zone has been deprecated
+			ellipse(width / 2, height / 2, innerDiameter, innerDiameter);
+			        ^
+src/vialab/SMT/PieMenuZone.java:313: warning: [deprecation] height in Zone has been deprecated
+			ellipse(width / 2, height / 2, innerDiameter, innerDiameter);
+			                   ^
+src/vialab/SMT/PieMenuZone.java:335: warning: [deprecation] width in Zone has been deprecated
+			ellipse(width / 2, height / 2, outerDiameter, outerDiameter);
+			        ^
+src/vialab/SMT/PieMenuZone.java:335: warning: [deprecation] height in Zone has been deprecated
+			ellipse(width / 2, height / 2, outerDiameter, outerDiameter);
+			                   ^
+src/vialab/SMT/PieMenuZone.java:345: warning: [deprecation] height in Zone has been deprecated
+			float mouseTheta = PApplet.atan2(touchInZone.y - height / 2, touchInZone.x - width / 2);
+			                                                 ^
+src/vialab/SMT/PieMenuZone.java:345: warning: [deprecation] width in Zone has been deprecated
+			float mouseTheta = PApplet.atan2(touchInZone.y - height / 2, touchInZone.x - width / 2);
+			                                                                             ^
+32 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/ShapeZone.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/SlideRevealZone.java
+src/vialab/SMT/SlideRevealZone.java:19: warning: [deprecation] width in Zone has been deprecated
+			hSwipe(0, getParent().width);
+			                     ^
+src/vialab/SMT/SlideRevealZone.java:25: warning: [deprecation] width in Zone has been deprecated
+			rect(0, 0, width, height);
+			           ^
+src/vialab/SMT/SlideRevealZone.java:25: warning: [deprecation] height in Zone has been deprecated
+			rect(0, 0, width, height);
+			                  ^
+src/vialab/SMT/SlideRevealZone.java:32: warning: [deprecation] height in Zone has been deprecated
+			triangle(0, 0, 0, height, width, height / 2);
+			                  ^
+src/vialab/SMT/SlideRevealZone.java:32: warning: [deprecation] width in Zone has been deprecated
+			triangle(0, 0, 0, height, width, height / 2);
+			                          ^
+src/vialab/SMT/SlideRevealZone.java:32: warning: [deprecation] height in Zone has been deprecated
+			triangle(0, 0, 0, height, width, height / 2);
+			                                 ^
+src/vialab/SMT/SlideRevealZone.java:54: warning: [deprecation] width in Zone has been deprecated
+		rect(0, 0, width, height);
+		           ^
+src/vialab/SMT/SlideRevealZone.java:54: warning: [deprecation] height in Zone has been deprecated
+		rect(0, 0, width, height);
+		                  ^
+src/vialab/SMT/SlideRevealZone.java:63: warning: [deprecation] width in Zone has been deprecated
+		text(revealText, 5, 20, width, height);
+		                        ^
+src/vialab/SMT/SlideRevealZone.java:63: warning: [deprecation] height in Zone has been deprecated
+		text(revealText, 5, 20, width, height);
+		                               ^
+src/vialab/SMT/SlideRevealZone.java:70: warning: [deprecation] width in Zone has been deprecated
+		rect(childxpos, 0, width, height);
+		                   ^
+src/vialab/SMT/SlideRevealZone.java:70: warning: [deprecation] height in Zone has been deprecated
+		rect(childxpos, 0, width, height);
+		                          ^
+src/vialab/SMT/SlideRevealZone.java:72: warning: [deprecation] width in Zone has been deprecated
+		text("Slide To Right", childxpos + getChild(0).width * 1.1f, height*3/8, width, height);
+		                                              ^
+src/vialab/SMT/SlideRevealZone.java:72: warning: [deprecation] height in Zone has been deprecated
+		text("Slide To Right", childxpos + getChild(0).width * 1.1f, height*3/8, width, height);
+		                                                             ^
+src/vialab/SMT/SlideRevealZone.java:72: warning: [deprecation] width in Zone has been deprecated
+		text("Slide To Right", childxpos + getChild(0).width * 1.1f, height*3/8, width, height);
+		                                                                         ^
+src/vialab/SMT/SlideRevealZone.java:72: warning: [deprecation] height in Zone has been deprecated
+		text("Slide To Right", childxpos + getChild(0).width * 1.1f, height*3/8, width, height);
+		                                                                                ^
+src/vialab/SMT/SlideRevealZone.java:93: warning: [deprecation] width in Zone has been deprecated
+		return (xPosSlider >= (width - height));
+		                       ^
+src/vialab/SMT/SlideRevealZone.java:93: warning: [deprecation] height in Zone has been deprecated
+		return (xPosSlider >= (width - height));
+		                               ^
+src/vialab/SMT/SlideRevealZone.java:100: warning: [deprecation] width in Zone has been deprecated
+		return width - height;
+		       ^
+src/vialab/SMT/SlideRevealZone.java:100: warning: [deprecation] height in Zone has been deprecated
+		return width - height;
+		               ^
+20 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/SliderZone.java
+src/vialab/SMT/SliderZone.java:164: warning: [deprecation] width in Zone has been deprecated
+							* (Math.max(touchInZone.x - (width / 10), 0) / (width * (((float) 8) / 10)))),
+							                             ^
+src/vialab/SMT/SliderZone.java:164: warning: [deprecation] width in Zone has been deprecated
+							* (Math.max(touchInZone.x - (width / 10), 0) / (width * (((float) 8) / 10)))),
+							                                                ^
+src/vialab/SMT/SliderZone.java:174: warning: [deprecation] width in Zone has been deprecated
+		rect(0, 0, width, height);
+		           ^
+src/vialab/SMT/SliderZone.java:174: warning: [deprecation] height in Zone has been deprecated
+		rect(0, 0, width, height);
+		                  ^
+src/vialab/SMT/SliderZone.java:186: warning: [deprecation] width in Zone has been deprecated
+		text(currentValue, width / 2, height*3/10);
+		                   ^
+src/vialab/SMT/SliderZone.java:186: warning: [deprecation] height in Zone has been deprecated
+		text(currentValue, width / 2, height*3/10);
+		                              ^
+src/vialab/SMT/SliderZone.java:187: warning: [deprecation] width in Zone has been deprecated
+		text(minValue, width/10, height*9/10);
+		               ^
+src/vialab/SMT/SliderZone.java:187: warning: [deprecation] height in Zone has been deprecated
+		text(minValue, width/10, height*9/10);
+		                         ^
+src/vialab/SMT/SliderZone.java:188: warning: [deprecation] width in Zone has been deprecated
+		text(maxValue, width*9/10, height*9/10);
+		               ^
+src/vialab/SMT/SliderZone.java:188: warning: [deprecation] height in Zone has been deprecated
+		text(maxValue, width*9/10, height*9/10);
+		                           ^
+src/vialab/SMT/SliderZone.java:196: warning: [deprecation] width in Zone has been deprecated
+				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
+				                               ^
+src/vialab/SMT/SliderZone.java:196: warning: [deprecation] width in Zone has been deprecated
+				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
+				                                                          ^
+src/vialab/SMT/SliderZone.java:196: warning: [deprecation] height in Zone has been deprecated
+				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
+				                                                                       ^
+src/vialab/SMT/SliderZone.java:197: warning: [deprecation] width in Zone has been deprecated
+						((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10),
+						                          ^
+src/vialab/SMT/SliderZone.java:197: warning: [deprecation] width in Zone has been deprecated
+						((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10),
+						                                                     ^
+src/vialab/SMT/SliderZone.java:198: warning: [deprecation] height in Zone has been deprecated
+						height * 5 / 8);
+						^
+src/vialab/SMT/SliderZone.java:202: warning: [deprecation] width in Zone has been deprecated
+				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
+				                               ^
+src/vialab/SMT/SliderZone.java:202: warning: [deprecation] width in Zone has been deprecated
+				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
+				                                                          ^
+src/vialab/SMT/SliderZone.java:202: warning: [deprecation] height in Zone has been deprecated
+				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
+				                                                                       ^
+src/vialab/SMT/SliderZone.java:203: warning: [deprecation] width in Zone has been deprecated
+						((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10),
+						                          ^
+src/vialab/SMT/SliderZone.java:203: warning: [deprecation] width in Zone has been deprecated
+						((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10),
+						                                                     ^
+src/vialab/SMT/SliderZone.java:204: warning: [deprecation] height in Zone has been deprecated
+						height / 2);
+						^
+src/vialab/SMT/SliderZone.java:212: warning: [deprecation] width in Zone has been deprecated
+		rect((((currentValue - minValue) / (float) maxValue) * width * (float) 8 / 10)
+		                                                       ^
+src/vialab/SMT/SliderZone.java:213: warning: [deprecation] width in Zone has been deprecated
+				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
+				   ^
+src/vialab/SMT/SliderZone.java:213: warning: [deprecation] width in Zone has been deprecated
+				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
+				                  ^
+src/vialab/SMT/SliderZone.java:213: warning: [deprecation] width in Zone has been deprecated
+				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
+				                                      ^
+src/vialab/SMT/SliderZone.java:213: warning: [deprecation] height in Zone has been deprecated
+				+ (width / 10) - (width / 20) / 2, 0, width / 20, height);
+				                                                  ^
+27 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/SMTTuioListener.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/SMTZonePicker.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/SMTTouchManager.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/TexturedTouchDrawer.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/SMT.java
+src/vialab/SMT/SMT.java:824: warning: [deprecation] width in Zone has been deprecated
+			if (currentX + zone.width > x + width) {
+			                   ^
+src/vialab/SMT/SMT.java:832: warning: [deprecation] width in Zone has been deprecated
+			currentX += zone.width + xSpace;
+			                ^
+src/vialab/SMT/SMT.java:833: warning: [deprecation] height in Zone has been deprecated
+			rowHeight = Math.max(rowHeight, zone.height);
+			                                    ^
+src/vialab/SMT/SMT.java:1139: warning: [deprecation] physics in Zone has been deprecated
+			if (z.physics) {
+			     ^
+src/vialab/SMT/SMT.java:1162: warning: [deprecation] physics in Zone has been deprecated
+			if (z.physics) {
+			     ^
+5 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/TabZone.java
+src/vialab/SMT/TabZone.java:51: warning: [deprecation] width in Zone has been deprecated
+				rect(0, 0, width, height);
+				           ^
+src/vialab/SMT/TabZone.java:51: warning: [deprecation] height in Zone has been deprecated
+				rect(0, 0, width, height);
+				                  ^
+src/vialab/SMT/TabZone.java:53: warning: [deprecation] width in Zone has been deprecated
+				line(0, 0, width, height);
+				           ^
+src/vialab/SMT/TabZone.java:53: warning: [deprecation] height in Zone has been deprecated
+				line(0, 0, width, height);
+				                  ^
+src/vialab/SMT/TabZone.java:54: warning: [deprecation] width in Zone has been deprecated
+				line(width, 0, 0, height);
+				     ^
+src/vialab/SMT/TabZone.java:54: warning: [deprecation] height in Zone has been deprecated
+				line(width, 0, 0, height);
+				                  ^
+src/vialab/SMT/TabZone.java:58: warning: [deprecation] width in Zone has been deprecated
+				rect(0, 0, width, height);
+				           ^
+src/vialab/SMT/TabZone.java:58: warning: [deprecation] height in Zone has been deprecated
+				rect(0, 0, width, height);
+				                  ^
+src/vialab/SMT/TabZone.java:60: warning: [deprecation] width in Zone has been deprecated
+				line(0, 0, width, height);
+				           ^
+src/vialab/SMT/TabZone.java:60: warning: [deprecation] height in Zone has been deprecated
+				line(0, 0, width, height);
+				                  ^
+src/vialab/SMT/TabZone.java:61: warning: [deprecation] width in Zone has been deprecated
+				line(width, 0, 0, height);
+				     ^
+src/vialab/SMT/TabZone.java:61: warning: [deprecation] height in Zone has been deprecated
+				line(width, 0, 0, height);
+				                  ^
+src/vialab/SMT/TabZone.java:205: warning: [deprecation] width in Zone has been deprecated
+			tab.setSize(width / (Tabs.keySet().size() + 1), TAB_HEIGHT);
+			            ^
+src/vialab/SMT/TabZone.java:207: warning: [deprecation] width in Zone has been deprecated
+		Tab tab = new Tab(tabName, 0, 0, width / (Tabs.keySet().size() + 1), TAB_HEIGHT, tabText);
+		                                 ^
+src/vialab/SMT/TabZone.java:211: warning: [deprecation] x in Zone has been deprecated
+		SMT.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
+		         ^
+src/vialab/SMT/TabZone.java:211: warning: [deprecation] y in Zone has been deprecated
+		SMT.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
+		            ^
+src/vialab/SMT/TabZone.java:211: warning: [deprecation] width in Zone has been deprecated
+		SMT.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
+		               ^
+src/vialab/SMT/TabZone.java:240: warning: [deprecation] width in Zone has been deprecated
+			tab.setSize(width / Tabs.keySet().size(), TAB_HEIGHT);
+			            ^
+src/vialab/SMT/TabZone.java:243: warning: [deprecation] x in Zone has been deprecated
+		SMT.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
+		         ^
+src/vialab/SMT/TabZone.java:243: warning: [deprecation] y in Zone has been deprecated
+		SMT.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
+		            ^
+src/vialab/SMT/TabZone.java:243: warning: [deprecation] width in Zone has been deprecated
+		SMT.grid(x, y, width, 0, 0, Tabs.keySet().toArray(new Zone[Tabs.keySet().size()]));
+		               ^
+src/vialab/SMT/TabZone.java:261: warning: [deprecation] width in Zone has been deprecated
+		rect(0, 0, width, height);
+		           ^
+src/vialab/SMT/TabZone.java:261: warning: [deprecation] height in Zone has been deprecated
+		rect(0, 0, width, height);
+		                  ^
+23 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/zone/AnchorZone.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/zone/SwipeKeyboardLayout.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/zone/ArrowKeysLayout.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/zone/SwipeKeyboard.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/test/TestSwipeKeyboard.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/test/TestZoneAccessors.java
+src/vialab/SMT/test/TestZoneAccessors.java:60: warning: [deprecation] width in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                ^
+src/vialab/SMT/test/TestZoneAccessors.java:60: warning: [deprecation] height in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                            ^
+src/vialab/SMT/test/TestZoneAccessors.java:63: warning: [deprecation] width in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                ^
+src/vialab/SMT/test/TestZoneAccessors.java:63: warning: [deprecation] height in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                            ^
+src/vialab/SMT/test/TestZoneAccessors.java:68: warning: [deprecation] x in Zone has been deprecated
+			zone.x, zone.y);
+			    ^
+src/vialab/SMT/test/TestZoneAccessors.java:68: warning: [deprecation] y in Zone has been deprecated
+			zone.x, zone.y);
+			            ^
+src/vialab/SMT/test/TestZoneAccessors.java:77: warning: [deprecation] width in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                ^
+src/vialab/SMT/test/TestZoneAccessors.java:77: warning: [deprecation] height in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                            ^
+src/vialab/SMT/test/TestZoneAccessors.java:80: warning: [deprecation] width in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                ^
+src/vialab/SMT/test/TestZoneAccessors.java:80: warning: [deprecation] height in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                            ^
+src/vialab/SMT/test/TestZoneAccessors.java:85: warning: [deprecation] x in Zone has been deprecated
+			zone.x, zone.y);
+			    ^
+src/vialab/SMT/test/TestZoneAccessors.java:85: warning: [deprecation] y in Zone has been deprecated
+			zone.x, zone.y);
+			            ^
+12 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/test/TestGets.java
+src/vialab/SMT/test/TestGets.java:51: warning: [deprecation] width in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                ^
+src/vialab/SMT/test/TestGets.java:51: warning: [deprecation] height in Zone has been deprecated
+		rect( 0, 0, zone.width, zone.height);
+		                            ^
+2 warnings
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/TextureZone.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/Touch.java
+javac -cp src:bin:lib/*:lib/processing/* -d bin -source 1.6 -target 1.6 -Xlint:deprecation -Xlint:-options src/vialab/SMT/TouchClient.java

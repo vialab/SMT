@@ -55,6 +55,8 @@ public class Touch extends TuioCursor {
 	public TuioTime assignTime;
 	/** The time at which the TuioCursor/Touch was unassigned */
 	public TuioTime unassignTime;
+	/** The time at which the TuioCursor/Touch was unassigned */
+	public TuioTime deathTime;
 	/**
 	 * A Vector of TuioPoints containing all the previous positions of the TUIO
 	 * component.
@@ -92,6 +94,7 @@ public class Touch extends TuioCursor {
 		//private fields
 		assignTime = null;
 		unassignTime = null;
+		deathTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -121,6 +124,7 @@ public class Touch extends TuioCursor {
 		//private fields
 		assignTime = null;
 		unassignTime = null;
+		deathTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -152,6 +156,7 @@ public class Touch extends TuioCursor {
 		//private fields
 		assignTime = null;
 		unassignTime = null;
+		deathTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -171,9 +176,7 @@ public class Touch extends TuioCursor {
 	}
 
 	/**
-	 * @param t
-	 *            TuioCursor to update the Touch with, since Touch extends
-	 *            TuioCursor, it can also take a Touch
+	 * @param t TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
 	 */
 	public void updateTouch(TuioCursor t) {
 		prevUpdateTime = currentTime;
@@ -246,7 +249,7 @@ public class Touch extends TuioCursor {
 			if (!zone.isAssigned(this))
 				zone.assign(this);
 			this.startTimeMillis = System.currentTimeMillis();
-			assignTime = currentTime;
+			assignTime = currentTime.getSessionTime();
 		}
 	}
 
@@ -259,6 +262,7 @@ public class Touch extends TuioCursor {
 			assignedZones.remove(zone);
 			zone.unassign( this.sessionID);
 			this.startTimeMillis = this.originalTimeMillis;
+			unassignTime= currentTime.getSessionTime();
 		}
 	}
 
@@ -375,6 +379,7 @@ public class Touch extends TuioCursor {
 		TouchEvent event = new TouchEvent( this, TouchEvent.TouchType.UP, this);
 		for( TouchListener listener : listeners)
 			listener.handleTouchUp( event);
+		deathTime = currentTime.getSessionTime();
 	}
 	public void invokeTouchMovedEvent(){
 		TouchEvent event = new TouchEvent( this, TouchEvent.TouchType.MOVED, this);

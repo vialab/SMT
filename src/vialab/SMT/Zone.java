@@ -81,11 +81,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected boolean updateOnlyWhenModified(){ return false;}	
 	public boolean stealChildrensTouch = false;
 	/**
-	 * @deprecated use Zone.setPhysicsEnabled( boolean) instead
-	 */
+	 * @deprecated use Zone.setPhysicsEnabled( boolean) instead */
 	@Deprecated
 	public boolean physics = false;
-	public boolean physics_enabled = false;
+	private boolean physics_enabled = false;
 	BodyDef zoneBodyDef = new BodyDef();
 	Body zoneBody;
 	PolygonShape zoneShape = new PolygonShape();
@@ -102,8 +101,12 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	//The zone's inverse transformation matrix
 	protected PMatrix3D inverse = new PMatrix3D();
 	//properties
+	/**
+	 * @deprecated use Zone.(get|set)(X|Y) instead */
 	@Deprecated
 	public int x, y;
+	/**
+	 * @deprecated use Zone.(get|set)(Width|Height) instead */
 	@Deprecated
 	public int height, width;
 	protected Dimension dimension;
@@ -348,11 +351,14 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param name The new name of the zone
 	 */
 	public void setName(String name) {
-		this.name = name == null ? this.getClass().getSimpleName() : name;
+		this.name =
+			name == null ?
+				this.getClass().getSimpleName() :
+				name;
 		loadMethods(this.name);
 	}
 
-	public void getPhysicsEnabled( boolean enabled){
+	public boolean getPhysicsEnabled(){
 		return physics_enabled;
 	}
 	public void setPhysicsEnabled( boolean enabled){

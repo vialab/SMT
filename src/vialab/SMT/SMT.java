@@ -1135,32 +1135,33 @@ public class SMT {
 	 * after of each Zone to keep the matrix and bodies synchronized
 	 */
 	private static void updateStep() {
-		for (Zone z : getZones()) {
-			if (z.physics) {
+		for( Zone zone : getZones()) {
+			if( zone.getPhysicsEnabled()) {
 				// generate body and fixture for zone if they do not exist
-				if (z.zoneBody == null && z.zoneFixture == null) {
-					z.zoneBody = world.createBody(z.zoneBodyDef);
-					z.zoneFixture = z.zoneBody.createFixture(z.zoneFixtureDef);
+				if( zone.zoneBody == null && zone.zoneFixture == null) {
+					zone.zoneBody = world.createBody( zone.zoneBodyDef);
+					zone.zoneFixture = zone.zoneBody.createFixture(
+						zone.zoneFixtureDef);
 				}
-				z.setBodyFromMatrix();
+				zone.setBodyFromMatrix();
 			}
 			else {
 				// make sure to destroy body for Zones that do not have physics
 				// on, as they should not collide with others
-				if (z.zoneBody != null) {
-					world.destroyBody(z.zoneBody);
-					z.zoneBody = null;
-					z.zoneFixture = null;
-					z.mJoint = null;
+				if( zone.zoneBody != null) {
+					world.destroyBody(zone.zoneBody);
+					zone.zoneBody = null;
+					zone.zoneFixture = null;
+					zone.mJoint = null;
 				}
 			}
 		}
 
 		world.step(1f / parent.frameRate, 8, 3);
 
-		for (Zone z : getZones()) {
-			if (z.physics) {
-				z.setMatrixFromBody();
+		for (Zone zone : getZones()) {
+			if (zone.getPhysicsEnabled()) {
+				zone.setMatrixFromBody();
 			}
 		}
 	}

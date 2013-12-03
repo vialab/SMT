@@ -16,6 +16,7 @@ public class TexturedTouchDrawer
 	private Vector<Touch> deadTouches;
 	private int sections;
 	private float radius;
+	private static long death_duration = 250;
 
 	public TexturedTouchDrawer(){
 		vertices = new Vector<PVector>();
@@ -30,25 +31,41 @@ public class TexturedTouchDrawer
 	public void draw( Iterable<Touch> touches, PGraphics graphics){
 		for( Touch touch : touches){
 			touch.addTouchListener( this);
-			graphics.noStroke();
-			graphics.beginShape( PApplet.TRIANGLE_FAN);
-			graphics.texture( touch_texture);
-			graphics.vertex( touch.x , touch.y, 0, 1);
-			for( PVector vert : vertices)
-				graphics.vertex( touch.x + vert.x, touch.y + vert.y, 0, 0);
-			graphics.endShape();
-			System.out.printf(
-				"%d, %d, %d\n",
-				touch.currentTime.getSeconds(),
-				touch.currentTime.getSessionTime().getSeconds(),
-				touch.currentTime.getSystemTime().getSeconds());
-		}
-		for( Touch touch : deadTouches){
+			drawTouch( touch, graphics, 1f);
 			System.out.printf(
 				"%d, %d\n",
-				touch.currentTime.getSeconds(),
-				touch.currentTime.getSessionTime().getSeconds());
+				touch.currentTime.getTotalMilliseconds(),
+				touch.currentTime.getSessionTime().getTotalMilliseconds());
 		}
+		Touch[] deadTouches_array = deadTouches.toArray( new Touch[0]);
+		for( Touch touch : deadTouches_array){
+			long deadtime_micros =
+				touch.currentTime
+					.getSessionTime().getTotalMilliseconds() -
+				touch.deathTime.getTotalMilliseconds();
+			float ani_step = (float) deadtime_micros / death_duration;
+			drawTouch( touch, graphics, 1 - ani_step);
+			System.out.printf( "%f", ani_step);
+			System.out.printf( " %d\n",
+				touch.deathTime != null ?
+					touch.deathTime.getTotalMilliseconds() : -1);
+			if( ani_step > 1){
+				deadTouches.remove( touch);
+				touch.removeTouchListener( this);
+			}
+		}
+	}
+	private void drawTouch(
+			Touch touch, PGraphics graphics, float alpha){
+		graphics.noStroke();
+		graphics.beginShape( PApplet.TRIANGLE_FAN);
+		graphics.texture( touch_texture);
+		graphics.tint( 255, 255f * alpha);
+		graphics.vertex( touch.x , touch.y, 0, 1);
+		for( PVector vert : vertices)
+			graphics.vertex( touch.x + vert.x, touch.y + vert.y, 0, 0);
+		graphics.endShape();
+		graphics.noTint();
 	}
 
 	// utility functions for textured touch point draw method
