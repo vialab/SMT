@@ -154,7 +154,7 @@ public class SMT {
 	// utility fields for the touch drawing methods
 	private static TexturedTouchDrawer texturedTouchDrawer = null;
 	private static TouchDrawer customTouchDrawer = null;
-	protected static float touch_radius = 50;
+	protected static float touch_radius = 25;
 	protected static int touch_sections = 24;
 
 	/**

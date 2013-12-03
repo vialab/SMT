@@ -1,9 +1,10 @@
-package vialab.SMT.zone;
+package vialab.SMT.swipekeyboard;
 
 //standard library imports
 import java.awt.event.KeyEvent;
-//local imports
-import vialab.SMT.zone.*;
+
+//local library imports
+import vialab.SMT.*;
 
 /**
  * A keyboard ayout that provides just the arrow keys.

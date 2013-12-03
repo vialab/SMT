@@ -1,4 +1,4 @@
-package vialab.SMT.zone;
+package vialab.SMT.swipekeyboard;
 
 //standard library imports
 import java.awt.Dimension;
@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import java.util.Vector;
 //local imports
 import vialab.SMT.*;
-import vialab.SMT.zone.*;
 
 /**
  * A keyboard layout that provides only the basic key set.

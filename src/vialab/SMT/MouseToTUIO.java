@@ -155,7 +155,7 @@ public class MouseToTUIO {
 			Finger cursor = cursorList.nextElement();
 			Point point = cursor.getPosition();
 
-			if (point.distance(x, y) < 20) {
+			if (point.distance(x, y) < SMT.touch_radius) {
 				int selCur = -1;
 				if (selectedCursor != null)
 					selCur = selectedCursor.sessionID;

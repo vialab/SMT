@@ -19,7 +19,7 @@ import processing.opengl.*;
 
 //smt imports
 import vialab.SMT.*;
-import vialab.SMT.zone.*;
+import vialab.SMT.swipekeyboard.*;
 
 //SMT library imports
 

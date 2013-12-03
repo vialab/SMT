@@ -9,7 +9,6 @@ import vialab.SMT.*;
 int display_width = 1200;
 int display_height = 800;
 int fps_limit = 60;
-int puck_count = 10;
 //other
 int display_halfWidth;
 int display_halfHeight;

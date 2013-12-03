@@ -1,4 +1,4 @@
-package vialab.SMT.zone;
+package vialab.SMT;
 
 //standard library imports
 import java.awt.Dimension;
@@ -11,6 +11,7 @@ import processing.core.PVector;
 //smt imports
 import vialab.SMT.*;
 import vialab.SMT.event.*;
+import vialab.SMT.swipekeyboard.*;
 
 /**
  * A Zone that provides swipe keyboard functionality.
@@ -23,7 +24,7 @@ public class SwipeKeyboard extends Zone
 	/**
 	 * Enables and disables debug print statements
 	 */
-	private static final boolean debug = false;
+	private static final boolean debug = true;
 
 	////////////////////
 	// public fields //
@@ -53,6 +54,7 @@ public class SwipeKeyboard extends Zone
 	 * Should be empty if there is no swipe in progress.
 	 */
 	private Vector<SwipeKeyEvent> swipeStack;
+	private SwipeResolver resolver;
 	/**
 	 * A list of all touches currently invovled in the current swipe.
 	 * Should be empty if there is no swipe in progress.
@@ -62,37 +64,23 @@ public class SwipeKeyboard extends Zone
 	/////////////////////////////
 	// private drawing fields //
 	/////////////////////////////
-	/**
-	 * Indicates whether the keyboard's background should be drawn.
-	 */
+	/** Indicates whether the keyboard's background should be drawn. */
 	private boolean drawBackground = false;
-	/**
-	 * The location of the keyboard.
-	 */
+	/** The location of the keyboard. */
 	protected PVector position;
-	/**
-	 * The degree of rounding of the top left corner of this key.
-	 */
+	/** The degree of rounding of the top left corner of this key. */
 	protected int cornerRounding_topLeft;
-	/**
-	 * The degree of rounding of the top right corner of this key.
-	 */
+	/** The degree of rounding of the top right corner of this key. */
 	protected int cornerRounding_topRight;
-	/**
-	 * The degree of rounding of the bottom left corner of this key.
-	 */
+	/** The degree of rounding of the bottom left corner of this key. */
 	protected int cornerRounding_bottomLeft;
-	/**
-	 * The degree of rounding of the bottom right corner of this key.
-	 */
+	/** The degree of rounding of the bottom right corner of this key. */
 	protected int cornerRounding_bottomRight;
 
 	///////////////////
 	// constructors //
 	///////////////////
-	/**
-	 * The default constructor for the keyboard. Uses the prototype Layout
-	 */
+	/** The default constructor for the keyboard. Uses the prototype Layout */
 	public SwipeKeyboard(){
 		this( condensedLayout);
 	}
@@ -126,6 +114,7 @@ public class SwipeKeyboard extends Zone
 		swipe_inProgress = false;
 		touches = new Vector<Touch>();
 		swipeStack = new Vector<SwipeKeyEvent>();
+		resolver = new DefaultSwipeResolver();
 	}
 
 	//////////////////////////////
@@ -265,8 +254,7 @@ public class SwipeKeyboard extends Zone
 	 * @param event The TouchDown that has occured.
 	 */
 	@Override
-	public void handleTouchDown( TouchEvent event){
-	}
+	public void handleTouchDown( TouchEvent event){}
 	/**
 	 * Listens to the occurrance of a TouchUp event and responds accordingly.
 	 * @param event The TouchUp that has occured.
@@ -287,8 +275,7 @@ public class SwipeKeyboard extends Zone
 	 * @param event The TouchMoved that has occured.
 	 */
 	@Override
-	public void handleTouchMoved( TouchEvent event){
-	}
+	public void handleTouchMoved( TouchEvent event){}
 
 	//////////////////////////////
 	// private utility methods //
@@ -303,10 +290,32 @@ public class SwipeKeyboard extends Zone
 		for( SwipeKeyEvent event : swipeStack)
 			swipe += event.getKeyChar();
 		swipeStack.clear();
-		System.out.printf("Swipe Finished: %s\n", swipe);
+
+		//this shouldn't happen, but just in case:
+		if( swipe.length() == 0) return;
+
 		//preprocess swipe string
 		// convert to lower case
-		// remove dupplicates
+		swipe = swipe.toLowerCase();
+		// remove duplicate chars
+		char last = swipe.charAt( 0);
+		String result = String.valueOf( last);
+		for( int i = 1; i < swipe.length(); i++){
+			char current = swipe.charAt( i);
+			if( current != last)
+				result += current;
+			last = current;
+		}
+		swipe = result;
+
+		if( swipe.length() > 1){
+			String word = resolver.resolve( swipe);
+			System.out.printf("Word finished: %s\n", word);
+		}
+		else {
+			char keychar = swipe.charAt( 0);
+			System.out.printf("Key typed: %c\n", keychar);
+		}
 	}
 
 	/////////////////////

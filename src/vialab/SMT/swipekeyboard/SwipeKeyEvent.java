@@ -1,8 +1,7 @@
-package vialab.SMT.event;
+package vialab.SMT.swipekeyboard;
 
 //local imports
 import vialab.SMT.*;
-import vialab.SMT.zone.*;
 
 /**
  * An event class that describes parts of a swipe gesture.

@@ -102,7 +102,6 @@ void draw(){
 	//draw enemy score
 	textAlign( LEFT);
 	text( String.format( "%d", enemy.score), display_halfWidth + 15, 32);
-
 }
 
 void stop(){

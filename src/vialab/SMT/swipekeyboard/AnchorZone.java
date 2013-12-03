@@ -1,4 +1,4 @@
-package vialab.SMT.zone;
+package vialab.SMT.swipekeyboard;
 
 //standard library imports
 import java.awt.Dimension;

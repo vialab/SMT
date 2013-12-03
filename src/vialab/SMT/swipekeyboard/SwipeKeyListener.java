@@ -1,4 +1,4 @@
-package vialab.SMT.event;
+package vialab.SMT.swipekeyboard;
 
 /**
  * The interface for recieving swipe key events. Not to be confused with

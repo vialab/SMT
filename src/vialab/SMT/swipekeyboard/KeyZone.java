@@ -1,4 +1,4 @@
-package vialab.SMT.zone;
+package vialab.SMT.swipekeyboard;
 
 //standard library imports
 import java.awt.Dimension;
@@ -10,7 +10,6 @@ import processing.core.PVector;
 
 //local imports
 import vialab.SMT.*;
-import vialab.SMT.event.*;
 
 /**
  * This class defines a zone that represents a key in a keyboard.

@@ -1,14 +1,12 @@
-package vialab.SMT.zone;
+package vialab.SMT.swipekeyboard;
 
-//standard library imports
-import java.awt.event.KeyEvent;
 //local imports
-import vialab.SMT.zone.*;
+import vialab.SMT.*;
 
 /**
- * A keyboard layout that provides an extended key set.
+ * Class that defines how the keys of a swipe keyboard are laid out and set up.
  */
-public class ExtendedLayout extends SwipeKeyboardLayout{
+public abstract class SwipeKeyboardLayout {
 	/////////////////////
 	// public methods //
 	/////////////////////
@@ -17,6 +15,5 @@ public class ExtendedLayout extends SwipeKeyboardLayout{
 	 * creation, organization, and linking of keys.
 	 * @param  keyboard The keyboard to be set up.
 	 */
-	public void setup( SwipeKeyboard keyboard){
-	}
+	public abstract void setup( SwipeKeyboard keyboard);
 }

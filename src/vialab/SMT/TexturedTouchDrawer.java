@@ -54,6 +54,7 @@ public class TexturedTouchDrawer
 	private void drawTouch(
 			Touch touch, PGraphics graphics, float alpha){
 		graphics.noStroke();
+		graphics.fill(0);
 		graphics.beginShape( PApplet.TRIANGLE_FAN);
 		graphics.texture( touch_texture);
 		graphics.tint( 255, 255f * alpha);
@@ -67,7 +68,8 @@ public class TexturedTouchDrawer
 	// utility functions for textured touch point draw method
 	public void update(){
 		sections = SMT.touch_sections;
-		radius = SMT.touch_radius;
+		//look at the texture used and you'll understand
+		radius = SMT.touch_radius * 2;
 		findVertices();
 	}
 	private void findVertices(){

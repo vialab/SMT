@@ -76,14 +76,11 @@ test-gets: build
 test-tablehockey: build jar
 	processing-shell examples/Demos/TableHockey --present
 
-
 # tutorials
 test-tutorial1: build jar
 	processing-shell examples/Tutorial/One --present
-
 test-tutorial2: build jar
 	processing-shell examples/Tutorial/Two --present
-
 test-tutorial3: build jar
 	processing-shell examples/Tutorial/Three --present
 
@@ -92,3 +89,5 @@ test-touch: build jar
 	processing-shell tests/Touch
 test-ripple: build jar
 	processing-shell tests/Ripple
+test-trail: build jar
+	processing-shell tests/Trail
