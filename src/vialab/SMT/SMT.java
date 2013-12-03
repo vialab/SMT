@@ -229,17 +229,11 @@ public class SMT {
 	 * Allows you to select the TouchSource backend from which to get
 	 * multi-touch events from
 	 * 
-	 * @param parent
-	 *            PApplet - The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
+	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
 	 * 
-	 * @param port
-	 *            int - The port to listen on
+	 * @param port The port to listen on
 	 * 
-	 * @param source
-	 *            int - The source of touch events to listen to. One of:
-	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
-	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
+	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
 	public static void init(
 			final PApplet parent, int port, TouchSource... sources) {
@@ -594,10 +588,13 @@ public class SMT {
 		}
 	}
 
-	/** Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal. Also sets the maximum path length to drawn.
+	/**
+	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal. Also sets the maximum path length to drawn.
 	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
 	 * @param maxPathLength The number of points on a touch's path to draw
+	 * @deprecated use setTouchDraw( TouchDraw) and setMaxPathLength( int) as separate calls, rather than together.
 	 */
+	@Deprecated
 	public static void setTouchDraw( TouchDraw drawMethod, int maxPathLength){
 		setTouchDraw( drawMethod);
 		setMaxPathLength( maxPathLength);
@@ -622,7 +619,7 @@ public class SMT {
 
 	/** Sets the desired number of sections of a drawn touch. Higher amounts result in smoother circles, but have a small performance hit.
 	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
-	 * @param radius the desired number of sections of a drawn touch
+	 * @param sections the desired number of sections of a drawn touch
 	 */
 	public static void setTouchSections( int sections){
 		touch_sections = sections;
@@ -1354,12 +1351,12 @@ public class SMT {
 	 * @param type a class type to cast the Zone to (e.g. Zone.class)
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
-	@SuppressWarnings("unchecked")
 	@Deprecated
 	public static <T extends Zone> T get( String name, Class<T> type) {
 		for( Zone zone : getZones())
-			if( zone.name != null && zone.name.equals(name))
-				return (T) zone;
+			if( name.equals( zone.name) &&
+					type.isInstance( zone))
+				return type.cast( zone);
 		return null;
 	}
 
@@ -1370,7 +1367,10 @@ public class SMT {
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
 	public static Zone get( String name) {
-		return get( name, Zone.class);
+		for( Zone zone : getZones())
+			if( name.equals( zone.name))
+				return zone
+;		return null;
 	}
 
 	/**

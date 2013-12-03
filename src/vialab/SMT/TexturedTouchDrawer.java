@@ -13,9 +13,13 @@ public class TexturedTouchDrawer
 		implements TouchDrawer, TouchListener {
 	private PImage touch_texture = null;
 	private Vector<PVector> vertices;
+	//list of touches that are no longer in use
 	private Vector<Touch> deadTouches;
+	//the number of sections to use when drawing touches
 	private int sections;
+	//the radius to use when drawing touches
 	private float radius;
+	//the duration of the fade-out animation
 	private static long death_duration = 250;
 
 	public TexturedTouchDrawer(){
@@ -32,23 +36,15 @@ public class TexturedTouchDrawer
 		for( Touch touch : touches){
 			touch.addTouchListener( this);
 			drawTouch( touch, graphics, 1f);
-			System.out.printf(
-				"%d, %d\n",
-				touch.currentTime.getTotalMilliseconds(),
-				touch.currentTime.getSessionTime().getTotalMilliseconds());
 		}
 		Touch[] deadTouches_array = deadTouches.toArray( new Touch[0]);
 		for( Touch touch : deadTouches_array){
-			long deadtime_micros =
+			long deadtime_millis =
 				touch.currentTime
 					.getSessionTime().getTotalMilliseconds() -
 				touch.deathTime.getTotalMilliseconds();
-			float ani_step = (float) deadtime_micros / death_duration;
+			float ani_step = (float) deadtime_millis / death_duration;
 			drawTouch( touch, graphics, 1 - ani_step);
-			System.out.printf( "%f", ani_step);
-			System.out.printf( " %d\n",
-				touch.deathTime != null ?
-					touch.deathTime.getTotalMilliseconds() : -1);
 			if( ani_step > 1){
 				deadTouches.remove( touch);
 				touch.removeTouchListener( this);

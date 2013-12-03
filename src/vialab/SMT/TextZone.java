@@ -198,18 +198,16 @@ public class TextZone extends Zone {
 	/**
 	 * Gets the background color of the rectangle that the text is rendered over.
 	 * This rectangle is rendered if this.setDrawTextBkg(true) is used.
-	 * @return
 	 */
 	public int[] getBkgColor(){
-		return new int[]{bkgRed, bkgGreen, bkgBlue, bkgAlpha};
+		return new int[]{ bkgRed, bkgGreen, bkgBlue, bkgAlpha};
 	}
 	
 	/**
 	 * Gets the text color
-	 * @return
 	 */
 	public int[] getTextColor(){
-		return new int[]{txtRed, txtGreen, txtBlue, txtAlpha};
+		return new int[]{ txtRed, txtGreen, txtBlue, txtAlpha};
 	}
 	
 	/**
@@ -218,10 +216,9 @@ public class TextZone extends Zone {
 	 * @param g
 	 * @param b
 	 * @param a
-	 * @return
 	 */
 	public int[] getSelBkgColor(int r, int g, int b, int a){
-			return new int[]{selBkgRed, selBkgGreen, selBkgBlue, selBkgAlpha};
+			return new int[]{ selBkgRed, selBkgGreen, selBkgBlue, selBkgAlpha};
 	}
 	
 	/**
@@ -230,7 +227,6 @@ public class TextZone extends Zone {
 	 * @param g
 	 * @param b
 	 * @param a
-	 * @return
 	 */
 	public int[] getSelTextColor(int r, int g, int b, int a){
 				return new int[]{selTxtRed, selTxtGreen, selTxtBlue, selTxtAlpha};
@@ -248,7 +244,6 @@ public class TextZone extends Zone {
 	/**
 	 * Get the draw text background flag.
 	 * When true, the text will be rendered on a background rectangle
-	 * @return
 	 */
 	public boolean getDrawTextBkg(){
 		return txtBkg;
@@ -264,7 +259,6 @@ public class TextZone extends Zone {
 	
 	/**
 	 * Gets the word zone used to render the text in the textZone
-	 * @return
 	 */
 	public WordZone getWordZone(){
 		return currentWordZone;
@@ -279,7 +273,6 @@ public class TextZone extends Zone {
 	
 	/**
 	 * Gets the flag that states if the text in the TextZone is selectable/highlightable 
-	 * @return
 	 */
 	public boolean getSelectable(){
 		return selectable;
@@ -295,7 +288,6 @@ public class TextZone extends Zone {
 	
 	/**
 	 * Get the font size
-	 * @return
 	 */
 	public float getFontSize(){
 		return fontSize;
@@ -311,7 +303,6 @@ public class TextZone extends Zone {
 	
 	/**
 	 * Gets the flag that states if the TextZone is to receive input from the PApplet (keyboard)
-	 * @return
 	 */
 	public boolean getKeysFromApplet(){
 		return keysFromApplet;
@@ -327,7 +318,6 @@ public class TextZone extends Zone {
 	
 	/**
 	 * Gets the blur flag. If the text is set to blurred.
-	 * @return
 	 */
 	public boolean getBlur(){
 		return blur;
@@ -462,7 +452,6 @@ public class TextZone extends Zone {
 
 	/**
 	 * Gets the text being rendered to the TextZone
-	 * @return
 	 */
 	public String getText(){
 		return currentWordZone.word;

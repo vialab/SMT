@@ -1,9 +1,7 @@
 package vialab.SMT;
 
 /**
- * 	New code should use SMT instead of TouchClient, although it will
- *  be kept for backwards compatibility for an indefinite length of time
- *	@deprecated
+ * @deprecated New code should use the static SMT instead of TouchClient.
  */
-public class TouchClient extends SMT {
-}
+@Deprecated
+public class TouchClient extends SMT {}
