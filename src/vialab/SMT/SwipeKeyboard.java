@@ -3,6 +3,7 @@ package vialab.SMT;
 //standard library imports
 import java.awt.Dimension;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -25,22 +26,20 @@ public class SwipeKeyboard extends Zone
 	/**
 	 * Enables and disables debug print statements
 	 */
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 
 	////////////////////
 	// public fields //
 	////////////////////
-	/**
-	 * A list of all the anchors contained by this keyboard
-	 */
+	/** A list of all the anchors contained by this keyboard */
 	private Vector<AnchorZone> anchors;
-	/**
-	 * A list of all the keys contained by this keyboard
-	 */
+	/** A list of all the keys contained by this keyboard */
 	private Vector<KeyZone> keys;
-	/**
-	 * A list of all the swipeKeys contained by this keyboard
-	 */
+	/** A list of all objects listening swipe events from this keyboard */
+	private Vector<SwipeKeyboardListener> swipeListeners;
+	/** A list of all objects listening swipe events from this keyboard */
+	private Vector<KeyListener> keyListeners;
+	/** A list of all the swipeKeys contained by this keyboard */
 	private Vector<SwipeKeyZone> swipeKeys;
 
 	/////////////////////
@@ -90,6 +89,21 @@ public class SwipeKeyboard extends Zone
 	 * @param  layout The desired keyboard layout.
 	 */
 	public SwipeKeyboard( SwipeKeyboardLayout layout){
+		this( layout, null);
+	}
+	/**
+	 * The main constructor for the keyboard.
+	 * @param  resolver The desired swipe resolver.
+	 */
+	public SwipeKeyboard( SwipeResolver resolver){
+		this( condensedLayout, resolver);
+	}
+	/**
+	 * The main constructor for the keyboard.
+	 * @param  layout The desired keyboard layout.
+	 * @param  resolver The desired swipe resolver.
+	 */
+	public SwipeKeyboard( SwipeKeyboardLayout layout, SwipeResolver resolver){
 		super( "Swipe Keyboard");
 		anchors = new Vector<AnchorZone>();
 		keys = new Vector<KeyZone>();
@@ -111,11 +125,23 @@ public class SwipeKeyboard extends Zone
 		for( SwipeKeyZone key : swipeKeys)
 			this.add( key);
 
+		//setup swipe resolver
+		this.resolver = resolver;
+		if( this.resolver == null)
+			try{
+				this.resolver = new DefaultSwipeResolver();
+			}
+			catch( FileNotFoundException exception){
+				System.err.println(
+				"[SwipeKeyboard] Loading the default swipe resolver failed. Swiping words will not work. Try setting the resolver to your own implementation via the SwipeKeyboard.setSwipeResolver( SwipeResolver) function or the SwipeKeyboard( SwipeResolver) constructor.");
+			}
+
 		//other
 		swipe_inProgress = false;
 		touches = new Vector<Touch>();
+		keyListeners = new Vector<KeyListener>();
+		swipeListeners = new Vector<SwipeKeyboardListener>();
 		swipeStack = new Vector<SwipeKeyEvent>();
-		resolver = new DefaultSwipeResolver();
 	}
 
 	//////////////////////////////
@@ -142,7 +168,24 @@ public class SwipeKeyboard extends Zone
 	 */
 	public void addSwipeKey( SwipeKeyZone key){
 		this.swipeKeys.add( key);
+		key.addKeyListener( this);
 		key.addSwipeKeyListener( this);
+	}
+
+	/**
+	 * Adds a (word) swipe listener to the keyboard.
+	 * @param listener A listener to which events should be sent.
+	 */
+	public void addSwipeKeyboardListener( SwipeKeyboardListener listener){
+		swipeListeners.add( listener);
+	}
+
+	/**
+	 * Adds an key listener to the keyboard.
+	 * @param listener A listener to which events should be sent.
+	 */
+	public void addKeyListener( KeyListener listener){
+		keyListeners.add( listener);
 	}
 
 	////////////////////
@@ -185,8 +228,10 @@ public class SwipeKeyboard extends Zone
 	 */
 	@Override
 	public void keyPressed( KeyEvent event){
-		//if( debug)
-		System.out.printf( "Key Down: %s\n", event.getKeyChar());
+		if( debug)
+			System.out.printf( "Key Down: %s\n", event.getKeyChar());
+		for( KeyListener listener : keyListeners)
+			listener.keyPressed( event);
 	}
 	/**
 	 * Listens to the occurrance of a KeyReleased event and responds accordingly.
@@ -194,8 +239,10 @@ public class SwipeKeyboard extends Zone
 	 */
 	@Override
 	public void keyReleased( KeyEvent event){
-		//if( debug)
-		System.out.printf( "Key Up: %s\n", event.getKeyChar());
+		if( debug)
+			System.out.printf( "Key Up: %s\n", event.getKeyChar());
+		for( KeyListener listener : keyListeners)
+			listener.keyReleased( event);
 	}
 	/**
 	 * Listens to the occurrance of a KeyTyped event and responds accordingly.
@@ -203,8 +250,10 @@ public class SwipeKeyboard extends Zone
 	 */
 	@Override
 	public void keyTyped( KeyEvent event){
-		//if( debug)
-		System.out.printf( "Key Typed: %s\n", event.getKeyChar());
+		if( debug)
+			System.out.printf( "Key Typed: %s\n", event.getKeyChar());
+		for( KeyListener listener : keyListeners)
+			listener.keyTyped( event);
 	}
 
 	///////////////////////////////
@@ -242,9 +291,9 @@ public class SwipeKeyboard extends Zone
 	 */
 	@Override
 	public void swipeEnded( SwipeKeyEvent event){
-		/*Touch touch = event.getTouch();
+		Touch touch = event.getTouch();
 		if( debug) System.out.printf( "Swipe Ended: %s TouchID: %d\n",
-			event.getKeyChar(), touch.getSessionID());*/
+			event.getKeyChar(), touch.getSessionID());
 	}
 
 	/////////////////////////////
@@ -309,16 +358,18 @@ public class SwipeKeyboard extends Zone
 		}
 		swipe = result;
 
-		if( swipe.length() > 1){
+		if( resolver != null){
 			Collection<String> words = resolver.resolve( swipe);
-			System.out.print("Words matched: ");
-			for( String word : words)
-				System.out.printf(" %s ", word);
-			System.out.println();
-		}
-		else {
-			char keychar = swipe.charAt( 0);
-			System.out.printf("Key typed: %c\n", keychar);
+			if( debug){
+				System.out.print("Words matched: ");
+				for( String word : words)
+					System.out.printf(" %s ", word);
+				System.out.println();
+			}
+			SwipeKeyboardEvent event = new SwipeKeyboardEvent(
+				this, swipe, words);
+			for( SwipeKeyboardListener listener : swipeListeners)
+				listener.wordSwiped( event);
 		}
 	}
 

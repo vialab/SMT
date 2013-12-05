@@ -56,6 +56,7 @@ public class TestSwipeKeyboard extends PApplet {
 		//add keyboard test
 		//keyboard = new SwipeKeyboard();
 		keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);
+		keyboard.addSwipeKeyboardListener( new DebugSwipeKeyboardListener());
 		keyboard.translate( 40, 300);
 		SMT.add( keyboard);
 		SMT.add( new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout));
