@@ -1,5 +1,5 @@
 package vialab.SMT.swipekeyboard;
 
 public interface SwipeResolver {
-	public String resolve( String swipe);
+	public java.util.Collection<String> resolve( String swipe);
 }

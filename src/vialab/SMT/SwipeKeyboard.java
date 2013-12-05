@@ -3,6 +3,7 @@ package vialab.SMT;
 //standard library imports
 import java.awt.Dimension;
 import java.awt.event.*;
+import java.util.Collection;
 import java.util.Vector;
 
 //processing imports
@@ -309,8 +310,11 @@ public class SwipeKeyboard extends Zone
 		swipe = result;
 
 		if( swipe.length() > 1){
-			String word = resolver.resolve( swipe);
-			System.out.printf("Word finished: %s\n", word);
+			Collection<String> words = resolver.resolve( swipe);
+			System.out.print("Words matched: ");
+			for( String word : words)
+				System.out.printf(" %s ", word);
+			System.out.println();
 		}
 		else {
 			char keychar = swipe.charAt( 0);
