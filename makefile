@@ -91,3 +91,7 @@ test-ripple: build jar
 	processing-shell tests/Ripple
 test-trail: build jar
 	processing-shell tests/Trail
+
+# other tests
+test-createshape: build jar
+	processing-shell tests/CreateShape
