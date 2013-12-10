@@ -5,7 +5,7 @@ void setup(){
 	//SMT and Processing setup
 	size(displayWidth, displayHeight, P3D);
 	textMode( SHAPE);
-	SMT.init(this, TouchSource.MULTIPLE);
+	SMT.init(this, TouchSource.TUIO_DEVICE);
 
 	//Make a new Zone
 	Zone zone = new Zone( "MyZone");
@@ -42,7 +42,9 @@ void drawMyZone( Zone zone){
 void pickDrawMyZone( Zone zone){
 	rect(0, 0, 400, 400);
 }
-
+void touchMyZone( Zone zone){
+	zone.rst();
+}
 
 // "ChildZone" functions
 
@@ -55,7 +57,9 @@ void drawChildZone( Zone zone){
 void pickDrawChildZone( Zone zone){
 	rect(0, 0, 200, 200);
 }
-
+void touchChildZone( Zone zone){
+	zone.rst();
+}
 // "GrandChildZone" functions
 
 //Draw functions for "MyZone"
@@ -66,4 +70,7 @@ void drawGrandChildZone( Zone zone){
 }
 void pickDrawGrandChildZone( Zone zone){
 	rect(0, 0, 100, 100);
+}
+void touchGrandChildZone( Zone zone){
+	zone.rst();
 }

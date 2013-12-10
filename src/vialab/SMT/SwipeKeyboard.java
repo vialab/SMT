@@ -218,6 +218,11 @@ public class SwipeKeyboard extends Zone
 	public void touchImpl() {
 		rst();
 	}
+	@Override
+	public void assign(Iterable<? extends Touch> touches) {
+		if( ! swipe_inProgress)
+			super.assign( touches);
+	}
 
 	/////////////////////////
 	// KeyListener handles //

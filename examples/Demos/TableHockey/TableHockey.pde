@@ -42,7 +42,7 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	//smt library setup
-	SMT.init( this, TouchSource.MULTIPLE);
+	SMT.init( this, TouchSource.TUIO_DEVICE);
 
 	//create pucks
 	pucks = new Vector<Puck>();

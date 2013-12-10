@@ -16,12 +16,14 @@ PImage tex;
 
 //main functions
 void setup(){
+	display_width = displayWidth;
+	display_height = displayHeight;
 	display_halfWidth = display_width / 2;
 	display_halfHeight = display_height / 2;
 	//processing library setup
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
-	SMT.init( this, TouchSource.MOUSE);
+	SMT.init( this, TouchSource.AUTOMATIC);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
 
 	//load texture and texture options

@@ -1,9 +1,10 @@
 import vialab.SMT.*;
+
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
 	size(displayWidth, displayHeight, P3D);
-	SMT.init(this, TouchSource.MULTIPLE);
+	SMT.init(this, TouchSource.TUIO_DEVICE);
 
 	//Make a new Zone
 	Zone zone = new Zone( "MyZone");

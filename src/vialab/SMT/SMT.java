@@ -221,8 +221,8 @@ public class SMT {
 	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
 	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
 	 */
-	public static void init(PApplet parent, TouchSource source) {
-		init(parent, default_port, source);
+	public static void init(PApplet parent, TouchSource... sources) {
+		init(parent, default_port, sources);
 	}
 
 	/**
@@ -616,6 +616,13 @@ public class SMT {
 		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
 			texturedTouchDrawer.update();
 	}
+	/** Gets the current radius of a drawn touch
+	 * Note: this function is only accurate when using TouchDraw.TEXTURED
+	 * @return the current radius of a drawn touch, in pixels
+	 */
+	public static float getTouchRadius(){
+		return touch_radius;
+	}
 
 	/** Sets the desired number of sections of a drawn touch. Higher amounts result in smoother circles, but have a small performance hit.
 	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
@@ -625,6 +632,13 @@ public class SMT {
 		touch_sections = sections;
 		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
 			texturedTouchDrawer.update();
+	}
+	/** Gets the current section count of a drawn touch
+	 * Note: this function is only relevant when using TouchDraw.TEXTURED
+	 * @return the current section count of a drawn touch, in pixels
+	 */
+	public static int getTouchSections(){
+		return touch_sections;
 	}
 
 	/** Implements the "Smooth" touch draw method */

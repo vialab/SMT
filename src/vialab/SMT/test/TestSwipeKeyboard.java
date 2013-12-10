@@ -1,4 +1,4 @@
-package vialab.SMT.test;
+ package vialab.SMT.test;
 
 //standard library imports
 import java.awt.event.KeyEvent;
@@ -30,8 +30,8 @@ import vialab.SMT.swipekeyboard.*;
 public class TestSwipeKeyboard extends PApplet {
 
 	// constants
-	final int window_width = 1200;
-	final int window_height = 800;
+	int window_width = 1200;
+	int window_height = 800;
 	final int fps_limit = 60;
 
 	// objects
@@ -51,7 +51,8 @@ public class TestSwipeKeyboard extends PApplet {
 		textMode( SHAPE);
 		frame.setTitle("Swipe Keyboard Test");
 		//smt library setup
-		SMT.init( this, TouchSource.MULTIPLE);
+		SMT.init( this, TouchSource.AUTOMATIC);
+		SMT.setTouchDraw( TouchDraw.TEXTURED);
 
 		//add keyboard test
 		//keyboard = new SwipeKeyboard();

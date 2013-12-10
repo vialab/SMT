@@ -2,3 +2,4 @@ documentation/
 javadoc/
 library/SMT.jar
 SMT.zip
+*.log

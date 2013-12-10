@@ -33,10 +33,13 @@ public class TexturedTouchDrawer
 
 	/** Implements the "Textured" touch draw method */
 	public void draw( Iterable<Touch> touches, PGraphics graphics){
+		//draw live touches
 		for( Touch touch : touches){
+			//listen for touch's death
 			touch.addTouchListener( this);
 			drawTouch( touch, graphics, 1f);
 		}
+		//draw dying touches
 		Touch[] deadTouches_array = deadTouches.toArray( new Touch[0]);
 		for( Touch touch : deadTouches_array){
 			long deadtime_millis =
@@ -53,9 +56,11 @@ public class TexturedTouchDrawer
 	}
 	private void drawTouch(
 			Touch touch, PGraphics graphics, float alpha){
+		//texture
 		graphics.noStroke();
 		graphics.fill(0);
-		graphics.beginShape( PApplet.TRIANGLE_FAN);
+		graphics.textureMode( PGraphics.NORMAL);
+		graphics.beginShape( PGraphics.TRIANGLE_FAN);
 		graphics.texture( touch_texture);
 		graphics.tint( 255, 255f * alpha);
 		graphics.vertex( touch.x , touch.y, 0, 1);
