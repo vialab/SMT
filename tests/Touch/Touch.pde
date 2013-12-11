@@ -7,10 +7,10 @@ import vialab.SMT.*;
 //constants
 int display_width = 1200;
 int display_height = 800;
-int fps_limit = 60;
-//other
 int display_halfWidth;
 int display_halfHeight;
+int fps_limit = 60;
+//other
 PImage tex;
 
 //main functions
@@ -94,6 +94,6 @@ public class Prototype extends Zone{
 		ellipse( 0, 0, radius, radius);}
 
 	public void touchImpl(){
-  System.out.println(this.getActiveTouch(0).getTouchSource());
+  	System.out.println(this.getActiveTouch(0).getTouchSource());
 		drag();}
 }

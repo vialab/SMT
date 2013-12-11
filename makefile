@@ -95,3 +95,5 @@ test-trail: build jar
 # other tests
 test-createshape: build jar
 	processing-shell tests/CreateShape
+test-touchsource: build jar
+	processing-shell tests/TouchSource
