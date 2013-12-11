@@ -1,4 +1,3 @@
-
 //standard library imports
 import java.util.Vector;
 
@@ -24,7 +23,7 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	SMT.init( this, TouchSource.AUTOMATIC);
-	SMT.setTouchDraw( TouchDraw.TEXTURED);
+  SMT.setTouchDraw( TouchDraw.TEXTURED);
 
 	//load texture and texture options
 	PImage tex1 = loadImage("resources/touch_texture.png");
@@ -95,5 +94,6 @@ public class Prototype extends Zone{
 		ellipse( 0, 0, radius, radius);}
 
 	public void touchImpl(){
+  System.out.println(this.getActiveTouch(0).getTouchSource());
 		drag();}
 }

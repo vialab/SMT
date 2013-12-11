@@ -1285,7 +1285,8 @@ public class SMT {
 	 * @param is64Bit
 	 *            Whether to use the 64-bit version of the exe
 	 */
-	private static void runWinTouchTuioServer(boolean is64Bit, final String address, final int port) {
+	private static void runWinTouchTuioServer(
+			boolean is64Bit, final String address, final int port) {
 		try {
 			File temp = tempDir();
 			

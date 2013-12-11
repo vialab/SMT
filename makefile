@@ -86,7 +86,7 @@ test-tutorial3: build jar
 
 # prototypes
 test-touch: build jar
-	processing-shell tests/Touch
+	processing-shell tests/Touch --present
 test-ripple: build jar
 	processing-shell tests/Ripple
 test-trail: build jar
