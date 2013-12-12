@@ -25,8 +25,8 @@ public void setup(){
 	textMode( SHAPE);
 	frame.setTitle("Swipe Keyboard Test");
 	//smt library setup
-	SMT.init( this, TouchSource.MULTIPLE);
-	//SMT.setTouchDraw( TouchDraw.TEXTURED);
+	SMT.init( this, TouchSource.TUIO_DEVICE);
+	SMT.setTouchDraw( TouchDraw.TEXTURED);
 
 	//add keyboard test
 	//keyboard = new SwipeKeyboard();
@@ -34,7 +34,7 @@ public void setup(){
 	keyboard.addSwipeKeyboardListener( new DebugSwipeKeyboardListener());
 	keyboard.translate( 40, 300);
 	SMT.add( keyboard);
-	SMT.add( new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout));
+	SMT.add( new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout));x1c
 }
 
 public void draw(){

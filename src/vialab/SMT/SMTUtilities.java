@@ -343,17 +343,18 @@ public final class SMTUtilities {
 		for( Method method : inherited)
 			methodSet.add( method.getName());
 		for (Method method : methods) {
+			String method_name = method.getName();
 			// find all methods that do not correspond to one used by a zone
-			if (!methodSet.contains(method.getName())) {
-				for (String prefix : prefixSet) {
+			if( ! methodSet.contains( method_name)) {
+				for( String prefix : prefixSet) {
 					// check all unaccounted for methods to see if they match
 					// any reserved prefixes
-					if (method.getName().startsWith(prefix)) {
-						System.err.printf(
-							"The method '%s' corresponds a zone named '%s' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '%s'.",
-								method.getName(),
-								method.getName().replaceFirst( prefix, ""),
-								prefix);
+					if( method_name.startsWith( prefix)) {
+					String zoneName = method_name.substring( prefix.length());
+						if(  zoneName.length() != 0)
+							System.err.printf(
+								"The method '%s' corresponds a zone named '%s' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '%s'.",
+								method_name, zoneName, prefix);
 					}
 				}
 			}

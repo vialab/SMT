@@ -44,6 +44,8 @@ void pickDrawMyZone( Zone zone){
 }
 void touchMyZone( Zone zone){
 	zone.rst();
+	System.out.printf("%d\n",
+		zone.getTouches().length);
 }
 
 // "ChildZone" functions

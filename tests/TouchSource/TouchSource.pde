@@ -10,7 +10,6 @@ int display_height = 800;
 int display_halfWidth;
 int display_halfHeight;
 int fps_limit = 60;
-//other
 
 //main functions
 void setup(){

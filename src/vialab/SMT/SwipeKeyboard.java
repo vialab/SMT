@@ -26,7 +26,7 @@ public class SwipeKeyboard extends Zone
 	/**
 	 * Enables and disables debug print statements
 	 */
-	private static final boolean debug = false;
+	private static final boolean debug = true;
 
 	////////////////////
 	// public fields //
