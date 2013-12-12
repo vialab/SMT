@@ -14,8 +14,6 @@ int fps_limit = 60;
 
 //main functions
 void setup(){
-	display_width = displayWidth;
-	display_height = displayHeight;
 	display_halfWidth = display_width / 2;
 	display_halfHeight = display_height / 2;
 	//processing library setup
@@ -31,9 +29,21 @@ void draw(){
 	rect( 0, 0, display_width, display_height);
 }
 
+void touchDown( Touch touch){
+	System.out.printf(
+		"Touch Down, ID: %d Source: %s\n",
+		touch.cursorID, touch.getTouchSource());
+}
+
 void touch(){
 	for( Touch touch : SMT.getTouches())
 		System.out.printf(
-			"ID: %d Source: %s\n",
+			"Touch Moved, ID: %d Source: %s\n",
 			touch.cursorID, touch.getTouchSource());
+}
+
+void touchUp( Touch touch){
+	System.out.printf(
+		"Touch Up, ID: %d Source: %s\n",
+		touch.cursorID, touch.getTouchSource());
 }

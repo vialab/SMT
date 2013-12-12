@@ -338,12 +338,10 @@ public final class SMTUtilities {
 
 	static void warnUncalledMethods(PApplet parent) {
 		Method methods[] = parent.getClass().getMethods();
-		// add inherited methods to the set that should not be checked for being
-		// uncalled
+		//add inherited methods to the set that should not be checked for being uncalled
 		Method inherited[] = parent.getClass().getSuperclass().getMethods();
-		for (Method method : inherited) {
-			methodSet.add(method.getName());
-		}
+		for( Method method : inherited)
+			methodSet.add( method.getName());
 		for (Method method : methods) {
 			// find all methods that do not correspond to one used by a zone
 			if (!methodSet.contains(method.getName())) {
@@ -351,13 +349,11 @@ public final class SMTUtilities {
 					// check all unaccounted for methods to see if they match
 					// any reserved prefixes
 					if (method.getName().startsWith(prefix)) {
-						System.err
-								.println("The method '"
-										+ method.getName()
-										+ "' corresponds a zone named '"
-										+ method.getName().replaceFirst(prefix, "")
-										+ "' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '"
-										+ prefix + "'.");
+						System.err.printf(
+							"The method '%s' corresponds a zone named '%s' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '%s'.",
+								method.getName(),
+								method.getName().replaceFirst( prefix, ""),
+								prefix);
 					}
 				}
 			}
