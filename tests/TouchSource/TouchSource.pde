@@ -31,19 +31,19 @@ void draw(){
 
 void touchDown( Touch touch){
 	System.out.printf(
-		"Touch Down, ID: %d Source: %s\n",
-		touch.cursorID, touch.getTouchSource());
+		"Touch Down, ID: %d X: %d Y: %d Source: %s\n",
+		touch.cursorID, touch.x, touch.y, touch.getTouchSource());
 }
 
 void touch(){
 	for( Touch touch : SMT.getTouches())
 		System.out.printf(
-			"Touch Moved, ID: %d Source: %s\n",
-			touch.cursorID, touch.getTouchSource());
+			"Touch Moved, ID: %d X: %d Y: %d Source: %s\n",
+			touch.cursorID, touch.x, touch.y, touch.getTouchSource());
 }
 
 void touchUp( Touch touch){
 	System.out.printf(
-		"Touch Up, ID: %d Source: %s\n",
-		touch.cursorID, touch.getTouchSource());
+		"Touch Up, ID: %d X: %d Y: %d Source: %s\n",
+		touch.cursorID, touch.x, touch.y, touch.getTouchSource());
 }
