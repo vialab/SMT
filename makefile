@@ -65,8 +65,8 @@ relink:
 test: test-trail
 
 # feature tests
-test-swipekeyboard: build
-	java $(cp) vialab.SMT.test.TestSwipeKeyboard --present
+test-swipekeyboard: build jar
+	processing-shell tests/TestSwipeKeyboard --present
 test-zoneaccessors: build
 	java $(cp) vialab.SMT.test.TestZoneAccessors
 test-gets: build

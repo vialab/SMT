@@ -69,7 +69,7 @@ import TUIO.*;
  * @version 1.0
  */
 public class SMT {
-	
+
 	private static class MainZone extends Zone{
 		MainZone(int x, int y, int w, int h){
 			super(x, y, w, h);
@@ -79,7 +79,7 @@ public class SMT {
 		public void pickDrawImpl(){}
 		public void touchImpl(){}
 	}
-	
+
 	public static Zone sketch;
 	static float box2dScale = 0.1f;
 	static World world;
@@ -240,7 +240,7 @@ public class SMT {
 		if( parent == null)
 			throw new NullPointerException(
 				"Null parent PApplet, pass 'this' to SMT.init() instead of null");
-		
+
 		SMT.parent = parent;
 		SMTUtilities.loadMethods(parent.getClass());
 
@@ -869,7 +869,7 @@ public class SMT {
 	public static boolean remove(Zone... zones) {
 		return SMT.sketch.remove(zones);
 	}
-	
+
 	public static void clearZones(){
 		SMT.sketch.clearChildren();
 	}
@@ -882,7 +882,7 @@ public class SMT {
 	 */
 	public static void draw() {
 		sketch.draw();
-		
+
 		switch (drawTouchPoints) {
 			case CUSTOM:
 				customTouchDrawer.draw( 
@@ -1135,7 +1135,7 @@ public class SMT {
 		if (getTouches().length > 0) {
 			SMTUtilities.invoke(touch, parent, null);
 		}
-		
+
 		sketch.touch();
 
 		updateStep();
@@ -1176,7 +1176,7 @@ public class SMT {
 			}
 		}
 	}
-	
+
 	/**
 	 * @return A temp file directory
 	 * @throws IOException
@@ -1187,7 +1187,7 @@ public class SMT {
 		temp.deleteOnExit();
 		return temp;
 	}
-	
+
 	/**
 	 * @param dir The directory to load the resource into
 	 * @param resource A string containing the name a program in SMT's resources folder
@@ -1210,7 +1210,7 @@ public class SMT {
 		exeTempFile.deleteOnExit();
 		return exeTempFile;
 	}
-	
+
 	/**
 	 * This class encapsulates all the logic for running a seperate process in a thread
 	 * It is used by runWinTouchTuioServer(), runSMart2TuioServer(), and runLeapTuioServer()
@@ -1221,13 +1221,13 @@ public class SMT {
 		String label;
 		String execArg;
 		String prematureShutdownError;
-		
+
 		TouchSourceThread(String label, String execArg, String prematureShutdownError){
 			this.label=label;
 			this.execArg=execArg;
 			this.prematureShutdownError=prematureShutdownError;
 		}
-		
+
 		@Override
 		public void run() {
 			try {
@@ -1289,7 +1289,7 @@ public class SMT {
 			boolean is64Bit, final String address, final int port) {
 		try {
 			File temp = tempDir();
-			
+
 			loadFile(temp, is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
 
 			new TouchSourceThread("WM_TOUCH", loadFile(temp, is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe").getAbsolutePath() + " " + parent.frame.getTitle() + " "
@@ -1303,13 +1303,13 @@ public class SMT {
 	private static void runSmart2TuioServer() {
 		try {
 			File temp = tempDir();
-			
+
 			loadFile(temp, "SMARTTableSDK.Core.dll");
 			loadFile(temp, "libTUIO.dll");
 
 			new TouchSourceThread(
 				"SMART", loadFile(temp, "SMARTtoTUIO2.exe").getAbsolutePath(),
-				"SMART Process died").start();								
+				"SMART Process died").start();
 		}
 		catch (IOException exception) {
 			exception.printStackTrace();

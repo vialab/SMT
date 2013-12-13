@@ -34,7 +34,7 @@ public void setup(){
 	keyboard.addSwipeKeyboardListener( new DebugSwipeKeyboardListener());
 	keyboard.translate( 40, 300);
 	SMT.add( keyboard);
-	SMT.add( new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout));x1c
+	SMT.add( new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout));
 }
 
 public void draw(){

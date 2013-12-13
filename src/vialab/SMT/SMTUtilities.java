@@ -43,9 +43,9 @@ public final class SMTUtilities {
 	static Set<String> methodSet = new HashSet<String>();
 	static Set<String> prefixSet = new HashSet<String>();
 	private static HashSet<Method> invokeList = new HashSet<Method>();
-	
+
 	static HashMap<String,Method> methodMap = new HashMap<String,Method>();
-	
+
 	/**
 	 * This scans all classes in the parent and SMT.extraClassList and puts the found methods into methodMap indexed by their name suffixed with parameters
 	 */
@@ -83,7 +83,7 @@ public final class SMTUtilities {
 		if (!suffix.isEmpty()) {
 			suffix = suffix.substring(0, 1).toUpperCase() + suffix.substring(1, suffix.length());
 		}
-		
+
 		Method m = getPMethod(parent, methodPrefix + suffix, parameterTypes);
 		if(m == null){
 			String suffix_no_num_suffix = suffix;
@@ -374,7 +374,7 @@ public final class SMTUtilities {
 	public static Object invoke(Method method, Zone zone) {
 		return SMTUtilities.invoke(method, Zone.applet, zone);
 	}
-	
+
 	/**
 	 * This tries every different way we know to invoke the method, although we
 	 * should just store the needed info when we get the method
@@ -393,13 +393,13 @@ public final class SMTUtilities {
 			if (SMT.debug && first) {
 				System.out.println("Invoking Method:" + method.toString());
 			}
-			
+
 			Object[] parametersZone = new Object[parameters.length +1];
 			parametersZone[0] = zone;
 			System.arraycopy(parameters, 0, parametersZone, 1, parameters.length);
-			
+
 			Object[] paramSubset = new Object[method.getParameterTypes().length];
-			
+
 			for(int i=0; i<paramSubset.length; i++){
 				Object param = null;
 				for(int k=0; k<parametersZone.length; k++){
@@ -418,7 +418,7 @@ public final class SMTUtilities {
 				}
 				paramSubset[i]=param;
 			}
-			
+
 			if (zone != null && zone.getBoundObject() != null) {
 				try {
 					return method.invoke(zone.getBoundObject(), paramSubset);

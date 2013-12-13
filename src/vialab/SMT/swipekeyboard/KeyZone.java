@@ -69,7 +69,7 @@ public class KeyZone extends Zone {
 	/**
 	 * Enables and disables debug print statements
 	 */
-	private static final boolean debug = false;
+	private static final boolean debug = true;
 
 	/////////////////////////////
 	// private utility fields //
@@ -243,9 +243,11 @@ public class KeyZone extends Zone {
 	@Override
 	public void touchUpImpl( Touch touch) {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchUp");
-		if( touchEventBuffer[1] == TouchEvent.TOUCH_DOWN &&
-				touchEventBuffer[0] == TouchEvent.UNASSIGN)
+		if( touchEventBuffer[0] == TouchEvent.UNASSIGN){
 			invokeKeyReleasedEvent();
+			if( touchEventBuffer[1] == TouchEvent.TOUCH_DOWN)
+				invokeKeyTypedEvent();
+		}
 		bufferTouchEvent( TouchEvent.TOUCH_UP);
 	}
 	/**
