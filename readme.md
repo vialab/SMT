@@ -4,11 +4,11 @@
 
 The website includes:
 
-	* Examples
-	* Processing style reference, with links to our javadocs
-	* Tutorials
-	* Support
-	* And more...
+ * Examples
+ * Processing style reference, with links to our javadocs
+ * Tutorials
+ * Support
+ * And more...
 
 --------------------------------------------
 
