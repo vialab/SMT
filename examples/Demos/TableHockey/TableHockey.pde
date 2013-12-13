@@ -44,6 +44,7 @@ void setup(){
 	//smt library setup
 	SMT.init( this, TouchSource.TUIO_DEVICE);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
+	SMT.setTouchRadius( 10);
 
 	//create pucks
 	pucks = new Vector<Puck>();

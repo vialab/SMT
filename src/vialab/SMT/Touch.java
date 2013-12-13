@@ -29,10 +29,7 @@ public class Touch extends TuioCursor {
 	public int cursorID;
 	/** Reflects the current state of the TuioComponent. */
 	public int state;
-	/**
-	 * The unique session ID number that is assigned to each TUIO object or
-	 * cursor.
-	 */
+	/** The unique session ID number that is assigned to each TUIO object or cursor. */
 	public long sessionID;
 	/** The X coordinate in pixels relative to the PApplet screen width. */
 	public int x;
@@ -110,8 +107,8 @@ public class Touch extends TuioCursor {
 	public Touch(long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(sessionID, cursorID, xCoord, yCoord);
 		this.cursorID = getCursorID();
-		x = getScreenX(applet.width);
-		y = getScreenY(applet.height);
+		x = getScreenX( applet.width);
+		y = getScreenY( applet.height);
 		startTime = getStartTime();
 		currentTime = getTuioTime();
 		xSpeed = getXSpeed();
@@ -139,7 +136,7 @@ public class Touch extends TuioCursor {
 	 * @param xCoord  - float: X Coordinate
 	 * @param yCoord   - float: Y Coordinate
 	 */
-	public Touch(TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
+	public Touch( TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(ttime, sessionID, cursorID, xCoord, yCoord);
 		this.cursorID = getCursorID();
 		x = getScreenX(applet.width);

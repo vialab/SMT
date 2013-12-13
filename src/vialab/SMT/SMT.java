@@ -97,7 +97,7 @@ public class SMT {
 	protected static LinkedList<TuioClient> tuioClientList = new LinkedList<TuioClient>();
 
 	/** Flag for drawing touch points */
-	private static TouchDraw drawTouchPoints = TouchDraw.SMOOTH;
+	private static TouchDraw touchDrawMethod = TouchDraw.SMOOTH;
 
 	/** Matrix used to test if the zone has gone off the screen */
 	// private PMatrix3D mTest = new PMatrix3D();
@@ -539,13 +539,11 @@ public class SMT {
 		return att.onTouchEvent(me);
 	}
 
-	/**
-	 * Returns the list of zones.
-	 * 
-	 * @return zoneList
+	/** Gets all zones recognized by SMT
+	 * @return A array of all the zones that have been added to SMT
 	 */
 	public static Zone[] getZones() {
-		return getDescendents(sketch).toArray( new Zone[0]);
+		return getDescendents( sketch).toArray( new Zone[0]);
 	}
 
 	private static List<Zone> getDescendents(Zone parent) {
@@ -563,17 +561,24 @@ public class SMT {
 	public static void setTouchDraw(
 			TouchDraw drawMethod, TouchDrawer... drawers) {
 		if( drawMethod != TouchDraw.CUSTOM){
-			if( SMT.drawTouchPoints == drawMethod)
+			//return if no change necessary
+			if( SMT.touchDrawMethod == drawMethod)
 				return;
-			SMT.drawTouchPoints = drawMethod;
-			//handle setup
-			if( SMT.drawTouchPoints == TouchDraw.TEXTURED){
+			//set the flag
+			SMT.touchDrawMethod = drawMethod;
+			//handle setup, if neccessary
+			if( SMT.touchDrawMethod == TouchDraw.TEXTURED){
+				//if necessary, initialize, otherwise, just update
 				if( texturedTouchDrawer == null)
 					texturedTouchDrawer = new TexturedTouchDrawer();
 				else texturedTouchDrawer.update();
 			}
+			//remove unusable object references
+			if( customTouchDrawer != null)
+				customTouchDrawer = null;
 		}
 		else {
+			//do validation
 			if( drawers.length == 0)
 				throw new RuntimeException(
 					"SMT.setTouchDraw() was given TouchDraw.CUSTOM, but no custom touch drawer. Try SMT.setTouchDraw( TouchDraw.CUSTOM, myTouchDrawer);");
@@ -584,9 +589,25 @@ public class SMT {
 			if( customTouchDrawer == null)
 				throw new NullPointerException(
 					"The first optional TouchDrawer parameter given to SMT.setTouchDraw() was null.");
-			SMT.drawTouchPoints = drawMethod;
+			//set the drawmethod
+			SMT.touchDrawMethod = drawMethod;
 		}
 	}
+
+	/** Gets the object currently being used to draw touches.
+	 * @return the object currently being used to draw touches. Null if the touches are not being draw with an object.
+	 */
+	public TouchDrawer getTouchDrawer(){
+		switch( touchDrawMethod){
+			case CUSTOM:
+				return customTouchDrawer;
+			case TEXTURED:
+				return texturedTouchDrawer;
+			default:
+				return null;
+		}
+	}
+
 
 	/**
 	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal. Also sets the maximum path length to drawn.
@@ -613,7 +634,7 @@ public class SMT {
 	 */
 	public static void setTouchRadius( float radius){
 		touch_radius = radius;
-		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
+		if( SMT.touchDrawMethod == TouchDraw.TEXTURED)
 			texturedTouchDrawer.update();
 	}
 	/** Gets the current radius of a drawn touch
@@ -630,7 +651,7 @@ public class SMT {
 	 */
 	public static void setTouchSections( int sections){
 		touch_sections = sections;
-		if( SMT.drawTouchPoints == TouchDraw.TEXTURED)
+		if( SMT.touchDrawMethod == TouchDraw.TEXTURED)
 			texturedTouchDrawer.update();
 	}
 	/** Gets the current section count of a drawn touch
@@ -883,7 +904,7 @@ public class SMT {
 	public static void draw() {
 		sketch.draw();
 
-		switch (drawTouchPoints) {
+		switch (touchDrawMethod) {
 			case CUSTOM:
 				customTouchDrawer.draw( 
 					SMTTouchManager.currentTouchState, parent.g);

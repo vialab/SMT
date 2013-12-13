@@ -2,6 +2,9 @@
 import java.awt.Point;
 import java.util.Vector;
 
+//TUIO library imports
+import TUIO.TuioPoint;
+
 //SMT library imports
 import vialab.SMT.*;
 
@@ -13,7 +16,7 @@ int display_halfHeight;
 int fps_limit = 60;
 //other
 PImage tex;
-int path_points = 10;
+int path_points = 30;
 int trail_sections = 20;
 
 //main functions
@@ -26,24 +29,30 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
 
-	//load texture and texture options
-	tex = loadImage("resources/ripple_texture.png");
+	//load texture
+	tex = loadImage("resources/trail_texture.png");
 
 	//other
 
 }
 
 void draw(){
+	//draw background
 	background( 0);
+
+	//draw touches
 	Touch[] touches = SMT.getTouches();
 	if( touches.length > 0){
+		//get first touch data
 		Touch touch = touches[0];
 		Point[] points = touch.getPathPoints();
 		int point_count = min( path_points, points.length);
 		//create the interpolation curve
+		//set up drawing parameters
 		stroke( 255);
 		noFill();
 		beginShape();
+
 		for( int i = 1 ; i <= point_count; i++){
 			Point point = points[ points.length - i];
 			curveVertex( point.x, point.y);
@@ -51,9 +60,4 @@ void draw(){
 		endShape();
 	}
 }
-void touch(){
-	System.out.printf(
-		"%d\n",
-		SMT.getTouches()[0].currentTime
-			.getSessionTime().getTotalMilliseconds());
-}
+void touch(){}

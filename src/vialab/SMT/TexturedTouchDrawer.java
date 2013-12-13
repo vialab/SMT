@@ -21,6 +21,14 @@ public class TexturedTouchDrawer
 	private float radius;
 	//the duration of the fade-out animation
 	private static long death_duration = 250;
+	//touch tinting's red element
+	private float tint_red = 255f;
+	//touch tinting's green element
+	private float tint_green = 255f;
+	//touch tinting's blue element
+	private float tint_blue = 255f;
+	//touch tinting's alpha element
+	private float tint_alpha = 200f;
 
 	public TexturedTouchDrawer(){
 		vertices = new Vector<PVector>();
@@ -54,6 +62,22 @@ public class TexturedTouchDrawer
 			}
 		}
 	}
+
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public void setTint( float red, float green, float blue, float alpha){
+		//do validation?
+		tint_red = red;
+		tint_green = green;
+		tint_blue = blue;
+		tint_alpha = alpha;
+	}
+
+	//private utility functions for textured touch point draw method
 	private void drawTouch(
 			Touch touch, PGraphics graphics, float alpha){
 		//texture
@@ -62,7 +86,11 @@ public class TexturedTouchDrawer
 		graphics.textureMode( PGraphics.NORMAL);
 		graphics.beginShape( PGraphics.TRIANGLE_FAN);
 		graphics.texture( touch_texture);
-		graphics.tint( 255, 255f * alpha);
+		graphics.tint( 
+			tint_red,
+			tint_green,
+			tint_blue,
+			tint_alpha * alpha);
 		graphics.vertex( touch.x , touch.y, 0, 1);
 		for( PVector vert : vertices)
 			graphics.vertex( touch.x + vert.x, touch.y + vert.y, 0, 0);
@@ -70,8 +98,7 @@ public class TexturedTouchDrawer
 		graphics.noTint();
 	}
 
-	// utility functions for textured touch point draw method
-	public void update(){
+	protected void update(){
 		sections = SMT.touch_sections;
 		//look at the texture used and you'll understand
 		radius = SMT.touch_radius * 2;
@@ -90,7 +117,6 @@ public class TexturedTouchDrawer
 				radius * PApplet.cos( theta),
 				radius * PApplet.sin( theta)));
 	}
-
 
 	//touch listener functions
 	public void handleTouchDown( TouchEvent touchEvent){}

@@ -66,7 +66,7 @@ test: test-trail
 
 # feature tests
 test-swipekeyboard: build jar
-	processing-shell tests/TestSwipeKeyboard --present
+	processing-shell tests/TestSwipeKeyboard
 test-zoneaccessors: build
 	java $(cp) vialab.SMT.test.TestZoneAccessors
 test-gets: build
