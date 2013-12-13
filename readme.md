@@ -3,6 +3,7 @@
 ### Project Website: http://vialab.science.uoit.ca/smt/
 
 The website includes:
+
 	* Examples
 	* Processing style reference, with links to our javadocs
 	* Tutorials
