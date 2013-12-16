@@ -1114,7 +1114,7 @@ public class SMT {
 	 *         consistent
 	 * @deprecated
 	 */
-	public static Touch getLastTouch(Touch current) {
+	public static Touch getLastTouch( Touch current) {
 		Vector<TuioPoint> path = current.path;
 		if (path.size() > 1) {
 			TuioPoint last = path.get(path.size() - 2);
@@ -1145,18 +1145,15 @@ public class SMT {
 		if (mtt != null) {
 			// update touches from mouseToTUIO joint cursors as they are a
 			// special case and need to be shown to user
-			for (Touch t : SMTTouchManager.currentTouchState) {
+			for( Touch t : SMTTouchManager.currentTouchState)
 				t.isJointCursor = false;
-			}
-			for (Integer i : mtt.getJointCursors()) {
+			for( Integer i : mtt.getJointCursors())
 				SMTTouchManager.currentTouchState.getById(i).isJointCursor = true;
-			}
 		}
 
 		parent.g.flush();
-		if (getTouches().length > 0) {
-			SMTUtilities.invoke(touch, parent, null);
-		}
+		if( getTouches().length > 0)
+			SMTUtilities.invoke( touch, parent, null);
 
 		sketch.touch();
 
@@ -1237,6 +1234,138 @@ public class SMT {
 	}
 
 	/**
+	 * Runs a server that sends TUIO events using Windows 7 Touch events
+	 * 
+	 * @param is64Bit Whether to use the 64-bit version of the exe
+	 */
+	private static void runWinTouchTuioServer(
+			boolean is64Bit, final String address, final int port) {
+		try {
+			File temp = tempDir();
+
+			File touchhook = loadFile( temp,
+				is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
+			File touch2tuio = loadFile( temp,
+				is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe")
+
+			String touch2tuio_path = touch2tuio.getAbsolutePath();
+			String window_title = parent.frame.getTitle();
+			String exec = String.format(
+				"%s %s %s %s", touch2tuio_path, window_title, address, port);
+			String error_message = "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting your computer.";
+
+			TouchSourceThread wintouch_thread = new TouchSourceThread(
+				"WM_TOUCH", exec, error_message);
+			wintouch_thread.start();
+		}
+		catch( IOException exception) {
+			exception.printStackTrace();
+		}
+	}
+
+	private static void runSmart2TuioServer() {
+		try {
+			File temp = tempDir();
+
+			File smartsdk = loadFile( temp, "SMARTTableSDK.Core.dll");
+			File libtuio = loadFile( temp, "libTUIO.dll");
+			File smart2tuio = loadFile( temp, "SMARTtoTUIO2.exe");
+
+			String exec = smart2tuio.getAbsolutePath();
+
+			TouchSourceThread smart_thread = new TouchSourceThread(
+				"SMART", exec, "SMART Process died");
+			smart_thread.start();
+		}
+		catch (IOException exception) {
+			exception.printStackTrace();
+		}
+	}
+
+	/**
+	 * Runs a server that sends TUIO events using Windows 7 Touch events
+	 * 
+	 * @param is64Bit
+	 *            Whether to use the 64-bit version of the exe
+	 */
+	private static void runLeapTuioServer(final int port) {
+		try {
+			File temp = tempDir();
+			File leap = loadFile( temp, "Leap.dll");
+			File motionless = loadFile( temp, "motionLess.exe");
+
+			String exec = String.format( "%s %s",
+				motionless.getAbsolutePath(), port);
+			String error_message = "LEAP Process died early, make sure Visual C++ 2010 Redistributable (x86) is installed (http://www.microsoft.com/en-ca/download/details.aspx?id=5555)";
+
+			TouchSourceThread leap_thread = new TouchSourceThread(
+				"LEAP", exec, error_message);
+			leap_thread.start();
+		}
+		catch (IOException exception) {
+			exception.printStackTrace();
+		}
+	}
+
+	/**
+	 * Runs an exe from a path, presumably for translating native events to tuio
+	 * events
+	 */
+	public static void runExe(final String path) {
+		new TouchSourceThread( path, path, path + " Process died").start();
+	}
+
+	/**
+	 * @param zone The zone to place on top of the others
+	 */
+	public static void putZoneOnTop(Zone zone) {
+		sketch.putChildOnTop( zone);
+	}
+
+	/**
+	 * This finds a zone by its name, returning the first zone with the given
+	 * name or null.
+	 * <br/>
+	 * This will throw ClassCastException if the Zone is not an instance of the
+	 * given class , and non-applicable type compile errors when the given class
+	 * does not extend Zone.
+	 * 
+	 * @param name The name of the zone to find
+	 * @param type a class type to cast the Zone to (e.g. Zone.class)
+	 * @return a Zone with the given name or null if it cannot be found
+	 */
+	@Deprecated
+	public static <T extends Zone> T get( String name, Class<T> type) {
+		for( Zone zone : getZones())
+			if( name.equals( zone.name) && type.isInstance( zone))
+				return type.cast( zone);
+		return null;
+	}
+
+	/**
+	 * This finds a zone by its name, returning the first zone with the given
+	 * name or null
+	 * @param name The name of the zone to find
+	 * @return a Zone with the given name or null if it cannot be found
+	 */
+	public static Zone get( String name) {
+		for( Zone zone : getZones())
+			if( name.equals( zone.name))
+				return zone;
+		return null;
+	}
+
+	/**
+	 * This adds objects to check for drawZoneName, touchZoneName, etc methods
+	 * in, similar to PApplet
+	 * @param classes The additional objects to check in for methods
+	 */
+	public static void addMethodClasses( Class<?>... classes) {
+		for( Class<?> c : classes)
+			SMTUtilities.loadMethods( c);
+	}
+
+	/**
 	 * This class encapsulates all the logic for running a seperate process in a thread
 	 * It is used by runWinTouchTuioServer(), runSMart2TuioServer(), and runLeapTuioServer()
 	 * To avoid duplicated code. It puts labels on output and allows specifying a error message
@@ -1298,133 +1427,5 @@ public class SMT {
 				System.err.println( label + " TUIO Server stopped!");
 			}
 		}
-	}
-
-	/**
-	 * Runs a server that sends TUIO events using Windows 7 Touch events
-	 * 
-	 * @param is64Bit
-	 *            Whether to use the 64-bit version of the exe
-	 */
-	private static void runWinTouchTuioServer(
-			boolean is64Bit, final String address, final int port) {
-		try {
-			File temp = tempDir();
-
-			File touchhook = loadFile( temp,
-				is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
-			File touch2tuio = loadFile( temp,
-				is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe")
-			String touch2tuio_path = touch2tuio.getAbsolutePath();
-			String window_title = parent.frame.getTitle();
-			String exec = String.format(
-				"%s %s %s %s", touch2tuio_path, window_title, address, port);
-			String error_message = "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting your computer.";
-
-			TouchSource wintouch_thread = new TouchSourceThread(
-				"WM_TOUCH", exec, error_message);
-			wintouch_thread.start();
-		}
-		catch( IOException exception) {
-			exception.printStackTrace();
-		}
-	}
-
-	private static void runSmart2TuioServer() {
-		try {
-			File temp = tempDir();
-
-			loadFile(temp, "SMARTTableSDK.Core.dll");
-			loadFile(temp, "libTUIO.dll");
-
-			new TouchSourceThread(
-				"SMART", loadFile(temp, "SMARTtoTUIO2.exe").getAbsolutePath(),
-				"SMART Process died").start();
-		}
-		catch (IOException exception) {
-			exception.printStackTrace();
-		}
-	}
-
-	/**
-	 * Runs a server that sends TUIO events using Windows 7 Touch events
-	 * 
-	 * @param is64Bit
-	 *            Whether to use the 64-bit version of the exe
-	 */
-	private static void runLeapTuioServer(final int port) {
-		try {
-			File temp = tempDir();
-			loadFile(temp, "Leap.dll");
-			new TouchSourceThread(
-				"LEAP",
-				loadFile( temp, "motionLess.exe")
-					.getAbsolutePath() + " " + port,
-				"LEAP Process died early, make sure Visual C++ 2010 Redistributable (x86) is installed (http://www.microsoft.com/en-ca/download/details.aspx?id=5555)")
-				.start();
-		}
-		catch (IOException exception) {
-			exception.printStackTrace();
-		}
-	}
-
-	/**
-	 * Runs an exe from a path, presumably for translating native events to tuio
-	 * events
-	 */
-	public static void runExe(final String path) {
-		new TouchSourceThread(path, path, path + " Process died").start();
-	}
-
-	/**
-	 * @param zone
-	 *            The zone to place on top of the others
-	 */
-	public static void putZoneOnTop(Zone zone) {
-		sketch.putChildOnTop(zone);
-	}
-
-	/**
-	 * This finds a zone by its name, returning the first zone with the given
-	 * name or null.
-	 * <br/>
-	 * This will throw ClassCastException if the Zone is not an instance of the
-	 * given class , and non-applicable type compile errors when the given class
-	 * does not extend Zone.
-	 * 
-	 * @param name The name of the zone to find
-	 * @param type a class type to cast the Zone to (e.g. Zone.class)
-	 * @return a Zone with the given name or null if it cannot be found
-	 */
-	@Deprecated
-	public static <T extends Zone> T get( String name, Class<T> type) {
-		for( Zone zone : getZones())
-			if( name.equals( zone.name) &&
-					type.isInstance( zone))
-				return type.cast( zone);
-		return null;
-	}
-
-	/**
-	 * This finds a zone by its name, returning the first zone with the given
-	 * name or null
-	 * @param name The name of the zone to find
-	 * @return a Zone with the given name or null if it cannot be found
-	 */
-	public static Zone get( String name) {
-		for( Zone zone : getZones())
-			if( name.equals( zone.name))
-				return zone
-;		return null;
-	}
-
-	/**
-	 * This adds objects to check for drawZoneName, touchZoneName, etc methods
-	 * in, similar to PApplet
-	 * @param classes The additional objects to check in for methods
-	 */
-	public static void addMethodClasses(Class<?>... classes) {
-		for (Class<?> c : classes)
-			SMTUtilities.loadMethods(c);
 	}
 }
