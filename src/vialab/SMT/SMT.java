@@ -149,7 +149,7 @@ public class SMT {
 
 	static int mainListenerPort;
 	protected static boolean inShutdown = false;
-	public static boolean debug = true;
+	public static boolean debug = false;
 	public static File smt_tempdir = null;
 
 	// utility fields for the touch drawing methods
@@ -272,8 +272,7 @@ public class SMT {
 			try{ connect_tuio( port);}
 			catch( TuioConnectionException exception){
 				System.out.printf(
-					"Opening a tuio listener on port %d failed. Tuio devices probably won't work.\n",
-					port);
+					"Opening a tuio listener on port %d failed. Tuio devices probably won't work.\n", port);
 			}
 			//increment port regardless of success so tuio devices don't get mistaken for other sources
 			// if this connection failed, the port is probably going to be incremented anyways when openning a new listener.

@@ -1,12 +1,17 @@
 package vialab.SMT.swipekeyboard;
 
 //standard library imports
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.Vector;
 
 //processing imports
+import processing.core.PApplet;
 import processing.core.PVector;
+
+//libTuio imports
+import TUIO.*;
 
 //local imports
 import vialab.SMT.*;
@@ -63,13 +68,18 @@ public class KeyZone extends Zone {
 	 */
 	protected int cornerRounding_bottomRight;
 
+	private Color stroke_base;
+	private Color stroke_highlight;
+	private TuioTime lastTouch;
+	private static final long fade_duration = 350;
+
 	///////////////////
 	// debug fields //
 	///////////////////
 	/**
 	 * Enables and disables debug print statements
 	 */
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 
 	/////////////////////////////
 	// private utility fields //
@@ -165,6 +175,9 @@ public class KeyZone extends Zone {
 		this.keyChar = keyChar;
 		this.keyLocation = keyLocation;
 		label = String.valueOf( keyChar);
+		stroke_base = new Color( 50, 50, 50, 255);
+		stroke_highlight = new Color( 240, 240, 240, 255);
+		lastTouch = TuioTime.getSessionTime();
 
 		//set drawing fields
 		position = new PVector( 0, 0);
@@ -189,11 +202,18 @@ public class KeyZone extends Zone {
 	 * Draws the key.
 	 */
 	@Override
-	public void drawImpl() {
+	public void drawImpl(){
 		//draw key
 		fill( 20, 20, 20, 255);
 		strokeWeight(4);
-		stroke( 50, 50, 50, 255);
+		float ratio = 0;
+		if( this.getNumTouches() == 0){
+			long session = TuioTime.getSessionTime().getTotalMilliseconds();
+			long last = lastTouch.getTotalMilliseconds();
+			ratio = ( session - last) / (float) fade_duration;
+		}
+		Color mix = mixColours( stroke_highlight, stroke_base, ratio);
+		stroke( mix.getRed(), mix.getBlue(), mix.getGreen(), mix.getAlpha());
 		rect(
 			position.x, position.y,
 			dimension.width, dimension.height,
@@ -213,7 +233,7 @@ public class KeyZone extends Zone {
 	 * Draws the touch selection area of the key.
 	 */
 	@Override
-	public void pickDrawImpl() {
+	public void pickDrawImpl(){
 		rect(
 			position.x, position.y,
 			dimension.width, dimension.height,
@@ -221,16 +241,16 @@ public class KeyZone extends Zone {
 			cornerRounding_bottomRight, cornerRounding_bottomLeft);
 	}
 	/**
-	 * Overrides the Zone touch method to define null behavior.
+	 * Records the time of last touch for use when drawing.
 	 */
 	@Override
-	public void touchImpl() {}
+	public void touchImpl(){}
 	/**
 	 * Detects the touchDown event and responds appropriately.
 	 * @param touch The vialab.SMT.Touch passed to the function by SMT
 	 */
 	@Override
-	public void touchDownImpl( Touch touch) {
+	public void touchDownImpl( Touch touch){
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchDown");
 		if( touchEventBuffer[0] == TouchEvent.ASSIGN)
 			invokeKeyPressedEvent();
@@ -241,7 +261,7 @@ public class KeyZone extends Zone {
 	 * @param touch The vialab.SMT.Touch passed to the function by SMT
 	 */
 	@Override
-	public void touchUpImpl( Touch touch) {
+	public void touchUpImpl( Touch touch){
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchUp");
 		if( touchEventBuffer[0] == TouchEvent.UNASSIGN){
 			invokeKeyReleasedEvent();
@@ -255,7 +275,7 @@ public class KeyZone extends Zone {
 	 * @param touch The vialab.SMT.Touch passed to the function by SMT
 	 */
 	@Override
-	public void pressImpl( Touch touch) {
+	public void pressImpl( Touch touch){
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "press");
 		//bufferTouchEvent( TouchEvent.PRESS);
 	}
@@ -263,7 +283,7 @@ public class KeyZone extends Zone {
 	 * Detects a touch entering event and responds by invoking a SwipeHit event.
 	 * @param touches The list of touches passed to the function by SMT
 	 */
-	public void assign(Iterable<? extends Touch> touches) {
+	public void assign( Iterable<? extends Touch> touches){
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "assign");
 		bufferTouchEvent( TouchEvent.ASSIGN);
 		super.assign( touches);
@@ -272,9 +292,10 @@ public class KeyZone extends Zone {
 	 * Detects a touch exiting event and responds appropriately.
 	 * @param touch The vialab.SMT.Touch passed to the function by SMT
 	 */
-	public void unassign(Touch touch) {
+	public void unassign( Touch touch){
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "unassign");
 		bufferTouchEvent( TouchEvent.UNASSIGN);
+		lastTouch = touch.currentTime;
 		super.unassign( touch);
 	}
 
@@ -303,7 +324,6 @@ public class KeyZone extends Zone {
 	 * Creates a KeyTyped event and sends it to all listeners for handling.
 	 */
 	public void invokeKeyTypedEvent(){
-		System.out.println("asdf");
 		KeyEvent event = constructKeyEvent( KeyEvent.KEY_TYPED);
 		for( KeyListener listener : keyListeners){
 			listener.keyTyped( event);
@@ -372,9 +392,13 @@ public class KeyZone extends Zone {
 	 */
 	protected KeyEvent constructKeyEvent( int id){
 		//is it okay to use 0 for KeyEvent's constructor's modifiers parameter?
+		int keyCode = ( id == KeyEvent.KEY_TYPED) ?
+			KeyEvent.VK_UNDEFINED : this.keyCode;
+		int keyLocation = ( id == KeyEvent.KEY_TYPED) ?
+			KeyEvent.KEY_LOCATION_UNKNOWN : this.keyLocation;
 		return new KeyEvent(
 			this.applet, id, System.currentTimeMillis(), 0,
-			this.keyCode, this.keyChar, this.keyLocation);
+			keyCode, this.keyChar, keyLocation);
 	}
 
 	////////////////////////////////
@@ -388,6 +412,23 @@ public class KeyZone extends Zone {
 		for( int i = 1; i < touchEventBuffer.length; i++)
 			touchEventBuffer[ i] = touchEventBuffer[ i - 1];
 		touchEventBuffer[ 0] = event;
+	}
+	private Color mixColours( Color base, Color highlight, float ratio){
+		float converse = 1 - ratio;
+		float red = base.getRed() * converse + highlight.getRed() * ratio;
+		float green = base.getBlue() * converse + highlight.getBlue() * ratio;
+		float blue = base.getGreen() * converse + highlight.getGreen() * ratio;
+		float alpha = base.getAlpha() * converse + highlight.getAlpha() * ratio;
+		return new Color(
+			clamp( red),
+			clamp( green),
+			clamp( blue),
+			clamp( alpha));
+	}
+	private int clamp( float c){
+		if( c < 0) return 0;
+		else if( c > 255) return 255;
+		else return Math.round( c);
 	}
 
 	////////////

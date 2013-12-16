@@ -1,12 +1,12 @@
 package vialab.SMT.swipekeyboard;
 
 public class DebugSwipeKeyboardListener implements SwipeKeyboardListener{
-	public void wordSwiped( SwipeKeyboardEvent event){
+	public void swipeCompleted( SwipeKeyboardEvent event){
 		System.out.printf(
-			"The swipe %s was resolved to the following words:\n\t{",
+			"Swipe %s resolved to: ",
 			event.getSwipeString());
 		for( String word : event.getSuggestions())
 			System.out.printf( " %s", word);
-		System.out.println(" }");
+		System.out.println();
 	}
 }

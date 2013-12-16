@@ -494,7 +494,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return A Touch[] containing all touches that are active on the zone
 	 */
 	public Touch[] getTouches() {
-		return activeTouches.values().toArray(new Touch[activeTouches.values().size()]);
+		return activeTouches.values().toArray( new Touch[0]);
 	}
 
 	/**
@@ -923,8 +923,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void removeFromParent() {
 		if(parent != null && parent.children.contains(this))
 			parent.remove(this);
-		else if (SMT.debug)
-			System.err.println("Warning: removeFromParent where parent is null or this zone is not a child of");
+		else if( SMT.debug)
+			System.err.println( "Warning: removeFromParent where parent is null or this zone is not a child of");
 	}
 	
 	public boolean remove(Zone... zones){
