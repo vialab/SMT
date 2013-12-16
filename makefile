@@ -6,7 +6,6 @@ clean: clean-specials
 clean-specials:
 	rm -rf library/SMT.jar SMT.zip
 	rm -rf javadoc/ SMT/
-freshen: clean build
 
 #variables
 cp = -cp src:bin:lib/*:lib/processing/*

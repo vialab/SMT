@@ -149,7 +149,8 @@ public class SMT {
 
 	static int mainListenerPort;
 	protected static boolean inShutdown = false;
-	public static boolean debug = false;
+	public static boolean debug = true;
+	public static File smt_tempdir = null;
 
 	// utility fields for the touch drawing methods
 	private static TexturedTouchDrawer texturedTouchDrawer = null;
@@ -1203,10 +1204,13 @@ public class SMT {
 	 * @throws IOException
 	 */
 	private static File tempDir(){
-		File temp = new File(System.getProperty("java.io.tmpdir") + "/SMT");
-		temp.mkdir();
-		temp.deleteOnExit();
-		return temp;
+		if( smt_tempdir == null){
+			smt_tempdir = new File(
+				System.getProperty("java.io.tmpdir") + "/SMT");
+			smt_tempdir.mkdir();
+			smt_tempdir.deleteOnExit();
+		}
+		return smt_tempdir;
 	}
 
 	/**
@@ -1243,59 +1247,55 @@ public class SMT {
 		String execArg;
 		String prematureShutdownError;
 
-		TouchSourceThread(String label, String execArg, String prematureShutdownError){
-			this.label=label;
-			this.execArg=execArg;
-			this.prematureShutdownError=prematureShutdownError;
+		TouchSourceThread( String label, String execArg, String prematureShutdownError){
+			this.label = label;
+			this.execArg = execArg;
+			this.prematureShutdownError = prematureShutdownError;
 		}
 
 		@Override
 		public void run() {
 			try {
-				Process tuioServer = Runtime.getRuntime().exec(execArg);
+				Process tuioServer = Runtime.getRuntime().exec( execArg);
 				BufferedReader tuioServerErr = new BufferedReader(
-					new InputStreamReader(
-						tuioServer.getErrorStream()));
+					new InputStreamReader( tuioServer.getErrorStream()));
 				BufferedReader tuioServerOut = new BufferedReader(
-					new InputStreamReader(
-						tuioServer.getInputStream()));
+					new InputStreamReader( tuioServer.getInputStream()));
 				BufferedWriter tuioServerIn = new BufferedWriter(
-					new OutputStreamWriter(
-						tuioServer.getOutputStream()));
+					new OutputStreamWriter( tuioServer.getOutputStream()));
 
 				tuioServerList.add(tuioServer);
 				tuioServerErrList.add(tuioServerErr);
 				tuioServerOutList.add(tuioServerOut);
 				tuioServerInList.add(tuioServerIn);
 
-				while (true) {
-					if (tuioServerErr.ready() && debug)
+				while( true) {
+					if( SMT.debug && tuioServerErr.ready())
 						System.err.println(
 							label + ": " + tuioServerErr.readLine());
-					if (tuioServerOut.ready() && debug)
+					if( SMT.debug && tuioServerOut.ready())
 						System.out.println(
 							label + ": " + tuioServerOut.readLine());
 
 					try {
-						int r = tuioServer.exitValue();
-						if(SMT.debug)
-							System.out.println(label + " return value=" + r);
-						if(!SMT.inShutdown)
-							System.err.println(prematureShutdownError);
+						int result = tuioServer.exitValue();
+						if( SMT.debug)
+							System.out.println(label + " return value=" + result);
+						if( ! SMT.inShutdown)
+							System.err.println( prematureShutdownError);
 						break;
 					}
-					catch( IllegalThreadStateException e) {
+					catch( IllegalThreadStateException exception) {
 						// still running... sleep time
 						Thread.sleep(100);
 					}
 				}
 			}
-			catch (IOException exception){
+			catch( IOException exception){
 				System.err.println( exception.getMessage());
 			}
-			catch (Exception exception){
-				System.err.println(
-					label + " TUIO Server stopped!");
+			catch( Exception exception){
+				System.err.println( label + " TUIO Server stopped!");
 			}
 		}
 	}
@@ -1311,12 +1311,21 @@ public class SMT {
 		try {
 			File temp = tempDir();
 
-			loadFile(temp, is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
+			File touchhook = loadFile( temp,
+				is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
+			File touch2tuio = loadFile( temp,
+				is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe")
+			String touch2tuio_path = touch2tuio.getAbsolutePath();
+			String window_title = parent.frame.getTitle();
+			String exec = String.format(
+				"%s %s %s %s", touch2tuio_path, window_title, address, port);
+			String error_message = "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting your computer.";
 
-			new TouchSourceThread("WM_TOUCH", loadFile(temp, is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe").getAbsolutePath() + " " + parent.frame.getTitle() + " "
-										+ address + " " + port, "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting your computer.").start();
+			TouchSource wintouch_thread = new TouchSourceThread(
+				"WM_TOUCH", exec, error_message);
+			wintouch_thread.start();
 		}
-		catch (IOException exception) {
+		catch( IOException exception) {
 			exception.printStackTrace();
 		}
 	}
