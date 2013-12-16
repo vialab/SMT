@@ -1246,7 +1246,7 @@ public class SMT {
 			File touchhook = loadFile( temp,
 				is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
 			File touch2tuio = loadFile( temp,
-				is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe")
+				is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe");
 
 			String touch2tuio_path = touch2tuio.getAbsolutePath();
 			String window_title = parent.frame.getTitle();
