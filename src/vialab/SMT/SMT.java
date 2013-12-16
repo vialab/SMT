@@ -179,61 +179,46 @@ public class SMT {
 	}
 
 	/*
-	 * Initializes the SMT, begins listening to a TUIO source on the
-	 * default port of 3333
 	 */
 
 	/**
+	 * Initializes SMT, begining listening to a TUIO source on the
+	 * default port of 3333 and using automatic touch source selection.
 	 * 
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
-	 * 
-	 * @param parent
-	 *            - PApplet: The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
+	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
 	 */
 	public static void init(PApplet parent) {
 		init(parent, default_port);
 	}
 
 	/**
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
+	 * Initializes SMT, begining listening to a TUIO source on the
+	 * specified port and using automatic touch source selection.
 	 * 
-	 * @param parent
-	 *            PApplet - The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
-	 * @param port
-	 *            int - The port to listen on
+	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param port The port to listen on
 	 */
 	public static void init(PApplet parent, int port) {
 		init(parent, port, default_touchsource);
 	}
 
 	/**
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
+	 * Initializes SMT, begining listening to a TUIO source on the
+	 * default port of 3333 and using the specified touch sources.
 	 * 
-	 * @param parent
-	 *            PApplet - The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
-	 * @param source
-	 *            enum TouchSource - The source of touch events to listen to.
-	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
-	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
+	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
 	public static void init(PApplet parent, TouchSource... sources) {
 		init(parent, default_port, sources);
 	}
 
 	/**
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
+	 * Initializes SMT, begining listening to a TUIO source on the
+	 * specified port and using the specified touch sources.
 	 * 
 	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
-	 * 
 	 * @param port The port to listen on
-	 * 
 	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
 	public static void init(
