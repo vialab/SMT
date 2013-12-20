@@ -50,7 +50,7 @@ public class MouseToTUIO {
 	Vector<Integer> stickyCursors = new Vector<Integer>();
 	/**
 	 * Vector of the joint cursors.
-	 * <P>
+	 * <br/>
 	 * These cursors are meant to move as a group.
 	 */
 	Vector<Integer> jointCursors = new Vector<Integer>();
@@ -64,9 +64,9 @@ public class MouseToTUIO {
 	 * messages. Sets the screen to be full-screen if the boolean/flag is set to
 	 * true.
 	 * 
-	 * @param width int - width of the screen
-	 * @param height int - height of the screen
-	 * @param port int - port to connect to
+	 * @param width width of the screen
+	 * @param height height of the screen
+	 * @param port port to connect to
 	 */
 	public MouseToTUIO(int width, int height, int port) {
 		super();
@@ -143,8 +143,7 @@ public class MouseToTUIO {
 	/**
 	 * Adds a cursor to the table state
 	 * 
-	 * @param me
-	 *            MouseEvent - The mouse pressed event
+	 * @param me MouseEvent - The mouse pressed event
 	 */
 	public void mousePressed(MouseEvent me) {
 		int x = me.getX();
@@ -228,8 +227,7 @@ public class MouseToTUIO {
 	/**
 	 * Currently not used
 	 * 
-	 * @param me
-	 *            MouseEvent
+	 * @param me MouseEvent
 	 */
 	public void mouseMoved(MouseEvent me) {
 	}
@@ -237,8 +235,7 @@ public class MouseToTUIO {
 	/**
 	 * Currently not used
 	 * 
-	 * @param me
-	 *            MouseEvent
+	 * @param me MouseEvent
 	 */
 	public void mouseClicked(MouseEvent me) {
 	}
@@ -246,8 +243,7 @@ public class MouseToTUIO {
 	/**
 	 * Currently not used
 	 * 
-	 * @param me
-	 *            MouseEvent
+	 * @param me MouseEvent
 	 */
 	public void mouseEntered(MouseEvent me) {
 	}
@@ -255,8 +251,7 @@ public class MouseToTUIO {
 	/**
 	 * Will release the Touch when the mouse exits the window
 	 * 
-	 * @param me
-	 *            MouseEvent
+	 * @param me MouseEvent
 	 */
 	public void mouseExited(MouseEvent me) {
 		// prevent touches getting stuck down by making them release on exit

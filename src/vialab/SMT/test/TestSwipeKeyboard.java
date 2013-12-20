@@ -61,6 +61,10 @@ public class TestSwipeKeyboard extends PApplet {
 		keyboard.translate( 40, 300);
 		SMT.add( keyboard);
 		SMT.add( new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout));
+
+		//add text zone
+		SwipeDisplayer texty = new SwipeDisplayer( "Texty", 500, 0, 500, 200);
+		SMT.add( texty);
 	}
 
 	public void draw(){
@@ -71,6 +75,23 @@ public class TestSwipeKeyboard extends PApplet {
 
 	public void stop(){
 		super.stop();
+	}
+
+	private class SwipeDisplayer extends Zone
+			implements SwipeKeyboardListener {
+		String content;
+		public SwipeDisplayer( String name, int x, int y, int width, int height){
+			super( name, x, y , width, height);
+			content = new String();
+		}
+		public void drawImpl(){}
+		public void touchImpl(){
+			rst();
+		}
+
+		public void swipeCompleted( SwipeKeyboardEvent event){}
+		public void swipeStarted( SwipeKeyboardEvent event){}
+		public void swipeProgressed( SwipeKeyboardEvent event){}
 	}
 
 	// program entry point

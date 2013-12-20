@@ -107,17 +107,6 @@ public class SwipeKeyZone extends KeyZone {
 		super.touchUpImpl( touch);
 	}
 	/**
-	 * Overrides the Zone method to define null behavior.
-	 */
-	@Override
-	public void touchImpl() {}
-	/**
-	 * Detects the press event and responds appropriately.
-	 * @param touch The vialab.SMT.Touch passed to the function by SMT
-	 */
-	@Override
-	public void pressImpl( Touch touch) {}
-	/**
 	 * Detects a touch entering event and responds by invoking a SwipeHit event.
 	 * @param touches The list of touches passed to the function by SMT
 	 */

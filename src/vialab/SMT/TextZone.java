@@ -20,15 +20,15 @@ public class TextZone extends Zone {
 		private boolean selected = false;
 
 		@SuppressWarnings("unused")
-		public WordZone(WordZone original) {
-			super(original.x, original.y, original.width, original.height);
+		public WordZone( WordZone original) {
+			super( original.x, original.y, original.width, original.height);
 			this.word = original.word;
 			this.setDirect(true);
 			this.selected = original.selected;
 		}
 
 		public WordZone(int x, int y, int width, int height) {
-			super(x, y, width, height);
+			super( x, y, width, height);
 			this.word = "";
 			TextZone.this.add(this);
 			this.setDirect(true);

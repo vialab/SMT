@@ -26,7 +26,7 @@ public class SwipeKeyboard extends Zone
 	/**
 	 * Enables and disables debug print statements
 	 */
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 
 	////////////////////
 	// public fields //
@@ -322,7 +322,7 @@ public class SwipeKeyboard extends Zone
 		touches.remove( touch);
 		if( touches.isEmpty()){
 			swipe_inProgress = false;
-			resolveSwipe();
+			completeSwipe();
 		}
 	}
 	/**
@@ -339,7 +339,7 @@ public class SwipeKeyboard extends Zone
 	 * Converts the current stack of swipe events into a string and sends that
 	 * string to all swipe listeners for processing.
 	 */
-	private void resolveSwipe(){
+	private void completeSwipe(){
 		String swipe = new String();
 		//load string
 		for( SwipeKeyEvent event : swipeStack)
@@ -363,19 +363,10 @@ public class SwipeKeyboard extends Zone
 		}
 		swipe = result;
 
-		if( resolver != null){
-			Collection<String> words = resolver.resolve( swipe);
-			if( debug){
-				System.out.print("Words matched: ");
-				for( String word : words)
-					System.out.printf(" %s ", word);
-				System.out.println();
-			}
-			SwipeKeyboardEvent event = new SwipeKeyboardEvent(
-				this, swipe, words);
-			for( SwipeKeyboardListener listener : swipeListeners)
-				listener.wordSwiped( event);
-		}
+		SwipeKeyboardEvent event = new SwipeKeyboardEvent(
+			this, SwipeKeyboardEvent.Type.SWIPE_COMPLETED, swipe, resolver);
+		for( SwipeKeyboardListener listener : swipeListeners)
+			listener.swipeCompleted( event);
 	}
 
 	/////////////////////
