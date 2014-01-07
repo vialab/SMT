@@ -24,6 +24,7 @@ void setup(){
 	size( display_width, display_height, P3D);
 	SMT.init( this, TouchSource.AUTOMATIC);
   SMT.setTouchDraw( TouchDraw.TEXTURED);
+  ((TexturedTouchDrawer) SMT.getTouchDrawer()).setTint( 150, 80, 150, 255);
 
 	//load texture and texture options
 	PImage tex1 = loadImage("resources/touch_texture.png");

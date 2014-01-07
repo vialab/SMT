@@ -50,8 +50,8 @@ docs-test: docs
 	chromium-browser javadoc/index.html
 
 git-prepare:
-	git add -A
 	git add -u
+	git add -A
 
 relink:
 	rm -f lib/*

@@ -582,7 +582,7 @@ public class SMT {
 	/** Gets the object currently being used to draw touches.
 	 * @return the object currently being used to draw touches. Null if the touches are not being draw with an object.
 	 */
-	public TouchDrawer getTouchDrawer(){
+	public static TouchDrawer getTouchDrawer(){
 		switch( touchDrawMethod){
 			case CUSTOM:
 				return customTouchDrawer;
@@ -1293,8 +1293,7 @@ public class SMT {
 	}
 
 	/**
-	 * Runs an exe from a path, presumably for translating native events to tuio
-	 * events
+	 * Runs an exe from a path, presumably for translating native events to tuio events
 	 */
 	public static void runExe(final String path) {
 		new TouchSourceThread( path, path, path + " Process died").start();
