@@ -74,12 +74,12 @@ public class TestSwipeKeyboard extends PApplet {
 	}
 
 	// program entry point
-  static public void main( String[] passedArgs) {
-    String[] appletArgs = new String[] { "vialab.SMT.test.TestSwipeKeyboard"};
-    if (passedArgs != null) {
-      PApplet.main(concat(appletArgs, passedArgs));
-    } else {
-      PApplet.main(appletArgs);
-    }
-  }
+	static public void main( String[] args) {
+		String[] appletArgs = new String[] { "vialab.SMT.test.TestSwipeKeyboard"};
+		if (args != null) {
+			PApplet.main(concat(appletArgs, args));
+		} else {
+			PApplet.main(appletArgs);
+		}
+	}
 }
