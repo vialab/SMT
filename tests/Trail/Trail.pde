@@ -30,14 +30,15 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	SMT.init( this, TouchSource.AUTOMATIC);
-	SMT.setTouchDraw( TouchDraw.NONE);
+	SMT.setTouchDraw( TouchDraw.TEXTURED);
+	SMT.setTouchRadius( 15);
 
 	//load texture
 	tex = loadImage("resources/trail_texture.png");
 
 	//points
 	points = new Vector<SamplePoint>();
-	points.add( new SamplePoint( 100, 200));
+	/*points.add( new SamplePoint( 100, 200));
 	points.add( new SamplePoint( 200, 200));
 	points.add( new SamplePoint( 300, 200));
 	points.add( new SamplePoint( 400, 200));
@@ -48,7 +49,7 @@ void setup(){
 	points.add( new SamplePoint( 900, 200));
 	points.add( new SamplePoint( 1000, 200));
 	for( SamplePoint point : points)
-		SMT.add( point);
+		SMT.add( point);*/
 
 	//other
 	movingPoints = new Vector<SamplePoint>();
@@ -58,11 +59,32 @@ void draw(){
 	//draw background
 	background( 0);
 
-	//draw touches
-	/*Touch[] touches = SMT.getTouches();
-	if( touches.length > 0){
+	//draw raw touch trails
+	drawRawTrails();
+
+	//drawConnectingLine();
+	//drawBernsteinPolynomial();
+	//drawBspline();
+	//drawNearestNeighbour();
+	drawNearestNeighbourTouchPath();
+}
+
+void drawConnectingLine(){
+	int pointCount = points.size();
+	stroke( 150, 230, 150, 150);
+	strokeWeight( 3);
+	noFill();
+	for( int i = 1; i < pointCount; i++){
+		SamplePoint prev = points.get( i - 1);
+		SamplePoint curr = points.get( i);
+		line( prev.pos.x, prev.pos.y, curr.x, curr.y);
+	}
+}
+
+void drawRawTrails(){
+	Touch[] touches = SMT.getTouches();
+	for( Touch touch : touches){
 		//get first touch data
-		Touch touch = touches[0];
 		Point[] points = touch.getPathPoints();
 		int point_count = min( path_points, points.length);
 		//create the interpolation curve
@@ -76,23 +98,6 @@ void draw(){
 			curveVertex( point.x, point.y);
 		}
 		endShape();
-	}*/
-
-	drawConnectingLine();
-	//drawBernsteinPolynomial();
-	//drawBspline();
-	drawNearestNeighbour();
-}
-
-void drawConnectingLine(){
-	int pointCount = points.size();
-	stroke( 150, 230, 150, 150);
-	strokeWeight( 3);
-	noFill();
-	for( int i = 1; i < pointCount; i++){
-		SamplePoint prev = points.get( i - 1);
-		SamplePoint curr = points.get( i);
-		line( prev.pos.x, prev.pos.y, curr.x, curr.y);
 	}
 }
 
@@ -180,9 +185,73 @@ void drawNearestNeighbour(){
 	stroke( 230, 230, 150, 200);
 	strokeWeight( 3);
 	noFill();
+
+	int t_n = 20;
+	int point_n = points.size();
+	float dt = (float)1 / t_n;
+	for( int t_i = 0; t_i <= t_n; t_i++){
+		float t = dt * t_i;
+		System.out.printf( "t_i, t, dt: %d, %f, %f\n", t_i, t, dt);
+		float x = 0;
+		float y = 0;
+		float sum = 0;
+		for( int point_i = 0; point_i < point_n; point_i++){
+			SamplePoint point = points.get( point_i);
+			float p_t = (float) point_i / point_n;
+			float w = expweight( p_t - t);
+			x += w * point.x;
+			y += w * point.y;
+			sum += w;
+			//System.out.printf( "t, p_t, w: %f, %f, %f\point_n", t, p_t, w);
+		}
+		if( sum == 0) break;
+		x /= sum;
+		y /= sum;
+		ellipse( x, y, radius, radius);
+	}
+}
+
+void drawNearestNeighbourTouchPath(){
+	int radius = 15;
+	stroke( 230, 230, 150, 200);
+	strokeWeight( 3);
+	noFill();
+
+	Touch[] touches = SMT.getTouches();
+	for( Touch touch : touches){
+		Point[] points = touch.getPathPoints();
+		int t_n = 50;
+		int point_n = min( points.length, path_points);
+		float distance_threshold = 0.2;
+		float dt = (float) 1 / t_n;
+		for( int t_i = 0; t_i <= t_n; t_i++){
+			float t = dt * t_i;
+			float x = 0;
+			float y = 0;
+			float sum = 0;
+			for( int point_i = 0; point_i < point_n; point_i++){
+				Point point = points[ points.length - point_i - 1];
+				float p_t = (float) point_i / point_n;
+				float distance = p_t - t;
+				if( distance > distance_threshold) continue;
+				float w = expweight( distance);
+				x += w * point.x;
+				y += w * point.y;
+				sum += w;
+			}
+			if( sum == 0) break;
+			x /= sum;
+			y /= sum;
+			ellipse( x, y, radius, radius);
+		}
+	}
 }
 
 
+float expweight( float distance){
+	float c = 0.1;
+	return exp( - pow( distance / c, 2) / 2);
+}
 
 void recalculate(){/*
 	println( "Recalculating...");
