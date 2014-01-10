@@ -15,13 +15,11 @@ int display_halfWidth;
 int display_halfHeight;
 int fps_limit = 60;
 //other
-PImage tex;
-int path_points = 15;
-int time_cutoff = 2000;
-int trail_sections = 20;
-boolean drawrawtrail = true;
-boolean drawrawpoints = true;
+PImage trail_texture;
+boolean drawrawtrail = false;
+boolean drawrawpoints = false;
 boolean drawnnt = true;
+float trail_width = 10.0;
 
 //main functions
 void setup(){
@@ -35,7 +33,7 @@ void setup(){
 	SMT.setTouchRadius( 15);
 
 	//load texture
-	tex = loadImage("resources/trail_texture.png");
+	trail_texture = loadImage("resources/trail_texture.png");
 }
 
 void draw(){
@@ -55,50 +53,118 @@ void drawNearestNeighbourTrail(){
 	noFill();
 
 	TuioTime sessionTime = TuioTime.getSessionTime();
-	
 	long currentTime = sessionTime.getTotalMilliseconds();
+	
 	Touch[] touches = SMT.getTouches();
 	for( Touch touch : touches){
-		Vector<Point> points = new Vector<Point>();
-		for( int i = touch.path.size() - 1; i >= 0; i--){
-			long millis = touch.path.get( i).getTuioTime().getTotalMilliseconds();
-			System.out.printf(
-				"sess, start, sys, touch: %d, %d\n",
-				currentTime, millis);
-			//if( 
-		}
-
+		//smoothing parameters
+		int time_threshold = 1000;
+		boolean timeDistance_model = true;
 		float distance_threshold = 0.2;
-		float c = 0.2;
-		int t_n = 25;
-		int point_n = min( points.size(), path_points);
+		boolean distance_threshold_enabled = false;
+		int point_threshold = 60;
+		float c = 0.05;
+		int t_n = 100;
+
+		//select points that are within the time threshold
+		Vector<TuioPoint> points = selectPoints(
+			touch, currentTime, time_threshold, point_threshold);
+
+		//convenience variables
+		int point_n = points.size();
+		if( point_n < 2) break;
 		float dt = (float) 1 / t_n;
-		beginShape();
+		Vector<CurvePoint> curvePoints = new Vector<CurvePoint>();
+		//for t_n points on the domain [ 0, 1]
 		for( int t_i = 0; t_i <= t_n; t_i++){
 			float t = dt * t_i;
+			//average their position
 			float x = 0;
 			float y = 0;
 			float sum = 0;
-			for( int point_i = 0; point_i < points.size(); point_i++){
-				Point point = points.get( points.size() - point_i - 1);
-				float p_t = (float) point_i / point_n;
+			for( int point_i = 0; point_i < point_n; point_i++){
+				TuioPoint point = points.get( point_i);
+				long pointTime = point.getTuioTime().getTotalMilliseconds();
+
+				//locate the point in the domain
+				float p_t = 
+					timeDistance_model ?
+						(float) ( currentTime - pointTime) / time_threshold :
+						(float) point_i / point_n;
+				//calculate distance on the domain
 				float distance = p_t - t;
-				//if( distance > distance_threshold) continue;
+				//discard if distance is too great
+				if( distance_threshold_enabled)
+					if( distance > distance_threshold)
+						continue;
+				//calculate weight with a gaussian function on distance
 				float w = expweight( distance, c);
-				x += w * point.x;
-				y += w * point.y;
+				//add weighted components
+				x += w * point.getX();
+				y += w * point.getY();
 				sum += w;
 			}
+			//avoid death
 			if( sum == 0) break;
-			x /= sum;
-			y /= sum;
-			//ellipse( x, y, radius, radius);
-			curveVertex( x, y);
+			x *= this.width / sum;
+			y *= this.height / sum;
+			//add point
+			CurvePoint curvePoint = new CurvePoint( x, y);
+			curvePoints.add( curvePoint);
+		}
+		int curvePoints_size = curvePoints.size();
+
+		//calculate the tangents and normals
+		//calculate first's tanget
+		CurvePoint first = curvePoints.firstElement();
+		CurvePoint second = curvePoints.get( 1);
+		first.tx = second.x - first.x;
+		first.ty = second.y - first.y;
+		//calculate lasts's tanget
+		CurvePoint last = curvePoints.lastElement();
+		CurvePoint secondLast = curvePoints.get( curvePoints_size - 2);
+		last.tx = last.x - secondLast.x;
+		last.ty = last.y - secondLast.y;
+		//prepare for iterations
+		CurvePoint previous = first;
+		CurvePoint current = second;
+		CurvePoint next = null;
+		//for all the rest
+		for( int i = 1 ; i < curvePoints_size - 1; i++){
+			next = curvePoints.get( i + 1);
+			current.tx = next.x - previous.x;
+			current.ty = next.y - previous.y;
+			float tr = sqrt( pow( current.tx, 2) + pow( current.ty, 2));
+			if( tr != 0.0){
+				current.tx /= tr;
+				current.ty /= tr;
+			}
+			previous = current;
+			current = next;
+		}
+
+		noStroke();
+		fill(0);
+		textureMode( NORMAL);
+		beginShape( QUAD_STRIP);
+		texture( trail_texture);
+		for( int i = 0 ; i < curvePoints_size; i++){
+			float t = (float) ( curvePoints_size - 1 - i) / ( curvePoints_size - 1);
+			CurvePoint point = curvePoints.get( i);
+			float nx = - point.ty;
+			float ny = point.tx;
+			vertex(
+				point.x + trail_width * nx,
+				point.y + trail_width * ny,
+				t, 0.0);
+			vertex(
+				point.x - trail_width * nx,
+				point.y - trail_width * ny,
+				t, 1.0);
 		}
 		endShape();
 	}
 }
-
 
 float expweight( float distance, float c){
 	return exp( - pow( distance / c, 2) / 2);
@@ -109,7 +175,7 @@ void drawRawTrails(){
 	for( Touch touch : touches){
 		//get first touch data
 		Point[] points = touch.getPathPoints();
-		int point_count = min( path_points, points.length);
+		int point_count = min( 25, points.length);
 		//create the interpolation curve
 		//set up drawing parameters
 		stroke( 255, 255, 255, 150);
@@ -127,12 +193,10 @@ void drawRawTrails(){
 void drawRawPoints(){
 	Touch[] touches = SMT.getTouches();
 	for( Touch touch : touches){
-		int radius = 15;
-		//get first touch data
 		Point[] points = touch.getPathPoints();
-		int point_count = min( path_points, points.length);
-		//create the interpolation curve
+		int point_count = min( 25, points.length);
 		//set up drawing parameters
+		int radius = 15;
 		stroke( 255, 255, 255, 150);
 		noFill();
 
@@ -143,8 +207,25 @@ void drawRawPoints(){
 	}
 }
 
+Vector<TuioPoint> selectPoints(
+		Touch touch, long currentTime, int time_threshold, int point_threshold){
+	//result points
+	Vector<TuioPoint> points = new Vector<TuioPoint>();
+	//for every point along the path
+	for( int i = touch.path.size() - 1; i >= 0; i--){
+		TuioPoint point = touch.path.get( i);
+		//get point time
+		long pointTime = point.getTuioTime().getTotalMilliseconds();
+		//add points that are within the time threshold
+		if( currentTime - pointTime <= time_threshold)
+			points.add( point);
+		if( points.size() >= point_threshold) break;
+	}
+	return points;
+}
+
 void keyPressed(){
-	println( key);
+	//println( key);
 	switch( key){
 		case 'a':{
 			drawrawtrail = ! drawrawtrail;
@@ -156,5 +237,16 @@ void keyPressed(){
 			drawnnt = ! drawnnt;
 			break;}
 		default: break;
+	}
+}
+
+public class CurvePoint {
+	public float x = 0;
+	public float y = 0;
+	public float tx = 0;
+	public float ty = 0;
+	public CurvePoint( float x, float y){
+		this.x = x;
+		this.y = y;
 	}
 }

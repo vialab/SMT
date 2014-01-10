@@ -222,7 +222,7 @@ public class SMT {
 	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
 	public static void init(
-			final PApplet parent, int port, TouchSource... sources) {
+			PApplet parent, int port, TouchSource... sources) {
 		if( parent == null)
 			throw new NullPointerException(
 				"Null parent PApplet, pass 'this' to SMT.init() instead of null");
