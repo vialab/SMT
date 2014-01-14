@@ -89,7 +89,7 @@ public class SMT {
 		new LinkedList<Process>();
 
 	/** Processing PApplet */
-	protected static PApplet parent;
+	public static PApplet parent;
 
 	/** Gesture Handler */
 	// private static GestureHandler handler;

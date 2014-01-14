@@ -8,6 +8,7 @@ import java.util.Vector;
 
 //processing imports
 import processing.core.PApplet;
+import processing.core.PShape;
 import processing.core.PVector;
 
 //libTuio imports
@@ -51,6 +52,18 @@ public class KeyZone extends Zone {
 	 * The text that appears on this key.
 	 */
 	protected String label;
+	/**
+	 * The icon that appears on this key.
+	 */
+	protected PShape icon;
+	/**
+	 * Whether the given text appears on this key.
+	 */
+	protected boolean label_enabled = true;
+	/**
+	 * Whether the given icon appears on this key.
+	 */
+	protected boolean icon_enabled = false;
 	/**
 	 * The degree of rounding of the top left corner of this key.
 	 */
@@ -175,6 +188,9 @@ public class KeyZone extends Zone {
 		this.keyChar = keyChar;
 		this.keyLocation = keyLocation;
 		label = String.valueOf( keyChar);
+		label_enabled = true;
+		icon = null;
+		icon_enabled = false;
 		stroke_base = new Color( 50, 50, 50, 255);
 		stroke_highlight = new Color( 240, 240, 240, 255);
 		lastTouch = TuioTime.getSessionTime();
@@ -204,6 +220,7 @@ public class KeyZone extends Zone {
 	@Override
 	public void drawImpl(){
 		//draw key
+		pushStyle();
 		fill( 20, 20, 20, 255);
 		strokeWeight(4);
 		float ratio = 0;
@@ -219,15 +236,31 @@ public class KeyZone extends Zone {
 			dimension.width, dimension.height,
 			cornerRounding_topLeft, cornerRounding_topRight,
 			cornerRounding_bottomRight, cornerRounding_bottomLeft);
-		//draw text
-		fill( 255, 255, 255, 200);
-		textSize( Math.round( dimension.height * 0.6));
-		textAlign( CENTER);
-		float halfAscent = textAscent()/2;
-		float halfDescent = textDescent()/2;
-		text( label,
-			position.x + halfDimension.width,
-			position.y + halfDimension.height + halfAscent - halfDescent);
+
+		//draw icon
+		if( icon_enabled){
+			int icon_inset = 10;
+			shape( icon,
+				position.x + icon_inset,
+				position.y + icon_inset,
+				dimension.width - 2 * icon_inset,
+				dimension.height - 2 * icon_inset);
+		}
+		
+		//draw label
+		if( label_enabled){
+			fill( 255, 255, 255, 200);
+			textSize( Math.round( dimension.height * 0.6));
+			textAlign( CENTER);
+			float halfAscent = textAscent()/2;
+			float halfDescent = textDescent()/2;
+			text( label,
+				position.x + halfDimension.width,
+				position.y + halfDimension.height + halfAscent - halfDescent);
+		}
+
+		//clean up
+		popStyle();
 	}
 	/**
 	 * Draws the touch selection area of the key.
@@ -350,6 +383,31 @@ public class KeyZone extends Zone {
 	 */
 	public void setLabel( String label){
 		this.label = label;
+		this.label_enabled = true;
+		this.icon_enabled = false;
+	}
+	/**
+	 * Sets the text that is displayed on the key.
+	 * @param label The text to be displayed on the key.
+	 */
+	public void setIcon( PShape icon){
+		this.icon = icon;
+		this.label_enabled = false;
+		this.icon_enabled = true;
+	}
+	/**
+	 * Sets whether the text appears on this key.
+	 * @param enabled whether the text should appear on this key
+	 */
+	public void setLabelEnabled( boolean enabled){
+		this.label_enabled = enabled;
+	}
+	/**
+	 * Sets whether the icon appears on this key.
+	 * @param enabled whether the icon should appear on this key
+	 */
+	public void setIconEnabled( boolean enabled){
+		this.icon_enabled = enabled;
 	}
 	/**
 	 * Sets the degree of rounding of the key's corners.

@@ -173,7 +173,20 @@ public class SwipeKeyboard extends Zone
 	}
 
 	/**
-	 * Adds a (word) swipe listener to the keyboard.
+	 * Adds an key or swipe listener to the keyboard.
+	 * If listener is a swipe listener, it will be added as both a key and
+	 * swipe listener.
+	 * @param listener A listener to which events should be sent.
+	 */
+	public void addListener( KeyListener listener){
+		addKeyListener( listener);
+		if( listener instanceof SwipeKeyboardListener)
+			addSwipeKeyboardListener( (SwipeKeyboardListener) listener);
+	}
+
+	/**
+	 * Adds a swipe listener to the keyboard.
+	 * If listener is a swipe listener, it will be added as only a swipe listener.
 	 * @param listener A listener to which events should be sent.
 	 */
 	public void addSwipeKeyboardListener( SwipeKeyboardListener listener){
@@ -182,6 +195,7 @@ public class SwipeKeyboard extends Zone
 
 	/**
 	 * Adds an key listener to the keyboard.
+	 * If listener is a swipe listener, it will be added as only a key listener.
 	 * @param listener A listener to which events should be sent.
 	 */
 	public void addKeyListener( KeyListener listener){

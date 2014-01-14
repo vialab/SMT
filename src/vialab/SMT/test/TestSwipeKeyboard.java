@@ -29,17 +29,25 @@ import vialab.SMT.swipekeyboard.*;
  */
 public class TestSwipeKeyboard extends PApplet {
 
-	// constants
+	// display properties
 	int window_width = 1200;
 	int window_height = 800;
+	int window_halfWidth;
+	int window_halfHeight;
 	final int fps_limit = 60;
 
 	// objects
 	SwipeKeyboard keyboard;
+	SwipeKeyboard arrows;
 
 	// other
-	int window_halfWidth;
-	int window_halfHeight;
+	PShape arrow_down;
+	PShape arrow_left;
+	PShape arrow_right;
+	PShape arrow_up;
+	PShape caps;
+	PShape shift;
+
 
 	// main functions
 	public void setup(){
@@ -54,23 +62,51 @@ public class TestSwipeKeyboard extends PApplet {
 		SMT.init( this, TouchSource.AUTOMATIC);
 		SMT.setTouchDraw( TouchDraw.TEXTURED);
 
-		//add keyboard test
-		//keyboard = new SwipeKeyboard();
+		//add keyboards
 		keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);
-		keyboard.addSwipeKeyboardListener( new DebugSwipeKeyboardListener());
 		keyboard.translate( 40, 300);
 		SMT.add( keyboard);
-		SMT.add( new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout));
+
+		arrows = new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout);
+		SMT.add( arrows);
 
 		//add text zone
 		SwipeDisplayer texty = new SwipeDisplayer( "Texty", 500, 0, 500, 200);
 		SMT.add( texty);
+		keyboard.addListener( texty);
+
+		arrow_down = loadShape( "resources/arrow_down.svg");
+		arrow_left = loadShape( "resources/arrow_left.svg");
+		arrow_right = loadShape( "resources/arrow_right.svg");
+		arrow_up = loadShape( "resources/arrow_up.svg");
+		caps = loadShape( "resources/caps.svg");
+		shift = loadShape( "resources/shift.svg");
+		
+		System.out.printf( "arrow_down: %f, %f\n",
+			arrow_down.width, arrow_down.height);
+		System.out.printf( "arrow_left: %f, %f\n",
+			arrow_left.width, arrow_left.height);
+		System.out.printf( "arrow_right: %f, %f\n",
+			arrow_right.width, arrow_right.height);
+		System.out.printf( "arrow_up: %f, %f\n",
+			arrow_up.width, arrow_up.height);
+		System.out.printf( "caps: %f, %f\n",
+			caps.width, caps.height);
+		System.out.printf( "shift: %f, %f\n",
+			shift.width, shift.height);
 	}
 
 	public void draw(){
-		fill( 255, 255, 255);
+		fill( 50, 50, 50);
 		//draw background
 		rect( 0, 0, window_width, window_height);
+		//draw textures
+		shape( arrow_down, 100, 0);
+		shape( arrow_left, 200, 0);
+		shape( arrow_right, 300, 0);
+		shape( arrow_up, 400, 0);
+		shape( caps, 500, 0, 100, 100);
+		shape( shift, 600, 0, 100, 100);
 	}
 
 	public void stop(){
@@ -84,14 +120,30 @@ public class TestSwipeKeyboard extends PApplet {
 			super( name, x, y , width, height);
 			content = new String();
 		}
-		public void drawImpl(){}
+		public void drawImpl(){
+			pushStyle();
+			noFill();
+			strokeWeight( 3);
+			stroke( 200, 120, 120, 150);
+			rect( 0, 0, width, height);
+			popStyle();
+		}
 		public void touchImpl(){
 			rst();
 		}
 
-		public void swipeCompleted( SwipeKeyboardEvent event){}
-		public void swipeStarted( SwipeKeyboardEvent event){}
-		public void swipeProgressed( SwipeKeyboardEvent event){}
+		public void swipeCompleted( SwipeKeyboardEvent event){
+			System.out.printf("Swipe Completed:\n\t");
+			for( String suggestion : event.getSuggestions())
+				System.out.printf( "%s ", suggestion);
+			System.out.println();
+		}
+		public void swipeStarted( SwipeKeyboardEvent event){
+			System.out.println("Swipe Started");
+		}
+		public void swipeProgressed( SwipeKeyboardEvent event){
+			System.out.println("Swipe Progressed");
+		}
 	}
 
 	// program entry point

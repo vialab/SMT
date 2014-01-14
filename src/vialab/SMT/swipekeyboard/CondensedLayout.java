@@ -4,6 +4,10 @@ package vialab.SMT.swipekeyboard;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
+
+//processing imports
+import processing.core.PShape;
+
 //local imports
 import vialab.SMT.*;
 
@@ -66,6 +70,11 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		key_space.setLabel( "___");
 		key_meta.setLabel( "@");
 		key_enter.setLabel( "<_|");
+
+		//load icons
+		PShape caps = SMT.parent.loadShape( "resources/caps.svg");
+		PShape shift = SMT.parent.loadShape( "resources/shift.svg");
+		key_shift.setIcon( shift);
 
 		//swipe keys
 		SwipeKeyZone key_q = new SwipeKeyZone( "key q", KeyEvent.VK_Q, 'Q');
