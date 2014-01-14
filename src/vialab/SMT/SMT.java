@@ -24,6 +24,7 @@
 
 package vialab.SMT;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -554,9 +555,8 @@ public class SMT {
 			//handle setup, if neccessary
 			if( SMT.touchDrawMethod == TouchDraw.TEXTURED){
 				//if necessary, initialize, otherwise, just update
-				if( texturedTouchDrawer == null)
-					texturedTouchDrawer = new TexturedTouchDrawer();
-				else texturedTouchDrawer.update();
+				texturedTouchDrawerNullCheck();
+				texturedTouchDrawer.update();
 			}
 			//remove unusable object references
 			if( customTouchDrawer != null)
@@ -569,14 +569,19 @@ public class SMT {
 					"SMT.setTouchDraw() was given TouchDraw.CUSTOM, but no custom touch drawer. Try SMT.setTouchDraw( TouchDraw.CUSTOM, myTouchDrawer);");
 			if( drawers.length > 1)
 				System.err.println(
-					"[ SMT Warning ] SMT.setTouchDraw() expected one optional parameter, but was given multiple. The first one will be used.");
+					"[SMT Warning] SMT.setTouchDraw() expected one optional parameter, but was given multiple. The first one will be used.");
 			customTouchDrawer = drawers[0];
 			if( customTouchDrawer == null)
 				throw new NullPointerException(
-					"The first optional TouchDrawer parameter given to SMT.setTouchDraw() was null.");
+					"The optional TouchDrawer parameter given to SMT.setTouchDraw() was null.");
 			//set the drawmethod
 			SMT.touchDrawMethod = drawMethod;
 		}
+	}
+
+	private static void texturedTouchDrawerNullCheck(){
+		if( texturedTouchDrawer == null)
+			texturedTouchDrawer = new TexturedTouchDrawer();
 	}
 
 	/** Gets the object currently being used to draw touches.
@@ -607,7 +612,7 @@ public class SMT {
 		setMaxPathLength( maxPathLength);
 	}
 
-	/** Sets the maximum path length to drawn.
+	/** Sets the maximum path length to drawn. Does not affect the textured touch drawer.
 	 * @param maxPathLength The number of points on a touch's path to draw
 	 */
 	public static void setMaxPathLength( int maxPathLength){
@@ -629,6 +634,41 @@ public class SMT {
 	 */
 	public static float getTouchRadius(){
 		return touch_radius;
+	}
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public static void setTouchColour( float red, float green, float blue, float alpha){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTint( red, green, blue, alpha);
+	}
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public static void setTouchColor( float red, float green, float blue, float alpha){
+		setTouchColour( red, green, blue, alpha);
+	}
+	public static float getTouchRed(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTintRed();
+	}
+	public static float getTouchGreen(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTintGreen();
+	}
+	public static float getTouchBlue(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTintBlue();
+	}
+	public static float getTouchAlpha(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTintAlpha();
 	}
 
 	/** Sets the desired number of sections of a drawn touch. Higher amounts result in smoother circles, but have a small performance hit.

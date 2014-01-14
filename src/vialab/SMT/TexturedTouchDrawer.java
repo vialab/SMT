@@ -2,6 +2,8 @@ package vialab.SMT;
 
 //standard library imports
 import java.util.Vector;
+import java.util.Vector;
+import java.awt.Color;
 
 //processing imports
 import processing.core.*;
@@ -76,11 +78,24 @@ public class TexturedTouchDrawer
 		tint_blue = blue;
 		tint_alpha = alpha;
 	}
+	public float getTintRed(){
+		return tint_red;
+	}
+	public float getTintGreen(){
+		return tint_green;
+	}
+	public float getTintBlue(){
+		return tint_blue;
+	}
+	public float getTintAlpha(){
+		return tint_alpha;
+	}
 
 	//private utility functions for textured touch point draw method
 	private void drawTouch(
 			Touch touch, PGraphics graphics, float alpha){
 		//texture
+		graphics.pushStyle();
 		graphics.noStroke();
 		graphics.fill(0);
 		graphics.textureMode( PGraphics.NORMAL);
@@ -95,7 +110,7 @@ public class TexturedTouchDrawer
 		for( PVector vert : vertices)
 			graphics.vertex( touch.x + vert.x, touch.y + vert.y, 0, 0);
 		graphics.endShape();
-		graphics.noTint();
+		graphics.popStyle();
 	}
 
 	protected void update(){

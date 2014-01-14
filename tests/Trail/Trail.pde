@@ -29,8 +29,10 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	SMT.init( this, TouchSource.AUTOMATIC);
+	//SMT.setTouchDraw( TouchDraw.NONE);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
-	SMT.setTouchRadius( 15);
+	SMT.setTouchRadius( 8);
+	SMT.setTouchColour( 20, 20, 20, 255);
 
 	//load texture
 	trail_texture = loadImage("resources/trail_texture.png");
@@ -38,7 +40,7 @@ void setup(){
 
 void draw(){
 	//draw background
-	background( 0);
+	background( 255, 255, 255);
 
 	//draw trails
 	if( drawrawtrail) drawRawTrails();
@@ -48,9 +50,6 @@ void draw(){
 
 void drawNearestNeighbourTrail(){
 	int radius = 15;
-	stroke( 230, 230, 150, 200);
-	strokeWeight( 3);
-	noFill();
 
 	TuioTime sessionTime = TuioTime.getSessionTime();
 	long currentTime = sessionTime.getTotalMilliseconds();
@@ -58,21 +57,23 @@ void drawNearestNeighbourTrail(){
 	Touch[] touches = SMT.getTouches();
 	for( Touch touch : touches){
 		//smoothing parameters
-		int time_threshold = 1000;
+		int time_threshold = 500;
 		boolean timeDistance_model = true;
 		float distance_threshold = 0.2;
 		boolean distance_threshold_enabled = false;
 		int point_threshold = 60;
 		float c = 0.05;
-		int t_n = 100;
+		int t_n = 40;
 
 		//select points that are within the time threshold
 		Vector<TuioPoint> points = selectPoints(
 			touch, currentTime, time_threshold, point_threshold);
+		System.out.printf("interpolation points: %d\n", points.size());
+		t_n += points.size();
 
 		//convenience variables
 		int point_n = points.size();
-		if( point_n < 2) break;
+		if( point_n < 2) continue;
 		float dt = (float) 1 / t_n;
 		Vector<CurvePoint> curvePoints = new Vector<CurvePoint>();
 		//for t_n points on the domain [ 0, 1]
@@ -105,7 +106,7 @@ void drawNearestNeighbourTrail(){
 				sum += w;
 			}
 			//avoid death
-			if( sum == 0) break;
+			if( sum == 0) continue;
 			x *= this.width / sum;
 			y *= this.height / sum;
 			//add point
@@ -113,6 +114,8 @@ void drawNearestNeighbourTrail(){
 			curvePoints.add( curvePoint);
 		}
 		int curvePoints_size = curvePoints.size();
+		if( curvePoints_size < 2)
+			continue;
 
 		//calculate the tangents and normals
 		//calculate first's tanget
@@ -134,7 +137,12 @@ void drawNearestNeighbourTrail(){
 			next = curvePoints.get( i + 1);
 			current.tx = next.x - previous.x;
 			current.ty = next.y - previous.y;
-			float tr = sqrt( pow( current.tx, 2) + pow( current.ty, 2));
+			double dx = current.x - previous.x;
+			double dy = current.y - previous.y;
+			current.dr2 = Math.pow( dx, 2) + Math.pow( dy, 2);
+			double tr = Math.sqrt(
+				Math.pow( current.tx, 2) +
+				Math.pow( current.ty, 2));
 			if( tr != 0.0){
 				current.tx /= tr;
 				current.ty /= tr;
@@ -148,21 +156,31 @@ void drawNearestNeighbourTrail(){
 		textureMode( NORMAL);
 		beginShape( QUAD_STRIP);
 		texture( trail_texture);
+		tint( 40, 40, 40, 200);
 		for( int i = 0 ; i < curvePoints_size; i++){
-			float t = (float) ( curvePoints_size - 1 - i) / ( curvePoints_size - 1);
+			double t = (double) ( curvePoints_size - 1 - i) / ( curvePoints_size - 1);
 			CurvePoint point = curvePoints.get( i);
-			float nx = - point.ty;
-			float ny = point.tx;
+			double nx = - point.ty * trail_width;
+			double ny = point.tx * trail_width;
+			double scale = 1;
+			double dr_threshold = 0.3;
+			if( point.dr2 <= 0)
+				scale = 0;
+			/*else if( point.dr2 < dr_threshold)
+				scale = dr_threshold - Math.pow( point.dr2 , 2);*/
+			/*System.out.printf(
+				"dr2: %f, scale: %f\n", point.dr2, scale);*/
 			vertex(
-				point.x + trail_width * nx,
-				point.y + trail_width * ny,
-				t, 0.0);
+				(float) ( point.x + nx * scale),
+				(float) ( point.y + ny * scale),
+				(float) t, 0.0);
 			vertex(
-				point.x - trail_width * nx,
-				point.y - trail_width * ny,
-				t, 1.0);
+				(float) ( point.x - nx * scale),
+				(float) ( point.y - ny * scale),
+				(float) t, 1.0);
 		}
 		endShape();
+		noTint();
 	}
 }
 
@@ -178,7 +196,7 @@ void drawRawTrails(){
 		int point_count = min( 25, points.length);
 		//create the interpolation curve
 		//set up drawing parameters
-		stroke( 255, 255, 255, 150);
+		stroke( 100, 100, 100, 150);
 		noFill();
 		beginShape();
 
@@ -197,7 +215,7 @@ void drawRawPoints(){
 		int point_count = min( 25, points.length);
 		//set up drawing parameters
 		int radius = 15;
-		stroke( 255, 255, 255, 150);
+		stroke( 100, 100, 100, 150);
 		noFill();
 
 		for( int i = 1 ; i <= point_count; i++){
@@ -212,11 +230,14 @@ Vector<TuioPoint> selectPoints(
 	//result points
 	Vector<TuioPoint> points = new Vector<TuioPoint>();
 	//for every point along the path
+	TuioPoint previous = null;
 	for( int i = touch.path.size() - 1; i >= 0; i--){
 		TuioPoint point = touch.path.get( i);
 		//get point time
 		long pointTime = point.getTuioTime().getTotalMilliseconds();
 		//add points that are within the time threshold
+		//don't add duplicates
+			
 		if( currentTime - pointTime <= time_threshold)
 			points.add( point);
 		if( points.size() >= point_threshold) break;
@@ -243,8 +264,9 @@ void keyPressed(){
 public class CurvePoint {
 	public float x = 0;
 	public float y = 0;
-	public float tx = 0;
-	public float ty = 0;
+	public double dr2 = 0;
+	public double tx = 0;
+	public double ty = 0;
 	public CurvePoint( float x, float y){
 		this.x = x;
 		this.y = y;

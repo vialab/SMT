@@ -5,6 +5,7 @@ void setup(){
 	//SMT and Processing setup
 	size(displayWidth, displayHeight, P3D);
 	SMT.init(this, TouchSource.AUTOMATIC);
+	SMT.setTouchDraw( TouchDraw.TEXTURED);
 
 	//Make a new Zone
 	Zone zone = new Zone( "MyZone");
