@@ -2,6 +2,7 @@
 
 //standard library imports
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
@@ -73,7 +74,8 @@ public class TestSwipeKeyboard extends PApplet {
 		//add text zone
 		SwipeDisplayer texty = new SwipeDisplayer( "Texty", 500, 0, 500, 200);
 		SMT.add( texty);
-		keyboard.addListener( texty);
+		keyboard.addKeyListener( texty);
+		keyboard.addSwipeKeyboardListener( texty);
 
 		arrow_down = loadShape( "resources/arrow_down.svg");
 		arrow_left = loadShape( "resources/arrow_left.svg");
@@ -114,7 +116,7 @@ public class TestSwipeKeyboard extends PApplet {
 	}
 
 	private class SwipeDisplayer extends Zone
-			implements SwipeKeyboardListener {
+			implements SwipeKeyboardListener, KeyListener {
 		String content;
 		public SwipeDisplayer( String name, int x, int y, int width, int height){
 			super( name, x, y , width, height);
@@ -132,6 +134,7 @@ public class TestSwipeKeyboard extends PApplet {
 			rst();
 		}
 
+		//swipe events
 		public void swipeCompleted( SwipeKeyboardEvent event){
 			System.out.printf("Swipe Completed:\n\t");
 			for( String suggestion : event.getSuggestions())
@@ -139,11 +142,29 @@ public class TestSwipeKeyboard extends PApplet {
 			System.out.println();
 		}
 		public void swipeStarted( SwipeKeyboardEvent event){
-			System.out.println("Swipe Started");
+			System.out.printf("Swipe Started:\n\t");
+			for( String suggestion : event.getSuggestions())
+				System.out.printf( "%s ", suggestion);
+			System.out.println();
 		}
 		public void swipeProgressed( SwipeKeyboardEvent event){
-			System.out.println("Swipe Progressed");
+			System.out.printf("Swipe Progressed:\n\t");
+			for( String suggestion : event.getSuggestions())
+				System.out.printf( "%s ", suggestion);
+			System.out.println();
 		}
+
+		//key events
+		public void keyPressed( KeyEvent event){
+			System.out.printf( "Key Pressed: %c\n", event.getKeyChar());
+		}
+		public void keyReleased( KeyEvent event){
+			System.out.printf( "Key Released: %c\n", event.getKeyChar());
+		}
+		public void keyTyped( KeyEvent event){
+			System.out.printf( "Key Typed: %c\n", event.getKeyChar());
+		}
+
 	}
 
 	// program entry point

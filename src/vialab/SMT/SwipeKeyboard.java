@@ -173,20 +173,7 @@ public class SwipeKeyboard extends Zone
 	}
 
 	/**
-	 * Adds an key or swipe listener to the keyboard.
-	 * If listener is a swipe listener, it will be added as both a key and
-	 * swipe listener.
-	 * @param listener A listener to which events should be sent.
-	 */
-	public void addListener( KeyListener listener){
-		addKeyListener( listener);
-		if( listener instanceof SwipeKeyboardListener)
-			addSwipeKeyboardListener( (SwipeKeyboardListener) listener);
-	}
-
-	/**
 	 * Adds a swipe listener to the keyboard.
-	 * If listener is a swipe listener, it will be added as only a swipe listener.
 	 * @param listener A listener to which events should be sent.
 	 */
 	public void addSwipeKeyboardListener( SwipeKeyboardListener listener){
@@ -195,7 +182,6 @@ public class SwipeKeyboard extends Zone
 
 	/**
 	 * Adds an key listener to the keyboard.
-	 * If listener is a swipe listener, it will be added as only a key listener.
 	 * @param listener A listener to which events should be sent.
 	 */
 	public void addKeyListener( KeyListener listener){
@@ -289,8 +275,15 @@ public class SwipeKeyboard extends Zone
 			event.getKeyChar(), touch.getSessionID());
 		touch.addTouchListener( this);
 		touches.add( touch);
-		swipe_inProgress = true;
 		swipeStack.add( event);
+		if( ! swipe_inProgress){
+			String swipe = getSwipeString();
+			SwipeKeyboardEvent boardEvent = new SwipeKeyboardEvent(
+				this, SwipeKeyboardEvent.Type.SWIPE_STARTED, swipe, resolver);
+			for( SwipeKeyboardListener listener : swipeListeners)
+				listener.swipeStarted( boardEvent);
+			swipe_inProgress = true;
+		}
 	}
 	/**
 	 * Listens to the occurrance of a SwipeHit event and responds accordingly.
@@ -301,8 +294,14 @@ public class SwipeKeyboard extends Zone
 		Touch touch = event.getTouch();
 		if( debug) System.out.printf( "Swipe Hit: %s TouchID: %d\n",
 			event.getKeyChar(), touch.getSessionID());
-		if( swipe_inProgress)
+		if( swipe_inProgress){
 			swipeStack.add( event);
+			String swipe = getSwipeString();
+			SwipeKeyboardEvent boardEvent = new SwipeKeyboardEvent(
+				this, SwipeKeyboardEvent.Type.SWIPE_PROGRESSED, swipe, resolver);
+			for( SwipeKeyboardListener listener : swipeListeners)
+				listener.swipeProgressed( boardEvent);
+		}
 	}
 	/**
 	 * Listens to the occurrance of a SwipeEnded event and responds accordingly.
@@ -354,14 +353,23 @@ public class SwipeKeyboard extends Zone
 	 * string to all swipe listeners for processing.
 	 */
 	private void completeSwipe(){
+		String swipe = getSwipeString();
+		swipeStack.clear();
+
+		SwipeKeyboardEvent event = new SwipeKeyboardEvent(
+			this, SwipeKeyboardEvent.Type.SWIPE_COMPLETED, swipe, resolver);
+		for( SwipeKeyboardListener listener : swipeListeners)
+			listener.swipeCompleted( event);
+	}
+
+	private String getSwipeString(){
 		String swipe = new String();
 		//load string
 		for( SwipeKeyEvent event : swipeStack)
 			swipe += event.getKeyChar();
-		swipeStack.clear();
 
 		//this shouldn't happen, but just in case:
-		if( swipe.length() == 0) return;
+		if( swipe.length() == 0) return swipe;
 
 		//preprocess swipe string
 		// convert to lower case
@@ -377,10 +385,8 @@ public class SwipeKeyboard extends Zone
 		}
 		swipe = result;
 
-		SwipeKeyboardEvent event = new SwipeKeyboardEvent(
-			this, SwipeKeyboardEvent.Type.SWIPE_COMPLETED, swipe, resolver);
-		for( SwipeKeyboardListener listener : swipeListeners)
-			listener.swipeCompleted( event);
+		//finish up
+		return swipe;
 	}
 
 	/////////////////////

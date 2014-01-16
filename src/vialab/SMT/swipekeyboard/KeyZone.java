@@ -223,6 +223,8 @@ public class KeyZone extends Zone {
 		pushStyle();
 		fill( 20, 20, 20, 255);
 		strokeWeight(4);
+
+		//draw key background
 		float ratio = 0;
 		if( this.getNumTouches() == 0){
 			long session = TuioTime.getSessionTime().getTotalMilliseconds();
@@ -238,18 +240,42 @@ public class KeyZone extends Zone {
 			cornerRounding_bottomRight, cornerRounding_bottomLeft);
 
 		//draw icon
-		if( icon_enabled){
-			int icon_inset = 10;
+		if( icon_enabled && icon != null){
+			int x_inset = 20;
+			int y_inset = 20;
+
+			float offset_x = x_inset;
+			float offset_y = y_inset;
+			float available_width = dimension.width - x_inset * 2;
+			float available_height = dimension.height - y_inset * 2;
+			float widthScale = icon.width / available_width;
+			float heightScale = icon.height / available_height;
+			float width;
+			float height;
+
+			if( widthScale > heightScale){
+				width = available_width;
+				height = width * icon.height / icon.width;
+				offset_y += ( available_height - height) / 2;
+			}
+			else {
+				height = available_height;
+				width = height * icon.width / icon.height;
+				offset_x += ( available_width - width) / 2;
+			}
+
+			icon.disableStyle();
+			noStroke();
+			fill( 255, 255, 255, 255);
 			shape( icon,
-				position.x + icon_inset,
-				position.y + icon_inset,
-				dimension.width - 2 * icon_inset,
-				dimension.height - 2 * icon_inset);
+				position.x + offset_x,
+				position.y + offset_y,
+				width, height);
 		}
 		
 		//draw label
 		if( label_enabled){
-			fill( 255, 255, 255, 200);
+			fill( 255, 255, 255, 255);
 			textSize( Math.round( dimension.height * 0.6));
 			textAlign( CENTER);
 			float halfAscent = textAscent()/2;
@@ -298,7 +324,8 @@ public class KeyZone extends Zone {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchUp");
 		if( touchEventBuffer[0] == TouchEvent.UNASSIGN){
 			invokeKeyReleasedEvent();
-			if( touchEventBuffer[1] == TouchEvent.TOUCH_DOWN)
+			if( touchEventBuffer[1] == TouchEvent.TOUCH_DOWN &&
+					keyChar != KeyEvent.CHAR_UNDEFINED)
 				invokeKeyTypedEvent();
 		}
 		bufferTouchEvent( TouchEvent.TOUCH_UP);

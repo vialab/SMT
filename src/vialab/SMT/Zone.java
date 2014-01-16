@@ -1075,7 +1075,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	
 	@Override
 	public void setSize(int width, int height){
-		super.setSize(width, height);
+		super.setSize( width, height);
 		this.width = width;
 		this.height = height;
 		this.dimension = new Dimension( width, height);
