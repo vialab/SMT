@@ -31,7 +31,7 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 	//SMT.setTouchDraw( TouchDraw.NONE);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
-	SMT.setTouchRadius( 8);
+	SMT.setTouchRadius( 25);
 	SMT.setTouchColour( 20, 20, 20, 255);
 
 	//load texture

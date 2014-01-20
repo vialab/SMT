@@ -31,8 +31,8 @@ import vialab.SMT.swipekeyboard.*;
 public class TestSwipeKeyboard extends PApplet {
 
 	// display properties
-	int window_width = 1200;
-	int window_height = 800;
+	int window_width = 1600;
+	int window_height = 900;
 	int window_halfWidth;
 	int window_halfHeight;
 	final int fps_limit = 60;
@@ -65,14 +65,17 @@ public class TestSwipeKeyboard extends PApplet {
 
 		//add keyboards
 		keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);
-		keyboard.translate( 40, 300);
+		keyboard.translate( 40, 400);
 		SMT.add( keyboard);
 
 		arrows = new SwipeKeyboard( SwipeKeyboard.arrowKeysLayout);
+		arrows.translate(
+			keyboard.width + 100,
+			400 + keyboard.height - arrows.height);
 		SMT.add( arrows);
 
 		//add text zone
-		SwipeDisplayer texty = new SwipeDisplayer( "Texty", 500, 0, 500, 200);
+		SwipeDisplayer texty = new SwipeDisplayer( "Texty", 300, 0, 1000, 200);
 		SMT.add( texty);
 		keyboard.addKeyListener( texty);
 		keyboard.addSwipeKeyboardListener( texty);
@@ -83,19 +86,6 @@ public class TestSwipeKeyboard extends PApplet {
 		arrow_up = loadShape( "resources/arrow_up.svg");
 		caps = loadShape( "resources/caps.svg");
 		shift = loadShape( "resources/shift.svg");
-		
-		System.out.printf( "arrow_down: %f, %f\n",
-			arrow_down.width, arrow_down.height);
-		System.out.printf( "arrow_left: %f, %f\n",
-			arrow_left.width, arrow_left.height);
-		System.out.printf( "arrow_right: %f, %f\n",
-			arrow_right.width, arrow_right.height);
-		System.out.printf( "arrow_up: %f, %f\n",
-			arrow_up.width, arrow_up.height);
-		System.out.printf( "caps: %f, %f\n",
-			caps.width, caps.height);
-		System.out.printf( "shift: %f, %f\n",
-			shift.width, shift.height);
 	}
 
 	public void draw(){
@@ -103,12 +93,46 @@ public class TestSwipeKeyboard extends PApplet {
 		//draw background
 		rect( 0, 0, window_width, window_height);
 		//draw textures
-		shape( arrow_down, 100, 0);
-		shape( arrow_left, 200, 0);
-		shape( arrow_right, 300, 0);
-		shape( arrow_up, 400, 0);
-		shape( caps, 500, 0, 100, 100);
-		shape( shift, 600, 0, 100, 100);
+		//draw_shapes();
+	}
+
+	public void draw_shapes(){
+		pushStyle();
+		noFill();
+		float offset = 100;
+		shape( arrow_down, offset, 0f, arrow_down.getWidth(), arrow_down.height);
+		rect( offset, 0f, arrow_down.getWidth(), arrow_down.height);
+		offset += arrow_down.getWidth();
+		shape( arrow_left, offset, 0f, arrow_left.getWidth(), arrow_left.height);
+		rect( offset, 0f, arrow_left.getWidth(), arrow_left.height);
+		offset += arrow_left.getWidth();
+		shape( arrow_right, offset, 0f, arrow_right.getWidth(), arrow_right.height);
+		rect( offset, 0f, arrow_right.getWidth(), arrow_right.height);
+		offset += arrow_right.getWidth();
+		shape( arrow_up, offset, 0f, arrow_up.getWidth(), arrow_up.height);
+		rect( offset, 0f, arrow_up.getWidth(), arrow_up.height);
+		offset += arrow_up.getWidth();
+		shape( caps, offset, 0f, caps.getWidth(), caps.height);
+		rect( offset, 0f, caps.getWidth(), caps.height);
+		offset += caps.getWidth();
+		shape( shift, offset, 0f, shift.getWidth(), shift.height);
+		rect( offset, 0f, shift.getWidth(), shift.height);
+		popStyle();
+	}
+
+	public void debug_shapes(){
+		System.out.printf( "arrow_down: %f, %f\n",
+			arrow_down.getWidth(), arrow_down.getHeight());
+		System.out.printf( "arrow_left: %f, %f\n",
+			arrow_left.getWidth(), arrow_left.getHeight());
+		System.out.printf( "arrow_right: %f, %f\n",
+			arrow_right.getWidth(), arrow_right.getHeight());
+		System.out.printf( "arrow_up: %f, %f\n",
+			arrow_up.getWidth(), arrow_up.getHeight());
+		System.out.printf( "caps: %f, %f\n",
+			caps.getWidth(), caps.getHeight());
+		System.out.printf( "shift: %f, %f\n",
+			shift.getWidth(), shift.getHeight());
 	}
 
 	public void stop(){
@@ -128,8 +152,22 @@ public class TestSwipeKeyboard extends PApplet {
 			strokeWeight( 3);
 			stroke( 200, 120, 120, 150);
 			rect( 0, 0, width, height);
+			drawText( content);
 			popStyle();
 		}
+		public void drawText( String text){
+			pushStyle();
+			fill( 255, 255, 255, 255);
+			textSize( Math.round( dimension.height * 0.6));
+			textAlign( CENTER);
+			float halfAscent = textAscent() / 2;
+			float halfDescent = textDescent() / 2;
+			text( text,
+				halfDimension.width,
+				halfDimension.height + halfAscent - halfDescent);
+			popStyle();
+		}
+
 		public void touchImpl(){
 			rst();
 		}
@@ -137,8 +175,9 @@ public class TestSwipeKeyboard extends PApplet {
 		//swipe events
 		public void swipeCompleted( SwipeKeyboardEvent event){
 			System.out.printf("Swipe Completed:\n\t");
+			content = new String();
 			for( String suggestion : event.getSuggestions())
-				System.out.printf( "%s ", suggestion);
+				content += String.format( "%s ", suggestion);
 			System.out.println();
 		}
 		public void swipeStarted( SwipeKeyboardEvent event){
@@ -168,12 +207,12 @@ public class TestSwipeKeyboard extends PApplet {
 	}
 
 	// program entry point
-	static public void main( String[] args) {
-		String[] appletArgs = new String[] { "vialab.SMT.test.TestSwipeKeyboard"};
-		if (args != null) {
-			PApplet.main(concat(appletArgs, args));
+	static public void main( String[] args){
+		String[] appletArgs = new String[]{ "vialab.SMT.test.TestSwipeKeyboard"};
+		if( args != null) {
+			PApplet.main( concat( args, appletArgs));
 		} else {
-			PApplet.main(appletArgs);
+			PApplet.main( appletArgs);
 		}
 	}
 }

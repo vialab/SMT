@@ -72,9 +72,15 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		key_enter.setLabel( "<_|");
 
 		//load icons
-		PShape caps = SMT.parent.loadShape( "resources/caps.svg");
-		PShape shift = SMT.parent.loadShape( "resources/shift.svg");
-		key_shift.setIcon( shift);
+		PShape icon_shift = SMT.parent.loadShape( "resources/shift.svg");
+		PShape icon_backspace = SMT.parent.loadShape( "resources/backspace.svg");
+		PShape icon_enter = SMT.parent.loadShape( "resources/enter.svg");
+		key_shift.setIcon( icon_shift);
+		key_backspace.setIcon( icon_backspace);
+		key_enter.setIcon( icon_enter);
+		//set insets
+		key_backspace.setInset( 25, 25);
+		key_enter.setInset( 25, 25);
 
 		//swipe keys
 		SwipeKeyZone key_q = new SwipeKeyZone( "key q", KeyEvent.VK_Q, 'Q');

@@ -80,6 +80,14 @@ public class KeyZone extends Zone {
 	 * The degree of rounding of the bottom right corner of this key.
 	 */
 	protected int cornerRounding_bottomRight;
+	/**
+	 * The inset of the icon in the x axis
+	 */
+	protected int x_inset;
+	/**
+	 * The inset of the icon in the y axis
+	 */
+	protected int y_inset;
 
 	private Color stroke_base;
 	private Color stroke_highlight;
@@ -205,6 +213,8 @@ public class KeyZone extends Zone {
 		cornerRounding_topRight = 0;
 		cornerRounding_bottomLeft = 0;
 		cornerRounding_bottomRight = 0;
+		x_inset = 20;
+		y_inset = 20;
 
 		//other initialization
 		keyListeners = new Vector<KeyListener>();
@@ -241,26 +251,23 @@ public class KeyZone extends Zone {
 
 		//draw icon
 		if( icon_enabled && icon != null){
-			int x_inset = 20;
-			int y_inset = 20;
-
 			float offset_x = x_inset;
 			float offset_y = y_inset;
 			float available_width = dimension.width - x_inset * 2;
 			float available_height = dimension.height - y_inset * 2;
-			float widthScale = icon.width / available_width;
-			float heightScale = icon.height / available_height;
+			float widthScale = icon.getWidth() / available_width;
+			float heightScale = icon.getHeight() / available_height;
 			float width;
 			float height;
 
 			if( widthScale > heightScale){
 				width = available_width;
-				height = width * icon.height / icon.width;
+				height = width * icon.getHeight() / icon.getWidth();
 				offset_y += ( available_height - height) / 2;
 			}
 			else {
 				height = available_height;
-				width = height * icon.width / icon.height;
+				width = height * icon.getWidth() / icon.getHeight();
 				offset_x += ( available_width - width) / 2;
 			}
 
@@ -278,8 +285,8 @@ public class KeyZone extends Zone {
 			fill( 255, 255, 255, 255);
 			textSize( Math.round( dimension.height * 0.6));
 			textAlign( CENTER);
-			float halfAscent = textAscent()/2;
-			float halfDescent = textDescent()/2;
+			float halfAscent = textAscent() / 2;
+			float halfDescent = textDescent() / 2;
 			text( label,
 				position.x + halfDimension.width,
 				position.y + halfDimension.height + halfAscent - halfDescent);
@@ -463,6 +470,16 @@ public class KeyZone extends Zone {
 		cornerRounding_topRight = topRight;
 		cornerRounding_bottomLeft = bottomLeft;
 		cornerRounding_bottomRight = bottomRight;
+	}
+	/**
+	 * Sets the inset
+	 * @param x_inset the inset in the x axis 
+	 * @param y_inset the inset in the y axis 
+	 */
+	public void setInset(
+			int x_inset, int y_inset){
+		this.x_inset = x_inset;
+		this.y_inset = y_inset;
 	}
 
 	////////////////////////

@@ -25,11 +25,11 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	SMT.init( this, TouchSource.AUTOMATIC);
-	SMT.setTouchDraw( TouchDraw.TEXTURED);
+	SMT.setTouchDraw( TouchDraw.DEBUG);
 
 }
 
 void draw(){
 	//draw background
-	background( 0, 0, 0);
+	background( 255, 255, 255);
 }

@@ -353,7 +353,7 @@ public final class SMTUtilities {
 					String zoneName = method_name.substring( prefix.length());
 						if(  zoneName.length() != 0)
 							System.err.printf(
-								"The method '%s' corresponds a zone named '%s' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '%s'.",
+								"The method '%s' corresponds a zone named '%s' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '%s'.\n",
 								method_name, zoneName, prefix);
 					}
 				}
