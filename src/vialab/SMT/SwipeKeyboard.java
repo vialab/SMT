@@ -54,6 +54,9 @@ public class SwipeKeyboard extends Zone
 	 * Should be empty if there is no swipe in progress.
 	 */
 	private Vector<SwipeKeyEvent> swipeStack;
+	/**
+	 * The object that is used to resolve swipe strings to words
+	 */
 	private SwipeResolver resolver;
 	/**
 	 * A list of all touches currently invovled in the current swipe.
@@ -218,6 +221,11 @@ public class SwipeKeyboard extends Zone
 	public void touchImpl() {
 		rst();
 	}
+	/**
+	 * Overrides the default assign behavor so that new touches cannot move
+	 * the keyboard while a swipe is progress.
+	 * @param touches
+	 */
 	@Override
 	public void assign(Iterable<? extends Touch> touches) {
 		if( ! swipe_inProgress)
@@ -362,6 +370,10 @@ public class SwipeKeyboard extends Zone
 			listener.swipeCompleted( event);
 	}
 
+	/**
+	 * Converts the stack of swipe events into a string
+	 * @return A string describing all the keys that have been hit by the swipe.
+	 */
 	private String getSwipeString(){
 		String swipe = new String();
 		//load string

@@ -51,7 +51,12 @@ public enum TouchSource {
 	/**
 	 * Runs all back-ends that do not interfere with each other, which currently
 	 * excludes SMART
+	 * @deprecated Use TouchSource.AUTOMATIC instead
 	 */
 	MULTIPLE,
+	/**
+	 * Runs all back-ends that do not interfere with each other, which currently
+	 * excludes SMART
+	 */
 	AUTOMATIC;
 }

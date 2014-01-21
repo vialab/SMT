@@ -22,6 +22,9 @@ public class TouchEvent extends java.util.EventObject {
 	////////////////
 	// constants //
 	////////////////
+	/**
+	 * An enum to descript the type of touch event that can occur.
+	 */
 	public enum TouchType {
 		UP, DOWN, MOVED
 	}

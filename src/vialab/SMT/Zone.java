@@ -81,9 +81,13 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected boolean updateOnlyWhenModified(){ return false;}	
 	public boolean stealChildrensTouch = false;
 	/**
-	 * @deprecated use Zone.setPhysicsEnabled( boolean) instead */
+	 * @deprecated use Zone.setPhysicsEnabled( boolean) instead
+	 */
 	@Deprecated
 	public boolean physics = false;
+	/**
+	 * A flag that describes whether physics is enabled.
+	 */
 	private boolean physics_enabled = false;
 	BodyDef zoneBodyDef = new BodyDef();
 	Body zoneBody;
@@ -102,20 +106,30 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected PMatrix3D inverse = new PMatrix3D();
 	//properties
 	/**
-	 * @deprecated use Zone.(get|set)(X|Y) instead */
+	 * @deprecated use Zone.(get|set)(X|Y) instead
+	 */
 	@Deprecated
 	public int x, y;
 	/**
-	 * @deprecated use Zone.(get|set)(Width|Height) instead */
+	 * @deprecated use Zone.(get|set)(Width|Height) instead
+	 */
 	@Deprecated
 	public int height, width;
+	/**
+	 * The dimensions of the zone
+	 */
 	protected Dimension dimension;
+	/**
+	 * The half-dimensions of the zone
+	 */
 	protected Dimension halfDimension;
 
 	// A LinkedHashMap will allow insertion order to be maintained.
 	// A synchronised one will prevent concurrent modification (which can happen
 	// pretty easily with the draw loop + touch event handling).
-	/** All of the currently active touches for this zone */
+	/**
+	 * All of the currently active touches for this zone
+	 */
 	private Map<Long, Touch> activeTouches = Collections
 			.synchronizedMap(new LinkedHashMap<Long, Touch>());
 	protected CopyOnWriteArrayList<Zone> children = new CopyOnWriteArrayList<Zone>();

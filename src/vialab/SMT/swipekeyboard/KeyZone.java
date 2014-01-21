@@ -44,62 +44,41 @@ public class KeyZone extends Zone {
 	/////////////////////
 	// drawing fields //
 	/////////////////////
-	/**
-	 * A vector defining the current position of this zone.
-	 */
+	/** A vector defining the current position of this zone. */
 	protected PVector position;
-	/**
-	 * The text that appears on this key.
-	 */
+	/** The text that appears on this key. */
 	protected String label;
-	/**
-	 * The icon that appears on this key.
-	 */
+	/** The icon that appears on this key. */
 	protected PShape icon;
-	/**
-	 * Whether the given text appears on this key.
-	 */
+	/** Whether the given text appears on this key. */
 	protected boolean label_enabled = true;
-	/**
-	 * Whether the given icon appears on this key.
-	 */
+	/** Whether the given icon appears on this key. */
 	protected boolean icon_enabled = false;
-	/**
-	 * The degree of rounding of the top left corner of this key.
-	 */
+	/** The degree of rounding of the top left corner of this key. */
 	protected int cornerRounding_topLeft;
-	/**
-	 * The degree of rounding of the top right corner of this key.
-	 */
+	/** The degree of rounding of the top right corner of this key. */
 	protected int cornerRounding_topRight;
-	/**
-	 * The degree of rounding of the bottom left corner of this key.
-	 */
+	/** The degree of rounding of the bottom left corner of this key. */
 	protected int cornerRounding_bottomLeft;
-	/**
-	 * The degree of rounding of the bottom right corner of this key.
-	 */
+	/** The degree of rounding of the bottom right corner of this key. */
 	protected int cornerRounding_bottomRight;
-	/**
-	 * The inset of the icon in the x axis
-	 */
+	/** The inset of the icon in the x axis */
 	protected int x_inset;
-	/**
-	 * The inset of the icon in the y axis
-	 */
+	/** The inset of the icon in the y axis */
 	protected int y_inset;
-
+	/** The color of the outline of the key when it has not been recently hit */
 	private Color stroke_base;
+	/** The color of the outline of the key when it has been recently hit */
 	private Color stroke_highlight;
+	/** The last time that this key has been hit by a touch */
 	private TuioTime lastTouch;
+	/** The duration of the fade animation that occurs when this key has been hit */
 	private static final long fade_duration = 350;
 
 	///////////////////
 	// debug fields //
 	///////////////////
-	/**
-	 * Enables and disables debug print statements
-	 */
+	/** Enables and disables debug print statements */
 	private static final boolean debug = false;
 
 	/////////////////////////////
@@ -218,7 +197,7 @@ public class KeyZone extends Zone {
 
 		//other initialization
 		keyListeners = new Vector<KeyListener>();
-		touchEventBuffer = new TouchEvent[ 5];
+		touchEventBuffer = new TouchEvent[5];
 	}
 
 	////////////////////
@@ -296,7 +275,7 @@ public class KeyZone extends Zone {
 		popStyle();
 	}
 	/**
-	 * Draws the touch selection area of the key.
+	 * Draws the selection area of the key.
 	 */
 	@Override
 	public void pickDrawImpl(){
@@ -307,7 +286,7 @@ public class KeyZone extends Zone {
 			cornerRounding_bottomRight, cornerRounding_bottomLeft);
 	}
 	/**
-	 * Records the time of last touch for use when drawing.
+	 * Does nothing.
 	 */
 	@Override
 	public void touchImpl(){}
@@ -421,8 +400,8 @@ public class KeyZone extends Zone {
 		this.icon_enabled = false;
 	}
 	/**
-	 * Sets the text that is displayed on the key.
-	 * @param label The text to be displayed on the key.
+	 * Sets the icon that is displayed on the key.
+	 * @param icon The icon to be displayed on the key.
 	 */
 	public void setIcon( PShape icon){
 		this.icon = icon;
@@ -515,6 +494,15 @@ public class KeyZone extends Zone {
 			touchEventBuffer[ i] = touchEventBuffer[ i - 1];
 		touchEventBuffer[ 0] = event;
 	}
+	/**
+	 * Mixes two colours together. When ratio is 0, it used entirely the base
+	 * colour. When ratio is 1, it uses entirely the highlight colour. Anywhere
+	 * between 0 and 1 mixes the two colours together accordingly.
+	 * @param  base The base colour
+	 * @param  highlight The hightlight colour
+	 * @param  ratio The ratio that determines how the two colours are mixed.
+	 * @return The mixed colour
+	 */
 	private Color mixColours( Color base, Color highlight, float ratio){
 		float converse = 1 - ratio;
 		float red = base.getRed() * converse + highlight.getRed() * ratio;
@@ -527,6 +515,11 @@ public class KeyZone extends Zone {
 			clamp( blue),
 			clamp( alpha));
 	}
+	/**
+	 * Clamps a float into an integer colour domain ( 0 through 255 )
+	 * @param  c the float to be clamped
+	 * @return The closest integer on [ 0, 255] to c
+	 */
 	private int clamp( float c){
 		if( c < 0) return 0;
 		else if( c > 255) return 255;

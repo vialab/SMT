@@ -12,7 +12,6 @@ public class TextZone extends Zone {
 
 	/**
 	 * Zone used to render the text in the textZone
-	 *
 	 */
 	private class WordZone extends Zone {
 

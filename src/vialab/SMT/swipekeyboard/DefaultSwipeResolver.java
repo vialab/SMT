@@ -9,9 +9,21 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Vector;
 
+/**
+ * An object that can resolve swipes to possibly desired words
+ */
 public class DefaultSwipeResolver implements SwipeResolver{
+	/**
+	 * The list of words used for looking up matches.
+	 */
 	protected Vector<String> wordlist;
 
+	/**
+	 * Create a new swipe resolver using the word list contained in the file
+	 * "resources/dictionary.txt.
+	 * @throws FileNotFoundException Thrown if the word list file,
+	 * resources/dictionary.txt, cannot be found.
+	 */
 	public DefaultSwipeResolver()
 			throws FileNotFoundException {
 		wordlist = new Vector<String>();
@@ -27,6 +39,15 @@ public class DefaultSwipeResolver implements SwipeResolver{
 		catch( IOException exception){}
 	}
 
+	/**
+	 * Resolve a swipe string to a list of possible words. The swipe string must
+	 * start on the first letter of the word, and end on the last. All the rest
+	 * of the characters in the word must be hit in order. Duplicate characters
+	 * in the word do not need to be duplicated in the swipe string. For example:
+	 * "fod" would suggest "food".
+	 * @param  swipe
+	 * @return The list of suggestions for the given swipe string.
+	 */
 	public Collection<String> resolve( String swipe){
 		Vector<String> results = new Vector<String>();
 		//error checking

@@ -7,47 +7,42 @@ import java.util.List;
 
 import TUIO.TuioCursor;
 
+/**
+ * A Touch "Container" class
+ */
 class TouchState implements Iterable<Touch> {
 	LinkedHashMap<Long, Touch> idToTouches = new LinkedHashMap<Long, Touch>();
 
-	public TouchState() {
-	}
+	public TouchState(){}
 
-	public TouchState(TouchState state) {
-		if (state == null) {
+	public TouchState( TouchState state) {
+		if (state == null)
 			return;
-		}
-
-		for (Touch touch : state) {
+		for (Touch touch : state)
 			add(touch);
-		}
 	}
 
-	public void add(Touch t) {
-		if (t == null) {
+	public void add( Touch t){
+		if (t == null)
 			return;
-		}
-
-		idToTouches.put(t.getSessionID(), t);
+		idToTouches.put( t.getSessionID(), t);
 	}
 
-	public Touch remove(Long id) {
-		if (idToTouches.containsKey(id)) {
+	public Touch remove( Long id){
+		if (idToTouches.containsKey(id))
 			return idToTouches.remove(id);
-		}
 		return null;
 	}
 
-	public Touch getById(long id) {
+	public Touch getById( long id){
 		return idToTouches.get(id);
 	}
 
 	public Touch get(int order) {
 		int i = 0;
-		for (Touch t : idToTouches.values()) {
-			if (i == order) {
+		for( Touch t : idToTouches.values()){
+			if (i == order)
 				return t;
-			}
 			i++;
 		}
 		return null;

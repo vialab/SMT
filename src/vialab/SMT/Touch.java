@@ -99,10 +99,10 @@ public class Touch extends TuioCursor {
 	 * This constructor takes the provided Session ID, Cursor ID, X and Y
 	 * coordinate and assigns these values to the newly created Touch.
 	 * 
-	 * @param sessionID   - long: Session ID
-	 * @param cursorID   - int: Cursor ID
-	 * @param xCoord    - float: X Coordinate
-	 * @param yCoord    - float: Y Coordinate
+	 * @param sessionID Session ID
+	 * @param cursorID Cursor ID
+	 * @param xCoord X Coordinate
+	 * @param yCoord Y Coordinate
 	 */
 	public Touch(long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(sessionID, cursorID, xCoord, yCoord);
@@ -130,11 +130,11 @@ public class Touch extends TuioCursor {
 	 * provided Session ID, Cursor ID, X and Y coordinate to the newly created
 	 * Touch.
 	 * 
-	 * @param ttime   - TuioTime: TuioTime
-	 * @param sessionID   - long: Session ID
-	 * @param cursorID  - int: Cursor ID
-	 * @param xCoord  - float: X Coordinate
-	 * @param yCoord   - float: Y Coordinate
+	 * @param ttime TuioTime
+	 * @param sessionID Session ID
+	 * @param cursorID Cursor ID
+	 * @param xCoord X Coordinate
+	 * @param yCoord Y Coordinate
 	 */
 	public Touch( TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(ttime, sessionID, cursorID, xCoord, yCoord);
@@ -158,7 +158,6 @@ public class Touch extends TuioCursor {
 	}
 
 	/**
-	 * 
 	 * @return The Point containing the last point of the Touch
 	 */
 	public Point getLastPoint() {
@@ -213,11 +212,10 @@ public class Touch extends TuioCursor {
 	/**
 	 * Gets a Point on the Touch's path history
 	 * 
-	 * @param index
-	 *            The index of the point on the Touch's path (0 is first Point,
-	 *            Touch.path.size()-1 is the current Point)
+	 * @param index The index of the point on the Touch's path (0 is first Point, 
+	 *   Touch.path.size()-1 is the current Point)
 	 * @return A Point containing the x,y values of the Touch's path at the
-	 *         specified index, returns null if invalid index
+	 *   specified index, returns null if invalid index
 	 */
 	public Point getPointOnPath(int index) {
 		if (index < 0 || index >= path.size())
