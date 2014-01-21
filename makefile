@@ -61,11 +61,11 @@ relink:
 	ln -s ~/p/libs/jbox2d/jbox2d-library-2.1.2.2-jar-with-dependencies.jar lib/jbox2d.jar
 
 #test commands
-test: test-swipekeyboard
+test: test-trail
 
 # feature tests
 test-swipekeyboard: build jar
-	java $(cp) vialab.SMT.test.TestSwipeKeyboard
+	processing-shell examples/Demos/Keyboard
 test-zoneaccessors: build
 	java $(cp) vialab.SMT.test.TestZoneAccessors
 test-gets: build

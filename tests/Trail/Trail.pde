@@ -18,8 +18,8 @@ int fps_limit = 60;
 PImage trail_texture;
 boolean drawrawtrail = false;
 boolean drawrawpoints = false;
-boolean drawnnt = true;
-float trail_width = 10.0;
+boolean drawnnt = false;
+float trail_width = 5.0;
 
 //main functions
 void setup(){
@@ -31,8 +31,9 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 	//SMT.setTouchDraw( TouchDraw.NONE);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
-	SMT.setTouchRadius( 25);
+	SMT.setTouchRadius( 10);
 	SMT.setTouchColour( 20, 20, 20, 255);
+	SMT.setTrailColour( 20, 20, 20, 180);
 
 	//load texture
 	trail_texture = loadImage("resources/trail_texture.png");
@@ -49,26 +50,24 @@ void draw(){
 }
 
 void drawNearestNeighbourTrail(){
-	int radius = 15;
-
 	TuioTime sessionTime = TuioTime.getSessionTime();
 	long currentTime = sessionTime.getTotalMilliseconds();
 	
 	Touch[] touches = SMT.getTouches();
 	for( Touch touch : touches){
-		//smoothing parameters
+		//drawing parameters
 		int time_threshold = 500;
 		boolean timeDistance_model = true;
 		float distance_threshold = 0.2;
 		boolean distance_threshold_enabled = false;
 		int point_threshold = 60;
 		float c = 0.05;
-		int t_n = 40;
+		int t_n = 30;
 
 		//select points that are within the time threshold
 		Vector<TuioPoint> points = selectPoints(
 			touch, currentTime, time_threshold, point_threshold);
-		System.out.printf("interpolation points: %d\n", points.size());
+		//System.out.printf("interpolation points: %d\n", points.size());
 		t_n += points.size();
 
 		//convenience variables
@@ -232,15 +231,27 @@ Vector<TuioPoint> selectPoints(
 	//for every point along the path
 	TuioPoint previous = null;
 	for( int i = touch.path.size() - 1; i >= 0; i--){
+		//stop when we have too many points
+		if( points.size() >= point_threshold) break;
 		TuioPoint point = touch.path.get( i);
 		//get point time
 		long pointTime = point.getTuioTime().getTotalMilliseconds();
 		//add points that are within the time threshold
 		//don't add duplicates
-			
-		if( currentTime - pointTime <= time_threshold)
-			points.add( point);
-		if( points.size() >= point_threshold) break;
+		if( currentTime - pointTime > time_threshold)
+			continue;
+		/*if( previous != null){
+			float dist_x2 = pow(
+				point.getScreenX( display_width) -
+				previous.getScreenX( display_width), 2);
+			float dist_y2 = pow(
+				point.getScreenY( display_height) -
+				previous.getScreenY( display_height), 2);
+			float distance = sqrt( dist_x2 + dist_y2);
+			if( distance <= 5)
+				continue;
+		}*/
+		points.add( point);
 	}
 	return points;
 }

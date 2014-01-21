@@ -156,7 +156,7 @@ public class SMT {
 	// utility fields for the touch drawing methods
 	private static TexturedTouchDrawer texturedTouchDrawer = null;
 	private static TouchDrawer customTouchDrawer = null;
-	protected static float touch_radius = 25;
+	protected static float touch_radius = 15;
 	protected static int touch_sections = 24;
 
 	/**
@@ -643,7 +643,7 @@ public class SMT {
 	 */
 	public static void setTouchColour( float red, float green, float blue, float alpha){
 		texturedTouchDrawerNullCheck();
-		texturedTouchDrawer.setTint( red, green, blue, alpha);
+		texturedTouchDrawer.setTouchTint( red, green, blue, alpha);
 	}
 	/** Sets the desired tint of drawn touches.
 	 * @param red The desired tint's red element
@@ -656,19 +656,109 @@ public class SMT {
 	}
 	public static float getTouchRed(){
 		texturedTouchDrawerNullCheck();
-		return texturedTouchDrawer.getTintRed();
+		return texturedTouchDrawer.getTouchTintRed();
 	}
 	public static float getTouchGreen(){
 		texturedTouchDrawerNullCheck();
-		return texturedTouchDrawer.getTintGreen();
+		return texturedTouchDrawer.getTouchTintGreen();
 	}
 	public static float getTouchBlue(){
 		texturedTouchDrawerNullCheck();
-		return texturedTouchDrawer.getTintBlue();
+		return texturedTouchDrawer.getTouchTintBlue();
 	}
 	public static float getTouchAlpha(){
 		texturedTouchDrawerNullCheck();
-		return texturedTouchDrawer.getTintAlpha();
+		return texturedTouchDrawer.getTouchTintAlpha();
+	}
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public static void setTrailColour( float red, float green, float blue, float alpha){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailTint( red, green, blue, alpha);
+	}
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public static void setTrailColor( float red, float green, float blue, float alpha){
+		setTrailColour( red, green, blue, alpha);
+	}
+	public static float getTrailRed(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTintRed();
+	}
+	public static float getTrailGreen(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTintGreen();
+	}
+	public static float getTrailBlue(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTintBlue();
+	}
+	public static float getTrailAlpha(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTintAlpha();
+	}
+
+
+	public static void setTrailEnabled( boolean enabled){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailEnabled( enabled);
+	}
+	public static boolean getTrailEnabled(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailEnabled();
+	}
+
+	public static void setTrailTimeThreshold( int threshold){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailTimeThreshold( threshold);
+	}
+	public static int getTrailTimeThreshold(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTimeThreshold();
+	}
+
+	public static void setTrailPointThreshold( int threshold){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailPointThreshold( threshold);
+	}
+	public static int getTrailPointThreshold(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailPointThreshold();
+	}
+
+	public static void setTrailC( float c){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailC( c);
+	}
+	public static float getTrailC(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailC();
+	}
+
+	public static void setTrailT_N( int t_n){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailT_N( t_n);
+	}
+	public static int getTrailT_N(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailT_N();
+	}
+
+	public static void setTrailWidth( float width){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailWidth( width);
+	}
+	public static float getTrailWidth(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailWidth();
 	}
 
 	/** Sets the desired number of sections of a drawn touch. Higher amounts result in smoother circles, but have a small performance hit.

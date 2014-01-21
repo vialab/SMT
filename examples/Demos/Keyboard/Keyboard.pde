@@ -60,6 +60,7 @@ public void setup(){
 	//smt library setup
 	SMT.init( this, TouchSource.AUTOMATIC);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
+	SMT.setTrailEnabled( false);
 
 	//add keyboards
 	keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);
