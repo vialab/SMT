@@ -1,4 +1,4 @@
- package vialab.SMT.test;
+package vialab.SMT.test;
 
 //standard library imports
 import java.awt.event.KeyEvent;
@@ -21,8 +21,6 @@ import processing.opengl.*;
 //smt imports
 import vialab.SMT.*;
 import vialab.SMT.swipekeyboard.*;
-
-//SMT library imports
 
 /**
  * Test program for the experimental SwipeKeyboard class

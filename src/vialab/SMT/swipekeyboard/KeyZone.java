@@ -74,6 +74,9 @@ public class KeyZone extends Zone {
 	private TuioTime lastTouch;
 	/** The duration of the fade animation that occurs when this key has been hit */
 	private static final long fade_duration = 350;
+	/** Stores the current state of the key - down or up*/
+	private boolean isDown;
+
 
 	///////////////////
 	// debug fields //
@@ -181,6 +184,7 @@ public class KeyZone extends Zone {
 		stroke_base = new Color( 50, 50, 50, 255);
 		stroke_highlight = new Color( 240, 240, 240, 255);
 		lastTouch = TuioTime.getSessionTime();
+		isDown = false;
 
 		//set drawing fields
 		position = new PVector( 0, 0);
@@ -297,8 +301,8 @@ public class KeyZone extends Zone {
 	@Override
 	public void touchDownImpl( Touch touch){
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchDown");
-		if( touchEventBuffer[0] == TouchEvent.ASSIGN)
-			invokeKeyPressedEvent();
+		/*if( touchEventBuffer[0] == TouchEvent.ASSIGN)
+			invokeKeyPressedEvent();*/
 		bufferTouchEvent( TouchEvent.TOUCH_DOWN);
 	}
 	/**
@@ -308,12 +312,10 @@ public class KeyZone extends Zone {
 	@Override
 	public void touchUpImpl( Touch touch){
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "touchUp");
-		if( touchEventBuffer[0] == TouchEvent.UNASSIGN){
-			invokeKeyReleasedEvent();
-			if( touchEventBuffer[1] == TouchEvent.TOUCH_DOWN &&
-					keyChar != KeyEvent.CHAR_UNDEFINED)
-				invokeKeyTypedEvent();
-		}
+		/*if( touchEventBuffer[0] == TouchEvent.UNASSIGN &&
+				touchEventBuffer[1] == TouchEvent.TOUCH_DOWN &&
+				keyChar != KeyEvent.CHAR_UNDEFINED)
+			invokeKeyTypedEvent();*/
 		bufferTouchEvent( TouchEvent.TOUCH_UP);
 	}
 	/**
@@ -331,6 +333,10 @@ public class KeyZone extends Zone {
 	 */
 	public void assign( Iterable<? extends Touch> touches){
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "assign");
+		if( ! isDown){
+			invokeKeyPressedEvent();
+			isDown = true;
+		}
 		bufferTouchEvent( TouchEvent.ASSIGN);
 		super.assign( touches);
 	}
@@ -339,10 +345,16 @@ public class KeyZone extends Zone {
 	 * @param touch The vialab.SMT.Touch passed to the function by SMT
 	 */
 	public void unassign( Touch touch){
+		super.unassign( touch);
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "unassign");
+		if( this.getNumTouches() == 0){
+			invokeKeyReleasedEvent();
+			if( keyChar != KeyEvent.CHAR_UNDEFINED)
+				invokeKeyTypedEvent();
+			isDown = false;
+		}
 		bufferTouchEvent( TouchEvent.UNASSIGN);
 		lastTouch = touch.currentTime;
-		super.unassign( touch);
 	}
 
 	///////////////////////////////////

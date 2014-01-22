@@ -61,7 +61,7 @@ relink:
 	ln -s ~/p/libs/jbox2d/jbox2d-library-2.1.2.2-jar-with-dependencies.jar lib/jbox2d.jar
 
 #test commands
-test: test-methodclasses
+test: test-swipekeyboard
 
 # feature tests
 test-swipekeyboard: build jar

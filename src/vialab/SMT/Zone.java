@@ -131,7 +131,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * All of the currently active touches for this zone
 	 */
 	private Map<Long, Touch> activeTouches = Collections
-			.synchronizedMap(new LinkedHashMap<Long, Touch>());
+			.synchronizedMap( new LinkedHashMap<Long, Touch>());
 	protected CopyOnWriteArrayList<Zone> children = new CopyOnWriteArrayList<Zone>();
 	protected int pickColor = -1;
 	protected TuioTime lastUpdate = TuioTime.getSessionTime();

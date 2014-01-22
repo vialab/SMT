@@ -175,6 +175,7 @@ private class SwipeDisplayer extends Zone
 
 	//key events
 	public void keyPressed( KeyEvent event){
+		System.out.printf("Key pressed: %d\n", event.getKeyCode());
 		switch( event.getKeyCode()){
 			case KeyEvent.VK_LEFT:
 				arrow_left_visible = true;
@@ -192,6 +193,7 @@ private class SwipeDisplayer extends Zone
 		}
 	}
 	public void keyReleased( KeyEvent event){
+		System.out.printf("Key released: %d\n", event.getKeyCode());
 		switch( event.getKeyCode()){
 			case KeyEvent.VK_LEFT:
 				arrow_left_visible = false;
@@ -209,5 +211,7 @@ private class SwipeDisplayer extends Zone
 		}
 	}
 	public void keyTyped( KeyEvent event){
+		System.out.printf("Key typed: %d\n", event.getKeyCode());
+
 	}
 }
