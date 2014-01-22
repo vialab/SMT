@@ -27,9 +27,19 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 	SMT.setTouchDraw( TouchDraw.DEBUG);
 
+
 }
 
 void draw(){
 	//draw background
-	background( 255, 255, 255);
+	background( 80, 80, 80);
+}
+
+
+public class Asdf extends Zone {
+	public Asdf(){}
+}
+
+public class MethodContainer {
+	public drawMyZone( Zone zone){}
 }

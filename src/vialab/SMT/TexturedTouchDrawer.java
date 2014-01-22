@@ -44,8 +44,8 @@ public class TexturedTouchDrawer
 	private boolean trail_enabled = true;
 	private int trail_time_threshold = 300;
 	private int trail_point_threshold = 50;
-	private float trail_c = 0.05f;
-	private int trail_t_n = 30;
+	private float trail_c = 0.10f;
+	private int trail_t_n = 40;
 	//width of the trail's texture
 	private float trail_width = 5.0f;
 	//trail tinting's red element
