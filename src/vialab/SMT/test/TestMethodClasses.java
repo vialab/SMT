@@ -42,31 +42,20 @@ public class TestMethodClasses extends PApplet {
 		SMT.setTouchDraw( TouchDraw.TEXTURED);
 
 		//add zones
-		Zone myZone = new Zone( "MyZone", 10, 10, 100, 100);
+		Zone myZone = new Zone( "MyOtherZone", 10, 10, 100, 100);
 		Zone myOtherZone = new Zone( "MyOtherZone", 120, 10, 100, 100);
+		myOtherZone.setBoundObject( new StaticZoneMethodContainer());
+		myZone.setBoundObject( new StaticZoneMethodContainer());
 
 		//add zones
 		SMT.add( myZone);
 		SMT.add( myOtherZone);
-
-		//use set bound object
-		myZone.setBoundObject( new ZoneMethodContainer());
 	}
 
 	public void draw(){
 		//draw background
 		fill( 50, 50, 50);
 		rect( 0, 0, window_width, window_height);
-	}
-
-	private class ZoneMethodContainer {
-		public void drawMyZone( Zone zone){
-			zone.fill( 180, 100, 100);
-			zone.rect( 0, 0, 100, 100);
-		}
-		public void touchMyZone( Zone zone){
-			zone.rect( 0, 0, 100, 100);
-		}
 	}
 
 	// program entry point
