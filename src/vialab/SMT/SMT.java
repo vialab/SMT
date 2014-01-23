@@ -98,7 +98,7 @@ public class SMT {
 	protected static LinkedList<TuioClient> tuioClientList = new LinkedList<TuioClient>();
 
 	/** Flag for drawing touch points */
-	private static TouchDraw touchDrawMethod = TouchDraw.SMOOTH;
+	private static TouchDraw touchDrawMethod = TouchDraw.TEXTURED;
 
 	/** Matrix used to test if the zone has gone off the screen */
 	// private PMatrix3D mTest = new PMatrix3D();

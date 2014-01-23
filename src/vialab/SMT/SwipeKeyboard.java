@@ -23,9 +23,8 @@ public class SwipeKeyboard extends Zone
 	///////////////////
 	// debug fields //
 	///////////////////
-	/**
-	 * Enables and disables debug print statements
-	 */
+
+	/** Enables and disables debug print statements */
 	private static final boolean debug = false;
 
 	////////////////////
@@ -45,18 +44,14 @@ public class SwipeKeyboard extends Zone
 	/////////////////////
 	// private fields //
 	/////////////////////
-	/**
-	 * Indicates whether a swipe is currently in progress.
-	 */
+	/** Indicates whether a swipe is currently in progress. */
 	private boolean swipe_inProgress;
 	/**
 	 * The stack of swipeKeyEvents to be resolved once the current swipe finishes.
 	 * Should be empty if there is no swipe in progress.
 	 */
 	private Vector<SwipeKeyEvent> swipeStack;
-	/**
-	 * The object that is used to resolve swipe strings to words
-	 */
+	/** The object that is used to resolve swipe strings to words */
 	private SwipeResolver resolver;
 	/**
 	 * A list of all touches currently invovled in the current swipe.
