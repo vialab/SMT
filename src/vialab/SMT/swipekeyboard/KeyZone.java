@@ -24,22 +24,26 @@ public class KeyZone extends Zone {
 	/////////////////////////////
 	// protected major fields //
 	/////////////////////////////
-	/**
-	 * This object's list of KeyListeners
-	 */
+	/** This object's list of KeyListeners. */
 	protected Vector<KeyListener> keyListeners;
-	/**
-	 * The KeyEvent-style key code represented by this key.
-	 */
+	/** The KeyEvent-style key code represented by this key. */
 	protected int keyCode;
-	/**
-	 * The KeyEvent-style key char represented by this key.
-	 */
+	/** The KeyEvent-style key char represented by this key. */
 	protected char keyChar;
-	/**
-	 * The KeyEvent-style key location of this key.
-	 */
+	/** The KeyEvent-style key char represented by this key when in alternate mode. */
+	protected char keyChar_alternate;
+	/** A flag to describe whether an alternate key is available. */
+	protected boolean alternate_available;
+	/** A flag to describe whether the alternate key is enabled. */
+	protected boolean alternate_enabled;
+	/** The KeyEvent-style key location of this key. */
 	protected int keyLocation;
+	/** Stores the current state of the key - down or up*/
+	private boolean isDown;
+	/** The current modifier mask, used for event creation */
+	protected int modifierMask = 0;
+	/** Whether the shift key is down or now */
+	protected boolean shift_down = false;
 
 	/////////////////////
 	// drawing fields //
@@ -48,12 +52,14 @@ public class KeyZone extends Zone {
 	protected PVector position;
 	/** The text that appears on this key. */
 	protected String label;
+	/** The text that appears on this key when the alternate key is enabled. */
+	protected String label_alternate;
 	/** The icon that appears on this key. */
 	protected PShape icon;
 	/** Whether the given text appears on this key. */
-	protected boolean label_enabled = true;
+	protected boolean label_enabled;
 	/** Whether the given icon appears on this key. */
-	protected boolean icon_enabled = false;
+	protected boolean icon_enabled;
 	/** The degree of rounding of the top left corner of this key. */
 	protected int cornerRounding_topLeft;
 	/** The degree of rounding of the top right corner of this key. */
@@ -67,15 +73,13 @@ public class KeyZone extends Zone {
 	/** The inset of the icon in the y axis */
 	protected int y_inset;
 	/** The color of the outline of the key when it has not been recently hit */
-	private Color stroke_base;
+	protected Color stroke_base;
 	/** The color of the outline of the key when it has been recently hit */
-	private Color stroke_highlight;
+	protected Color stroke_highlight;
 	/** The last time that this key has been hit by a touch */
-	private TuioTime lastTouch;
+	protected TuioTime lastTouch;
 	/** The duration of the fade animation that occurs when this key has been hit */
-	private static final long fade_duration = 350;
-	/** Stores the current state of the key - down or up*/
-	private boolean isDown;
+	protected static final long fade_duration = 350;
 
 
 	///////////////////
@@ -176,15 +180,20 @@ public class KeyZone extends Zone {
 		//set key code, char, and location
 		this.keyCode = keyCode;
 		this.keyChar = keyChar;
+		this.keyChar_alternate = KeyEvent.CHAR_UNDEFINED;
+		this.alternate_available = false;
+		this.alternate_enabled = false;
 		this.keyLocation = keyLocation;
-		label = String.valueOf( keyChar);
-		label_enabled = true;
-		icon = null;
-		icon_enabled = false;
-		stroke_base = new Color( 50, 50, 50, 255);
-		stroke_highlight = new Color( 240, 240, 240, 255);
-		lastTouch = TuioTime.getSessionTime();
-		isDown = false;
+		this.isDown = false;
+
+		//set drawing fields
+		this.label = String.valueOf( keyChar);
+		this.label_enabled = true;
+		this.icon = null;
+		this.icon_enabled = false;
+		this.stroke_base = new Color( 10, 10, 10, 255);
+		this.stroke_highlight = new Color( 240, 240, 240, 255);
+		this.lastTouch = TuioTime.getSessionTime();
 
 		//set drawing fields
 		position = new PVector( 0, 0);
@@ -207,9 +216,7 @@ public class KeyZone extends Zone {
 	////////////////////
 	// SMT Overrides //
 	////////////////////
-	/**
-	 * Draws the key.
-	 */
+	/** Draws the key. */
 	@Override
 	public void drawImpl(){
 		//draw key
@@ -225,7 +232,7 @@ public class KeyZone extends Zone {
 			ratio = ( session - last) / (float) fade_duration;
 		}
 		Color mix = mixColours( stroke_highlight, stroke_base, ratio);
-		stroke( mix.getRed(), mix.getBlue(), mix.getGreen(), mix.getAlpha());
+		stroke( mix.getRed(), mix.getGreen(), mix.getBlue(), mix.getAlpha());
 		rect(
 			position.x, position.y,
 			dimension.width, dimension.height,
@@ -270,7 +277,10 @@ public class KeyZone extends Zone {
 			textAlign( CENTER);
 			float halfAscent = textAscent() / 2;
 			float halfDescent = textDescent() / 2;
-			text( label,
+			String label_text = alternate_enabled ? label_alternate : label;
+			if( shift_down) label_text = label_text.toUpperCase();
+			text(
+				label_text,
 				position.x + halfDimension.width,
 				position.y + halfDimension.height + halfAscent - halfDescent);
 		}
@@ -278,9 +288,7 @@ public class KeyZone extends Zone {
 		//clean up
 		popStyle();
 	}
-	/**
-	 * Draws the selection area of the key.
-	 */
+	/** Draws the selection area of the key. */
 	@Override
 	public void pickDrawImpl(){
 		rect(
@@ -289,9 +297,7 @@ public class KeyZone extends Zone {
 			cornerRounding_topLeft, cornerRounding_topRight,
 			cornerRounding_bottomRight, cornerRounding_bottomLeft);
 	}
-	/**
-	 * Does nothing.
-	 */
+	/** Does nothing. */
 	@Override
 	public void touchImpl(){}
 	/**
@@ -335,7 +341,7 @@ public class KeyZone extends Zone {
 		if( debug) System.out.printf("%s %s %s\n", name, keyChar, "assign");
 		if( ! isDown){
 			invokeKeyPressedEvent();
-			isDown = true;
+			setDown( true);
 		}
 		bufferTouchEvent( TouchEvent.ASSIGN);
 		super.assign( touches);
@@ -351,7 +357,7 @@ public class KeyZone extends Zone {
 			invokeKeyReleasedEvent();
 			if( keyChar != KeyEvent.CHAR_UNDEFINED)
 				invokeKeyTypedEvent();
-			isDown = false;
+			setDown( false);
 		}
 		bufferTouchEvent( TouchEvent.UNASSIGN);
 		lastTouch = touch.currentTime;
@@ -399,9 +405,48 @@ public class KeyZone extends Zone {
 		keyListeners.add( listener);
 	}
 
-	//////////////////////////////
-	// public accessor methods //
-	//////////////////////////////
+	/////////////////////////////////
+	// public set accessor methods //
+	/////////////////////////////////
+	/**
+	 * Sets whether this key is down or not
+	 * @param down whether this key should be down or not
+	 */
+	protected void setDown( boolean down){
+		this.isDown = down;
+	}
+	/**
+	 * Sets the current modifier mask
+	 * @param mask the desired mask
+	 */
+	public void setModifierMask( int mask){
+		this.modifierMask = mask;
+		this.shift_down =
+			( mask & KeyEvent.SHIFT_DOWN_MASK) == KeyEvent.SHIFT_DOWN_MASK;
+	}
+	/**
+	 * Sets an alternate character for the key.
+	 * @param keyChar the desired alternate character
+	 */
+	public void setAlternateChar( char keyChar){
+		if( keyChar == KeyEvent.CHAR_UNDEFINED){
+			alternate_available = false;
+			alternate_enabled = false;
+		}
+		else{
+			keyChar_alternate = keyChar;
+			alternate_available = true;
+			label_alternate = String.valueOf( keyChar);
+		}
+	}
+	/**
+	 * Sets whether the alternate character for the key is enabled.
+	 * @param enabled whether to enable or disable the alternate key
+	 */
+	public void setAlternateEnabled( boolean enabled){
+		if( alternate_available)
+			alternate_enabled = enabled;
+	}
 	/**
 	 * Sets the text that is displayed on the key.
 	 * @param label The text to be displayed on the key.
@@ -410,6 +455,13 @@ public class KeyZone extends Zone {
 		this.label = label;
 		this.label_enabled = true;
 		this.icon_enabled = false;
+	}
+	/**
+	 * Sets the text that is displayed on the key when the alternate key is enabled.
+	 * @param label The text to be displayed on the key.
+	 */
+	public void setAlternateLabel( String label){
+		this.label_alternate = label;
 	}
 	/**
 	 * Sets the icon that is displayed on the key.
@@ -473,6 +525,14 @@ public class KeyZone extends Zone {
 		this.y_inset = y_inset;
 	}
 
+	/////////////////////////////////
+	// public get accessor methods //
+	/////////////////////////////////
+	/** returns whether an alternate key is available or not */
+	public boolean getAlternateAvailable(){
+		return alternate_available;
+	}
+
 	////////////////////////
 	// utility functions //
 	////////////////////////
@@ -484,14 +544,18 @@ public class KeyZone extends Zone {
 	 * event's constructor.
 	 */
 	protected KeyEvent constructKeyEvent( int id){
-		//is it okay to use 0 for KeyEvent's constructor's modifiers parameter?
+		//get parameters
 		int keyCode = ( id == KeyEvent.KEY_TYPED) ?
 			KeyEvent.VK_UNDEFINED : this.keyCode;
 		int keyLocation = ( id == KeyEvent.KEY_TYPED) ?
 			KeyEvent.KEY_LOCATION_UNKNOWN : this.keyLocation;
+		char keyChar = ( id == KeyEvent.KEY_TYPED && alternate_enabled) ?
+			this.keyChar_alternate : this.keyChar;
+		if( shift_down) keyChar = Character.toUpperCase( keyChar);
+		//make and return event
 		return new KeyEvent(
-			this.applet, id, System.currentTimeMillis(), 0,
-			keyCode, this.keyChar, keyLocation);
+			this.applet, id, System.currentTimeMillis(), modifierMask,
+			keyCode, keyChar, keyLocation);
 	}
 
 	////////////////////////////////
@@ -516,11 +580,12 @@ public class KeyZone extends Zone {
 	 * @return The mixed colour
 	 */
 	private Color mixColours( Color base, Color highlight, float ratio){
-		float converse = 1 - ratio;
-		float red = base.getRed() * converse + highlight.getRed() * ratio;
-		float green = base.getBlue() * converse + highlight.getBlue() * ratio;
-		float blue = base.getGreen() * converse + highlight.getGreen() * ratio;
-		float alpha = base.getAlpha() * converse + highlight.getAlpha() * ratio;
+		float minned_ratio = Math.min( 1f, ratio);
+		float converse = 1 - minned_ratio;
+		float red = base.getRed() * converse + highlight.getRed() * minned_ratio;
+		float green = base.getGreen() * converse + highlight.getGreen() * minned_ratio;
+		float blue = base.getBlue() * converse + highlight.getBlue() * minned_ratio;
+		float alpha = base.getAlpha() * converse + highlight.getAlpha() * minned_ratio;
 		return new Color(
 			clamp( red),
 			clamp( green),

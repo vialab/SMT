@@ -36,6 +36,9 @@ bin/vialab/SMT/swipekeyboard/ExtendedLayout.class: \
 bin/vialab/SMT/swipekeyboard/KeyZone.class: \
 	bin/vialab/SMT/Zone.class
 
+bin/vialab/SMT/swipekeyboard/ModifierKeyZone.class: \
+	bin/vialab/SMT/swipekeyboard/KeyZone.class
+
 bin/vialab/SMT/swipekeyboard/SwipeKeyboardLayout.class:
 
 bin/vialab/SMT/swipekeyboard/SwipeKeyEvent.class:

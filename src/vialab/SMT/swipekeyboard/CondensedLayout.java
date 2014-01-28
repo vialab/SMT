@@ -52,63 +52,122 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 	public void setup( SwipeKeyboard keyboard){
 		//initialize keys
 		//normal keys
-		KeyZone key_shift = new KeyZone( "key shift", KeyEvent.VK_SHIFT,
-			KeyEvent.CHAR_UNDEFINED, KeyEvent.KEY_LOCATION_LEFT);
 		KeyZone key_backspace = new KeyZone( "key backspace",
 			KeyEvent.VK_BACK_SPACE);
 		KeyZone key_nums = new KeyZone( "key nums", KeyEvent.VK_NUM_LOCK);
 		KeyZone key_comma = new KeyZone( "key comma", KeyEvent.VK_COMMA, ',');
 		KeyZone key_space = new KeyZone( "key space", KeyEvent.VK_SPACE, ' ');
 		KeyZone key_period = new KeyZone( "key period", KeyEvent.VK_PERIOD, '.');
-		KeyZone key_meta = new KeyZone( "key special", KeyEvent.VK_META); 
 		KeyZone key_enter = new KeyZone( "key enter", KeyEvent.VK_ENTER, '\n');
+
+		//modifier keys
+		ModifierKeyZone key_shift = new ModifierKeyZone( "key shift",
+			KeyEvent.VK_SHIFT, KeyEvent.KEY_LOCATION_LEFT);
 
 		//key labels
 		key_shift.setLabel( "^");
 		key_backspace.setLabel( "<");
 		key_nums.setLabel( "#");
 		key_space.setLabel( "___");
-		key_meta.setLabel( "@");
 		key_enter.setLabel( "<_|");
 
 		//load icons
-		PShape icon_shift = SMT.parent.loadShape( "resources/shift.svg");
 		PShape icon_backspace = SMT.parent.loadShape( "resources/backspace.svg");
 		PShape icon_enter = SMT.parent.loadShape( "resources/enter.svg");
-		key_shift.setIcon( icon_shift);
+		PShape icon_shift = SMT.parent.loadShape( "resources/shift.svg");
+		PShape icon_space = SMT.parent.loadShape( "resources/space.svg");
 		key_backspace.setIcon( icon_backspace);
 		key_enter.setIcon( icon_enter);
+		key_shift.setIcon( icon_shift);
+		key_space.setIcon( icon_space);
 		//set insets
 		key_backspace.setInset( 25, 25);
 		key_enter.setInset( 25, 25);
+		key_space.setInset( 25, 40);
 
 		//swipe keys
-		SwipeKeyZone key_q = new SwipeKeyZone( "key q", KeyEvent.VK_Q, 'Q');
-		SwipeKeyZone key_w = new SwipeKeyZone( "key w", KeyEvent.VK_W, 'W');
-		SwipeKeyZone key_e = new SwipeKeyZone( "key e", KeyEvent.VK_E, 'E');
-		SwipeKeyZone key_r = new SwipeKeyZone( "key r", KeyEvent.VK_R, 'R');
-		SwipeKeyZone key_t = new SwipeKeyZone( "key t", KeyEvent.VK_T, 'T');
-		SwipeKeyZone key_y = new SwipeKeyZone( "key y", KeyEvent.VK_Y, 'Y');
-		SwipeKeyZone key_u = new SwipeKeyZone( "key u", KeyEvent.VK_U, 'U');
-		SwipeKeyZone key_i = new SwipeKeyZone( "key i", KeyEvent.VK_I, 'I');
-		SwipeKeyZone key_o = new SwipeKeyZone( "key o", KeyEvent.VK_O, 'O');
-		SwipeKeyZone key_p = new SwipeKeyZone( "key p", KeyEvent.VK_P, 'P');
-		SwipeKeyZone key_a = new SwipeKeyZone( "key a", KeyEvent.VK_A, 'A');
-		SwipeKeyZone key_s = new SwipeKeyZone( "key s", KeyEvent.VK_S, 'S');
-		SwipeKeyZone key_d = new SwipeKeyZone( "key d", KeyEvent.VK_D, 'D');
-		SwipeKeyZone key_f = new SwipeKeyZone( "key f", KeyEvent.VK_F, 'F');
-		SwipeKeyZone key_g = new SwipeKeyZone( "key g", KeyEvent.VK_G, 'G');
-		SwipeKeyZone key_h = new SwipeKeyZone( "key h", KeyEvent.VK_H, 'H');
-		SwipeKeyZone key_j = new SwipeKeyZone( "key j", KeyEvent.VK_J, 'J');
-		SwipeKeyZone key_k = new SwipeKeyZone( "key k", KeyEvent.VK_K, 'K');
-		SwipeKeyZone key_l = new SwipeKeyZone( "key l", KeyEvent.VK_L, 'L');
-		SwipeKeyZone key_z = new SwipeKeyZone( "key z", KeyEvent.VK_Z, 'Z');
-		SwipeKeyZone key_x = new SwipeKeyZone( "key x", KeyEvent.VK_X, 'X');
-		SwipeKeyZone key_c = new SwipeKeyZone( "key c", KeyEvent.VK_C, 'C');
-		SwipeKeyZone key_v = new SwipeKeyZone( "key v", KeyEvent.VK_V, 'V');
-		SwipeKeyZone key_b = new SwipeKeyZone( "key b", KeyEvent.VK_B, 'B');
-		SwipeKeyZone key_n = new SwipeKeyZone( "key n", KeyEvent.VK_N, 'N');
-		SwipeKeyZone key_m = new SwipeKeyZone( "key m", KeyEvent.VK_M, 'M');
+		SwipeKeyZone key_q = new SwipeKeyZone( "key q", KeyEvent.VK_Q, 'q');
+		SwipeKeyZone key_w = new SwipeKeyZone( "key w", KeyEvent.VK_W, 'w');
+		SwipeKeyZone key_e = new SwipeKeyZone( "key e", KeyEvent.VK_E, 'e');
+		SwipeKeyZone key_r = new SwipeKeyZone( "key r", KeyEvent.VK_R, 'r');
+		SwipeKeyZone key_t = new SwipeKeyZone( "key t", KeyEvent.VK_T, 't');
+		SwipeKeyZone key_y = new SwipeKeyZone( "key y", KeyEvent.VK_Y, 'y');
+		SwipeKeyZone key_u = new SwipeKeyZone( "key u", KeyEvent.VK_U, 'u');
+		SwipeKeyZone key_i = new SwipeKeyZone( "key i", KeyEvent.VK_I, 'i');
+		SwipeKeyZone key_o = new SwipeKeyZone( "key o", KeyEvent.VK_O, 'o');
+		SwipeKeyZone key_p = new SwipeKeyZone( "key p", KeyEvent.VK_P, 'p');
+		SwipeKeyZone key_a = new SwipeKeyZone( "key a", KeyEvent.VK_A, 'a');
+		SwipeKeyZone key_s = new SwipeKeyZone( "key s", KeyEvent.VK_S, 's');
+		SwipeKeyZone key_d = new SwipeKeyZone( "key d", KeyEvent.VK_D, 'd');
+		SwipeKeyZone key_f = new SwipeKeyZone( "key f", KeyEvent.VK_F, 'f');
+		SwipeKeyZone key_g = new SwipeKeyZone( "key g", KeyEvent.VK_G, 'g');
+		SwipeKeyZone key_h = new SwipeKeyZone( "key h", KeyEvent.VK_H, 'h');
+		SwipeKeyZone key_j = new SwipeKeyZone( "key j", KeyEvent.VK_J, 'j');
+		SwipeKeyZone key_k = new SwipeKeyZone( "key k", KeyEvent.VK_K, 'k');
+		SwipeKeyZone key_l = new SwipeKeyZone( "key l", KeyEvent.VK_L, 'l');
+		SwipeKeyZone key_z = new SwipeKeyZone( "key z", KeyEvent.VK_Z, 'z');
+		SwipeKeyZone key_x = new SwipeKeyZone( "key x", KeyEvent.VK_X, 'x');
+		SwipeKeyZone key_c = new SwipeKeyZone( "key c", KeyEvent.VK_C, 'c');
+		SwipeKeyZone key_v = new SwipeKeyZone( "key v", KeyEvent.VK_V, 'v');
+		SwipeKeyZone key_b = new SwipeKeyZone( "key b", KeyEvent.VK_B, 'b');
+		SwipeKeyZone key_n = new SwipeKeyZone( "key n", KeyEvent.VK_N, 'n');
+		SwipeKeyZone key_m = new SwipeKeyZone( "key m", KeyEvent.VK_M, 'm');
+
+		//set alternates
+		key_q.setAlternateChar( '1');
+		key_w.setAlternateChar( '2');
+		key_e.setAlternateChar( '3');
+		key_r.setAlternateChar( '4');
+		key_t.setAlternateChar( '5');
+		key_y.setAlternateChar( '6');
+		key_u.setAlternateChar( '7');
+		key_i.setAlternateChar( '8');
+		key_o.setAlternateChar( '9');
+		key_p.setAlternateChar( '0');
+		key_a.setAlternateChar( '!');
+		key_s.setAlternateChar( '@');
+		key_d.setAlternateChar( '#');
+		key_f.setAlternateChar( '$');
+		key_g.setAlternateChar( '%');
+		key_h.setAlternateChar( '&');
+		key_j.setAlternateChar( '+');
+		key_k.setAlternateChar( '?');
+		key_l.setAlternateChar( '/');
+		key_z.setAlternateChar( '_');
+		key_x.setAlternateChar( '\"');
+		key_c.setAlternateChar( '\'');
+		key_v.setAlternateChar( '(');
+		key_b.setAlternateChar( ')');
+		key_n.setAlternateChar( '-');
+		key_m.setAlternateChar( ':');
+
+		//set alternates
+		keyboard.addAlternatableKey( key_q);
+		keyboard.addAlternatableKey( key_w);
+		keyboard.addAlternatableKey( key_e);
+		keyboard.addAlternatableKey( key_r);
+		keyboard.addAlternatableKey( key_t);
+		keyboard.addAlternatableKey( key_y);
+		keyboard.addAlternatableKey( key_u);
+		keyboard.addAlternatableKey( key_i);
+		keyboard.addAlternatableKey( key_o);
+		keyboard.addAlternatableKey( key_p);
+		keyboard.addAlternatableKey( key_a);
+		keyboard.addAlternatableKey( key_s);
+		keyboard.addAlternatableKey( key_d);
+		keyboard.addAlternatableKey( key_f);
+		keyboard.addAlternatableKey( key_g);
+		keyboard.addAlternatableKey( key_h);
+		keyboard.addAlternatableKey( key_j);
+		keyboard.addAlternatableKey( key_k);
+		keyboard.addAlternatableKey( key_l);
+		keyboard.addAlternatableKey( key_z);
+		keyboard.addAlternatableKey( key_x);
+		keyboard.addAlternatableKey( key_c);
+		keyboard.addAlternatableKey( key_v);
+		keyboard.addAlternatableKey( key_b);
+		keyboard.addAlternatableKey( key_n);
+		keyboard.addAlternatableKey( key_m);
 
 		//mess with key sizes
 		key_shift.setWidth( 100 + 30 + padding);
@@ -159,7 +218,6 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		row4.add( key_comma);
 		row4.add( key_space);
 		row4.add( key_period);
-		//row4.add( key_meta);
 		row4.add( key_enter);
 		
 		//center rows
@@ -193,14 +251,15 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		anchor_bottomRight.translate( width - halfDim.width, - halfDim.height);
 
 		//add keys to keyboard
-		keyboard.addKey( key_shift);
 		keyboard.addKey( key_backspace);
 		keyboard.addKey( key_nums);
 		keyboard.addKey( key_comma);
 		keyboard.addKey( key_space);
 		keyboard.addKey( key_period);
-		//keyboard.addKey( key_meta);
 		keyboard.addKey( key_enter);
+
+		//add modifier keys to keyboard
+		keyboard.addModifierKey( key_shift);
 
 		//add swipe keys to keyboard
 		keyboard.addSwipeKey( key_q);

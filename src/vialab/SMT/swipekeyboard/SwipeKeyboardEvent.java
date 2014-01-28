@@ -15,6 +15,8 @@ public class SwipeKeyboardEvent extends java.util.EventObject{
 	private String swipe;
 	/** The type of event that occurred */
 	private Type type;
+	/** Whether the shift key was down during this swipe */
+	private boolean shift_down = false;
 
 	/**
 	 * Create a new SwipeKeyboardEvent
@@ -54,6 +56,20 @@ public class SwipeKeyboardEvent extends java.util.EventObject{
 	 */
 	public String getSwipeString(){
 		return swipe;
+	}
+	/**
+	 * Returns whether the shift key was down during this swipe.
+	 * @return whether the shift key was down during this swipe.
+	 */
+	public boolean getShiftDown(){
+		return shift_down;
+	}
+	/**
+	 * Sets whether the shift key was down during this swipe.
+	 * @param down whether the shift key was down during this swipe.
+	 */
+	public void setShiftDown( boolean down){
+		this.shift_down = down;
 	}
 
 	/**

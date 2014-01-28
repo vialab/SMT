@@ -34,12 +34,16 @@ public class SwipeKeyboard extends Zone
 	private Vector<AnchorZone> anchors;
 	/** A list of all the keys contained by this keyboard */
 	private Vector<KeyZone> keys;
-	/** A list of all objects listening swipe events from this keyboard */
-	private Vector<SwipeKeyboardListener> swipeListeners;
-	/** A list of all objects listening swipe events from this keyboard */
-	private Vector<KeyListener> keyListeners;
+	/** A list of all the keys contained by this keyboard */
+	private Vector<ModifierKeyZone> modifierKeys;
 	/** A list of all the swipeKeys contained by this keyboard */
 	private Vector<SwipeKeyZone> swipeKeys;
+	/** A list of all the keys contained by this keyboard */
+	private Vector<KeyZone> alternatableKeys;
+	/** A list of all objects listening swipe events from this keyboard */
+	private Vector<KeyListener> keyListeners;
+	/** A list of all objects listening swipe events from this keyboard */
+	private Vector<SwipeKeyboardListener> swipeListeners;
 
 	/////////////////////
 	// private fields //
@@ -53,13 +57,19 @@ public class SwipeKeyboard extends Zone
 	private Vector<SwipeKeyEvent> swipeStack;
 	/** The object that is used to resolve swipe strings to words */
 	private SwipeResolver resolver;
-	/**
+	/** 
 	 * A list of all touches currently invovled in the current swipe.
 	 * Should be empty if there is no swipe in progress.
 	 */
 	private Vector<Touch> touches;
+	/** Whether the alternate keys are enabled */
+	private boolean alternate_enabled = false;
+	/** Whether the shift key is on or not */
+	private boolean shift_enabled = false;
+	/** The current modifier mask */
+	private int modifierMask = 0;
 
-	/////////////////////////////
+	/////////////////////////////KeyEvent.VK_NUM_LOCK
 	// private drawing fields //
 	/////////////////////////////
 	/** Indicates whether the keyboard's background should be drawn. */
@@ -105,7 +115,9 @@ public class SwipeKeyboard extends Zone
 		super( "Swipe Keyboard");
 		anchors = new Vector<AnchorZone>();
 		keys = new Vector<KeyZone>();
+		modifierKeys = new Vector<ModifierKeyZone>();
 		swipeKeys = new Vector<SwipeKeyZone>();
+		alternatableKeys = new Vector<KeyZone>();
 
 		//drawing fields
 		position = new PVector( 0, 0);
@@ -119,6 +131,8 @@ public class SwipeKeyboard extends Zone
 		for( AnchorZone anchor : anchors)
 			this.add( anchor);
 		for( KeyZone key : keys)
+			this.add( key);
+		for( ModifierKeyZone key : modifierKeys)
 			this.add( key);
 		for( SwipeKeyZone key : swipeKeys)
 			this.add( key);
@@ -161,6 +175,14 @@ public class SwipeKeyboard extends Zone
 		key.addKeyListener( this);
 	}
 	/**
+	 * Adds a modifier key to the keyboard.
+	 * @param key The modifier key to be added to this keyboard.
+	 */
+	public void addModifierKey( ModifierKeyZone key){
+		this.modifierKeys.add( key);
+		key.addKeyListener( this);
+	}
+	/**
 	 * Adds an swipe key to the keyboard.
 	 * @param key The swipe key to be added to this keyboard.
 	 */
@@ -168,6 +190,13 @@ public class SwipeKeyboard extends Zone
 		this.swipeKeys.add( key);
 		key.addKeyListener( this);
 		key.addSwipeKeyListener( this);
+	}
+	/**
+	 * Adds an alternatable key to the keyboard.
+	 * @param key The key to be added to this keyboard.
+	 */
+	public void addAlternatableKey( KeyZone key){
+		this.alternatableKeys.add( key);
 	}
 
 	/**
@@ -222,7 +251,7 @@ public class SwipeKeyboard extends Zone
 	 * @param touches
 	 */
 	@Override
-	public void assign(Iterable<? extends Touch> touches) {
+	public void assign( Iterable<? extends Touch> touches) {
 		if( ! swipe_inProgress)
 			super.assign( touches);
 	}
@@ -237,7 +266,9 @@ public class SwipeKeyboard extends Zone
 	@Override
 	public void keyPressed( KeyEvent event){
 		if( debug)
-			System.out.printf( "Key Down: %s\n", event.getKeyChar());
+			System.out.printf("Key Pressed: %d, %d, %c\n",
+				event.getModifiers(), event.getKeyCode(), event.getKeyChar());
+		//pass event to listeners
 		for( KeyListener listener : keyListeners)
 			listener.keyPressed( event);
 	}
@@ -246,9 +277,19 @@ public class SwipeKeyboard extends Zone
 	 * @param event The KeyReleased event that has occured.
 	 */
 	@Override
+
+
 	public void keyReleased( KeyEvent event){
 		if( debug)
-			System.out.printf( "Key Up: %s\n", event.getKeyChar());
+			System.out.printf("Key Released: %d, %d, %c\n",
+				event.getModifiers(), event.getKeyCode(), event.getKeyChar());
+		if( event.getKeyCode() == KeyEvent.VK_NUM_LOCK)
+			setAlternateKeysEnabled( ! this.alternate_enabled);
+		else if( event.getKeyCode() == KeyEvent.VK_SHIFT){
+			shift_enabled = ! shift_enabled;
+			setModifierEnabled( KeyEvent.SHIFT_DOWN_MASK, shift_enabled);
+		}
+		//pass event to listeners
 		for( KeyListener listener : keyListeners)
 			listener.keyReleased( event);
 	}
@@ -259,7 +300,9 @@ public class SwipeKeyboard extends Zone
 	@Override
 	public void keyTyped( KeyEvent event){
 		if( debug)
-			System.out.printf( "Key Typed: %s\n", event.getKeyChar());
+			System.out.printf("Key Typed: %d, %d, %c\n",
+				event.getModifiers(), event.getKeyCode(), event.getKeyChar());
+		//pass event to listeners
 		for( KeyListener listener : keyListeners)
 			listener.keyTyped( event);
 	}
@@ -283,6 +326,8 @@ public class SwipeKeyboard extends Zone
 			String swipe = getSwipeString();
 			SwipeKeyboardEvent boardEvent = new SwipeKeyboardEvent(
 				this, SwipeKeyboardEvent.Type.SWIPE_STARTED, swipe, resolver);
+			if( shift_enabled)
+				boardEvent.setShiftDown( true);
 			for( SwipeKeyboardListener listener : swipeListeners)
 				listener.swipeStarted( boardEvent);
 			swipe_inProgress = true;
@@ -302,6 +347,8 @@ public class SwipeKeyboard extends Zone
 			String swipe = getSwipeString();
 			SwipeKeyboardEvent boardEvent = new SwipeKeyboardEvent(
 				this, SwipeKeyboardEvent.Type.SWIPE_PROGRESSED, swipe, resolver);
+			if( shift_enabled)
+				boardEvent.setShiftDown( true);
 			for( SwipeKeyboardListener listener : swipeListeners)
 				listener.swipeProgressed( boardEvent);
 		}
@@ -359,8 +406,12 @@ public class SwipeKeyboard extends Zone
 		String swipe = getSwipeString();
 		swipeStack.clear();
 
+		//create the event
 		SwipeKeyboardEvent event = new SwipeKeyboardEvent(
 			this, SwipeKeyboardEvent.Type.SWIPE_COMPLETED, swipe, resolver);
+		if( shift_enabled)
+			event.setShiftDown( true);
+		//pass event to all listeners
 		for( SwipeKeyboardListener listener : swipeListeners)
 			listener.swipeCompleted( event);
 	}
@@ -394,6 +445,32 @@ public class SwipeKeyboard extends Zone
 
 		//finish up
 		return swipe;
+	}
+
+	/**
+	 * Sets whether the alternatable keys should be set to their alternate states
+	 */
+	private void setAlternateKeysEnabled( boolean enabled){
+		this.alternate_enabled = enabled;
+		for( KeyZone key : alternatableKeys)
+			if( key.getAlternateAvailable())
+				key.setAlternateEnabled( enabled);
+	}
+
+	/**
+	 * Sets whether the shift modifier is enabled or not
+	 */
+	private void setModifierEnabled( int mask, boolean enabled){
+		if( enabled)
+			this.modifierMask	|= mask;
+		else
+			this.modifierMask &= ~mask;
+		for( KeyZone key : keys)
+			key.setModifierMask( this.modifierMask);
+		for( KeyZone key : modifierKeys)
+			key.setModifierMask( this.modifierMask);
+		for( KeyZone key : swipeKeys)
+			key.setModifierMask( this.modifierMask);
 	}
 
 	/////////////////////

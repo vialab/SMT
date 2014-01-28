@@ -130,6 +130,7 @@ public void debug_shapes(){
 public void stop(){
 	super.stop();
 }
+// subclasses
 
 private class SwipeDisplayer extends Zone
 		implements SwipeKeyboardListener, KeyListener {
@@ -169,13 +170,23 @@ private class SwipeDisplayer extends Zone
 	public void swipeStarted( SwipeKeyboardEvent event){}
 	public void swipeProgressed( SwipeKeyboardEvent event){
 		content = new String();
-		for( String suggestion : event.getSuggestions())
-			content += String.format( "%s ", suggestion);
+		boolean shift_down = event.getShiftDown();
+		for( String suggestion : event.getSuggestions()){
+			String word = null; 
+			if( shift_down){
+				word = String.valueOf(
+					Character.toUpperCase( suggestion.charAt(0)));
+				if( suggestion.length() > 1)
+					word += suggestion.substring( 1);
+			}
+			else
+				word = suggestion;
+			content += String.format( "%s ", word);
+		}
 	}
 
 	//key events
 	public void keyPressed( KeyEvent event){
-		System.out.printf("Key pressed: %d\n", event.getKeyCode());
 		switch( event.getKeyCode()){
 			case KeyEvent.VK_LEFT:
 				arrow_left_visible = true;
@@ -193,7 +204,6 @@ private class SwipeDisplayer extends Zone
 		}
 	}
 	public void keyReleased( KeyEvent event){
-		System.out.printf("Key released: %d\n", event.getKeyCode());
 		switch( event.getKeyCode()){
 			case KeyEvent.VK_LEFT:
 				arrow_left_visible = false;
@@ -210,8 +220,5 @@ private class SwipeDisplayer extends Zone
 			default: break;
 		}
 	}
-	public void keyTyped( KeyEvent event){
-		System.out.printf("Key typed: %d\n", event.getKeyCode());
-
-	}
+	public void keyTyped( KeyEvent event){}
 }

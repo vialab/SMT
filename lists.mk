@@ -31,6 +31,7 @@ class_files = \
 	bin/vialab/SMT/swipekeyboard/DefaultSwipeResolver.class \
 	bin/vialab/SMT/swipekeyboard/ExtendedLayout.class \
 	bin/vialab/SMT/swipekeyboard/KeyZone.class \
+	bin/vialab/SMT/swipekeyboard/ModifierKeyZone.class \
 	bin/vialab/SMT/swipekeyboard/SwipeKeyboardEvent.class \
 	bin/vialab/SMT/swipekeyboard/SwipeKeyboardLayout.class \
 	bin/vialab/SMT/swipekeyboard/SwipeKeyboardListener.class \
@@ -91,6 +92,7 @@ source_files = \
 	src/vialab/SMT/swipekeyboard/DefaultSwipeResolver.java \
 	src/vialab/SMT/swipekeyboard/ExtendedLayout.java \
 	src/vialab/SMT/swipekeyboard/KeyZone.java \
+	src/vialab/SMT/swipekeyboard/ModifierKeyZone.java \
 	src/vialab/SMT/swipekeyboard/SwipeKeyboardEvent.java \
 	src/vialab/SMT/swipekeyboard/SwipeKeyboardLayout.java \
 	src/vialab/SMT/swipekeyboard/SwipeKeyboardListener.java \

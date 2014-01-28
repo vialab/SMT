@@ -183,7 +183,9 @@ public class SwipeKeyZone extends KeyZone {
 	 * required by the event's constructor.
 	 */
 	private SwipeKeyEvent constructSwipeEvent( int id, Touch touch){
+		char keyChar = this.alternate_enabled ?
+			this.keyChar_alternate : this.keyChar;
 		return new SwipeKeyEvent(
-			this, id, this.keyCode, this.keyChar, this.keyLocation, touch);
+			this, id, this.keyCode, keyChar, this.keyLocation, touch);
 	}
 }
