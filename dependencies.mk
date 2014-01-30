@@ -8,9 +8,6 @@ bin/vialab/SMT/event/TouchListener.class: \
 #test package
 bin/vialab/SMT/test/TestGets.class: \
 	bin/vialab/SMT/Zone.class
-bin/vialab/SMT/test/TestMethodClasses.class: \
-	bin/vialab/SMT/Zone.class \
-	bin/vialab/SMT/test/StaticZoneMethodContainer.class
 bin/vialab/SMT/test/TestSwipeKeyboard.class: \
 	bin/vialab/SMT/SwipeKeyboard.class \
 	bin/vialab/SMT/TouchSource.class

@@ -381,60 +381,59 @@ public final class SMTUtilities {
 	 *         will be null, the opposite is not true, as the return of an
 	 *         invoked method can be null also
 	 */
-	static Object invoke(Method method, PApplet parent, Zone zone, Object... parameters) {
-		if (method != null) {
-			boolean first = !invokeList.contains(method);
-			invokeList.add(method);
-			if (SMT.debug && first) {
-				System.out.println("Invoking Method:" + method.toString());
-			}
+	static Object invoke( Method method, PApplet parent, Zone zone, Object... parameters){
+		if( method == null)
+			return null;
 
-			Object[] parametersZone = new Object[parameters.length +1];
-			parametersZone[0] = zone;
-			System.arraycopy(parameters, 0, parametersZone, 1, parameters.length);
-
-			Object[] paramSubset = new Object[method.getParameterTypes().length];
-
-			for(int i=0; i<paramSubset.length; i++){
-				Object param = null;
-				for(int k=0; k<parametersZone.length; k++){
-					if(parametersZone[k] != null && method.getParameterTypes()[i].isAssignableFrom(parametersZone[k].getClass())){
-						param = parametersZone[k];
-						//only allow one match per param
-						parametersZone[k] = null;
-						break;
-					}
-				}
-				if(param == null){
-					if(SMT.debug && first){
-						System.err.println("No matching parameter for class " + method.getParameterTypes()[i]);
-					}
-					return null;
-				}
-				paramSubset[i]=param;
-			}
-
-			if (zone != null && zone.getBoundObject() != null) {
-				try {
-					return method.invoke(zone.getBoundObject(), paramSubset);
-				}
-				catch (Exception e) {
-					if(SMT.debug && first){
-						e.printStackTrace();
-					}
-				}
-			}
-			else{
-				try {
-					return method.invoke(parent, paramSubset);
-				}
-				catch (Exception e) {
-					if(SMT.debug){
-						e.printStackTrace();
-					}
-				}
-			}
+		boolean first = !invokeList.contains(method);
+		invokeList.add(method);
+		if (SMT.debug && first) {
+			System.out.println("Invoking Method:" + method.toString());
 		}
+
+		Object[] parametersZone = new Object[parameters.length +1];
+		parametersZone[0] = zone;
+		System.arraycopy( parameters, 0, parametersZone, 1, parameters.length);
+
+		Object[] paramSubset = new Object[method.getParameterTypes().length];
+
+		for( int i=0; i < paramSubset.length; i++){
+			Object param = null;
+			for(int k=0; k<parametersZone.length; k++)
+				if(parametersZone[k] != null &&
+					method.getParameterTypes()[i].isAssignableFrom(
+						parametersZone[k].getClass())){
+					param = parametersZone[k];
+					//only allow one match per param
+					parametersZone[k] = null;
+					break;
+				}
+			if( param == null){
+				if( SMT.debug && first)
+					System.err.println(
+						"No matching parameter for class " +
+							method.getParameterTypes()[i]);
+				return null;
+			}
+			paramSubset[i]=param;
+		}
+
+		if( zone != null && zone.getBoundObject() != null)
+			try {
+				return method.invoke( zone.getBoundObject(), paramSubset);
+			}
+			catch( Exception exception) {
+				if( SMT.debug && first)
+					exception.printStackTrace();
+			}
+		else
+			try {
+				return method.invoke( parent, paramSubset);
+			}
+			catch( Exception exception) {
+				if( SMT.debug)
+					exception.printStackTrace();
+			}
 		return null;
 	}
 

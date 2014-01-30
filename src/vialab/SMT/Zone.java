@@ -2762,14 +2762,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Make sure that if a hidden sub-Zone is given a name that the outer-Zone
 	 * overrides this method to pass through the set to those Zones too,
 	 * otherwise the methods on these sub-Zones will never be called
-	 * 
-	 * @param obj
-	 *            The object to bind to the Zone
+	 * @param obj The object to bind to the Zone
+	 * @deprecated Do not use this method - See <a href="https://github.com/vialab/SMT/issues/174">this github issue</a>
 	 */
+	@Deprecated
 	public void setBoundObject(Object obj) {
 		this.boundObject = obj;
 	}
 
+	/**
+	 * Gets the object this zone is currently bound to.
+	 * @deprecated Do not use this method - See <a href="https://github.com/vialab/SMT/issues/174">this github issue</a>
+	 */
+	@Deprecated
 	public Object getBoundObject() {
 		return boundObject;
 	}

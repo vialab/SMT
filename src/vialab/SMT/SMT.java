@@ -1479,11 +1479,13 @@ public class SMT {
 	 * This adds objects to check for drawZoneName, touchZoneName, etc methods
 	 * in, similar to PApplet
 	 * @param classes The additional objects to check in for methods
+	 * @deprecated Do not use this method - See <a href="https://github.com/vialab/SMT/issues/174">this github issue</a>
 	 */
-	public static void addMethodClasses( Class<?>... classes) {
+	/*@Deprecated
+	public static void addMethodClasses( Class<?>... classes){
 		for( Class<?> c : classes)
 			SMTUtilities.loadMethods( c);
-	}
+	}*/
 
 	/**
 	 * This class encapsulates all the logic for running a seperate process in a thread
