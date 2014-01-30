@@ -92,7 +92,7 @@ public void setup(){
 }
 
 public void draw(){
-	fill( 50, 50, 50);
+	fill( 222, 222, 222);
 	//draw background
 	rect( 0, 0, window_width, window_height);
 	//draw textures

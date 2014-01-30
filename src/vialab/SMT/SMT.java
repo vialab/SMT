@@ -229,12 +229,17 @@ public class SMT {
 				"Null parent PApplet, pass 'this' to SMT.init() instead of null");
 
 		SMT.parent = parent;
-		SMTUtilities.loadMethods(parent.getClass());
 
 		// This build of the toolkit cannot operate without OpenGL renderers
 		if( ! parent.g.is3D())
 			System.out.println(
 				"This build of SMT only supports using OpenGL renderers, please use either OPENGL or P3D in the size function; e.g: size( displayWidth, displayHeight, P3D);");
+		//load applet methods
+		SMTUtilities.loadMethods(parent.getClass());
+
+		//load touch drawer
+		if( touchDrawMethod == TouchDraw.TEXTURED)
+			texturedTouchDrawerNullCheck();
 
 		touch = SMTUtilities.getPMethod( parent, "touch");
 		SMT.sketch = new MainZone( 0, 0, parent.width, parent.height);
@@ -541,7 +546,8 @@ public class SMT {
 		return descendents;
 	}
 
-	/** Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal.
+	/**
+	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal.
 	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
 	 */
 	public static void setTouchDraw(

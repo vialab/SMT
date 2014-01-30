@@ -277,7 +277,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param renderer - String: The PGraphics renderer that draws the Zone
 	 */
 	public Zone(String name, String renderer) {
-		this(name, 0, 0, 1, 1, renderer);
+		this(name, 0, 0, 100, 100, renderer);
 	}
 
 	/**
@@ -364,12 +364,21 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * @param name The new name of the zone
 	 */
-	public void setName(String name) {
-		this.name =
-			name == null ?
-				this.getClass().getSimpleName() :
-				name;
-		loadMethods(this.name);
+	public void setName( String name) {
+		if( name != null){
+			if( name.length() < 1)
+				throw new IllegalArgumentException(
+					"Cannot give a zone an empty string for a name");
+			this.name = name;
+		}
+		else {
+			name = this.getClass().getSimpleName();
+			if( name.length() < 1)
+				//this is an anonymous class!
+				name = this.getClass().getName();
+			this.name = name;
+		}
+		loadMethods( this.name);
 	}
 
 	public boolean getPhysicsEnabled(){
@@ -383,19 +392,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * @param name The name of the zone to load the methods from
 	 */
-	protected void loadMethods(String name) {
-		if (SMT.warnUnimplemented != null) {
-			if (SMT.warnUnimplemented.booleanValue()) {
-				loadMethods(name, true, true, true, true, true, true);
-			}
-			else {
-				loadMethods(name, false, false, false, false, false, false);
-			}
+	protected void loadMethods( String name) {
+		if ( SMT.warnUnimplemented != null) {
+			if ( SMT.warnUnimplemented.booleanValue())
+				loadMethods( name, true, true, true, true, true, true);
+			else
+				loadMethods( name, false, false, false, false, false, false);
 		}
-		else {
-			loadMethods(name, warnDraw(), warnTouch(), warnKeys(), warnPick(), warnTouchUDM(),
+		else 
+			loadMethods(
+				name, warnDraw(), warnTouch(), warnKeys(), warnPick(), warnTouchUDM(),
 					warnPress());
-		}
 	}
 
 	/**
@@ -420,9 +427,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM, boolean warnPress) {
 
-		touchUDM = SMTUtilities.checkImpl(Zone.class, "touchDown", this.getClass(), Touch.class)
-				|| SMTUtilities.checkImpl(Zone.class, "touchUp", this.getClass(), Touch.class)
-				|| SMTUtilities.checkImpl(Zone.class, "touchMoved", this.getClass(), Touch.class);
+		touchUDM =
+			SMTUtilities.checkImpl( Zone.class, "touchDown", this.getClass(), Touch.class)
+			|| SMTUtilities.checkImpl( Zone.class, "touchUp", this.getClass(), Touch.class)
+			|| SMTUtilities.checkImpl( Zone.class, "touchMoved", this.getClass(), Touch.class);
 
 		press = SMTUtilities.checkImpl(Zone.class, "press", this.getClass(), Touch.class);
 
@@ -1842,33 +1850,32 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void draw(boolean drawChildren, boolean picking) {
-		//prerender indirect children
-		if(!picking){
-			drawIndirectChildren(picking);
-		}
-		
-		if (picking) {
+		//picking = true;
+		if (picking)
 			beginPickDraw();
-		}
 		else {
+			//prerender indirect children
+			drawIndirectChildren( picking);
 			beginDraw();
 		}
+
 		PGraphics temp = applet.g;
 		applet.g = this;
 		pushStyle();
-		if (picking) {
-			if (pickDrawMethod == null && !pickImpl) {
-				rect(0, 0, width, height);
-			}
+		if( picking) {
+			if( pickDrawMethod == null && ! pickImpl)
+				rect( 0, 0, width, height);
 			else {
 				pickDrawImpl();
-				SMTUtilities.invoke(pickDrawMethod, applet, this);
+				SMTUtilities.invoke( pickDrawMethod, applet, this);
 			}
 		}
 		else {
-			if (drawMethod == null && !drawImpl) {
+			if( drawMethod == null && ! drawImpl) {
+				fill( 50, 50, 50, 150);
+				stroke( 255, 255, 255, 150);
 				rect(0, 0, width, height);
-				fill(0);
+				fill( 255, 255, 255, 150);
 				text("No Draw Method", 0, 0, width, height);
 			}
 			else{
@@ -1878,20 +1885,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		popStyle();
 		
-		if (drawChildren) {
-			drawChildren(picking);
-		}
+		if( drawChildren)
+			drawChildren( picking);
 		
 		//make sure children draw into parent by not resetting applet.g
 		//untill after children draw
 		applet.g = temp;
 
-		if (picking) {
+		if (picking)
 			endPickDraw();
-		}
-		else {
+		else
 			endDraw();
-		}
 	}
 
 	protected void drawIndirectImage() {
@@ -2424,118 +2428,131 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
+	/**
+	 * Converts java key pressed events into their processing counterparts,
+	 * then calls them on this zone.
+	 * @param event the key pressed event to be converted
+	 */
 	@Override
-	public void keyPressed(java.awt.event.KeyEvent e) {
-		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.PRESS, e.getModifiers(), e.getKeyChar(),
-				e.getKeyCode()));
+	public void keyPressed( java.awt.event.KeyEvent event){
+		this.keyPressed(
+			new KeyEvent(
+				event,
+				event.getWhen(),
+				KeyEvent.PRESS,
+				event.getModifiers(),
+				event.getKeyChar(),
+				event.getKeyCode()));
 	}
 
+	/**
+	 * Converts java key released events into their processing counterparts,
+	 * then calls them on this zone.
+	 * @param event the key released event to be converted
+	 */
 	@Override
-	public void keyReleased(java.awt.event.KeyEvent e) {
-		keyReleased(new KeyEvent(e, e.getWhen(), KeyEvent.RELEASE, e.getModifiers(),
-				e.getKeyChar(), e.getKeyCode()));
+	public void keyReleased( java.awt.event.KeyEvent event){
+		this.keyReleased(
+			new KeyEvent(
+				event,
+				event.getWhen(),
+				KeyEvent.RELEASE,
+				event.getModifiers(),
+				event.getKeyChar(),
+				event.getKeyCode()));
 	}
 
+	/**
+	 * Converts java key typed events into their processing counterparts,
+	 * then calls them on this zone.
+	 * @param event the key typed event to be converted
+	 */
 	@Override
-	public void keyTyped(java.awt.event.KeyEvent e) {
-		keyTyped(new KeyEvent(e, e.getWhen(), KeyEvent.TYPE, e.getModifiers(), e.getKeyChar(),
-				e.getKeyCode()));
+	public void keyTyped( java.awt.event.KeyEvent event){
+		this.keyTyped(
+			new KeyEvent(
+				event,
+				event.getWhen(),
+				KeyEvent.TYPE,
+				event.getModifiers(),
+				event.getKeyChar(),
+				event.getKeyCode()));
 	}
 
-	public void keyPressed(KeyEvent e) {
-		keyPressedImpl(e);
-		SMTUtilities.invoke(keyPressedMethod, applet, this, e);
+	public void keyPressed( KeyEvent event) {
+		keyPressedImpl( event);
+		SMTUtilities.invoke( keyPressedMethod, applet, this, event);
 	}
 
-	public void keyReleased(KeyEvent e) {
-		keyReleasedImpl(e);
-		SMTUtilities.invoke(keyReleasedMethod, applet, this, e);
+	public void keyReleased( KeyEvent event) {
+		keyReleasedImpl( event);
+		SMTUtilities.invoke( keyReleasedMethod, applet, this, event);
 	}
 
-	public void keyTyped(KeyEvent e) {
-		keyTypedImpl(e);
-		SMTUtilities.invoke(keyTypedMethod, applet, this, e);
+	public void keyTyped( KeyEvent event) {
+		keyTypedImpl( event);
+		SMTUtilities.invoke( keyTypedMethod, applet, this, event);
 	}
 
-	protected void touchUpInvoker(Touch touch) {
+	protected void touchUpInvoker( Touch touch) {
 		touchUpImpl(touch);
 		SMTUtilities.invoke(touchUpMethod, applet, this, touch);
 	}
 
-	protected void touchDownInvoker(Touch touch) {
-		touchDownImpl(touch);
+	protected void touchDownInvoker( Touch touch) {
+		touchDownImpl( touch);
 		SMTUtilities.invoke(touchDownMethod, applet, this, touch);
 	}
 
-	protected void touchMovedInvoker(Touch touch) {
-		touchMovedImpl(touch);
+	protected void touchMovedInvoker( Touch touch) {
+		touchMovedImpl( touch);
 		SMTUtilities.invoke(touchMovedMethod, applet, this, touch);
 	}
 
-	protected void pressInvoker(Touch touch) {
-		pressImpl(touch);
+	protected void pressInvoker( Touch touch) {
+		pressImpl( touch);
 		SMTUtilities.invoke(pressMethod, applet, this, touch);
 	}
 
-	/**
-	 * Override to specify a default behavior for press
-	 */
-	protected void pressImpl(Touch touch) {
+	/** Override to specify a default behavior for press */
+	protected void pressImpl( Touch touch) {
 	}
 
-	/**
-	 * Override to specify a default behavior for draw
-	 */
-	protected void drawImpl() {
+	/** Override to specify a default behavior for draw */
+	protected void drawImpl(){
 	}
 
-	/**
-	 * Override to specify a default behavior for touch
-	 */
+	/** Override to specify a default behavior for touch */
 	protected void touchImpl() {
 	}
 
-	/**
-	 * Override to specify a default behavior for pickDraw
-	 */
+	/** Override to specify a default behavior for pickDraw */
 	protected void pickDrawImpl() {
 	}
 
-	/**
-	 * Override to specify a default behavior for touchDown
-	 */
+	/** Override to specify a default behavior for touchDown */
 	protected void touchDownImpl(Touch touch) {
 		addPhysicsMouseJoint();
 	}
 
-	/**
-	 * Override to specify a default behavior for touchUp
-	 */
+	/** Override to specify a default behavior for touchUp */
 	protected void touchUpImpl(Touch touch) {
 	}
 
-	/**
-	 * Override to specify a default behavior for touchMoved
-	 */
+	/** Override to specify a default behavior for touchMoved */
 	protected void touchMovedImpl(Touch touch) {
 		addPhysicsMouseJoint();
 	}
 
-	/**
-	 * Override to specify a default behavior for keyPressed
-	 */
+	/** Override to specify a default behavior for keyPressed */
 	protected void keyPressedImpl(KeyEvent e) {
 	}
 
-	/**
-	 * Override to specify a default behavior for keyReleased
-	 */
+	/** Override to specify a default behavior for keyReleased */
 	protected void keyReleasedImpl(KeyEvent e) {
 	}
 
-	/**
-	 * Override to specify a default behavior for keyTyped
-	 */
+	/** Override to specify a default behavior for keyTyped */
 	protected void keyTypedImpl(KeyEvent e) {
 	}
 
@@ -2564,6 +2581,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		P.invert();
 		ng.apply(P);
 		matrix.set(ng);
+	}
+
+	public void addPhysicsMouseJoint() {
+		if (zoneBody != null && mJoint == null && physics) {
+			mJointDef = new MouseJointDef();
+			mJointDef.maxForce = 1000000.0f;
+			mJointDef.frequencyHz = applet.frameRate;
+			mJointDef.bodyA = SMT.groundBody;
+			mJointDef.bodyB = zoneBody;
+			mJointDef.target.set(new Vec2(zoneBody.getPosition().x, zoneBody.getPosition().y));
+			mJoint = (MouseJoint) SMT.world.createJoint(mJointDef);
+			zoneBody.setAwake(true);
+		}
 	}
 
 	public void toss() {
@@ -2709,25 +2739,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	public void addPhysicsMouseJoint() {
-		if (zoneBody != null && mJoint == null && physics) {
-			mJointDef = new MouseJointDef();
-			mJointDef.maxForce = 1000000.0f;
-			mJointDef.frequencyHz = applet.frameRate;
-			mJointDef.bodyA = SMT.groundBody;
-			mJointDef.bodyB = zoneBody;
-			mJointDef.target.set(new Vec2(zoneBody.getPosition().x, zoneBody.getPosition().y));
-			mJoint = (MouseJoint) SMT.world.createJoint(mJointDef);
-			zoneBody.setAwake(true);
-		}
-	}
-
 	/**
 	 * This method is for use by Processing, override it to change what occurs
 	 * when a Processing KeyEvent is passed to the Zone
-	 * 
-	 * @param event
-	 *            The Processing KeyEvent that is sent to the Zone
+	 * @param event The Processing KeyEvent that is sent to the Zone
 	 */
 	public void keyEvent(KeyEvent event) {
 		switch (event.getAction()) {

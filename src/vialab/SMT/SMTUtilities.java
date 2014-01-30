@@ -193,50 +193,45 @@ public final class SMTUtilities {
 			// only warn once per method)
 			// and the methodPrefix+Impl method is not provided by the class
 			// itself
-			if (warnMissing && !methodSet.contains(methodPrefix + name)
-					&& !checkImpl(callingClass, methodPrefix, parameters)) {
-				if (!warned) {
-					System.err
-							.println("\nCall SMT.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
+			if( warnMissing && ! methodSet.contains( methodPrefix + name)
+					&& ! checkImpl( callingClass, methodPrefix, parameters)) {
+				if(! warned) {
+					System.err.println(
+						"Call SMT.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
 					warned = true;
 				}
-				System.err.print("No such method: " + methodPrefix + name+"(");
+				System.err.print( "No such method: " + methodPrefix + name+"(");
 				boolean first = true;
-				for(Class<?> c : parameters){
-					if(first){
+				for( Class<?> c : parameters){
+					if( first)
 						first = false;
-					}
-					else{
+					else
 						System.err.print(", ");
-					}
 					System.err.print(c.getName());
 				}
-				System.err.print(")");
-				System.err.print(", using default "+methodPrefix+" method");
-				for(Method m : methodMap.values()){
-					if(m.getName().equalsIgnoreCase(methodPrefix+name)){
-						System.err.print(", method found named "+m.getName()+"(");
+				System.err.print( "), using default " + methodPrefix + " method");
+				for( Method methodInMap : methodMap.values()){
+					if( methodInMap.getName().equalsIgnoreCase( methodPrefix + name)){
+						System.err.print(", method found named " + methodInMap.getName()+"(");
 						boolean first2 = true;
-						for(Class<?> c2 : m.getParameterTypes()){
-							if(first2){
+						for(Class<?> c2 : methodInMap.getParameterTypes()){
+							if(first2)
 								first2 = false;
-							}
-							else{
+							else
 								System.err.print(", ");
-							}
 							System.err.print(c2.getName());
 						}
-						System.err.print(")");
-						System.err.print(" which did not have correct capitalization or parameters");
+						System.err.print(
+							") which did not have correct capitalization or parameters");
 						break;
 					}
 				}
 				System.err.println();
 			}
 			// set method to methodPrefix+Default if defined
-			method = getAnyPMethod(parent, methodPrefix, "Default", true, parameters);
+			method = getAnyPMethod( parent, methodPrefix, "Default", true, parameters);
 			if (method == null) {
-				method = getAnyPMethod(parent, methodPrefix, "Default", false, parameters);
+				method = getAnyPMethod( parent, methodPrefix, "Default", false, parameters);
 			}
 		}
 		methodSet.add(methodPrefix + name);
