@@ -102,3 +102,5 @@ test-addremove: build jar
 	processing-shell tests/AddRemove
 test-methodclasses: build jar
 	java $(cp) vialab.SMT.test.TestMethodClasses
+test-basictest: build jar
+	processing-shell tests/BasicTest
