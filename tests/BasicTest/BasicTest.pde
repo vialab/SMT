@@ -24,12 +24,13 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	SMT.init( this, TouchSource.AUTOMATIC);
+	println("SMT.init finished");
 }
 
 void draw(){
 	//draw background
 	background( 80, 80, 80);
-	pushStyle();
+	/*pushStyle();
 	rectMode(CENTER);
 	for( TuioObject object : SMT.getTuioObjects()) {
 		float x = object.getX();
@@ -41,5 +42,5 @@ void draw(){
 		rect( 0, 0, 40, 40);
 		popMatrix();
 	}
-	popStyle();
+	popStyle();*/
 }
