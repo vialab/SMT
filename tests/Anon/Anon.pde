@@ -23,7 +23,7 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//stuff
-	Zone asdf = new Zone( 0, 0, 100, 100){
+	Zone asdf = new Zone( 120, 10, 100, 100){
 		public void drawImpl(){
 			pushStyle();
 			fill( 180, 100, 100);
@@ -37,9 +37,8 @@ void setup(){
 			drag();
 		}
 	};
-	asdf.translate( 110, 0);
 	SMT.add( asdf);
-	SMT.add( new Zone());
+	SMT.add( new Zone( 10, 10, 100, 100));
 }
 
 void draw(){
