@@ -24,9 +24,10 @@ SMT supports multiple input sources for Touch events:
 * SmartSDK,  
 * Windows Touch (requires http://www.microsoft.com/en-au/download/details.aspx?id=30679), 
 * TUIO, 
-* Mouse Emulation, 
-* Android, and 
+* Mouse Emulation, and 
 * Leap Motion.
+
+Android support is in development, but not officially supported yet.  
 
 SMT can be used in **Windows**, **Mac** and **Linux** environments.  
   
