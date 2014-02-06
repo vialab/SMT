@@ -9,6 +9,8 @@ package vialab.SMT;
  * DEBUG - Debug mode will show some debugging info near the touch path, and some extra debug messages on the console.
  * 
  * SMOOTH - Smooth mode has a Ripples-like visual representation of touches, and shows whether the touch was assigned or not with an inward or outward ripple effect.
+ *
+ * TEXTURED - Textured mode uses some nice textures and some fancy opengl. Its kind of an upgrade from SMOOTH.
  */
 public enum TouchDraw {
 
@@ -18,6 +20,11 @@ public enum TouchDraw {
 	 * the touches
 	 */
 	NONE,
+
+	/**
+	 * Custom mode will simple use the user-specified TouchDrawer
+	 */
+	CUSTOM,
 
 	/**
 	 * Debug mode will show some debugging info near the touch path, and some
@@ -30,5 +37,11 @@ public enum TouchDraw {
 	 * shows whether the touch was assigned or not with an inward or outward
 	 * ripple effect
 	 */
-	SMOOTH;
+	SMOOTH,
+
+	/**
+	 * Textured mode uses some nice textures and some fancy opengl.
+	 * Its kind of an upgrade from SMOOTH.
+	 */
+	TEXTURED;
 }

@@ -8,7 +8,6 @@ import processing.opengl.*;
 
 //smt imports
 import vialab.SMT.*;
-import vialab.SMT.zone.*;
 
 //SMT library imports
 

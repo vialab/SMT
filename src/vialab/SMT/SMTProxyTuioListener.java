@@ -12,8 +12,8 @@ import TUIO.TuioTime;
  * for 2^48 ids
  */
 class SMTProxyTuioListener implements TuioListener {
-	int port;
 
+	int port;
 	TuioListener realListener;
 
 	public SMTProxyTuioListener(int port, TuioListener realListener) {
@@ -52,7 +52,7 @@ class SMTProxyTuioListener implements TuioListener {
 	}
 
 	@Override
-	public synchronized void removeTuioObject(TuioObject tobj) {
+	public synchronized void removeTuioObject( TuioObject tobj) {
 		TuioObject t = changedSessionIdObject(tobj, port);
 		realListener.removeTuioObject(t);
 	}
@@ -62,16 +62,24 @@ class SMTProxyTuioListener implements TuioListener {
 		realListener.refresh(bundleTime);
 	}
 
-	private TuioCursor changedSessionIdCursor(TuioCursor tcur, int port) {
-		return new TouchCursor((((long) port)<<48) + (0x0000ffffffffffffl&tcur.getSessionID()), tcur.getCursorID(), tcur);
+	private TuioCursor changedSessionIdCursor( TuioCursor tcur, int port) {
+		return new TouchCursor(
+			( ( (long) port) << 48) +
+				( 0x0000ffffffffffffl & tcur.getSessionID()),
+			tcur.getCursorID(),
+			tcur);
 	}
 
-	private TuioObject changedSessionIdObject(TuioObject tobj, int port) {
-		return new TouchObject((((long) port)<<48) + (0x0000ffffffffffffl&tobj.getSessionID()), tobj.getSymbolID(), tobj);
+	private TuioObject changedSessionIdObject( TuioObject tobj, int port) {
+		return new TouchObject(
+			( ( (long) port) << 48) +
+				( 0x0000ffffffffffffl & tobj.getSessionID()),
+			tobj.getSymbolID(),
+			tobj);
 	}
 
 	private class TouchObject extends TuioObject {
-		public TouchObject(long si, int sym, TuioObject tobj) {
+		public TouchObject( long si, int sym, TuioObject tobj) {
 			super(tobj.getTuioTime(), si, sym, tobj.getX(), tobj.getY(), tobj.getAngle());
 			startTime = tobj.getStartTime();
 			x_speed = tobj.getXSpeed();

@@ -43,15 +43,19 @@ public final class SMTUtilities {
 	static Set<String> methodSet = new HashSet<String>();
 	static Set<String> prefixSet = new HashSet<String>();
 	private static HashSet<Method> invokeList = new HashSet<Method>();
-	
+
 	static HashMap<String,Method> methodMap = new HashMap<String,Method>();
-	
+
 	/**
 	 * This scans all classes in the parent and SMT.extraClassList and puts the found methods into methodMap indexed by their name suffixed with parameters
 	 */
 	public static void loadMethods(Class<?> c){
-		for (Method m : c.getMethods()){
-			methodMap.put(nameParamToString(m.getName(),m.getParameterTypes()),m);
+		for (Method method : c.getMethods()){
+			methodMap.put(
+				nameParamToString(
+					method.getName(),
+					method.getParameterTypes()),
+				method);
 		}
 	}
 
@@ -79,7 +83,7 @@ public final class SMTUtilities {
 		if (!suffix.isEmpty()) {
 			suffix = suffix.substring(0, 1).toUpperCase() + suffix.substring(1, suffix.length());
 		}
-		
+
 		Method m = getPMethod(parent, methodPrefix + suffix, parameterTypes);
 		if(m == null){
 			String suffix_no_num_suffix = suffix;
@@ -189,50 +193,45 @@ public final class SMTUtilities {
 			// only warn once per method)
 			// and the methodPrefix+Impl method is not provided by the class
 			// itself
-			if (warnMissing && !methodSet.contains(methodPrefix + name)
-					&& !checkImpl(callingClass, methodPrefix, parameters)) {
-				if (!warned) {
-					System.err
-							.println("\nCall SMT.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
+			if( warnMissing && ! methodSet.contains( methodPrefix + name)
+					&& ! checkImpl( callingClass, methodPrefix, parameters)) {
+				if(! warned) {
+					System.err.println(
+						"Call SMT.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
 					warned = true;
 				}
-				System.err.print("No such method: " + methodPrefix + name+"(");
+				System.err.print( "No such method: " + methodPrefix + name+"(");
 				boolean first = true;
-				for(Class<?> c : parameters){
-					if(first){
+				for( Class<?> c : parameters){
+					if( first)
 						first = false;
-					}
-					else{
+					else
 						System.err.print(", ");
-					}
 					System.err.print(c.getName());
 				}
-				System.err.print(")");
-				System.err.print(", using default "+methodPrefix+" method");
-				for(Method m : methodMap.values()){
-					if(m.getName().equalsIgnoreCase(methodPrefix+name)){
-						System.err.print(", method found named "+m.getName()+"(");
+				System.err.print( "), using default " + methodPrefix + " method");
+				for( Method methodInMap : methodMap.values()){
+					if( methodInMap.getName().equalsIgnoreCase( methodPrefix + name)){
+						System.err.print(", method found named " + methodInMap.getName()+"(");
 						boolean first2 = true;
-						for(Class<?> c2 : m.getParameterTypes()){
-							if(first2){
+						for(Class<?> c2 : methodInMap.getParameterTypes()){
+							if(first2)
 								first2 = false;
-							}
-							else{
+							else
 								System.err.print(", ");
-							}
 							System.err.print(c2.getName());
 						}
-						System.err.print(")");
-						System.err.print(" which did not have correct capitalization or parameters");
+						System.err.print(
+							") which did not have correct capitalization or parameters");
 						break;
 					}
 				}
 				System.err.println();
 			}
 			// set method to methodPrefix+Default if defined
-			method = getAnyPMethod(parent, methodPrefix, "Default", true, parameters);
+			method = getAnyPMethod( parent, methodPrefix, "Default", true, parameters);
 			if (method == null) {
-				method = getAnyPMethod(parent, methodPrefix, "Default", false, parameters);
+				method = getAnyPMethod( parent, methodPrefix, "Default", false, parameters);
 			}
 		}
 		methodSet.add(methodPrefix + name);
@@ -334,26 +333,23 @@ public final class SMTUtilities {
 
 	static void warnUncalledMethods(PApplet parent) {
 		Method methods[] = parent.getClass().getMethods();
-		// add inherited methods to the set that should not be checked for being
-		// uncalled
+		//add inherited methods to the set that should not be checked for being uncalled
 		Method inherited[] = parent.getClass().getSuperclass().getMethods();
-		for (Method method : inherited) {
-			methodSet.add(method.getName());
-		}
+		for( Method method : inherited)
+			methodSet.add( method.getName());
 		for (Method method : methods) {
+			String method_name = method.getName();
 			// find all methods that do not correspond to one used by a zone
-			if (!methodSet.contains(method.getName())) {
-				for (String prefix : prefixSet) {
+			if( ! methodSet.contains( method_name)) {
+				for( String prefix : prefixSet) {
 					// check all unaccounted for methods to see if they match
 					// any reserved prefixes
-					if (method.getName().startsWith(prefix)) {
-						System.err
-								.println("The method '"
-										+ method.getName()
-										+ "' corresponds a zone named '"
-										+ method.getName().replaceFirst(prefix, "")
-										+ "' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '"
-										+ prefix + "'.");
+					if( method_name.startsWith( prefix)) {
+					String zoneName = method_name.substring( prefix.length());
+						if(  zoneName.length() != 0)
+							System.err.printf(
+								"The method '%s' corresponds a zone named '%s' which did not exist during this run.\nIf this method is not meant to be used by a Zone, do not use the reserved method prefix '%s'.\n",
+								method_name, zoneName, prefix);
 					}
 				}
 			}
@@ -373,7 +369,7 @@ public final class SMTUtilities {
 	public static Object invoke(Method method, Zone zone) {
 		return SMTUtilities.invoke(method, Zone.applet, zone);
 	}
-	
+
 	/**
 	 * This tries every different way we know to invoke the method, although we
 	 * should just store the needed info when we get the method
@@ -385,60 +381,59 @@ public final class SMTUtilities {
 	 *         will be null, the opposite is not true, as the return of an
 	 *         invoked method can be null also
 	 */
-	static Object invoke(Method method, PApplet parent, Zone zone, Object... parameters) {
-		if (method != null) {
-			boolean first = !invokeList.contains(method);
-			invokeList.add(method);
-			if (SMT.debug && first) {
-				System.out.println("Invoking Method:" + method.toString());
-			}
-			
-			Object[] parametersZone = new Object[parameters.length +1];
-			parametersZone[0] = zone;
-			System.arraycopy(parameters, 0, parametersZone, 1, parameters.length);
-			
-			Object[] paramSubset = new Object[method.getParameterTypes().length];
-			
-			for(int i=0; i<paramSubset.length; i++){
-				Object param = null;
-				for(int k=0; k<parametersZone.length; k++){
-					if(parametersZone[k] != null && method.getParameterTypes()[i].isAssignableFrom(parametersZone[k].getClass())){
-						param = parametersZone[k];
-						//only allow one match per param
-						parametersZone[k] = null;
-						break;
-					}
-				}
-				if(param == null){
-					if(SMT.debug && first){
-						System.err.println("No matching parameter for class " + method.getParameterTypes()[i]);
-					}
-					return null;
-				}
-				paramSubset[i]=param;
-			}
-			
-			if (zone != null && zone.getBoundObject() != null) {
-				try {
-					return method.invoke(zone.getBoundObject(), paramSubset);
-				}
-				catch (Exception e) {
-					if(SMT.debug && first){
-						e.printStackTrace();
-					}
-				}
-			}
-			else{
-				try {
-					return method.invoke(parent, paramSubset);
-				}
-				catch (Exception e) {
-					if(SMT.debug){
-						e.printStackTrace();
-					}
-				}
-			}
+	static Object invoke( Method method, PApplet parent, Zone zone, Object... parameters){
+		if( method == null)
+			return null;
+
+		boolean first = !invokeList.contains(method);
+		invokeList.add(method);
+		if (SMT.debug && first) {
+			System.out.println("Invoking Method:" + method.toString());
 		}
+
+		Object[] parametersZone = new Object[parameters.length +1];
+		parametersZone[0] = zone;
+		System.arraycopy( parameters, 0, parametersZone, 1, parameters.length);
+
+		Object[] paramSubset = new Object[method.getParameterTypes().length];
+
+		for( int i=0; i < paramSubset.length; i++){
+			Object param = null;
+			for(int k=0; k<parametersZone.length; k++)
+				if(parametersZone[k] != null &&
+					method.getParameterTypes()[i].isAssignableFrom(
+						parametersZone[k].getClass())){
+					param = parametersZone[k];
+					//only allow one match per param
+					parametersZone[k] = null;
+					break;
+				}
+			if( param == null){
+				if( SMT.debug && first)
+					System.err.println(
+						"No matching parameter for class " +
+							method.getParameterTypes()[i]);
+				return null;
+			}
+			paramSubset[i]=param;
+		}
+
+		if( zone != null && zone.getBoundObject() != null)
+			try {
+				return method.invoke( zone.getBoundObject(), paramSubset);
+			}
+			catch( Exception exception) {
+				if( SMT.debug && first)
+					exception.printStackTrace();
+			}
+		else
+			try {
+				return method.invoke( parent, paramSubset);
+			}
+			catch( Exception exception) {
+				if( SMT.debug)
+					exception.printStackTrace();
+			}
 		return null;
 	}
 

@@ -42,7 +42,9 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	//smt library setup
-	SMT.init( this, TouchSource.MULTIPLE);
+	SMT.init( this, TouchSource.AUTOMATIC);
+	SMT.setTouchDraw( TouchDraw.TEXTURED);
+	SMT.setTouchRadius( 10);
 
 	//create pucks
 	pucks = new Vector<Puck>();
@@ -102,7 +104,6 @@ void draw(){
 	//draw enemy score
 	textAlign( LEFT);
 	text( String.format( "%d", enemy.score), display_halfWidth + 15, 32);
-
 }
 
 void stop(){

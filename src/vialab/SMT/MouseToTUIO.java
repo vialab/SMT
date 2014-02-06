@@ -50,7 +50,7 @@ public class MouseToTUIO {
 	Vector<Integer> stickyCursors = new Vector<Integer>();
 	/**
 	 * Vector of the joint cursors.
-	 * <P>
+	 * <br/>
 	 * These cursors are meant to move as a group.
 	 */
 	Vector<Integer> jointCursors = new Vector<Integer>();
@@ -64,12 +64,9 @@ public class MouseToTUIO {
 	 * messages. Sets the screen to be full-screen if the boolean/flag is set to
 	 * true.
 	 * 
-	 * @param width
-	 *            int - width of the screen
-	 * @param height
-	 *            int - height of the screen
-	 * @param port
-	 *            int - port to connect to
+	 * @param width width of the screen
+	 * @param height height of the screen
+	 * @param port port to connect to
 	 */
 	public MouseToTUIO(int width, int height, int port) {
 		super();
@@ -81,8 +78,7 @@ public class MouseToTUIO {
 	/**
 	 * Updates the selected cursor
 	 * 
-	 * @param me
-	 *            MouseEvent - The mouse dragged event
+	 * @param me MouseEvent - The mouse dragged event
 	 */
 	public void mouseDragged(MouseEvent me) {
 		Point pt = new Point(me.getX(), me.getY());
@@ -147,8 +143,7 @@ public class MouseToTUIO {
 	/**
 	 * Adds a cursor to the table state
 	 * 
-	 * @param me
-	 *            MouseEvent - The mouse pressed event
+	 * @param me MouseEvent - The mouse pressed event
 	 */
 	public void mousePressed(MouseEvent me) {
 		int x = me.getX();
@@ -159,7 +154,7 @@ public class MouseToTUIO {
 			Finger cursor = cursorList.nextElement();
 			Point point = cursor.getPosition();
 
-			if (point.distance(x, y) < 20) {
+			if (point.distance(x, y) < SMT.touch_radius) {
 				int selCur = -1;
 				if (selectedCursor != null)
 					selCur = selectedCursor.sessionID;
@@ -232,8 +227,7 @@ public class MouseToTUIO {
 	/**
 	 * Currently not used
 	 * 
-	 * @param me
-	 *            MouseEvent
+	 * @param me MouseEvent
 	 */
 	public void mouseMoved(MouseEvent me) {
 	}
@@ -241,8 +235,7 @@ public class MouseToTUIO {
 	/**
 	 * Currently not used
 	 * 
-	 * @param me
-	 *            MouseEvent
+	 * @param me MouseEvent
 	 */
 	public void mouseClicked(MouseEvent me) {
 	}
@@ -250,8 +243,7 @@ public class MouseToTUIO {
 	/**
 	 * Currently not used
 	 * 
-	 * @param me
-	 *            MouseEvent
+	 * @param me MouseEvent
 	 */
 	public void mouseEntered(MouseEvent me) {
 	}
@@ -259,8 +251,7 @@ public class MouseToTUIO {
 	/**
 	 * Will release the Touch when the mouse exits the window
 	 * 
-	 * @param me
-	 *            MouseEvent
+	 * @param me MouseEvent
 	 */
 	public void mouseExited(MouseEvent me) {
 		// prevent touches getting stuck down by making them release on exit

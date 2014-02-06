@@ -24,6 +24,7 @@
 
 package vialab.SMT;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +54,8 @@ import org.jbox2d.dynamics.World;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PImage;
+import processing.core.PVector;
 
 import TUIO.*;
 
@@ -66,32 +70,26 @@ import TUIO.*;
  * @version 1.0
  */
 public class SMT {
-	
+
 	private static class MainZone extends Zone{
 		MainZone(int x, int y, int w, int h){
 			super(x, y, w, h);
 			this.setDirect(true);
 		}
-		
-		protected void drawImpl() {
-		}
-
-		protected void touchImpl() {
-		}
+		public void drawImpl(){}
+		public void pickDrawImpl(){}
+		public void touchImpl(){}
 	}
-	
+
 	public static Zone sketch;
-
 	static float box2dScale = 0.1f;
-
 	static World world;
-
-	private static int MAX_PATH_LENGTH = 50;
-
-	protected static LinkedList<Process> tuioServerList = new LinkedList<Process>();
+	protected static int MAX_PATH_LENGTH = 50;
+	protected static LinkedList<Process> tuioServerList =
+		new LinkedList<Process>();
 
 	/** Processing PApplet */
-	protected static PApplet parent;
+	public static PApplet parent;
 
 	/** Gesture Handler */
 	// private static GestureHandler handler;
@@ -100,19 +98,15 @@ public class SMT {
 	protected static LinkedList<TuioClient> tuioClientList = new LinkedList<TuioClient>();
 
 	/** Flag for drawing touch points */
-	private static TouchDraw drawTouchPoints = TouchDraw.SMOOTH;
+	private static TouchDraw touchDrawMethod = TouchDraw.TEXTURED;
 
 	/** Matrix used to test if the zone has gone off the screen */
 	// private PMatrix3D mTest = new PMatrix3D();
 
 	protected static SMTZonePicker picker;
-
 	protected static SMTTuioListener listener;
-
 	protected static SMTTouchManager manager;
-
 	protected static Method touch;
-
 	protected static Boolean warnUnimplemented;
 
 	/**
@@ -120,7 +114,7 @@ public class SMT {
 	 * one of the reserved method prefixes (draw,pickDraw,touch,etc and any that
 	 * have been added by calls to SMTUtilities.getZoneMethod() with a unique
 	 * prefix).
-	 * <P>
+	 * <br/>
 	 * Default state is on.
 	 */
 	public static boolean warnUncalledMethods = true;
@@ -132,34 +126,43 @@ public class SMT {
 	 */
 	public static String defaultRenderer;
 
+	//default SMT.init() parameters
+	public static final int default_port = 3333;
+	public static final TouchSource default_touchsource =
+		TouchSource.TUIO_DEVICE;
+
 	/** TUIO adapter depending on which TouchSource is used */
 	static AndroidToTUIO att = null;
 	static MouseToTUIO mtt = null;
 
-	protected static LinkedList<BufferedReader> tuioServerErrList = new LinkedList<BufferedReader>();
-
-	protected static LinkedList<BufferedReader> tuioServerOutList = new LinkedList<BufferedReader>();
-
-	protected static LinkedList<BufferedWriter> tuioServerInList = new LinkedList<BufferedWriter>();
+	protected static LinkedList<BufferedReader> tuioServerErrList =
+		new LinkedList<BufferedReader>();
+	protected static LinkedList<BufferedReader> tuioServerOutList =
+		new LinkedList<BufferedReader>();
+	protected static LinkedList<BufferedWriter> tuioServerInList =
+		new LinkedList<BufferedWriter>();
 
 	static Body groundBody;
-
 	static boolean fastPicking = true;
-
-	static Map<Integer, TouchSource> deviceMap = Collections
-			.synchronizedMap(new LinkedHashMap<Integer, TouchSource>());
+	static Map<Integer, TouchSource> deviceMap =
+		Collections.synchronizedMap(
+			new LinkedHashMap<Integer, TouchSource>());
 
 	static int mainListenerPort;
-
 	protected static boolean inShutdown = false;
-	
 	public static boolean debug = false;
+	public static File smt_tempdir = null;
+
+	// utility fields for the touch drawing methods
+	private static TexturedTouchDrawer texturedTouchDrawer = null;
+	private static TouchDrawer customTouchDrawer = null;
+	protected static float touch_radius = 15;
+	protected static int touch_sections = 24;
 
 	/**
 	 * Prevent SMT instantiation with protected constructor
 	 */
-	protected SMT() {
-	}
+	protected SMT() {}
 
 	public static void setFastPicking(boolean fastPicking) {
 		SMT.fastPicking = fastPicking;
@@ -177,110 +180,69 @@ public class SMT {
 	}
 
 	/*
-	 * Initializes the SMT, begins listening to a TUIO source on the
-	 * default port of 3333
 	 */
 
 	/**
+	 * Initializes SMT, begining listening to a TUIO source on the
+	 * default port of 3333 and using automatic touch source selection.
 	 * 
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
-	 * 
-	 * @param parent
-	 *            - PApplet: The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
+	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
 	 */
 	public static void init(PApplet parent) {
-		init(parent, 3333);
+		init(parent, default_port);
 	}
 
 	/**
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
+	 * Initializes SMT, begining listening to a TUIO source on the
+	 * specified port and using automatic touch source selection.
 	 * 
-	 * @param parent
-	 *            PApplet - The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
-	 * @param port
-	 *            int - The port to listen on
+	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param port The port to listen on
 	 */
 	public static void init(PApplet parent, int port) {
-		init(parent, port, TouchSource.TUIO_DEVICE);
+		init(parent, port, default_touchsource);
 	}
 
 	/**
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
+	 * Initializes SMT, begining listening to a TUIO source on the
+	 * default port of 3333 and using the specified touch sources.
 	 * 
-	 * @param parent
-	 *            PApplet - The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
-	 * @param source
-	 *            enum TouchSource - The source of touch events to listen to.
-	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
-	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
+	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
-	public static void init(PApplet parent, TouchSource source) {
-		init(parent, 3333, source);
+	public static void init(PApplet parent, TouchSource... sources) {
+		init(parent, default_port, sources);
 	}
 
 	/**
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
+	 * Initializes SMT, begining listening to a TUIO source on the
+	 * specified port and using the specified touch sources.
 	 * 
-	 * @param parent
-	 *            PApplet - The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
-	 * @param source
-	 *            enum TouchSource - The source of touch events to listen to.
-	 *            One of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
-	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
-	 * @param extraClasses
-	 *            Class< ?> - Classes that should be checked for method
-	 *            definitions similar to PApplet for drawZoneName(), etc, but
-	 *            PApplet takes precedence.
-	 **/
-	public static void init(PApplet parent, TouchSource source, Class<?>... extraClasses) {
-		init(parent, 3333, source, extraClasses);
-	}
-
-	/**
-	 * Allows you to select the TouchSource backend from which to get
-	 * multi-touch events from
-	 * 
-	 * @param parent
-	 *            PApplet - The Processing PApplet, usually just 'this' when
-	 *            using the Processing IDE
-	 * 
-	 * @param port
-	 *            int - The port to listen on
-	 * 
-	 * @param source
-	 *            int - The source of touch events to listen to. One of:
-	 *            TouchSource.MOUSE, TouchSource.TUIO_DEVICE,
-	 *            TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART
+	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param port The port to listen on
+	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
-	private static void init(final PApplet parent, int port, TouchSource source,
-			Class<?>... extraClasses) {
-		if (parent == null) {
-			System.err
-					.println("Null parent PApplet, pass 'this' to SMT.init() instead of null");
-			return;
-		}
-		
+	public static void init(
+			PApplet parent, int port, TouchSource... sources) {
+		if( parent == null)
+			throw new NullPointerException(
+				"Null parent PApplet, pass 'this' to SMT.init() instead of null");
+
 		SMT.parent = parent;
-		
+
+		// This build of the toolkit cannot operate without OpenGL renderers
+		if( ! parent.g.is3D())
+			System.out.println(
+				"This build of SMT only supports using OpenGL renderers, please use either OPENGL or P3D in the size function; e.g: size( displayWidth, displayHeight, P3D);");
+		//load applet methods
 		SMTUtilities.loadMethods(parent.getClass());
 
-		// As of now the toolkit only supports OpenGL
-		if (!parent.g.is3D()) {
-			System.out
-					.println("SMT only supports using OpenGL 3D renderers, please use either OPENGL, P3D, in the size function e.g  size(displayWidth, displayHeight, P3D);");
-		}
+		//load touch drawer
+		if( touchDrawMethod == TouchDraw.TEXTURED)
+			texturedTouchDrawerNullCheck();
 
-		touch = SMTUtilities.getPMethod(parent, "touch");
-		
-		SMT.sketch = new MainZone(0,0,parent.width,parent.height);
+		touch = SMTUtilities.getPMethod( parent, "touch");
+		SMT.sketch = new MainZone( 0, 0, parent.width, parent.height);
 
 		// set Zone.applet so that it is consistently set at this time, not
 		// after a zone is constructed
@@ -292,210 +254,265 @@ public class SMT {
 		// handler = new GestureHandler();
 
 		picker = new SMTZonePicker();
-
 		defaultRenderer = parent.g.getClass().getName();
-
 		listener = new SMTTuioListener();
-		manager = new SMTTouchManager(listener, picker);
-
-		TuioClient c = new TuioClient(port);
-		c.connect();
-		while (!c.isConnected()) {
-			c = new TuioClient(++port);
-			c.connect();
-		}
-		c.addTuioListener(listener);
-		tuioClientList.add(c);
-
-		if(debug){
-			System.out.println("TuioClient listening on port: " + port);
-		}
+		manager = new SMTTouchManager( listener, picker);
 		mainListenerPort = port;
 
-		switch (source) {
-		case ANDROID:
-			// this still uses the old method, should be re-implemented without
-			// the socket
-			att = new AndroidToTUIO(parent.width, parent.height, port);
-			deviceMap.put(port, source);
-			// parent.registerMethod("touchEvent", att); //when Processing
-			// supports this
-			break;
-		case MOUSE:
-			// this still uses the old method, should be re-implemented without
-			// the socket
-			mtt = new MouseToTUIO(parent.width, parent.height, port);
-			deviceMap.put(port, source);
-			parent.registerMethod("mouseEvent", mtt);
-			break;
-		case TUIO_DEVICE:
-			break;
-		case WM_TOUCH:
-			if (System.getProperty("os.arch").equals("x86")) {
-				SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
-			}
-			else {
-				SMT.runWinTouchTuioServer(true, "127.0.0.1", port);
-			}
-			deviceMap.put(port, source);
-			break;
-		case SMART:
-			SMT.runSmart2TuioServer();
-			deviceMap.put(port, source);
-			break;
-		case LEAP:
-			SMT.runLeapTuioServer(port);
-			deviceMap.put(port, source);
-			break;
-		case MULTIPLE:
-			// ANDROID
-			if (System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")) {
-				att = new AndroidToTUIO(parent.width, parent.height, port);
-				deviceMap.put(port, TouchSource.ANDROID);
-				// parent.registerMethod("touchEvent", att); //when Processing
-				// supports this
-				break;
-			}
-			else {
-				// TUIO_DEVICE:
-				// covered already by c
-				deviceMap.put(port, TouchSource.TUIO_DEVICE);
+		//remove duplicate touch sources and stuff
+		boolean auto_enabled = false;
+		boolean tuio_enabled = false;
+		Vector<TouchSource> filteredSources = new Vector<TouchSource>();
+		for( TouchSource source : sources)
+			if( source == TouchSource.AUTOMATIC ||
+					source == TouchSource.MULTIPLE)
+				auto_enabled = true;
+			else if( source == TouchSource.TUIO_DEVICE)
+				tuio_enabled = true;
+			else if( ! filteredSources.contains( source))
+				filteredSources.add( source);
 
-				if(System.getProperty("os.name").startsWith("Windows")){
-					// WM_TOUCH:
-					TuioClient c2 = new TuioClient(++port);
-					c2.connect();
-					while (!c2.isConnected()) {
-						c2 = new TuioClient(++port);
-						c2.connect();
-					}
-					c2.addTuioListener(new SMTProxyTuioListener(port, listener));
-					if(debug){
-						System.out.println("TuioClient listening on port: " + port);
-					}
-					if (System.getProperty("os.arch").equals("x86")) {
-						SMT.runWinTouchTuioServer(false, "127.0.0.1", port);
-						deviceMap.put(port, TouchSource.WM_TOUCH);
-					}
-					else {
-						SMT.runWinTouchTuioServer(true, "127.0.0.1", port);
-						deviceMap.put(port, TouchSource.WM_TOUCH);
-					}
-	
-					// LEAP:
-					TuioClient c3 = new TuioClient(++port);
-					c3.connect();
-					while (!c3.isConnected()) {
-						c3 = new TuioClient(++port);
-						c3.connect();
-					}
-					c3.addTuioListener(new SMTProxyTuioListener(port, listener));
-					if(debug){
-						System.out.println("TuioClient listening on port: " + port);
-					}
-					SMT.runLeapTuioServer(port);
-					deviceMap.put(port, TouchSource.LEAP);
-					
-					tuioClientList.add(c2);
-					tuioClientList.add(c3);
-				}
-				
-				// MOUSE:
-				TuioClient c4 = new TuioClient(++port);
-				c4.connect();
-				while (!c4.isConnected()) {
-					c4 = new TuioClient(++port);
-					c4.connect();
-				}
-				c4.addTuioListener(new SMTProxyTuioListener(port, listener));
-				if(debug){
-					System.out.println("TuioClient listening on port: " + port);
-				}
-
-				// this still uses the old method, should be re-implemented
-				// without
-				// the socket
-				mtt = new MouseToTUIO(parent.width, parent.height, port);
-				deviceMap.put(port, TouchSource.MOUSE);
-				parent.registerMethod("mouseEvent", mtt);
-
-				tuioClientList.add(c4);
+		//the tuio adapter should always started first
+		// so it uses the parameter-specified port.
+		if( tuio_enabled || auto_enabled){
+			try{ connect_tuio( port);}
+			catch( TuioConnectionException exception){
+				System.out.printf(
+					"Opening a tuio listener on port %d failed. Tuio devices probably won't work.\n", port);
 			}
-			break;
-		default:
-			break;
+			//increment port regardless of success so tuio devices don't get mistaken for other sources
+			// if this connection failed, the port is probably going to be incremented anyways when openning a new listener.
+			port++;
 		}
+		//connect to every specified touch source
+		for( TouchSource source : filteredSources){
+			//open a new listener
+			TuioClient client = null;
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+
+			switch (source) {
+				case ANDROID:
+					//connect_auto will take care of this later - ignore
+					if( ! auto_enabled)
+						connect_android( port);
+					break;
+				case MOUSE:
+					//connect_auto will take care of this later - ignore
+					if( ! auto_enabled)
+						connect_mouse( port);
+					break;
+				case LEAP:
+					//connect_auto will take care of this later - ignore
+					if( ! auto_enabled)
+						connect_leap( port);
+					break;
+				case SMART:
+					connect_smart( port);
+					break;
+				case WM_TOUCH:
+					//connect_auto will take care of this later - ignore
+					if( ! auto_enabled)
+						connect_windows( port);
+					break;
+				default: break;
+			}
+			//increment the port so next source's client doesn't conflict
+			port++;
+		}
+		if( auto_enabled) connect_auto( port);
 
 		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
+		addJVMShutdownHook();
 
-		/**
-		 * Disconnects the TuioClient when the PApplet is stopped. Shuts down
-		 * any threads, disconnect from the net, unload memory, etc.
-		 */
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			public void run() {
-				SMT.inShutdown  = true;
-				if (warnUncalledMethods) {
-					SMTUtilities.warnUncalledMethods(parent);
-				}
-				for (TuioClient t : tuioClientList) {
-					if (t.isConnected()) {
-						t.disconnect();
-					}
-				}
-				for (BufferedWriter w : tuioServerInList) {
-					try {
-						w.newLine();
-						w.flush();
-					}
-					catch (IOException e) {}
-				}
-				
-				try {
-					Thread.sleep(500);
-				}
-				catch (InterruptedException e) {}
-
-				for (Process tuioServer : tuioServerList) {
-					if (tuioServer != null) {
-						tuioServer.destroy();
-					}
-				}
-			}
-		}));
-
-		world = new World(new Vec2(0.0f, 0.0f), true);
-		// top
-		groundBody = createStaticBox(0, -10.0f, parent.width, 10.f);
-		// bottom
-		createStaticBox(0, parent.height + 10.0f, parent.width, 10.f);
-		// left
-		createStaticBox(-10.0f, 0, 10.0f, parent.height);
-		// right
-		createStaticBox(parent.width + 10.0f, 0, 10.0f, parent.height);
+		world = new World( new Vec2( 0.0f, 0.0f), true);
+		//top
+		groundBody = createStaticBox( 0, -10.0f, parent.width, 10.f);
+		//bottom
+		createStaticBox( 0, parent.height + 10.0f, parent.width, 10.f);
+		//left
+		createStaticBox( -10.0f, 0, 10.0f, parent.height);
+		//right
+		createStaticBox( parent.width + 10.0f, 0, 10.0f, parent.height);
 	}
 
+	// touch server connection functions
+	private static void connect_auto( int port){
+		//gather system information
+		boolean os_android =
+			System.getProperty( "java.vm.name")
+				.equalsIgnoreCase( "dalvik");
+		String os_string = System.getProperty( "os.name");
+		boolean os_windows = os_string.startsWith( "Windows");
+
+		//other variables
+		TuioClient client = null;
+
+		//connect to tuio devices
+		// already handled before this method call
+
+		//connect to android touch
+		if( os_android){
+			client = null; //just in case... aha
+			//open a new listener
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+			System.out.printf("Trying to connect to %s on port %d\n",
+				"android touch", port);
+			connect_android( port);
+		}
+
+		if( os_windows){
+			//connect to leap motion
+			client = null;
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+			System.out.printf("Trying to connect to %s on port %d\n",
+				"leap motion", port);
+			connect_leap( port);
+
+			//connect to windows touch
+			client = null;
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+			System.out.printf("Trying to connect to %s on port %d\n",
+				"windows touch", port);
+			connect_windows( port);
+		}
+
+		//connect to mouse
+		if( ! os_android){
+			client = null;
+			while( client == null)
+				try{ client = openTuioClient( port);}
+				catch( TuioConnectionException exception){
+					port++;
+				}
+			System.out.printf("Trying to connect to %s on port %d\n",
+				"mouse emulation", port);
+			connect_mouse( port);
+		}
+	}
+	private static void connect_android( int port){
+		att = new AndroidToTUIO(
+			parent.width, parent.height, port);
+		deviceMap.put( port, TouchSource.ANDROID);
+		printConnectMessage( "android touch", port);
+	}
+	private static void connect_leap( int port){
+		SMT.runLeapTuioServer( port);
+		deviceMap.put(port, TouchSource.LEAP);
+		printConnectMessage( "leap motion", port);
+	}
+	private static void connect_mouse( int port){
+		mtt = new MouseToTUIO( parent.width, parent.height, port);
+		parent.registerMethod( "mouseEvent", mtt);
+		deviceMap.put( port, TouchSource.MOUSE);
+		printConnectMessage( "mouse emulation", port);
+	}
+	private static void connect_smart( int port){
+		SMT.runSmart2TuioServer();
+		deviceMap.put( port, TouchSource.SMART);
+		printConnectMessage( "not-so-smart table", port);
+	}
+	private static void connect_tuio( int port){
+		TuioClient client = openTuioClient( port);
+		client.addTuioListener( listener);
+		tuioClientList.add( client);
+		deviceMap.put( port, TouchSource.TUIO_DEVICE);
+		printConnectMessage( "tuio devices", port);
+	}
+	private static void connect_windows( int port){
+		SMT.runWinTouchTuioServer(
+			! System.getProperty( "os.arch").equals("x86"),
+			"127.0.0.1", port);
+		deviceMap.put( port, TouchSource.WM_TOUCH);
+		printConnectMessage( "windows touch", port);
+	}
+
+	// Connection utility methods
+	private static TuioClient openTuioClient( int port){
+		//try to open connection
+		TuioClient client = new TuioClient( port);
+		client.connect();
+		//return if connection succeeded
+		if( client.isConnected()){
+			client.addTuioListener(
+				new SMTProxyTuioListener( port, listener));
+			tuioClientList.add( client);
+			return client;}
+		else throw new TuioConnectionException(
+				String.format( "Listening on port %d failed.\n", port));
+	}
+
+	private static void printConnectMessage( String message, int port){
+		System.out.printf(
+			"Listening to %s using port %d\n", message, port);
+	}
+
+	/**
+	 * Disconnects the TuioClient when the PApplet is stopped. Shuts down
+	 * any threads, disconnect from the net, unload memory, etc.
+	 */
+	private static void addJVMShutdownHook(){
+		Runtime.getRuntime().addShutdownHook( new Thread( new Runnable(){
+			public void run() {
+				SMT.inShutdown  = true;
+				if( warnUncalledMethods)
+					SMTUtilities.warnUncalledMethods(parent);
+				for( TuioClient client : tuioClientList)
+					if( client.isConnected())
+						client.disconnect();
+				for( BufferedWriter writer : tuioServerInList)
+					try{
+						writer.newLine();
+						writer.flush();
+					}
+					catch( IOException exception){}
+
+				try{ Thread.sleep( 500);}
+				catch( InterruptedException exception){}
+
+				for( Process tuioServer : tuioServerList)
+					if( tuioServer != null)
+						tuioServer.destroy();
+				if( debug)
+					System.out.println("SMT has completed shutdown");
+			}
+		}));
+	}
 	/**
 	 * This creates a static box to interact with the physics engine, collisions
 	 * will occur with Zones that have physics == true, keeping them on the
 	 * screen
 	 * 
-	 * @param x
-	 *            X-position
-	 * @param y
-	 *            Y-position
-	 * @param w
-	 *            Width
-	 * @param h
-	 *            Height
+	 * @param x X-position
+	 * @param y Y-position
+	 * @param w Width
+	 * @param h Height
 	 */
-	public static Body createStaticBox(float x, float y, float w, float h) {
+	public static Body createStaticBox( float x, float y, float w, float h) {
 		BodyDef boxDef = new BodyDef();
-		boxDef.position.set(SMT.box2dScale * (x + w / 2), SMT.box2dScale
-				* (parent.height - (y + h / 2)));
+		boxDef.position.set(
+			SMT.box2dScale * (x + w / 2),
+			SMT.box2dScale * (parent.height - (y + h / 2)));
 		Body box = world.createBody(boxDef);
 		PolygonShape boxShape = new PolygonShape();
-		boxShape.setAsBox(SMT.box2dScale * w / 2, SMT.box2dScale * h / 2);
+		boxShape.setAsBox(
+			SMT.box2dScale * w / 2,
+			SMT.box2dScale * h / 2);
 		box.createFixture(boxShape, 0.0f);
 		return box;
 	}
@@ -513,13 +530,11 @@ public class SMT {
 		return att.onTouchEvent(me);
 	}
 
-	/**
-	 * Returns the list of zones.
-	 * 
-	 * @return zoneList
+	/** Gets all zones recognized by SMT
+	 * @return A array of all the zones that have been added to SMT
 	 */
 	public static Zone[] getZones() {
-		return getDescendents(sketch).toArray(new Zone[0]);
+		return getDescendents( sketch).toArray( new Zone[0]);
 	}
 
 	private static List<Zone> getDescendents(Zone parent) {
@@ -532,63 +547,244 @@ public class SMT {
 	}
 
 	/**
-	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
-	 * points if flag is set to true.
-	 * 
-	 * @param drawTouchPoints
-	 *            boolean - flag
-	 * @deprecated
+	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal.
+	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
 	 */
-	public static void setDrawTouchPoints(TouchDraw drawTouchPoints) {
-		setTouchDraw(drawTouchPoints);
+	public static void setTouchDraw(
+			TouchDraw drawMethod, TouchDrawer... drawers) {
+		if( drawMethod != TouchDraw.CUSTOM){
+			//return if no change necessary
+			if( SMT.touchDrawMethod == drawMethod)
+				return;
+			//set the flag
+			SMT.touchDrawMethod = drawMethod;
+			//handle setup, if neccessary
+			if( SMT.touchDrawMethod == TouchDraw.TEXTURED){
+				//if necessary, initialize, otherwise, just update
+				texturedTouchDrawerNullCheck();
+				texturedTouchDrawer.update();
+			}
+			//remove unusable object references
+			if( customTouchDrawer != null)
+				customTouchDrawer = null;
+		}
+		else {
+			//do validation
+			if( drawers.length == 0)
+				throw new RuntimeException(
+					"SMT.setTouchDraw() was given TouchDraw.CUSTOM, but no custom touch drawer. Try SMT.setTouchDraw( TouchDraw.CUSTOM, myTouchDrawer);");
+			if( drawers.length > 1)
+				System.err.println(
+					"[SMT Warning] SMT.setTouchDraw() expected one optional parameter, but was given multiple. The first one will be used.");
+			customTouchDrawer = drawers[0];
+			if( customTouchDrawer == null)
+				throw new NullPointerException(
+					"The optional TouchDrawer parameter given to SMT.setTouchDraw() was null.");
+			//set the drawmethod
+			SMT.touchDrawMethod = drawMethod;
+		}
 	}
 
-	/**
-	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
-	 * points if flag is set to true. Sets the maximum path length to draw to be
-	 * max_path_length
-	 * 
-	 * @param drawTouchPoints
-	 *            boolean - flag
-	 * 
-	 * @param max_path_length
-	 *            int - sets maximum path length to draw
-	 * @deprecated
-	 */
-	public static void setDrawTouchPoints(TouchDraw drawTouchPoints, int max_path_length) {
-		setTouchDraw(drawTouchPoints, max_path_length);
+	private static void texturedTouchDrawerNullCheck(){
+		if( texturedTouchDrawer == null)
+			texturedTouchDrawer = new TexturedTouchDrawer();
 	}
 
-	/**
-	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
-	 * points if flag is set to true.
-	 * 
-	 * @param drawTouchPoints
-	 *            boolean - flag
+	/** Gets the object currently being used to draw touches.
+	 * @return the object currently being used to draw touches. Null if the touches are not being draw with an object.
 	 */
-	public static void setTouchDraw(TouchDraw drawTouchPoints) {
-		SMT.drawTouchPoints = drawTouchPoints;
+	public static TouchDrawer getTouchDrawer(){
+		switch( touchDrawMethod){
+			case CUSTOM:
+				return customTouchDrawer;
+			case TEXTURED:
+				return texturedTouchDrawer;
+			default:
+				return null;
+		}
 	}
 
-	/**
-	 * Sets the flag for drawing touch points in the PApplet. Draws the touch
-	 * points if flag is set to true. Sets the maximum path length to draw to be
-	 * max_path_length
-	 * 
-	 * @param drawTouchPoints
-	 *            boolean - flag
-	 * 
-	 * @param max_path_length
-	 *            int - sets maximum path length to draw
-	 */
-	public static void setTouchDraw(TouchDraw drawTouchPoints, int max_path_length) {
-		SMT.drawTouchPoints = drawTouchPoints;
-		SMT.MAX_PATH_LENGTH = max_path_length;
-	}
 
 	/**
-	 * Draws the touch points in the PApplet if flag is set to true.
+	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal. Also sets the maximum path length to drawn.
+	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
+	 * @param maxPathLength The number of points on a touch's path to draw
+	 * @deprecated use setTouchDraw( TouchDraw) and setMaxPathLength( int) as separate calls, rather than together.
 	 */
+	@Deprecated
+	public static void setTouchDraw(
+			TouchDraw drawMethod, int maxPathLength){
+		setTouchDraw( drawMethod);
+		setMaxPathLength( maxPathLength);
+	}
+
+	/** Sets the maximum path length to drawn. Does not affect the textured touch drawer.
+	 * @param maxPathLength The number of points on a touch's path to draw
+	 */
+	public static void setMaxPathLength( int maxPathLength){
+		SMT.MAX_PATH_LENGTH = maxPathLength;
+	}
+
+	/** Sets the desired radius of a drawn touch
+	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
+	 * @param radius the desired radius of a drawn touch, in pixels
+	 */
+	public static void setTouchRadius( float radius){
+		touch_radius = radius;
+		if( SMT.touchDrawMethod == TouchDraw.TEXTURED)
+			texturedTouchDrawer.update();
+	}
+	/** Gets the current radius of a drawn touch
+	 * Note: this function is only accurate when using TouchDraw.TEXTURED
+	 * @return the current radius of a drawn touch, in pixels
+	 */
+	public static float getTouchRadius(){
+		return touch_radius;
+	}
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public static void setTouchColour( float red, float green, float blue, float alpha){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTouchTint( red, green, blue, alpha);
+	}
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public static void setTouchColor( float red, float green, float blue, float alpha){
+		setTouchColour( red, green, blue, alpha);
+	}
+	public static float getTouchRed(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTouchTintRed();
+	}
+	public static float getTouchGreen(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTouchTintGreen();
+	}
+	public static float getTouchBlue(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTouchTintBlue();
+	}
+	public static float getTouchAlpha(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTouchTintAlpha();
+	}
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public static void setTrailColour( float red, float green, float blue, float alpha){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailTint( red, green, blue, alpha);
+	}
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public static void setTrailColor( float red, float green, float blue, float alpha){
+		setTrailColour( red, green, blue, alpha);
+	}
+	public static float getTrailRed(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTintRed();
+	}
+	public static float getTrailGreen(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTintGreen();
+	}
+	public static float getTrailBlue(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTintBlue();
+	}
+	public static float getTrailAlpha(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTintAlpha();
+	}
+
+
+	public static void setTrailEnabled( boolean enabled){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailEnabled( enabled);
+	}
+	public static boolean getTrailEnabled(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailEnabled();
+	}
+
+	public static void setTrailTimeThreshold( int threshold){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailTimeThreshold( threshold);
+	}
+	public static int getTrailTimeThreshold(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailTimeThreshold();
+	}
+
+	public static void setTrailPointThreshold( int threshold){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailPointThreshold( threshold);
+	}
+	public static int getTrailPointThreshold(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailPointThreshold();
+	}
+
+	public static void setTrailC( float c){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailC( c);
+	}
+	public static float getTrailC(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailC();
+	}
+
+	public static void setTrailT_N( int t_n){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailT_N( t_n);
+	}
+	public static int getTrailT_N(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailT_N();
+	}
+
+	public static void setTrailWidth( float width){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setTrailWidth( width);
+	}
+	public static float getTrailWidth(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getTrailWidth();
+	}
+
+	/** Sets the desired number of sections of a drawn touch. Higher amounts result in smoother circles, but have a small performance hit.
+	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
+	 * @param sections the desired number of sections of a drawn touch
+	 */
+	public static void setTouchSections( int sections){
+		touch_sections = sections;
+		if( SMT.touchDrawMethod == TouchDraw.TEXTURED)
+			texturedTouchDrawer.update();
+	}
+	/** Gets the current section count of a drawn touch
+	 * Note: this function is only relevant when using TouchDraw.TEXTURED
+	 * @return the current section count of a drawn touch, in pixels
+	 */
+	public static int getTouchSections(){
+		return touch_sections;
+	}
+
+	/** Implements the "Smooth" touch draw method */
 	public static void drawSmoothTouchPoints() {
 		parent.pushStyle();
 		for (Touch t : SMTTouchManager.currentTouchState) {
@@ -624,8 +820,11 @@ public class SMT {
 					float weight = 10 - (path.length - j) / 5;
 					if (weight >= 1) {
 						parent.strokeWeight(weight);
-						parent.bezier(path[j].x, path[j].y, path[j - 1].x, path[j - 1].y,
-								path[j - 2].x, path[j - 2].y, path[j - 3].x, path[j - 3].y);
+						parent.bezier(
+							path[j].x, path[j].y,
+							path[j - 1].x, path[j - 1].y,
+							path[j - 2].x, path[j - 2].y,
+							path[j - 3].x, path[j - 3].y);
 					}
 				}
 			}
@@ -633,27 +832,26 @@ public class SMT {
 		parent.popStyle();
 	}
 
-	/**
+	/** Implements the "Debug" touch draw method
 	 * Draws all Touch objects and their path history, with some data to try to
 	 * help with debugging
 	 */
 	public static void drawDebugTouchPoints() {
 		parent.pushStyle();
-		for (Touch t : SMTTouchManager.currentTouchState) {
+		for (Touch touch : SMTTouchManager.currentTouchState) {
 			parent.fill(255);
-			if (t.isJointCursor) {
+			if (touch.isJointCursor)
 				parent.fill(0, 255, 0);
-			}
 			parent.stroke(0);
-			parent.ellipse(t.x, t.y, 30, 30);
-			parent.line(t.x, t.y - 15, t.x, t.y + 15);
-			parent.line(t.x - 15, t.y, t.x + 15, t.y);
-			TuioPoint[] path = t.path.toArray(new TuioPoint[t.path.size()]);
+			parent.ellipse(touch.x, touch.y, 30, 30);
+			parent.line(touch.x, touch.y - 15, touch.x, touch.y + 15);
+			parent.line(touch.x - 15, touch.y, touch.x + 15, touch.y);
+			TuioPoint[] path = touch.path.toArray(new TuioPoint[touch.path.size()]);
 			TuioPoint lastText = null;
-			if (path.length > 3) {
+			if( path.length > 3) {
 				for (int j = 1 + Math.max(0, path.length - (SMT.MAX_PATH_LENGTH + 2)); j < path.length; j++) {
 					String pointText = "#" + j + " x:" + path[j].getScreenX(parent.width) + " y:"
-							+ path[j].getScreenY(parent.height) + " t:"
+							+ path[j].getScreenY(parent.height) + " touch:"
 							+ path[j].getTuioTime().getTotalMilliseconds() + "ms";
 					parent.fill(255);
 					parent.line(path[j].getScreenX(parent.width),
@@ -683,12 +881,9 @@ public class SMT {
 		parent.popStyle();
 	}
 
-	/**
-	 * Adds a zone(s) to the sketch/application.
-	 * 
-	 * @param zones
-	 *            - Zone: The zones to add to the sketch/application
-	 * @return Whether all Zones were sucessfully added to the root Zone
+	/** Adds a zone(s) to the sketch/application.
+	 * @param zones The zones to add to the sketch/application
+	 * @return Whether all zones were sucessfully added
 	 */
 	public static boolean add(Zone... zones) {
 		return SMT.sketch.add(zones);
@@ -698,9 +893,7 @@ public class SMT {
 	 * This adds zones by creating them from XML specs, the XML needs "zone"
 	 * tags, and currently supports the following variables: name, x, y, width,
 	 * height, img
-	 * 
-	 * @param xmlFilename
-	 *            The XML file to read in for zone configuration
+	 * @param xmlFilename The XML file to read in for zone configuration
 	 * @return The array of zones created from the XML File
 	 */
 	public static Zone[] add(String xmlFilename) {
@@ -709,11 +902,8 @@ public class SMT {
 
 	/**
 	 * This adds a set of zones to a parent Zone
-	 * 
-	 * @param parent
-	 *            The Zone to add the given zones to
-	 * @param zones
-	 *            The zones to add to the parent as children
+	 * @param parent The Zone to add the given zones to
+	 * @param zones The zones to add to the parent as children
 	 */
 	public static boolean addChild(Zone parent, Zone... zones) {
 		if (parent != null) {
@@ -822,7 +1012,7 @@ public class SMT {
 	public static boolean remove(Zone... zones) {
 		return SMT.sketch.remove(zones);
 	}
-	
+
 	public static void clearZones(){
 		SMT.sketch.clearChildren();
 	}
@@ -835,16 +1025,24 @@ public class SMT {
 	 */
 	public static void draw() {
 		sketch.draw();
-		
-		switch (drawTouchPoints) {
-		case DEBUG:
-			drawDebugTouchPoints();
-			break;
-		case SMOOTH:
-			drawSmoothTouchPoints();
-			break;
-		case NONE:
-			break;
+
+		switch (touchDrawMethod) {
+			case CUSTOM:
+				customTouchDrawer.draw( 
+					SMTTouchManager.currentTouchState, parent.g);
+				break;
+			case DEBUG:
+				drawDebugTouchPoints();
+				break;
+			case SMOOTH:
+				drawSmoothTouchPoints();
+				break;
+			case TEXTURED:
+				texturedTouchDrawer.draw( 
+					SMTTouchManager.currentTouchState, parent.g);
+				break;
+			case NONE:
+				break;
 		}
 	}
 
@@ -928,7 +1126,7 @@ public class SMT {
 	 * @return Touch[] containing all touches that are currently mapped
 	 */
 	public static Touch[] getTouches() {
-		return getTouchMap().values().toArray(new Touch[getTouchMap().values().size()]);
+		return getTouchMap().values().toArray(new Touch[0]);
 	}
 
 	/**
@@ -1037,7 +1235,7 @@ public class SMT {
 	 *         consistent
 	 * @deprecated
 	 */
-	public static Touch getLastTouch(Touch current) {
+	public static Touch getLastTouch( Touch current) {
 		Vector<TuioPoint> path = current.path;
 		if (path.size() > 1) {
 			TuioPoint last = path.get(path.size() - 2);
@@ -1053,7 +1251,7 @@ public class SMT {
 	 * @return number of current touches
 	 */
 	public static int getTouchCount() {
-		return listener.getTuioCursors().size();
+		return getTouches().length;
 	}
 
 	/**
@@ -1068,19 +1266,16 @@ public class SMT {
 		if (mtt != null) {
 			// update touches from mouseToTUIO joint cursors as they are a
 			// special case and need to be shown to user
-			for (Touch t : SMTTouchManager.currentTouchState) {
+			for( Touch t : SMTTouchManager.currentTouchState)
 				t.isJointCursor = false;
-			}
-			for (Integer i : mtt.getJointCursors()) {
+			for( Integer i : mtt.getJointCursors())
 				SMTTouchManager.currentTouchState.getById(i).isJointCursor = true;
-			}
 		}
 
 		parent.g.flush();
-		if (getTouches().length > 0) {
-			SMTUtilities.invoke(touch, parent, null);
-		}
-		
+		if( getTouches().length > 0)
+			SMTUtilities.invoke( touch, parent, null);
+
 		sketch.touch();
 
 		updateStep();
@@ -1091,47 +1286,51 @@ public class SMT {
 	 * after of each Zone to keep the matrix and bodies synchronized
 	 */
 	private static void updateStep() {
-		for (Zone z : getZones()) {
-			if (z.physics) {
+		for( Zone zone : getZones()) {
+			if( zone.getPhysicsEnabled()) {
 				// generate body and fixture for zone if they do not exist
-				if (z.zoneBody == null && z.zoneFixture == null) {
-					z.zoneBody = world.createBody(z.zoneBodyDef);
-					z.zoneFixture = z.zoneBody.createFixture(z.zoneFixtureDef);
+				if( zone.zoneBody == null && zone.zoneFixture == null) {
+					zone.zoneBody = world.createBody( zone.zoneBodyDef);
+					zone.zoneFixture = zone.zoneBody.createFixture(
+						zone.zoneFixtureDef);
 				}
-				z.setBodyFromMatrix();
+				zone.setBodyFromMatrix();
 			}
 			else {
 				// make sure to destroy body for Zones that do not have physics
 				// on, as they should not collide with others
-				if (z.zoneBody != null) {
-					world.destroyBody(z.zoneBody);
-					z.zoneBody = null;
-					z.zoneFixture = null;
-					z.mJoint = null;
+				if( zone.zoneBody != null) {
+					world.destroyBody(zone.zoneBody);
+					zone.zoneBody = null;
+					zone.zoneFixture = null;
+					zone.mJoint = null;
 				}
 			}
 		}
 
 		world.step(1f / parent.frameRate, 8, 3);
 
-		for (Zone z : getZones()) {
-			if (z.physics) {
-				z.setMatrixFromBody();
+		for (Zone zone : getZones()) {
+			if (zone.getPhysicsEnabled()) {
+				zone.setMatrixFromBody();
 			}
 		}
 	}
-	
+
 	/**
 	 * @return A temp file directory
 	 * @throws IOException
 	 */
 	private static File tempDir(){
-		File temp = new File(System.getProperty("java.io.tmpdir") + "/SMT");
-		temp.mkdir();
-		temp.deleteOnExit();
-		return temp;
+		if( smt_tempdir == null){
+			smt_tempdir = new File(
+				System.getProperty("java.io.tmpdir") + "/SMT");
+			smt_tempdir.mkdir();
+			smt_tempdir.deleteOnExit();
+		}
+		return smt_tempdir;
 	}
-	
+
 	/**
 	 * @param dir The directory to load the resource into
 	 * @param resource A string containing the name a program in SMT's resources folder
@@ -1154,104 +1353,53 @@ public class SMT {
 		exeTempFile.deleteOnExit();
 		return exeTempFile;
 	}
-	
-	/**
-	 * This class encapsulates all the logic for running a seperate process in a thread
-	 * It is used by runWinTouchTuioServer(), runSMart2TuioServer(), and runLeapTuioServer()
-	 * To avoid duplicated code. It puts labels on output and allows specifying a error message
-	 * for premature shutdown condition.
-	 */
-	private static class TouchSourceThread extends Thread{
-		String label;
-		String execArg;
-		String prematureShutdownError;
-		
-		TouchSourceThread(String label, String execArg, String prematureShutdownError){
-			this.label=label;
-			this.execArg=execArg;
-			this.prematureShutdownError=prematureShutdownError;
-		}
-		
-		@Override
-		public void run() {
-			try {
-				Process tuioServer = Runtime.getRuntime().exec(execArg);
-				BufferedReader tuioServerErr = new BufferedReader(new InputStreamReader(
-						tuioServer.getErrorStream()));
-				BufferedReader tuioServerOut = new BufferedReader(new InputStreamReader(
-						tuioServer.getInputStream()));
-				BufferedWriter tuioServerIn = new BufferedWriter(new OutputStreamWriter(
-						tuioServer.getOutputStream()));
-
-				tuioServerList.add(tuioServer);
-				tuioServerErrList.add(tuioServerErr);
-				tuioServerOutList.add(tuioServerOut);
-				tuioServerInList.add(tuioServerIn);
-
-				while (true) {
-					if (tuioServerErr.ready() && debug) {
-						System.err.println(label + ": " + tuioServerErr.readLine());
-					}
-					if (tuioServerOut.ready() && debug) {
-						System.out.println(label + ": " + tuioServerOut.readLine());
-					}
-
-					try {
-						int r = tuioServer.exitValue();
-						if(SMT.debug){
-							System.out.println(label + " return value=" + r);
-						}
-						if(!SMT.inShutdown){
-							System.err.println(prematureShutdownError);
-						}
-						break;
-					}
-					catch (IllegalThreadStateException e) {
-						// still running... sleep time
-						Thread.sleep(100);
-					}
-				}
-			}
-			catch (IOException e) {
-				System.err.println(e.getMessage());
-			}
-			catch (Exception e) {
-				System.err.println(label + " TUIO Server stopped!");
-			}
-		}
-	}
 
 	/**
 	 * Runs a server that sends TUIO events using Windows 7 Touch events
 	 * 
-	 * @param is64Bit
-	 *            Whether to use the 64-bit version of the exe
+	 * @param is64Bit Whether to use the 64-bit version of the exe
 	 */
-	private static void runWinTouchTuioServer(boolean is64Bit, final String address, final int port) {
+	private static void runWinTouchTuioServer(
+			boolean is64Bit, final String address, final int port) {
 		try {
 			File temp = tempDir();
-			
-			loadFile(temp, is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
 
-			new TouchSourceThread("WM_TOUCH", loadFile(temp, is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe").getAbsolutePath() + " " + parent.frame.getTitle() + " "
-										+ address + " " + port, "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting your computer.").start();
+			File touchhook = loadFile( temp,
+				is64Bit ? "TouchHook_x64.dll" : "TouchHook.dll");
+			File touch2tuio = loadFile( temp,
+				is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe");
+
+			String touch2tuio_path = touch2tuio.getAbsolutePath();
+			String window_title = parent.frame.getTitle();
+			String exec = String.format(
+				"%s %s %s %s", touch2tuio_path, window_title, address, port);
+			String error_message = "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting your computer.";
+
+			TouchSourceThread wintouch_thread = new TouchSourceThread(
+				"WM_TOUCH", exec, error_message);
+			wintouch_thread.start();
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch( IOException exception) {
+			exception.printStackTrace();
 		}
 	}
 
 	private static void runSmart2TuioServer() {
 		try {
 			File temp = tempDir();
-			
-			loadFile(temp, "SMARTTableSDK.Core.dll");
-			loadFile(temp, "libTUIO.dll");
 
-			new TouchSourceThread("SMART", loadFile(temp, "SMARTtoTUIO2.exe").getAbsolutePath(), "SMART Process died").start();								
+			File smartsdk = loadFile( temp, "SMARTTableSDK.Core.dll");
+			File libtuio = loadFile( temp, "libTUIO.dll");
+			File smart2tuio = loadFile( temp, "SMARTtoTUIO2.exe");
+
+			String exec = smart2tuio.getAbsolutePath();
+
+			TouchSourceThread smart_thread = new TouchSourceThread(
+				"SMART", exec, "SMART Process died");
+			smart_thread.start();
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException exception) {
+			exception.printStackTrace();
 		}
 	}
 
@@ -1264,78 +1412,142 @@ public class SMT {
 	private static void runLeapTuioServer(final int port) {
 		try {
 			File temp = tempDir();
-			
-			loadFile(temp, "Leap.dll");
+			File leap = loadFile( temp, "Leap.dll");
+			File motionless = loadFile( temp, "motionLess.exe");
 
-			new TouchSourceThread("LEAP", loadFile(temp, "motionLess.exe").getAbsolutePath() + " " + port, "LEAP Process died early, make sure Visual C++ 2010 Redistributable (x86) is installed (http://www.microsoft.com/en-ca/download/details.aspx?id=5555)").start();
+			String exec = String.format( "%s %s",
+				motionless.getAbsolutePath(), port);
+			String error_message = "LEAP Process died early, make sure Visual C++ 2010 Redistributable (x86) is installed (http://www.microsoft.com/en-ca/download/details.aspx?id=5555)";
+
+			TouchSourceThread leap_thread = new TouchSourceThread(
+				"LEAP", exec, error_message);
+			leap_thread.start();
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException exception) {
+			exception.printStackTrace();
 		}
 	}
 
 	/**
-	 * Runs an exe from a path, presumably for translating native events to tuio
-	 * events
+	 * Runs an exe from a path, presumably for translating native events to tuio events
 	 */
 	public static void runExe(final String path) {
-		new TouchSourceThread(path, path, path + " Process died").start();
+		new TouchSourceThread( path, path, path + " Process died").start();
 	}
 
 	/**
-	 * @param zone
-	 *            The zone to place on top of the others
+	 * @param zone The zone to place on top of the others
 	 */
 	public static void putZoneOnTop(Zone zone) {
-		sketch.putChildOnTop(zone);
+		sketch.putChildOnTop( zone);
 	}
 
 	/**
 	 * This finds a zone by its name, returning the first zone with the given
 	 * name or null.
-	 * <P>
+	 * <br/>
 	 * This will throw ClassCastException if the Zone is not an instance of the
 	 * given class , and non-applicable type compile errors when the given class
 	 * does not extend Zone.
 	 * 
-	 * @param name
-	 *            The name of the zone to find
-	 * @param type
-	 *            a class type to cast the Zone to (e.g. Zone.class)
+	 * @param name The name of the zone to find
+	 * @param type a class type to cast the Zone to (e.g. Zone.class)
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
-	@SuppressWarnings("unchecked")
+	@Deprecated
 	public static <T extends Zone> T get( String name, Class<T> type) {
-		for (Zone z : getZones()) {
-			if (z.name != null && z.name.equals(name)) {
-				return (T) z;
-			}
-		}
+		for( Zone zone : getZones())
+			if( name.equals( zone.name) && type.isInstance( zone))
+				return type.cast( zone);
 		return null;
 	}
 
 	/**
 	 * This finds a zone by its name, returning the first zone with the given
 	 * name or null
-	 * 
-	 * @param name
-	 *            The name of the zone to find
+	 * @param name The name of the zone to find
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
-	public static Zone get(String name) {
-		return get(name, Zone.class);
+	public static Zone get( String name) {
+		for( Zone zone : getZones())
+			if( name.equals( zone.name))
+				return zone;
+		return null;
 	}
 
 	/**
 	 * This adds objects to check for drawZoneName, touchZoneName, etc methods
 	 * in, similar to PApplet
-	 * 
-	 * @param classes
-	 *            The additional objects to check in for methods
+	 * @param classes The additional objects to check in for methods
+	 * @deprecated Do not use this method - See <a href="https://github.com/vialab/SMT/issues/174">this github issue</a>
 	 */
-	public static void addMethodClasses(Class<?>... classes) {
-		for (Class<?> c : classes) {
-			SMTUtilities.loadMethods(c);
+	/*@Deprecated
+	public static void addMethodClasses( Class<?>... classes){
+		for( Class<?> c : classes)
+			SMTUtilities.loadMethods( c);
+	}*/
+
+	/**
+	 * This class encapsulates all the logic for running a seperate process in a thread
+	 * It is used by runWinTouchTuioServer(), runSMart2TuioServer(), and runLeapTuioServer()
+	 * To avoid duplicated code. It puts labels on output and allows specifying a error message
+	 * for premature shutdown condition.
+	 */
+	private static class TouchSourceThread extends Thread{
+		String label;
+		String execArg;
+		String prematureShutdownError;
+
+		TouchSourceThread( String label, String execArg, String prematureShutdownError){
+			this.label = label;
+			this.execArg = execArg;
+			this.prematureShutdownError = prematureShutdownError;
+		}
+
+		@Override
+		public void run() {
+			try {
+				Process tuioServer = Runtime.getRuntime().exec( execArg);
+				BufferedReader tuioServerErr = new BufferedReader(
+					new InputStreamReader( tuioServer.getErrorStream()));
+				BufferedReader tuioServerOut = new BufferedReader(
+					new InputStreamReader( tuioServer.getInputStream()));
+				BufferedWriter tuioServerIn = new BufferedWriter(
+					new OutputStreamWriter( tuioServer.getOutputStream()));
+
+				tuioServerList.add(tuioServer);
+				tuioServerErrList.add(tuioServerErr);
+				tuioServerOutList.add(tuioServerOut);
+				tuioServerInList.add(tuioServerIn);
+
+				while( true) {
+					if( SMT.debug && tuioServerErr.ready())
+						System.err.println(
+							label + ": " + tuioServerErr.readLine());
+					if( SMT.debug && tuioServerOut.ready())
+						System.out.println(
+							label + ": " + tuioServerOut.readLine());
+
+					try {
+						int result = tuioServer.exitValue();
+						if( SMT.debug)
+							System.out.println(label + " return value=" + result);
+						if( ! SMT.inShutdown)
+							System.err.println( prematureShutdownError);
+						break;
+					}
+					catch( IllegalThreadStateException exception) {
+						// still running... sleep time
+						Thread.sleep(100);
+					}
+				}
+			}
+			catch( IOException exception){
+				System.err.println( exception.getMessage());
+			}
+			catch( Exception exception){
+				System.err.println( label + " TUIO Server stopped!");
+			}
 		}
 	}
 }

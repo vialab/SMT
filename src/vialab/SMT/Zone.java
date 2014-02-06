@@ -79,8 +79,16 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * every frame for indirect Zones, and instead only will redraw if setModified(true) is called on it.
 	 */
 	protected boolean updateOnlyWhenModified(){ return false;}	
-	public boolean stealChildrensTouch = false;	
+	public boolean stealChildrensTouch = false;
+	/**
+	 * @deprecated use Zone.setPhysicsEnabled( boolean) instead
+	 */
+	@Deprecated
 	public boolean physics = false;
+	/**
+	 * A flag that describes whether physics is enabled.
+	 */
+	private boolean physics_enabled = false;
 	BodyDef zoneBodyDef = new BodyDef();
 	Body zoneBody;
 	PolygonShape zoneShape = new PolygonShape();
@@ -97,19 +105,33 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	//The zone's inverse transformation matrix
 	protected PMatrix3D inverse = new PMatrix3D();
 	//properties
+	/**
+	 * @deprecated use Zone.(get|set)(X|Y) instead
+	 */
 	@Deprecated
 	public int x, y;
+	/**
+	 * @deprecated use Zone.(get|set)(Width|Height) instead
+	 */
 	@Deprecated
 	public int height, width;
+	/**
+	 * The dimensions of the zone
+	 */
 	protected Dimension dimension;
+	/**
+	 * The half-dimensions of the zone
+	 */
 	protected Dimension halfDimension;
 
 	// A LinkedHashMap will allow insertion order to be maintained.
 	// A synchronised one will prevent concurrent modification (which can happen
 	// pretty easily with the draw loop + touch event handling).
-	/** All of the currently active touches for this zone */
+	/**
+	 * All of the currently active touches for this zone
+	 */
 	private Map<Long, Touch> activeTouches = Collections
-			.synchronizedMap(new LinkedHashMap<Long, Touch>());
+			.synchronizedMap( new LinkedHashMap<Long, Touch>());
 	protected CopyOnWriteArrayList<Zone> children = new CopyOnWriteArrayList<Zone>();
 	protected int pickColor = -1;
 	protected TuioTime lastUpdate = TuioTime.getSessionTime();
@@ -255,7 +277,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param renderer - String: The PGraphics renderer that draws the Zone
 	 */
 	public Zone(String name, String renderer) {
-		this(name, 0, 0, 1, 1, renderer);
+		this(name, 0, 0, 100, 100, renderer);
 	}
 
 	/**
@@ -342,27 +364,45 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	/**
 	 * @param name The new name of the zone
 	 */
-	public void setName(String name) {
-		this.name = name == null ? this.getClass().getSimpleName() : name;
-		loadMethods(this.name);
+	public void setName( String name) {
+		if( name != null){
+			if( name.length() < 1)
+				throw new IllegalArgumentException(
+					"Cannot give a zone an empty string for a name");
+			this.name = name;
+		}
+		else {
+			name = this.getClass().getSimpleName();
+			if( name.length() < 1)
+				//this is an anonymous class!
+				name = this.getClass().getName();
+			this.name = name;
+		}
+		loadMethods( this.name);
+	}
+
+	public boolean getPhysicsEnabled(){
+		return physics_enabled;
+	}
+	public void setPhysicsEnabled( boolean enabled){
+		physics = enabled;
+		physics_enabled = enabled;
 	}
 
 	/**
 	 * @param name The name of the zone to load the methods from
 	 */
-	protected void loadMethods(String name) {
-		if (SMT.warnUnimplemented != null) {
-			if (SMT.warnUnimplemented.booleanValue()) {
-				loadMethods(name, true, true, true, true, true, true);
-			}
-			else {
-				loadMethods(name, false, false, false, false, false, false);
-			}
+	protected void loadMethods( String name) {
+		if ( SMT.warnUnimplemented != null) {
+			if ( SMT.warnUnimplemented.booleanValue())
+				loadMethods( name, true, true, true, true, true, true);
+			else
+				loadMethods( name, false, false, false, false, false, false);
 		}
-		else {
-			loadMethods(name, warnDraw(), warnTouch(), warnKeys(), warnPick(), warnTouchUDM(),
+		else 
+			loadMethods(
+				name, warnDraw(), warnTouch(), warnKeys(), warnPick(), warnTouchUDM(),
 					warnPress());
-		}
 	}
 
 	/**
@@ -387,9 +427,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM, boolean warnPress) {
 
-		touchUDM = SMTUtilities.checkImpl(Zone.class, "touchDown", this.getClass(), Touch.class)
-				|| SMTUtilities.checkImpl(Zone.class, "touchUp", this.getClass(), Touch.class)
-				|| SMTUtilities.checkImpl(Zone.class, "touchMoved", this.getClass(), Touch.class);
+		touchUDM =
+			SMTUtilities.checkImpl( Zone.class, "touchDown", this.getClass(), Touch.class)
+			|| SMTUtilities.checkImpl( Zone.class, "touchUp", this.getClass(), Touch.class)
+			|| SMTUtilities.checkImpl( Zone.class, "touchMoved", this.getClass(), Touch.class);
 
 		press = SMTUtilities.checkImpl(Zone.class, "press", this.getClass(), Touch.class);
 
@@ -475,7 +516,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @return A Touch[] containing all touches that are active on the zone
 	 */
 	public Touch[] getTouches() {
-		return activeTouches.values().toArray(new Touch[activeTouches.values().size()]);
+		return activeTouches.values().toArray( new Touch[0]);
 	}
 
 	/**
@@ -904,8 +945,8 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void removeFromParent() {
 		if(parent != null && parent.children.contains(this))
 			parent.remove(this);
-		else if (SMT.debug)
-			System.err.println("Warning: removeFromParent where parent is null or this zone is not a child of");
+		else if( SMT.debug)
+			System.err.println( "Warning: removeFromParent where parent is null or this zone is not a child of");
 	}
 	
 	public boolean remove(Zone... zones){
@@ -970,7 +1011,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * @param index
 	 * @return The child at the given index, or null if the index is invalid
 	 */
-	public Zone getChild(int index) {
+	public Zone getChild( int index) {
 		try {
 			return children.get(index);
 		}
@@ -1056,7 +1097,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	
 	@Override
 	public void setSize(int width, int height){
-		super.setSize(width, height);
+		super.setSize( width, height);
 		this.width = width;
 		this.height = height;
 		this.dimension = new Dimension( width, height);
@@ -1809,33 +1850,32 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void draw(boolean drawChildren, boolean picking) {
-		//prerender indirect children
-		if(!picking){
-			drawIndirectChildren(picking);
-		}
-		
-		if (picking) {
+		//picking = true;
+		if (picking)
 			beginPickDraw();
-		}
 		else {
+			//prerender indirect children
+			drawIndirectChildren( picking);
 			beginDraw();
 		}
+
 		PGraphics temp = applet.g;
 		applet.g = this;
 		pushStyle();
-		if (picking) {
-			if (pickDrawMethod == null && !pickImpl) {
-				rect(0, 0, width, height);
-			}
+		if( picking) {
+			if( pickDrawMethod == null && ! pickImpl)
+				rect( 0, 0, width, height);
 			else {
 				pickDrawImpl();
-				SMTUtilities.invoke(pickDrawMethod, applet, this);
+				SMTUtilities.invoke( pickDrawMethod, applet, this);
 			}
 		}
 		else {
-			if (drawMethod == null && !drawImpl) {
+			if( drawMethod == null && ! drawImpl) {
+				fill( 50, 50, 50, 150);
+				stroke( 255, 255, 255, 150);
 				rect(0, 0, width, height);
-				fill(0);
+				fill( 255, 255, 255, 150);
 				text("No Draw Method", 0, 0, width, height);
 			}
 			else{
@@ -1845,20 +1885,17 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 		popStyle();
 		
-		if (drawChildren) {
-			drawChildren(picking);
-		}
+		if( drawChildren)
+			drawChildren( picking);
 		
 		//make sure children draw into parent by not resetting applet.g
 		//untill after children draw
 		applet.g = temp;
 
-		if (picking) {
+		if (picking)
 			endPickDraw();
-		}
-		else {
+		else
 			endDraw();
-		}
 	}
 
 	protected void drawIndirectImage() {
@@ -2384,124 +2421,138 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	public void putChildOnTop(Zone zone) {
 		// only remove and add if actually in the children arraylist and not
 		// already the last(top) already
-		if (this.children.contains(zone) && (children.indexOf(zone) < children.size() - 1)) {
+		if ( this.children.contains(zone) &&
+				(children.indexOf(zone) < children.size() - 1)) {
 			this.children.remove(zone);
 			this.children.add(zone);
 		}
 	}
 
+	/**
+	 * Converts java key pressed events into their processing counterparts,
+	 * then calls them on this zone.
+	 * @param event the key pressed event to be converted
+	 */
 	@Override
-	public void keyPressed(java.awt.event.KeyEvent e) {
-		keyPressed(new KeyEvent(e, e.getWhen(), KeyEvent.PRESS, e.getModifiers(), e.getKeyChar(),
-				e.getKeyCode()));
+	public void keyPressed( java.awt.event.KeyEvent event){
+		this.keyPressed(
+			new KeyEvent(
+				event,
+				event.getWhen(),
+				KeyEvent.PRESS,
+				event.getModifiers(),
+				event.getKeyChar(),
+				event.getKeyCode()));
 	}
 
+	/**
+	 * Converts java key released events into their processing counterparts,
+	 * then calls them on this zone.
+	 * @param event the key released event to be converted
+	 */
 	@Override
-	public void keyReleased(java.awt.event.KeyEvent e) {
-		keyReleased(new KeyEvent(e, e.getWhen(), KeyEvent.RELEASE, e.getModifiers(),
-				e.getKeyChar(), e.getKeyCode()));
+	public void keyReleased( java.awt.event.KeyEvent event){
+		this.keyReleased(
+			new KeyEvent(
+				event,
+				event.getWhen(),
+				KeyEvent.RELEASE,
+				event.getModifiers(),
+				event.getKeyChar(),
+				event.getKeyCode()));
 	}
 
+	/**
+	 * Converts java key typed events into their processing counterparts,
+	 * then calls them on this zone.
+	 * @param event the key typed event to be converted
+	 */
 	@Override
-	public void keyTyped(java.awt.event.KeyEvent e) {
-		keyTyped(new KeyEvent(e, e.getWhen(), KeyEvent.TYPE, e.getModifiers(), e.getKeyChar(),
-				e.getKeyCode()));
+	public void keyTyped( java.awt.event.KeyEvent event){
+		this.keyTyped(
+			new KeyEvent(
+				event,
+				event.getWhen(),
+				KeyEvent.TYPE,
+				event.getModifiers(),
+				event.getKeyChar(),
+				event.getKeyCode()));
 	}
 
-	public void keyPressed(KeyEvent e) {
-		keyPressedImpl(e);
-		SMTUtilities.invoke(keyPressedMethod, applet, this, e);
+	public void keyPressed( KeyEvent event) {
+		keyPressedImpl( event);
+		SMTUtilities.invoke( keyPressedMethod, applet, this, event);
 	}
 
-	public void keyReleased(KeyEvent e) {
-		keyReleasedImpl(e);
-		SMTUtilities.invoke(keyReleasedMethod, applet, this, e);
+	public void keyReleased( KeyEvent event) {
+		keyReleasedImpl( event);
+		SMTUtilities.invoke( keyReleasedMethod, applet, this, event);
 	}
 
-	public void keyTyped(KeyEvent e) {
-		keyTypedImpl(e);
-		SMTUtilities.invoke(keyTypedMethod, applet, this, e);
+	public void keyTyped( KeyEvent event) {
+		keyTypedImpl( event);
+		SMTUtilities.invoke( keyTypedMethod, applet, this, event);
 	}
 
-	protected void touchUpInvoker(Touch touch) {
+	protected void touchUpInvoker( Touch touch) {
 		touchUpImpl(touch);
 		SMTUtilities.invoke(touchUpMethod, applet, this, touch);
 	}
 
-	protected void touchDownInvoker(Touch touch) {
-		touchDownImpl(touch);
+	protected void touchDownInvoker( Touch touch) {
+		touchDownImpl( touch);
 		SMTUtilities.invoke(touchDownMethod, applet, this, touch);
 	}
 
-	protected void touchMovedInvoker(Touch touch) {
-		touchMovedImpl(touch);
+	protected void touchMovedInvoker( Touch touch) {
+		touchMovedImpl( touch);
 		SMTUtilities.invoke(touchMovedMethod, applet, this, touch);
 	}
 
-	protected void pressInvoker(Touch touch) {
-		pressImpl(touch);
+	protected void pressInvoker( Touch touch) {
+		pressImpl( touch);
 		SMTUtilities.invoke(pressMethod, applet, this, touch);
 	}
 
-	/**
-	 * Override to specify a default behavior for press
-	 */
-	protected void pressImpl(Touch touch) {
+	/** Override to specify a default behavior for press */
+	protected void pressImpl( Touch touch) {
 	}
 
-	/**
-	 * Override to specify a default behavior for draw
-	 */
-	protected void drawImpl() {
+	/** Override to specify a default behavior for draw */
+	protected void drawImpl(){
 	}
 
-	/**
-	 * Override to specify a default behavior for touch
-	 */
+	/** Override to specify a default behavior for touch */
 	protected void touchImpl() {
 	}
 
-	/**
-	 * Override to specify a default behavior for pickDraw
-	 */
+	/** Override to specify a default behavior for pickDraw */
 	protected void pickDrawImpl() {
 	}
 
-	/**
-	 * Override to specify a default behavior for touchDown
-	 */
+	/** Override to specify a default behavior for touchDown */
 	protected void touchDownImpl(Touch touch) {
 		addPhysicsMouseJoint();
 	}
 
-	/**
-	 * Override to specify a default behavior for touchUp
-	 */
+	/** Override to specify a default behavior for touchUp */
 	protected void touchUpImpl(Touch touch) {
 	}
 
-	/**
-	 * Override to specify a default behavior for touchMoved
-	 */
+	/** Override to specify a default behavior for touchMoved */
 	protected void touchMovedImpl(Touch touch) {
 		addPhysicsMouseJoint();
 	}
 
-	/**
-	 * Override to specify a default behavior for keyPressed
-	 */
+	/** Override to specify a default behavior for keyPressed */
 	protected void keyPressedImpl(KeyEvent e) {
 	}
 
-	/**
-	 * Override to specify a default behavior for keyReleased
-	 */
+	/** Override to specify a default behavior for keyReleased */
 	protected void keyReleasedImpl(KeyEvent e) {
 	}
 
-	/**
-	 * Override to specify a default behavior for keyTyped
-	 */
+	/** Override to specify a default behavior for keyTyped */
 	protected void keyTypedImpl(KeyEvent e) {
 	}
 
@@ -2532,9 +2583,22 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		matrix.set(ng);
 	}
 
+	public void addPhysicsMouseJoint() {
+		if (zoneBody != null && mJoint == null && physics) {
+			mJointDef = new MouseJointDef();
+			mJointDef.maxForce = 1000000.0f;
+			mJointDef.frequencyHz = applet.frameRate;
+			mJointDef.bodyA = SMT.groundBody;
+			mJointDef.bodyB = zoneBody;
+			mJointDef.target.set(new Vec2(zoneBody.getPosition().x, zoneBody.getPosition().y));
+			mJoint = (MouseJoint) SMT.world.createJoint(mJointDef);
+			zoneBody.setAwake(true);
+		}
+	}
+
 	public void toss() {
 		// enable physics on this zone to make sure it can move from the toss
-		physics = true;
+		setPhysicsEnabled( true);
 		Touch t = getActiveTouch(0);
 		if (zoneBody != null && mJoint != null) {
 			mJoint.setTarget(new Vec2(t.x * SMT.box2dScale, (applet.height - t.y)
@@ -2675,25 +2739,10 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 		}
 	}
 
-	public void addPhysicsMouseJoint() {
-		if (zoneBody != null && mJoint == null && physics) {
-			mJointDef = new MouseJointDef();
-			mJointDef.maxForce = 1000000.0f;
-			mJointDef.frequencyHz = applet.frameRate;
-			mJointDef.bodyA = SMT.groundBody;
-			mJointDef.bodyB = zoneBody;
-			mJointDef.target.set(new Vec2(zoneBody.getPosition().x, zoneBody.getPosition().y));
-			mJoint = (MouseJoint) SMT.world.createJoint(mJointDef);
-			zoneBody.setAwake(true);
-		}
-	}
-
 	/**
 	 * This method is for use by Processing, override it to change what occurs
 	 * when a Processing KeyEvent is passed to the Zone
-	 * 
-	 * @param event
-	 *            The Processing KeyEvent that is sent to the Zone
+	 * @param event The Processing KeyEvent that is sent to the Zone
 	 */
 	public void keyEvent(KeyEvent event) {
 		switch (event.getAction()) {
@@ -2713,14 +2762,19 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * Make sure that if a hidden sub-Zone is given a name that the outer-Zone
 	 * overrides this method to pass through the set to those Zones too,
 	 * otherwise the methods on these sub-Zones will never be called
-	 * 
-	 * @param obj
-	 *            The object to bind to the Zone
+	 * @param obj The object to bind to the Zone
+	 * @deprecated Do not use this method - See <a href="https://github.com/vialab/SMT/issues/174">this github issue</a>
 	 */
+	@Deprecated
 	public void setBoundObject(Object obj) {
 		this.boundObject = obj;
 	}
 
+	/**
+	 * Gets the object this zone is currently bound to.
+	 * @deprecated Do not use this method - See <a href="https://github.com/vialab/SMT/issues/174">this github issue</a>
+	 */
+	@Deprecated
 	public Object getBoundObject() {
 		return boundObject;
 	}

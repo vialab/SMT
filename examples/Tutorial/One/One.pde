@@ -1,9 +1,10 @@
 import vialab.SMT.*;
+
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
 	size(displayWidth, displayHeight, P3D);
-	SMT.init(this, TouchSource.MULTIPLE);
+	SMT.init(this, TouchSource.AUTOMATIC);
 
 	//Make a new Zone
 	Zone zone = new Zone( "MyZone");
@@ -16,15 +17,15 @@ void draw(){
 }
 
 //Draw function for "MyZone"
-void drawMyZone(Zone zone){
+void drawMyZone( Zone zone){
 	fill( #88dd88);
 	rect(0, 0, 100, 100);
 }
 
-void pickDrawMyZone(Zone zone){
+void pickDrawMyZone( Zone zone){
 	rect(0, 0, 100, 100);
 }
 //Touch function for "MyZone"
-void touchMyZone(Zone zone){
-	zone.drag();
+void touchMyZone( Zone zone){
+	zone.rotate();
 }

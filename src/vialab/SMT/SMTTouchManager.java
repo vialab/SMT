@@ -141,9 +141,9 @@ class SMTTouchManager {
 		}
 	}
 
-	private void doPress( Zone zone, Touch t) {
+	private void doPress( Zone zone, Touch touch) {
 		if ( zone != null) {
-			zone.pressRegister( t);
+			zone.pressRegister( touch);
 		}
 	}
 

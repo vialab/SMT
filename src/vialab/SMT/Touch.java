@@ -29,10 +29,7 @@ public class Touch extends TuioCursor {
 	public int cursorID;
 	/** Reflects the current state of the TuioComponent. */
 	public int state;
-	/**
-	 * The unique session ID number that is assigned to each TUIO object or
-	 * cursor.
-	 */
+	/** The unique session ID number that is assigned to each TUIO object or cursor. */
 	public long sessionID;
 	/** The X coordinate in pixels relative to the PApplet screen width. */
 	public int x;
@@ -47,15 +44,16 @@ public class Touch extends TuioCursor {
 	/** The motion acceleration value. */
 	public float motionAcceleration;
 
-	/**
-	 * The start time of the TuioCursor/Touch
-	 */
+	/** The start time of the TuioCursor/Touch */
 	public TuioTime startTime;
-
-	/**
-	 * The current time of the TuioCursor/Touch
-	 */
+	/** The current time of the TuioCursor/Touch */
 	public TuioTime currentTime;
+	/** The time at which the TuioCursor/Touch was assigned*/
+	public TuioTime assignTime;
+	/** The time at which the TuioCursor/Touch was unassigned */
+	public TuioTime unassignTime;
+	/** The time at which the TuioCursor/Touch was unassigned */
+	public TuioTime deathTime;
 	/**
 	 * A Vector of TuioPoints containing all the previous positions of the TUIO
 	 * component.
@@ -91,6 +89,9 @@ public class Touch extends TuioCursor {
 		this.startTimeMillis = System.currentTimeMillis();
 		this.originalTimeMillis = this.startTimeMillis;
 		//private fields
+		assignTime = null;
+		unassignTime = null;
+		deathTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -98,16 +99,16 @@ public class Touch extends TuioCursor {
 	 * This constructor takes the provided Session ID, Cursor ID, X and Y
 	 * coordinate and assigns these values to the newly created Touch.
 	 * 
-	 * @param sessionID   - long: Session ID
-	 * @param cursorID   - int: Cursor ID
-	 * @param xCoord    - float: X Coordinate
-	 * @param yCoord    - float: Y Coordinate
+	 * @param sessionID Session ID
+	 * @param cursorID Cursor ID
+	 * @param xCoord X Coordinate
+	 * @param yCoord Y Coordinate
 	 */
 	public Touch(long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(sessionID, cursorID, xCoord, yCoord);
 		this.cursorID = getCursorID();
-		x = getScreenX(applet.width);
-		y = getScreenY(applet.height);
+		x = getScreenX( applet.width);
+		y = getScreenY( applet.height);
 		startTime = getStartTime();
 		currentTime = getTuioTime();
 		xSpeed = getXSpeed();
@@ -118,6 +119,9 @@ public class Touch extends TuioCursor {
 		this.sessionID = getSessionID();
 		state = getTuioState();
 		//private fields
+		assignTime = null;
+		unassignTime = null;
+		deathTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
@@ -126,13 +130,13 @@ public class Touch extends TuioCursor {
 	 * provided Session ID, Cursor ID, X and Y coordinate to the newly created
 	 * Touch.
 	 * 
-	 * @param ttime   - TuioTime: TuioTime
-	 * @param sessionID   - long: Session ID
-	 * @param cursorID  - int: Cursor ID
-	 * @param xCoord  - float: X Coordinate
-	 * @param yCoord   - float: Y Coordinate
+	 * @param ttime TuioTime
+	 * @param sessionID Session ID
+	 * @param cursorID Cursor ID
+	 * @param xCoord X Coordinate
+	 * @param yCoord Y Coordinate
 	 */
-	public Touch(TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
+	public Touch( TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(ttime, sessionID, cursorID, xCoord, yCoord);
 		this.cursorID = getCursorID();
 		x = getScreenX(applet.width);
@@ -147,11 +151,13 @@ public class Touch extends TuioCursor {
 		this.sessionID = getSessionID();
 		state = getTuioState();
 		//private fields
+		assignTime = null;
+		unassignTime = null;
+		deathTime = null;
 		listeners = new Vector<TouchListener>();
 	}
 
 	/**
-	 * 
 	 * @return The Point containing the last point of the Touch
 	 */
 	public Point getLastPoint() {
@@ -166,9 +172,7 @@ public class Touch extends TuioCursor {
 	}
 
 	/**
-	 * @param t
-	 *            TuioCursor to update the Touch with, since Touch extends
-	 *            TuioCursor, it can also take a Touch
+	 * @param t TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
 	 */
 	public void updateTouch(TuioCursor t) {
 		prevUpdateTime = currentTime;
@@ -208,11 +212,10 @@ public class Touch extends TuioCursor {
 	/**
 	 * Gets a Point on the Touch's path history
 	 * 
-	 * @param index
-	 *            The index of the point on the Touch's path (0 is first Point,
-	 *            Touch.path.size()-1 is the current Point)
+	 * @param index The index of the point on the Touch's path (0 is first Point, 
+	 *   Touch.path.size()-1 is the current Point)
 	 * @return A Point containing the x,y values of the Touch's path at the
-	 *         specified index, returns null if invalid index
+	 *   specified index, returns null if invalid index
 	 */
 	public Point getPointOnPath(int index) {
 		if (index < 0 || index >= path.size())
@@ -238,10 +241,10 @@ public class Touch extends TuioCursor {
 	public void assignZone(Zone zone) {
 		if (zone != null) {
 			assignedZones.add(zone);
-			if (!zone.isAssigned(this)) {
+			if (!zone.isAssigned(this))
 				zone.assign(this);
-			}
 			this.startTimeMillis = System.currentTimeMillis();
+			assignTime = currentTime.getSessionTime();
 		}
 	}
 
@@ -254,6 +257,7 @@ public class Touch extends TuioCursor {
 			assignedZones.remove(zone);
 			zone.unassign( this.sessionID);
 			this.startTimeMillis = this.originalTimeMillis;
+			unassignTime= currentTime.getSessionTime();
 		}
 	}
 
@@ -285,19 +289,19 @@ public class Touch extends TuioCursor {
 	}
 	
 	/**
-	 * @param z
+	 * @param zone
 	 * @return the x position of this Touch in local coordinates of the given zone
 	 */
-	public float getLocalX(Zone z){
-		return z.getLocalX(this);
+	public float getLocalX( Zone zone){
+		return zone.getLocalX(this);
 	}
 	
 	/**
-	 * @param z
+	 * @param zone
 	 * @return the y position of this Touch in local coordinates of the given zone
 	 */
-	public float getLocalY(Zone z){
-		return z.getLocalY(this);
+	public float getLocalY( Zone zone){
+		return zone.getLocalY(this);
 	}
 
 	public TouchSource getTouchSource() {
@@ -306,10 +310,11 @@ public class Touch extends TuioCursor {
 		// by the main tuiolistener, all others use the port number for the
 		// partition index, and so can be used to find the port, and so the
 		// device it came from
-		if (sessionID >> 48 == 0) {
-			return SMT.deviceMap.get(SMT.mainListenerPort);
-		}
-		return SMT.deviceMap.get((int) (sessionID >> 48));
+		int portbits = (int) ( sessionID >> 48);
+		int port = ( portbits != 0) ?
+				portbits : SMT.mainListenerPort;
+		//System.out.printf( "port: %d\n", port);
+		return SMT.deviceMap.get( port);
 	}
 
 	/**
@@ -369,6 +374,7 @@ public class Touch extends TuioCursor {
 		TouchEvent event = new TouchEvent( this, TouchEvent.TouchType.UP, this);
 		for( TouchListener listener : listeners)
 			listener.handleTouchUp( event);
+		deathTime = currentTime.getSessionTime();
 	}
 	public void invokeTouchMovedEvent(){
 		TouchEvent event = new TouchEvent( this, TouchEvent.TouchType.MOVED, this);
@@ -378,7 +384,8 @@ public class Touch extends TuioCursor {
 
 	//private utility functions
 	public void addTouchListener( TouchListener listener){
-		listeners.add( listener);
+		if( ! listeners.contains( listener))
+			listeners.add( listener);
 	}
 	public void removeTouchListener( TouchListener listener){
 		listeners.remove( listener);
