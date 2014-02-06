@@ -1,6 +1,6 @@
-# Simple Multi-Touch Toolkit (SMT) for Processing
+## Simple Multi-Touch Toolkit (SMT) for Processing
 
-### Project Website: http://vialab.science.uoit.ca/smt/
+### Project Website: http://vialab.science.uoit.ca/SMT/
 
 The website includes:
 
@@ -14,20 +14,26 @@ The website includes:
 
 ### Version 3.7.1
 
-Project Website: http://vialab.science.uoit.ca/smt/
-Research Portfolio: http://vialab.science.uoit.ca/portfolio/smt-toolkit
+**Project Website:** http://vialab.science.uoit.ca/SMT/  
+**Research Portfolio:** http://vialab.science.uoit.ca/portfolio/smt-toolkit  
 
 SMT (Simple Multi-Touch Toolkit) is a project to support the learning of HCI concepts.
 It provides an easy to use library for processing sketches to handle touch input and associated matrix and drawing functions, to allow quick development of the desired application.
 
-SMT supports multiple input sources for Touch events: SmartSDK, Windows Touch (requires http://www.microsoft.com/en-au/download/details.aspx?id=30679), TUIO, Mouse Emulation, Android, and Leap Motion.
+SMT supports multiple input sources for Touch events:  
+* SmartSDK,  
+* Windows Touch (requires http://www.microsoft.com/en-au/download/details.aspx?id=30679), 
+* TUIO, 
+* Mouse Emulation, 
+* Android, and 
+* Leap Motion.
 
-SMT can be used in Windows, Mac and Linux environments.
-
-Installation Instructions:
-	1 - Install Processing 2.0+ if you do not have it already
-	2 - Processing Menu bar->sketch->Import Library->Add Library
-	3 - Search for smt, in the I/O category, click Install
+SMT can be used in **Windows**, **Mac** and **Linux** environments.  
+  
+Installation Instructions:  
+&nbsp;&nbsp; **1.**  Install Processing 2.0+ if you do not have it already  
+&nbsp;&nbsp; **2.**  Processing Menu bar->sketch->Import Library->Add Library  
+&nbsp;&nbsp; **3.**  Search for smt, in the I/O category, click Install  
 
 Online Javadoc is available at http://vialab.github.io/SMT/
 
