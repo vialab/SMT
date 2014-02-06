@@ -25,6 +25,7 @@ void setup(){
 	size( display_width, display_height, P3D);
 	SMT.init( this, TouchSource.AUTOMATIC);
 	println("SMT.init finished");
+	//throw new RuntimeException( "asdf");
 }
 
 void draw(){
