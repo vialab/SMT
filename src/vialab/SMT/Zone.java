@@ -1119,7 +1119,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * Get the zone x-coordinate. Upper left corner for rectangle.
-	 * 
 	 * @return x int representing the upper left x-coordinate of the zone.
 	 */
 	public int getX() {
@@ -1128,7 +1127,6 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * Get the zone y-coordinate. Upper left corner for rectangle.
-	 * 
 	 * @return y int representing the upper left y-coordinate of the zone.
 	 */
 	public int getY() {
@@ -1137,23 +1135,24 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 
 	/**
 	 * Get the zone's original width.
-	 * 
 	 * @return width int representing the width of the zone.
 	 */
 	public int getWidth() {
-		return (int) PVector.sub(fromZoneVector(new PVector(this.width, 0)), this.getOrigin())
-				.mag();
+		return (int) PVector.sub(
+			fromZoneVector(
+				new PVector(this.width, 0)),
+			this.getOrigin()).mag();
 	}
 
 	/**
 	 * Get the zone's original height.
-	 * 
 	 * @return height int representing the height of the zone.
-	 * 
 	 */
 	public int getHeight() {
-		return (int) PVector.sub(fromZoneVector(new PVector(0, this.height)), this.getOrigin())
-				.mag();
+		return (int) PVector.sub(
+			fromZoneVector(
+				new PVector(0, this.height)),
+			this.getOrigin()).mag();
 	}
 
 	public Dimension getSize(){

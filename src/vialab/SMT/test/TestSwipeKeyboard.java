@@ -24,7 +24,7 @@ import vialab.SMT.swipekeyboard.*;
 
 /**
  * Test program for the experimental SwipeKeyboard class
- * by Kalev Kalda Sikes
+ * @author Kalev Kalda Sikes
  */
 public class TestSwipeKeyboard extends PApplet {
 

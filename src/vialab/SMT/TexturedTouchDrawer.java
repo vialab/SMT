@@ -14,16 +14,26 @@ import TUIO.*;
 //local imports
 import vialab.SMT.event.*;
 
+/**
+ * This class uses some nice textures to render touches and their paths.
+ * @author Kalev Kalda Sikes
+ */
 public class TexturedTouchDrawer
 		implements TouchDrawer, TouchListener {
+	//the texture used for touches
 	private PImage touch_texture = null;
+	//the texture used for trails
 	private PImage trail_texture = null;
+	//the calculated list of vertices for drawing the circle for touches
 	private Vector<PVector> vertices;
 	//list of touches that are no longer in use
 	private Vector<Touch> deadTouches;
-	long currentTime;
+	//the current (TUIO) time
+	private long currentTime;
 
 	// Touch drawing options
+	//whether to draw the trail
+	private boolean touch_enabled = true;
 	//the number of sections to use when drawing touches
 	private int touch_sections;
 	//the radius to use when drawing touches
@@ -42,9 +52,13 @@ public class TexturedTouchDrawer
 	// Trail drawing options
 	//whether to draw the trail
 	private boolean trail_enabled = true;
+	//the time window within which to include points
 	private int trail_time_threshold = 300;
+	//the maximum number of points on to include
 	private int trail_point_threshold = 50;
+	//the smoothing constant of the curve
 	private float trail_c = 0.10f;
+	//the base number of points on the curve
 	private int trail_t_n = 40;
 	//width of the trail's texture
 	private float trail_width = 5.0f;
@@ -58,15 +72,17 @@ public class TexturedTouchDrawer
 	private float trail_tint_alpha = 200f;
 
 	public TexturedTouchDrawer(){
+		//initialize properties
 		vertices = new Vector<PVector>();
-		update();
-		if( touch_texture == null)
-			touch_texture = SMT.parent.loadImage(
-				"resources/touch_texture.png");
-		if( trail_texture == null)
-			trail_texture = SMT.parent.loadImage(
-				"resources/trail_texture.png");
 		deadTouches = new Vector<Touch>();
+		//update the circle's points
+		update();
+		//load touch texture
+		touch_texture = SMT.parent.loadImage(
+			"resources/touch_texture.png");
+		//load trail texture
+		trail_texture = SMT.parent.loadImage(
+			"resources/trail_texture.png");
 	}
 
 	/** Implements the "Textured" touch draw method */
@@ -92,10 +108,8 @@ public class TexturedTouchDrawer
 			//draw the touch
 			drawTouch( touch, graphics, 1 - ani_step);
 			//remove if the death animation has finished
-			if( ani_step > 1){
+			if( ani_step > 1)
 				deadTouches.remove( touch);
-				touch.removeTouchListener( this);
-			}
 		}
 	}
 
@@ -136,12 +150,15 @@ public class TexturedTouchDrawer
 
 	}
 
+	/** Pull the static SMT touch drawing parameters, and update accordingly. */
 	protected void update(){
 		touch_sections = SMT.touch_sections;
-		//look at the texture i used and you'll understand
+		//the texture i'm using is actually twice the radius
 		touch_radius = SMT.touch_radius * 2;
 		findVertices();
 	}
+
+	/** Recalculate the points of the circle */
 	private void findVertices(){
 		vertices.clear();
 		float dtheta = PApplet.TWO_PI / touch_sections;
@@ -149,6 +166,7 @@ public class TexturedTouchDrawer
 			addVert( theta);
 		addVert( PApplet.TWO_PI);
 	}
+	/** Recalculate the points of the circle */
 	private void addVert( float theta){
 		vertices.add(
 			new PVector(
@@ -156,6 +174,10 @@ public class TexturedTouchDrawer
 				touch_radius * PApplet.sin( theta)));
 	}
 
+	/**
+	 * Select the points from the touch's path that we wanna interpolate from.
+	 * @return the selected points
+	 **/
 	private Vector<TuioPoint> selectPoints( Touch touch, long currentTime){
 		//result points
 		Vector<TuioPoint> points = new Vector<TuioPoint>();
@@ -187,6 +209,10 @@ public class TexturedTouchDrawer
 		return points;
 	}
 
+	/**
+	 * Interpolate the points of the trail from the touch's path
+	 * @return the interpolated points
+	 **/
 	private Vector<CurvePoint> interpolatePoints(
 			PGraphics graphics, Vector<TuioPoint> points){
 		//convenience variables
@@ -268,10 +294,24 @@ public class TexturedTouchDrawer
 		//finish up
 		return curvePoints;
 	}
+	/**
+	 * Calculate the weight of a point based the distance.
+	 * Uses a gaussian function.
+	 * @param distance the distance on the domain
+	 * @param c the c parameter of the gaussian function
+	 * @return the calculated weight of the point
+	 */
 	private float expweight( float distance, float c){
 		return PApplet.exp( - PApplet.pow( distance / c, 2) / 2);
 	}
 
+	/**
+	 * Draws the given points on the given graphics context.
+	 * Uses the given alpha for tranparency.
+	 * @param graphics the graphics context to draw on
+	 * @param curvePoints the points of the curve to draw
+	 * @param alpha the desired transparency of the curve
+	 */
 	private void drawCurvePoints(
 			PGraphics graphics, Vector<CurvePoint> curvePoints, float alpha){
 		if( curvePoints == null) return;
@@ -320,6 +360,10 @@ public class TexturedTouchDrawer
 
 	//Accessor methods
 
+	/** Sets whether trail drawing is enabled **/
+	public void setTouchEnabled( boolean enabled){
+		touch_enabled = enabled;
+	}
 	/** Sets the desired tint of drawn touches.
 	 * @param red The desired tint's red element
 	 * @param green The desired tint's green element
@@ -333,15 +377,27 @@ public class TexturedTouchDrawer
 		touch_tint_blue = blue;
 		touch_tint_alpha = alpha;
 	}
+	/** Gets the red aspect of tint of drawn touches.
+	 * @return The desired tint's red element
+	 */
 	public float getTouchTintRed(){
 		return touch_tint_red;
 	}
+	/** Gets the green aspect of tint of drawn touches.
+	 * @return The desired tint's green element
+	 */
 	public float getTouchTintGreen(){
 		return touch_tint_green;
 	}
+	/** Gets the blue aspect of tint of drawn touches.
+	 * @return The desired tint's blue element
+	 */
 	public float getTouchTintBlue(){
 		return touch_tint_blue;
 	}
+	/** Gets the alpha aspect of tint of drawn touches.
+	 * @return The desired tint's alpha element
+	 */
 	public float getTouchTintAlpha(){
 		return touch_tint_alpha;
 	}
@@ -361,62 +417,128 @@ public class TexturedTouchDrawer
 		trail_tint_blue = blue;
 		trail_tint_alpha = alpha;
 	}
+	/** Gets the red aspect of tint of the drawn trail.
+	 * @return The desired tint's red element
+	 */
 	public float getTrailTintRed(){
 		return trail_tint_red;
 	}
+	/** Gets the green aspect of tint of the drawn trail.
+	 * @return The desired tint's green element
+	 */
 	public float getTrailTintGreen(){
 		return trail_tint_green;
 	}
+	/** Gets the blue aspect of tint of the drawn trail.
+	 * @return The desired tint's blue element
+	 */
 	public float getTrailTintBlue(){
 		return trail_tint_blue;
 	}
+	/** Gets the alpha aspect of tint of the drawn trail.
+	 * @return The desired tint's alpha element
+	 */
 	public float getTrailTintAlpha(){
 		return trail_tint_alpha;
 	}
 
+	/**
+	 * Set whether trail drawing is enabled 
+	 * @param enabled whether trail drawing should be enabled 
+	 **/
 	public void setTrailEnabled( boolean enabled){
 		trail_enabled = enabled;
 	}
+	/**
+	 * Set the time threshold for touch path point selection 
+	 * @param threshold the desired time threshold for touch path point selection
+	 **/
 	public void setTrailTimeThreshold( int threshold){
 		trail_time_threshold = threshold;
 	}
+	/**
+	 * Set the point count threshold for touch path point selection 
+	 * @param threshold the desired point count threshold for touch path point selection
+	 **/
 	public void setTrailPointThreshold( int threshold){
 		trail_point_threshold = threshold;
 	}
+	/**
+	 * Set the C parameter of the smoothing function 
+	 * @param c the desired C parameter of the smoothing function
+	 **/
 	public void setTrailC( float c){
 		trail_c = c;
 	}
+	/**
+	 * Set the base number of points on the curve 
+	 * @param t_n the desired base number of points on the curve
+	 **/
 	public void setTrailT_N( int t_n){
 		trail_t_n = t_n;
 	}
+	/**
+	 * Set the desired width of the trail.
+	 * Making this any greater than the default will probably look bad.
+	 * @param width the desired width of the trail
+	 **/
 	public void setTrailWidth( float width){
 		trail_width = width;
 	}
 
+	/**
+	 * Get whether the trail is enabled
+	 * @return whether the trail is enabled
+	 **/
 	public boolean getTrailEnabled(){
 		return trail_enabled;
 	}
+	/**
+	 * Get the time threshold for touch path point selection
+	 * @return the time threshold for touch path point selection
+	 **/
 	public int getTrailTimeThreshold(){
 		return trail_time_threshold;
 	}
+	/**
+	 * Get the point count threshold for touch path point selection
+	 * @return the point count threshold for touch path point selection
+	 **/
 	public int getTrailPointThreshold(){
 		return trail_point_threshold;
 	}
+	/**
+	 * Get the C parameter of the smoothing function
+	 * @return the C parameter of the smoothing function
+	 **/
 	public float getTrailC(){
 		return trail_c;
 	}
+	/**
+	 * Get the base number of points on the curve
+	 * @return the base number of points on the curve
+	 **/
 	public int getTrailT_N(){
 		return trail_t_n;
 	}
+	/**
+	 * Get Set the desired width of the trail
+	 * @return Set the desired width of the trail
+	 **/
 	public float getTrailWidth(){
 		return trail_width;
 	}
 
 	//touch listener functions
+	/** Do nothing on touch down **/
 	public void handleTouchDown( TouchEvent touchEvent){}
+	/** Do nothing on touch moved **/
 	public void handleTouchMoved( TouchEvent touchEvent){}
+	/** Add to our list of dead touches and stop listening **/
 	public void handleTouchUp( TouchEvent touchEvent){
-		deadTouches.add( touchEvent.getTouch());
+		Touch touch = touchEvent.getTouch();
+		deadTouches.add( touch);
+		touch.removeTouchListener( this);
 	}
 
 	//sub-classes

@@ -164,6 +164,11 @@ public class SMT {
 	 */
 	protected SMT() {}
 
+	/**
+	 * Set whether to use fast picking or not.
+	 * IDK why you wouldn't want to, but hey, I didn't write this.
+	 * @param fastPicking whether to use fast picking
+	 */
 	public static void setFastPicking(boolean fastPicking) {
 		SMT.fastPicking = fastPicking;
 	}
@@ -660,18 +665,30 @@ public class SMT {
 	public static void setTouchColor( float red, float green, float blue, float alpha){
 		setTouchColour( red, green, blue, alpha);
 	}
+	/** Gets the red aspect of tint of drawn touches.
+	 * @return The desired tint's red element
+	 */
 	public static float getTouchRed(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTouchTintRed();
 	}
+	/** Gets the green aspect of tint of drawn touches.
+	 * @return The desired tint's green element
+	 */
 	public static float getTouchGreen(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTouchTintGreen();
 	}
+	/** Gets the blue aspect of tint of drawn touches.
+	 * @return The desired tint's blue element
+	 */
 	public static float getTouchBlue(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTouchTintBlue();
 	}
+	/** Gets the alpha aspect of tint of drawn touches.
+	 * @return The desired tint's alpha element
+	 */
 	public static float getTouchAlpha(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTouchTintAlpha();
@@ -695,79 +712,140 @@ public class SMT {
 	public static void setTrailColor( float red, float green, float blue, float alpha){
 		setTrailColour( red, green, blue, alpha);
 	}
+	/** Gets the red aspect of tint of the drawn trail.
+	 * @return The desired tint's red element
+	 */
 	public static float getTrailRed(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailTintRed();
 	}
+	/** Gets the green aspect of tint of the drawn trail.
+	 * @return The desired tint's green element
+	 */
 	public static float getTrailGreen(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailTintGreen();
 	}
+	/** Gets the blue aspect of tint of the drawn trail.
+	 * @return The desired tint's blue element
+	 */
 	public static float getTrailBlue(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailTintBlue();
 	}
+	/** Gets the alpha aspect of tint of the drawn trail.
+	 * @return The desired tint's alpha element
+	 */
 	public static float getTrailAlpha(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailTintAlpha();
 	}
 
-
+	/**
+	 * Set whether trail drawing is enabled 
+	 * @param enabled whether trail drawing should be enabled 
+	 **/
 	public static void setTrailEnabled( boolean enabled){
 		texturedTouchDrawerNullCheck();
 		texturedTouchDrawer.setTrailEnabled( enabled);
 	}
+	/**
+	 * Get whether the trail is enabled
+	 * @return whether the trail is enabled
+	 **/
 	public static boolean getTrailEnabled(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailEnabled();
 	}
 
+	/**
+	 * Set the time threshold for touch path point selection 
+	 * @param threshold the desired time threshold for touch path point selection
+	 **/
 	public static void setTrailTimeThreshold( int threshold){
 		texturedTouchDrawerNullCheck();
 		texturedTouchDrawer.setTrailTimeThreshold( threshold);
 	}
+	/**
+	 * Get the time threshold for touch path point selection
+	 * @return the time threshold for touch path point selection
+	 **/
 	public static int getTrailTimeThreshold(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailTimeThreshold();
 	}
 
+	/**
+	 * Set the point count threshold for touch path point selection 
+	 * @param threshold the desired point count threshold for touch path point selection
+	 **/
 	public static void setTrailPointThreshold( int threshold){
 		texturedTouchDrawerNullCheck();
 		texturedTouchDrawer.setTrailPointThreshold( threshold);
 	}
+	/**
+	 * Get the point count threshold for touch path point selection
+	 * @return the point count threshold for touch path point selection
+	 **/
 	public static int getTrailPointThreshold(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailPointThreshold();
 	}
 
+	/**
+	 * Set the C parameter of the smoothing function 
+	 * @param c the desired C parameter of the smoothing function
+	 **/
 	public static void setTrailC( float c){
 		texturedTouchDrawerNullCheck();
 		texturedTouchDrawer.setTrailC( c);
 	}
+	/**
+	 * Get the C parameter of the smoothing function
+	 * @return the C parameter of the smoothing function
+	 **/
 	public static float getTrailC(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailC();
 	}
 
+	/**
+	 * Set the base number of points on the curve 
+	 * @param t_n the desired base number of points on the curve
+	 **/
 	public static void setTrailT_N( int t_n){
 		texturedTouchDrawerNullCheck();
 		texturedTouchDrawer.setTrailT_N( t_n);
 	}
+	/**
+	 * Get the base number of points on the curve
+	 * @return the base number of points on the curve
+	 **/
 	public static int getTrailT_N(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailT_N();
 	}
 
+	/**
+	 * Set the desired width of the trail.
+	 * Making this any greater than the default will probably look bad.
+	 * @param width the desired width of the trail
+	 **/
 	public static void setTrailWidth( float width){
 		texturedTouchDrawerNullCheck();
 		texturedTouchDrawer.setTrailWidth( width);
 	}
+	/**
+	 * Get Set the desired width of the trail
+	 * @return Set the desired width of the trail
+	 **/
 	public static float getTrailWidth(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getTrailWidth();
 	}
 
-	/** Sets the desired number of sections of a drawn touch. Higher amounts result in smoother circles, but have a small performance hit.
+	/**
+	 * Sets the desired number of sections of a drawn touch. Higher amounts result in smoother circles, but have a small performance hit.
 	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
 	 * @param sections the desired number of sections of a drawn touch
 	 */
@@ -776,7 +854,8 @@ public class SMT {
 		if( SMT.touchDrawMethod == TouchDraw.TEXTURED)
 			texturedTouchDrawer.update();
 	}
-	/** Gets the current section count of a drawn touch
+	/**
+	 * Gets the current section count of a drawn touch
 	 * Note: this function is only relevant when using TouchDraw.TEXTURED
 	 * @return the current section count of a drawn touch, in pixels
 	 */

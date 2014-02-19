@@ -6,6 +6,9 @@ import processing.core.*;
 //smt imports
 import vialab.SMT.*;
 
+/**
+ * A test program to validate that the zone get methods are accurate
+ */
 public class TestGets extends PApplet {
 
 	// constants
@@ -25,7 +28,7 @@ public class TestGets extends PApplet {
 		//processing library setup
 		frameRate( fps_limit);
 		size( window_width, window_height, P3D);
-		frame.setTitle("Zone Accessor Test");
+		frame.setTitle("Zone Get Accessor Test");
 
 		//smt library setup
 		SMT.init( this, TouchSource.MULTIPLE);

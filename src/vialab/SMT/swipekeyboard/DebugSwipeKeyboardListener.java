@@ -17,8 +17,14 @@ public class DebugSwipeKeyboardListener implements SwipeKeyboardListener{
 			System.out.printf( " %s", word);
 		System.out.println();
 	}
-	/** Does nothing. */
+	/**
+	 * Does nothing.
+	 * @param event The swipe event that has occurred.
+	 */
 	public void swipeStarted( SwipeKeyboardEvent event){}
-	/** Does nothing. */
+	/**
+	 * Does nothing.
+	 * @param event The swipe event that has occurred.
+	 */
 	public void swipeProgressed( SwipeKeyboardEvent event){}
 }
