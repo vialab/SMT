@@ -554,6 +554,7 @@ public class SMT {
 	/**
 	 * Sets the desired touch draw method. Any of the values of the enum TouchDraw are legal.
 	 * @param drawMethod One of TouchDraw.{ NONE, DEBUG, SMOOTH, TEXTURED}
+	 * @param drawers the optional touch drawer parameter. only to be used when using TouchDraw.CUSTOM
 	 */
 	public static void setTouchDraw(
 			TouchDraw drawMethod, TouchDrawer... drawers) {
