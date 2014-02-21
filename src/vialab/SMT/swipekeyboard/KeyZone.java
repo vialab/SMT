@@ -222,7 +222,10 @@ public class KeyZone extends Zone {
 		//draw key
 		pushStyle();
 		fill( 20, 20, 20, 255);
-		strokeWeight(4);
+		textMode( SHAPE);
+		strokeJoin( ROUND);
+		strokeCap( ROUND);
+		strokeWeight( 4);
 
 		//draw key background
 		float ratio = 0;
@@ -271,13 +274,13 @@ public class KeyZone extends Zone {
 		}
 		
 		//draw label
-		if( label_enabled){
+		String label_text = alternate_enabled ? label_alternate : label;
+		if( label_enabled && label_text != null){
 			fill( 255, 255, 255, 255);
 			textSize( Math.round( dimension.height * 0.6));
 			textAlign( CENTER);
 			float halfAscent = textAscent() / 2;
 			float halfDescent = textDescent() / 2;
-			String label_text = alternate_enabled ? label_alternate : label;
 			if( shift_down) label_text = label_text.toUpperCase();
 			text(
 				label_text,

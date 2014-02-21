@@ -40,10 +40,10 @@ public class ArrowKeysLayout extends SwipeKeyboardLayout{
 		key_up.translate( base_width + buffer, 0);
 		key_down.translate( base_width + buffer, base_width + buffer);
 
-		key_left.setCornerRounding( 7, 7, 7, 7);
-		key_right.setCornerRounding( 7, 7, 7, 7);
-		key_up.setCornerRounding( 7, 7, 7, 7);
-		key_down.setCornerRounding( 7, 7, 7, 7);
+		key_left.setCornerRounding( 7);
+		key_right.setCornerRounding( 7);
+		key_up.setCornerRounding( 7);
+		key_down.setCornerRounding( 7);
 
 		key_left.setLabel( "<");
 		key_right.setLabel( ">");

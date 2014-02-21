@@ -1,14 +1,6 @@
 //standard library imports
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 //processing imports
 import processing.core.*;
@@ -55,12 +47,12 @@ public void setup(){
 	//processing library setup
 	frameRate( fps_limit);
 	size( window_width, window_height, P3D);
-	textMode( SHAPE);
 	frame.setTitle("Swipe Keyboard Test");
 	//smt library setup
 	SMT.init( this, TouchSource.AUTOMATIC);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
-	SMT.setTrailEnabled( true);
+	SMT.setTouchColour( 200, 150, 200, 150);
+	SMT.setTrailColour( 200, 150, 200, 150);
 
 	//add keyboards
 	keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);
@@ -137,7 +129,7 @@ private class SwipeDisplayer extends Zone
 	String content;
 	public SwipeDisplayer( String name, int x, int y, int width, int height){
 		super( name, x, y , width, height);
-		content = new String();
+		content = new String( "Hello!");
 	}
 	public void drawImpl(){
 		pushStyle();
@@ -151,8 +143,9 @@ private class SwipeDisplayer extends Zone
 	public void drawText( String text){
 		pushStyle();
 		fill( 255, 255, 255, 255);
-		textSize( Math.round( dimension.height * 0.6));
 		textAlign( CENTER);
+		textMode( SHAPE);
+		textSize( Math.round( dimension.height * 0.6));
 		float halfAscent = textAscent() / 2;
 		float halfDescent = textDescent() / 2;
 		text( text,

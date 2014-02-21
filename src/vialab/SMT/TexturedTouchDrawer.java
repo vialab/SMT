@@ -108,8 +108,10 @@ public class TexturedTouchDrawer
 			//draw the touch
 			drawTouch( touch, graphics, 1 - ani_step);
 			//remove if the death animation has finished
-			if( ani_step > 1)
+			if( ani_step > 1){
 				deadTouches.remove( touch);
+				touch.removeTouchListener( this);
+			}
 		}
 	}
 
@@ -536,9 +538,7 @@ public class TexturedTouchDrawer
 	public void handleTouchMoved( TouchEvent touchEvent){}
 	/** Add to our list of dead touches and stop listening **/
 	public void handleTouchUp( TouchEvent touchEvent){
-		Touch touch = touchEvent.getTouch();
-		deadTouches.add( touch);
-		touch.removeTouchListener( this);
+		deadTouches.add( touchEvent.getTouch());
 	}
 
 	//sub-classes

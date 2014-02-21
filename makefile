@@ -64,12 +64,14 @@ relink:
 test: test-anon
 
 # feature tests
-test-swipekeyboard: build jar
-	processing-shell examples/Demos/Keyboard
-test-zoneaccessors: build
-	java $(cp) vialab.SMT.test.TestZoneAccessors
 test-gets: build
 	java $(cp) vialab.SMT.test.TestGets
+test-keyboard: build jar
+	processing-shell examples/Demos/Keyboard
+test-touchcolours: build jar
+	processing-shell examples/Demos/TouchColours
+test-zoneaccessors: build
+	java $(cp) vialab.SMT.test.TestZoneAccessors
 
 # examples
 test-tablehockey: build jar
@@ -84,8 +86,6 @@ test-tutorial3: build jar
 	processing-shell examples/Tutorial/Three --present
 
 # prototypes
-test-touch: build jar
-	processing-shell tests/Touch --present
 test-ripple: build jar
 	processing-shell tests/Ripple
 test-trail: build jar
@@ -102,5 +102,5 @@ test-addremove: build jar
 	processing-shell tests/AddRemove
 test-methodclasses: build jar
 	java $(cp) vialab.SMT.test.TestMethodClasses
-test-basictest: build jar
-	processing-shell tests/BasicTest
+test-basic: build jar
+	processing-shell tests/Basic

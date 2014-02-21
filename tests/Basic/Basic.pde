@@ -23,7 +23,7 @@ void setup(){
 	//processing window setup
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
-	SMT.init( this, TouchSource.AUTOMATIC);
+	//SMT.init( this, TouchSource.AUTOMATIC);
 	println("SMT.init finished");
 	//throw new RuntimeException( "asdf");
 }
@@ -31,6 +31,8 @@ void setup(){
 void draw(){
 	//draw background
 	background( 80, 80, 80);
+	strokeWeight( 5);
+	rect( 10, 10, 100, 100, 5);
 	/*pushStyle();
 	rectMode(CENTER);
 	for( TuioObject object : SMT.getTuioObjects()) {

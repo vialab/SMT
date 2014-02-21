@@ -27,18 +27,19 @@ void setup(){
 		public void drawImpl(){
 			pushStyle();
 			fill( 180, 100, 100);
-			rect( 0, 0, 100, 100);
+			rect( 0, 0, 100, 100, 5);
 			popStyle();
 		}
 		public void pickDrawImpl(){
-			rect( 0, 0, 100, 100);
+			rect( 0, 0, 100, 100, 5);
 		}
 		public void touchImpl(){
-			drag();
+			rst();
 		}
 	};
 	SMT.add( asdf);
 	SMT.add( new Zone( 10, 10, 100, 100));
+	//SMT.add( new SwipeKeyboard());
 }
 
 void draw(){

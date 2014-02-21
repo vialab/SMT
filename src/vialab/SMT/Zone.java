@@ -1913,14 +1913,15 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	}
 
 	protected void drawIndirectChildren(boolean picking) {
-		for (Zone child : children) {
+		for (Zone child : children)
 			//redraw if updateOnlyWhenModified returns false (the default), or if the child 
 			//has been modified, for indirect Zones
-			if (!child.direct && (!this.updateOnlyWhenModified() || child.isModified())) {
+			if ( ! child.direct &&
+					( ! this.updateOnlyWhenModified() ||
+						child.isModified())){
 				child.draw(true, picking);
 				child.setModified(false);
 			}
-		}
 	}
 
 	protected void drawChildren(boolean picking) {
