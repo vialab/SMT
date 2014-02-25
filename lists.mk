@@ -11,6 +11,7 @@ class_files = \
 	bin/vialab/SMT/ImageZone.class \
 	bin/vialab/SMT/KeyboardZone.class \
 	bin/vialab/SMT/LeftPopUpMenuZone.class \
+	bin/vialab/SMT/MainZone.class \
 	bin/vialab/SMT/MouseToTUIO.class \
 	bin/vialab/SMT/PatternUnlockZone.class \
 	bin/vialab/SMT/PGraphicsDelegate.class \
@@ -70,6 +71,7 @@ source_files = \
 	src/vialab/SMT/ImageZone.java \
 	src/vialab/SMT/KeyboardZone.java \
 	src/vialab/SMT/LeftPopUpMenuZone.java \
+	src/vialab/SMT/MainZone.java \
 	src/vialab/SMT/MouseToTUIO.java \
 	src/vialab/SMT/PatternUnlockZone.java \
 	src/vialab/SMT/PGraphicsDelegate.java \

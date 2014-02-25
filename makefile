@@ -64,43 +64,45 @@ relink:
 test: test-anon
 
 # feature tests
+test-android: build jar
+	pshell -a tests/android
 test-gets: build
 	java $(cp) vialab.SMT.test.TestGets
 test-keyboard: build jar
-	processing-shell examples/Demos/Keyboard
+	pshell examples/Demos/Keyboard
 test-touchcolours: build jar
-	processing-shell examples/Demos/TouchColours
+	pshell examples/Demos/TouchColours
 test-zoneaccessors: build
 	java $(cp) vialab.SMT.test.TestZoneAccessors
 
 # examples
 test-tablehockey: build jar
-	processing-shell examples/Demos/TableHockey --present
+	pshell -p examples/Demos/TableHockey
 
 # tutorials
 test-tutorial1: build jar
-	processing-shell examples/Tutorial/One --present
+	pshell -p examples/Tutorial/One
 test-tutorial2: build jar
-	processing-shell examples/Tutorial/Two --present
+	pshell -p examples/Tutorial/Two
 test-tutorial3: build jar
-	processing-shell examples/Tutorial/Three --present
+	pshell -p examples/Tutorial/Three
 
 # prototypes
 test-ripple: build jar
-	processing-shell tests/Ripple
+	pshell tests/Ripple
 test-trail: build jar
-	processing-shell tests/Trail
+	pshell tests/Trail
 
 # other tests
 test-anon: build jar
-	processing-shell tests/Anon
+	pshell tests/Anon
 test-createshape: build jar
-	processing-shell tests/CreateShape
+	pshell tests/CreateShape
 test-touchsource: build jar
-	processing-shell tests/TouchSource
+	pshell tests/TouchSource
 test-addremove: build jar
-	processing-shell tests/AddRemove
+	pshell tests/AddRemove
 test-methodclasses: build jar
 	java $(cp) vialab.SMT.test.TestMethodClasses
 test-basic: build jar
-	processing-shell tests/Basic
+	pshell tests/Basic

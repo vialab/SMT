@@ -76,6 +76,9 @@ bin/vialab/SMT/LeftPopUpMenuZone.class: \
 	bin/vialab/SMT/ButtonZone.class \
 	bin/vialab/SMT/Zone.class
 
+bin/vialab/SMT/MainZone.class: \
+	bin/vialab/SMT/Zone.class
+
 bin/vialab/SMT/MouseToTUIO.class: \
 	bin/vialab/SMT/Finger.class \
 	bin/vialab/SMT/Simulation.class
@@ -106,6 +109,7 @@ bin/vialab/SMT/SliderZone.class: \
 
 bin/vialab/SMT/SMT.class: \
 	bin/vialab/SMT/AndroidToTUIO.class \
+	bin/vialab/SMT/MainZone.class \
 	bin/vialab/SMT/MouseToTUIO.class \
 	bin/vialab/SMT/SMTProxyTuioListener.class \
 	bin/vialab/SMT/SMTTouchManager.class \

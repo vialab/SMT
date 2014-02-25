@@ -71,16 +71,6 @@ import TUIO.*;
  */
 public class SMT {
 
-	private static class MainZone extends Zone{
-		MainZone(int x, int y, int w, int h){
-			super(x, y, w, h);
-			this.setDirect(true);
-		}
-		public void drawImpl(){}
-		public void pickDrawImpl(){}
-		public void touchImpl(){}
-	}
-
 	public static Zone sketch;
 	static float box2dScale = 0.1f;
 	static World world;

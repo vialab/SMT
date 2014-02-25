@@ -6,8 +6,8 @@ color myZone_color;
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
-	size(displayWidth, displayHeight, P3D);
-	SMT.init(this, TouchSource.AUTOMATIC);
+	size( displayWidth, displayHeight, P3D);
+	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//Make a new Zone
 	Zone zone = new Zone( "MyZone");
@@ -24,7 +24,7 @@ void setup(){
 
 //Draw function for the sketch
 void draw(){
-	background( 51);
+	background( 30);
 }
 
 // "MyZone" functions

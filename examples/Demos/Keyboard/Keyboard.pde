@@ -51,8 +51,8 @@ public void setup(){
 	//smt library setup
 	SMT.init( this, TouchSource.AUTOMATIC);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
-	SMT.setTouchColour( 200, 150, 200, 150);
-	SMT.setTrailColour( 200, 150, 200, 150);
+	//SMT.setTouchColour( 200, 150, 200, 150);
+	//SMT.setTrailColour( 200, 150, 200, 150);
 
 	//add keyboards
 	keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);
@@ -84,7 +84,7 @@ public void setup(){
 }
 
 public void draw(){
-	fill( 222, 222, 222);
+	fill( 40, 40, 40);
 	//draw background
 	rect( 0, 0, window_width, window_height);
 	//draw textures
