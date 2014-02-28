@@ -29,7 +29,7 @@ build: $(class_files)
 
 #extra commands
 library/SMT.jar: build
-	jar cmf manifest library/SMT.jar -C bin vialab/
+	jar cf library/SMT.jar -C bin vialab/
 	jar uf library/SMT.jar resources/
 
 jar: library/SMT.jar

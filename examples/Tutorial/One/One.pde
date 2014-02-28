@@ -27,5 +27,5 @@ void pickDrawMyZone( Zone zone){
 }
 //Touch function for "MyZone"
 void touchMyZone( Zone zone){
-	zone.drag();
+	zone.rst();
 }

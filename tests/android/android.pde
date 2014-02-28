@@ -1,9 +1,9 @@
-import vialab.SMT.*;
+//import vialab.SMT.*;
 
 void setup(){
 	size( 500, 500, P3D);
-	SMT.setTouchDraw( TouchDraw.NONE);
-	SMT.init( this, TouchSource.ANDROID);
+	//SMT.setTouchDraw( TouchDraw.NONE);
+	//SMT.init( this, TouchSource.ANDROID);
 }
 
 void draw(){

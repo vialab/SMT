@@ -145,7 +145,7 @@ public class SwipeKeyboard extends Zone
 			}
 			catch( FileNotFoundException exception){
 				System.err.println(
-				"[SwipeKeyboard] Loading the default swipe resolver failed. Swiping words will not work. Try setting the resolver to your own implementation via the SwipeKeyboard.setSwipeResolver( SwipeResolver) function or the SwipeKeyboard( SwipeResolver) constructor.");
+				"[SwipeKeyboard] Loading the default swipe resolver failed because the wordlist could not be found. Swiping words will not work. Try setting the resolver to your own implementation via the SwipeKeyboard.setSwipeResolver( SwipeResolver) function or the SwipeKeyboard( SwipeResolver) constructor.");
 			}
 
 		//other
