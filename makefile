@@ -11,7 +11,9 @@ clean-specials:
 cp = -cp src:bin:lib/*:lib/processing/*
 dest = -d bin
 docscp = -classpath src:bin:lib/*:lib/processing/*
+docs_dir = javadoc
 documentation = -d javadoc
+jarfile = library/SMT.jar
 version = -source 1.6 -target 1.6
 #warnings = -Xlint:-options
 warnings = -Xlint:-deprecation -Xlint:-options
@@ -27,28 +29,27 @@ $(class_files): bin/%.class : src/%.java
 #basic commands
 build: $(class_files)
 
-#extra commands
-library/SMT.jar: build
-	jar cf library/SMT.jar -C bin vialab/
-	jar uf library/SMT.jar resources/
+$(jarfile): build
+	jar cf $(jarfile) -C bin vialab/
+	jar uf $(jarfile) resources/
+jar: $(jarfile)
 
-jar: library/SMT.jar
+$(docs_dir): $(source_files)
+	rm -rf $(docs_dir)
+	$(docs_dir) $(docscp) $(documentation) $(source_files)
+docs: $(docs_dir)
+docs-test: docs
+	chromium-browser $(docs_dir)/index.html
 
-export: build jar docs
+package: build jar docs
 	mkdir SMT
 	cp -r examples library library.properties \
-		javadoc release_notes.md readme.md src \
+		$(docs_dir) release_notes.md readme.md src \
 		SMT
 	zip -r SMT.zip SMT
 	rm -rf SMT
 
-javadoc: $(source_files)
-	rm -rf javadoc
-	javadoc $(docscp) $(documentation) $(source_files)
-docs: javadoc
-docs-test: docs
-	chromium-browser javadoc/index.html
-
+#extra commands
 git-prepare:
 	git add -u
 	git add -A

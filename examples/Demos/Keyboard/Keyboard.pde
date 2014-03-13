@@ -42,6 +42,8 @@ boolean arrow_up_visible;
 
 // main functions
 public void setup(){
+	window_width = displayWidth;
+	window_height = displayHeight;
 	window_halfWidth = window_width / 2;
 	window_halfHeight = window_height / 2;
 	//processing library setup
@@ -49,10 +51,7 @@ public void setup(){
 	size( window_width, window_height, P3D);
 	frame.setTitle("Swipe Keyboard Test");
 	//smt library setup
-	SMT.init( this, TouchSource.AUTOMATIC);
-	SMT.setTouchDraw( TouchDraw.TEXTURED);
-	//SMT.setTouchColour( 200, 150, 200, 150);
-	//SMT.setTrailColour( 200, 150, 200, 150);
+	SMT.init( this, TouchSource.WM_TOUCH);
 
 	//add keyboards
 	keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);

@@ -42,8 +42,9 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
 	//smt library setup
-	SMT.init( this, TouchSource.AUTOMATIC);
-	SMT.setTouchDraw( TouchDraw.TEXTURED);
+	SMT.init( this, TouchSource.TUIO_DEVICE);
+	SMT.setTouchColour( 30, 30, 30, 150);
+	SMT.setTrailColour( 30, 30, 30, 150);
 	SMT.setTouchRadius( 10);
 
 	//create pucks
