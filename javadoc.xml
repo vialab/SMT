@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="javadoc">
-    <target name="javadoc">
-        <javadoc access="protected" additionalparam=" -notimestamp" author="true" classpath="lib/core.jar:lib/gluegen-rt-natives-windows-amd64.jar:lib/gluegen-rt-natives-windows-i586.jar:lib/jogl-all-natives-windows-amd64.jar:lib/jogl-all-natives-linux-amd64.jar:lib/android.jar:lib/gluegen-rt-natives-macosx-universal.jar:lib/jogl-all-natives-macosx-universal.jar:lib/jogl-all-natives-windows-i586.jar:lib/opengl.jar:lib/gluegen-rt-natives-linux-amd64.jar:lib/jogl-all.jar:lib/libTUIO.jar:lib/gluegen-rt.jar:lib/gluegen-rt-natives-linux-i586.jar:lib/core.jar:lib/jogl-all-natives-linux-i586.jar:lib/jbox2d-library-2.1.2.2-jar-with-dependencies.jar" destdir="reference" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="vialab.SMT" source="1.6" sourcepath="src" splitindex="true" use="true" version="true"/>
-    </target>
-</project>
