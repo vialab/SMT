@@ -65,6 +65,9 @@ import processing.event.KeyEvent;
 import processing.opengl.PGraphicsOpenGL;
 import TUIO.TuioTime;
 
+//local imports
+import vialab.SMT.renderer.PGraphics3DDelegate;
+
 /**
  * This is the main zone class which all other Zones extend. It holds the zone's
  * coordinates, size, matrices, etc.. Zones are used to draw and interact with
@@ -73,7 +76,7 @@ import TUIO.TuioTime;
  * @author Erik Paluka, Zach Cook
  * @version 1.0
  */
-public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
+public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener {
 	/**
 	 * Changing the return of this method from the default of false will stop the redraw from occuring
 	 * every frame for indirect Zones, and instead only will redraw if setModified(true) is called on it.

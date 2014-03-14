@@ -101,6 +101,8 @@ test-createshape: build jar
 	pshell tests/CreateShape
 test-touchsource: build jar
 	pshell tests/TouchSource
+test-count: build jar
+	pshell tests/count
 test-addremove: build jar
 	pshell tests/AddRemove
 test-methodclasses: build jar
