@@ -103,6 +103,8 @@ test-touchsource: build jar
 	pshell tests/TouchSource
 test-addremove: build jar
 	pshell tests/AddRemove
+test-count: build jar
+	pshell tests/count
 test-methodclasses: build jar
 	java $(cp) vialab.SMT.test.TestMethodClasses
 test-basic: build jar
