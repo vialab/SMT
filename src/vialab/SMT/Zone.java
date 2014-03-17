@@ -55,18 +55,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
-import processing.core.PImage;
-import processing.core.PMatrix3D;
-import processing.core.PVector;
+import processing.core.*;
 import processing.event.KeyEvent;
-import processing.opengl.PGraphicsOpenGL;
+import processing.opengl.PGraphics3D;
 import TUIO.TuioTime;
 
 //local imports
 import vialab.SMT.renderer.PGraphics3DDelegate;
+import vialab.SMT.renderer.P3DDSRenderer;
 
 /**
  * This is the main zone class which all other Zones extend. It holds the zone's
@@ -78,8 +74,7 @@ import vialab.SMT.renderer.PGraphics3DDelegate;
  */
 public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener {
 	/**
-	 * Changing the return of this method from the default of false will stop the redraw from occuring
-	 * every frame for indirect Zones, and instead only will redraw if setModified(true) is called on it.
+	 * Changing the return of this method to true will cause indirect zones only redraw if setModified(true) is called on it.
 	 */
 	protected boolean updateOnlyWhenModified(){ return false;}	
 	public boolean stealChildrensTouch = false;
@@ -88,9 +83,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	@Deprecated
 	public boolean physics = false;
-	/**
-	 * A flag that describes whether physics is enabled.
-	 */
+	/** A flag that describes whether physics is enabled. */
 	private boolean physics_enabled = false;
 	BodyDef zoneBodyDef = new BodyDef();
 	Body zoneBody;
@@ -99,7 +92,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	Fixture zoneFixture;
 	
 	//Processing PApplet
-	protected static PApplet applet;
+	protected PApplet applet;
 	
 	//The zone's transformation matrix
 	protected PMatrix3D matrix = new PMatrix3D();
@@ -108,23 +101,15 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	//The zone's inverse transformation matrix
 	protected PMatrix3D inverse = new PMatrix3D();
 	//properties
-	/**
-	 * @deprecated use Zone.(get|set)(X|Y) instead
-	 */
+	/** @deprecated use Zone.(get|set)(X|Y) instead */
 	@Deprecated
 	public int x, y;
-	/**
-	 * @deprecated use Zone.(get|set)(Width|Height) instead
-	 */
+	/** @deprecated use Zone.(get|set)(Width|Height) instead */
 	@Deprecated
 	public int height, width;
-	/**
-	 * The dimensions of the zone
-	 */
+	/** The dimensions of the zone */
 	protected Dimension dimension;
-	/**
-	 * The half-dimensions of the zone
-	 */
+	/** The half-dimensions of the zone */
 	protected Dimension halfDimension;
 
 	// A LinkedHashMap will allow insertion order to be maintained.
@@ -152,7 +137,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected Method touchMovedMethod = null;
 	protected Method pressMethod = null;
 	protected String name = null;
-	protected String renderer = null;
+	protected String renderer_name = null;
 
 	/**
 	 * The direct flag controls whether rendering directly onto
@@ -193,7 +178,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	private float offsetX;
 	private float offsetY;
 	private HashSet<Long> dragSeenTouch = new HashSet<Long>();
-	private PGraphics drawPG;
+	private PGraphics3D extra_graphics;
 	private boolean firstDraw;
 
 	boolean warnDraw() {
@@ -243,16 +228,28 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *            controls rendering directly onto screen/pickBuffer, or not
 	 */
 	public void setDirect(boolean direct) {
-		if(direct){
+		if( direct){
 			this.vertices = null;
 			this.tessGeo = null;
 			this.texCache = null;
 			this.inGeo = null;
-			drawPG = null;
+			this.extra_graphics = null;
 		}else{
-			drawPG = applet.createGraphics(width, height, renderer);
+			//get offscreen graphics context
+			PGraphics extra_object = applet.createGraphics(
+				this.dimension.getWidth(),
+				this.dimension.getHeight(),
+				this.renderer_name);
+			//double-check the class
+			if( ! PGraphics.class.isInstance( extra_object))
+				throw new ClassCastException(
+					"Must use PGraphics3D, or a class that extends PGraphics3D as the renderer for zones.");
+			extra_graphics = (PGraphics3D) extra_object;
+			//draw the background
+			extra_graphics.beginDraw();
+			extra_graphics.background( 0, 0);
+			extra_graphics.endDraw();
 			setModified();
-			firstDraw = true;
 		}
 		this.direct = direct;
 	}
@@ -270,7 +267,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
 	 */
 	public Zone(String name) {
-		this(name, SMT.defaultRenderer);
+		this(name, SMT.zone_renderer);
 	}
 
 	/**
@@ -290,7 +287,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param height The height of the zone
 	 */
 	public Zone(int x, int y, int width, int height) {
-		this(x, y, width, height, SMT.defaultRenderer);
+		this(x, y, width, height, SMT.zone_renderer);
 	}
 
 	/**
@@ -300,8 +297,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param height The height of the zone
 	 * @param renderer The renderer that draws the zone
 	 */
-	public Zone(int x, int y, int width, int height, String renderer) {
-		this(null, x, y, width, height, renderer);
+	public Zone( int x, int y, int width, int height, String renderer) {
+		this( null, x, y, width, height, renderer);
 	}
 
 	/**
@@ -312,35 +309,29 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param width The width of the zone
 	 * @param height The height of the zone
 	 */
-	public Zone(String name, int x, int y, int width, int height) {
-		this(name, x, y, width, height, SMT.defaultRenderer);
+	public Zone( String name, int x, int y, int width, int height) {
+		this( name, x, y, width, height, SMT.zone_renderer);
 	}
 
 	/**
-	 * @param name
-	 *   The name of the zone, used for the reflection methods
-	 *   (drawname(),touchname(),etc)
-	 * @param x
-	 *   The x position of the zone
-	 * @param y
-	 *   The y position of the zone
-	 * @param width
-	 *   The width of the zone
-	 * @param height
-	 *   The height of the zone
-	 * @param renderer
-	 *   The renderer that draws the zone
+	 * @param name The name of the zone, used for the reflection methods (drawname(),touchname(),etc)
+	 * @param x The x position of the zone
+	 * @param y The y position of the zone
+	 * @param width The width of the zone
+	 * @param height The height of the zone
+	 * @param renderer The renderer that draws the zone
 	 */
-	public Zone(String name, int x, int y, int width, int height, String renderer) {
+	public Zone( String name, int x, int y, int width, int height, String renderer) {
 		super();
-		applet = SMT.parent;
-		setParent(applet);
-		if (applet == null) {
-			System.err
-					.println("Error: Instantiation of Zone before SMT.init(). Expect serious issues if you see this message.");
-		}
+		//check if smt has been initialized
+		if( SMT.applet == null)
+			System.err.println(
+				"Warning: Initialization of Zone before SMT.init()");
 
-		this.renderer = renderer;
+		//get parent
+		this.applet = SMT.applet;
+		setParent( SMT.applet);
+		this.setDelegate( SMT.renderer);
 
 		//initialize properties
 		this.x = x;
@@ -349,16 +340,16 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		this.height = height;
 		this.dimension = new Dimension( width, height);
 		this.halfDimension = new Dimension( width/2, height/2);
+		this.renderer_name = renderer;
 		this.rntRadius = Math.min(width, height) / 4;
 
-		init();
 		resetMatrix();
-		setName(name);
+		setName( name);
 
 		zoneBodyDef.type = BodyType.DYNAMIC;
 		zoneBodyDef.linearDamping = 1.0f;
 		zoneBodyDef.angularDamping = 1.0f;
-		zoneShape.setAsBox(SMT.box2dScale * width / 2, SMT.box2dScale * height / 2);
+		zoneShape.setAsBox( SMT.box2dScale * width / 2, SMT.box2dScale * height / 2);
 		zoneFixtureDef.shape = zoneShape;
 		zoneFixtureDef.density = 1.0f;
 		zoneFixtureDef.friction = 0.3f;
@@ -404,28 +395,19 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 		else 
 			loadMethods(
-				name, warnDraw(), warnTouch(), warnKeys(), warnPick(), warnTouchUDM(),
-					warnPress());
+				name,
+				warnDraw(), warnTouch(), warnKeys(),
+				warnPick(), warnTouchUDM(), warnPress());
 	}
 
 	/**
-	 * @param name
-	 *   The name of the zone to load methods from, used as a suffix
-	 * @param warnDraw
-	 *   Display a warning when the draw method doesn't exist
-	 * @param warnTouch
-	 *   Display a warning when the touch method doesn't exist
-	 * @param warnKeys
-	 *   Display a warning when the keyTyped/keyPressed/keyReleased
-	 *   methods don't exist
-	 * @param warnPick
-	 *   Display a warning when the pickDraw method doesn't exist
-	 * @param warnTouchUDM
-	 *   Display a warning when the touchUp/touchDown/touchMoved
-	 *   methods don't exist
-	 * @param warnPress
-	 *   Display a warning when the touchPress
-	 *   methods don't exist
+	 * @param name The name of the zone to load methods from, used as a suffix
+	 * @param warnDraw Display a warning when the draw method doesn't exist
+	 * @param warnTouch Display a warning when the touch method doesn't exist
+	 * @param warnKeys Display a warning when the keyTyped/keyPressed/keyReleased methods don't exist
+	 * @param warnPick Display a warning when the pickDraw method doesn't exist
+	 * @param warnTouchUDM Display a warning when the touchUp/touchDown/touchMoved methods don't exist
+	 * @param warnPress Display a warning when the touchPress methods don't exist
 	 */
 	protected void loadMethods(String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
 			boolean warnPick, boolean warnTouchUDM, boolean warnPress) {
@@ -435,69 +417,59 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			|| SMTUtilities.checkImpl( Zone.class, "touchUp", this.getClass(), Touch.class)
 			|| SMTUtilities.checkImpl( Zone.class, "touchMoved", this.getClass(), Touch.class);
 
+		//check for extended class implementations
 		press = SMTUtilities.checkImpl(Zone.class, "press", this.getClass(), Touch.class);
+		touchImpl = SMTUtilities.checkImpl( Zone.class, "touch", this.getClass());
+		drawImpl = SMTUtilities.checkImpl( Zone.class, "draw", this.getClass());
+		pickImpl = SMTUtilities.checkImpl( Zone.class, "pickDraw", this.getClass());
 
 		if (name != null) {
-			drawMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "draw", name, warnDraw,
-					this.getClass());
+			//get draw method
+			drawMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "draw", name, warnDraw,
+				this.getClass());
 
-			pickDrawMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "pickDraw", name,
-					warnPick, this.getClass());
+			//get pick draw method
+			pickDrawMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "pickDraw", name, warnPick,
+				this.getClass());
 
-			keyPressedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyPressed", name,
-					warnKeys, this.getClass(), KeyEvent.class);
-			keyReleasedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyReleased", name,
-					warnKeys, this.getClass(), KeyEvent.class);
-			keyTypedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "keyTyped", name,
-					warnKeys, this.getClass(), KeyEvent.class);
-			touchUpMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchUp", name,
-					warnTouchUDM, this.getClass(), Touch.class);
+			//get key methods
+			keyPressedMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "keyPressed", name, warnKeys,
+				this.getClass(), KeyEvent.class);
+			keyReleasedMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "keyReleased", name, warnKeys,
+				this.getClass(), KeyEvent.class);
+			keyTypedMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "keyTyped", name, warnKeys,
+				this.getClass(), KeyEvent.class);
 
-			touchDownMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchDown", name,
-					warnTouchUDM, this.getClass(), Touch.class);
+			//get touch methods
+			touchUpMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "touchUp", name, warnTouchUDM,
+				this.getClass(), Touch.class);
+			touchDownMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "touchDown", name, warnTouchUDM,
+				this.getClass(), Touch.class);
+			touchMovedMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "touchMoved", name, warnTouchUDM,
+				this.getClass(), Touch.class);
 
-			touchMovedMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touchMoved", name,
-					warnTouchUDM, this.getClass(), Touch.class);
+			//get press method
+			pressMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "press", name, warnPress,
+				this.getClass(), Touch.class);
 
-			pressMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "press", name, warnPress,
-					this.getClass(), Touch.class);
-
-			if (touchUpMethod != null || touchDownMethod != null || touchMovedMethod != null
-					|| touchUDM || press || pressMethod != null) {
+			//get touch method
+			if( touchUpMethod != null || touchDownMethod != null ||
+					touchMovedMethod != null || touchUDM ||
+					press || pressMethod != null) 
 				warnTouch = false;
-			}
-
-			touchMethod = SMTUtilities.getZoneMethod(Zone.class, applet, "touch", name, warnTouch,
+			touchMethod = SMTUtilities.getZoneMethod(
+				Zone.class, applet, "touch", name, warnTouch,
 					this.getClass());
 		}
-
-		touchImpl = SMTUtilities.checkImpl(Zone.class, "touch", this.getClass());
-		drawImpl = SMTUtilities.checkImpl(Zone.class, "draw", this.getClass());
-		pickImpl = SMTUtilities.checkImpl(Zone.class, "pickDraw", this.getClass());
-	}
-
-	/**
-	 * This function [re]creates the PGraphics for the zone, for advanced use
-	 * only, override when something needs to be done when the PGraphics is
-	 * recreated
-	 */
-	protected void init() {
-		if (pg != null) {
-			// save and pop the matrix to finish the matrix loading cycle for
-			// the current zonePG, as we are about to change it
-			matrix.preApply((PMatrix3D) getMatrix());
-			popMatrix();
-		}
-
-		setSize(width, height);
-		
-		// pgraphics that all methods call by default
-		pg = this;
-		
-		setDirect(direct);
-
-		// push and clear the matrix to [re]start the matrix loading cycle
-		pushMatrix();
 	}
 
 	/**
@@ -661,21 +633,16 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	@Override
 	public void beginDraw() {
-		if (direct) {
-			pg = (PGraphicsOpenGL) applet.g;
-			pg.pushMatrix();
-			pg.applyMatrix(matrix);
+		//REWRITE THIS SHIT
+		if( direct){
+			this.pushMatrix();
+			this.applyMatrix( matrix);
 		}
 		else {
-			pg = drawPG;
-			super.beginDraw();
-			if(firstDraw){
-				//clear the background on the first draw so the default background is transparent
-				background(0, 0);
-				firstDraw = false;
-			}
+			extra_graphics.beginDraw();
+			SMT.renderer.pushDelegate( extra_graphics);
 		}
-		pg.pushStyle();
+		pushStyle();
 	}
 
 	/**
@@ -683,14 +650,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	@Override
 	public void endDraw() {
-		if (direct) {
-			pg.popMatrix();
+		if( direct)
+			this.popMatrix();
+		else{
+			SMT.renderer.popDelegate();
+			extra_graphics.endDraw();
 		}
-		else {
-			super.endDraw();
-		}
-		pg.popStyle();
-		pg = this;
+		popStyle();
 	}
 
 	/**
@@ -703,18 +669,19 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		pg.pushMatrix();
 
 		if (direct) {
+			//REWRITE THIS SHIT
 			if (getParent() == null) {
-				drawPG = (PGraphicsOpenGL) applet.g;
+				extra_graphics = (PGraphics3D) applet.g;
 			}
 			else {
-				drawPG = getParent().drawPG;
+				extra_graphics = getParent().extra_graphics;
 			}
-			pg = drawPG;
+			pg = extra_graphics;
 			pg.pushMatrix();
 			pg.applyMatrix(matrix);
 		}
 		else {
-			pg = drawPG;
+			pg = extra_graphics;
 			super.beginDraw();
 		}
 		pg.pushStyle();
@@ -724,10 +691,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		pg.noStroke();
 
 		// make sure the colorMode makes sense for the components given to it
-		pg.colorMode(RGB, 255);
+		pg.colorMode( RGB, 255);
 		// extract the components using bitshifts with bitwise AND, to get RGB
 		// values 0-255
-		pg.fill((pickColor & 0x00FF0000) >> 16, (pickColor & 0x0000FF00) >> 8, pickColor & 0x000000FF);
+		pg.fill(
+			( pickColor & 0x00FF0000) >> 16,
+			( pickColor & 0x0000FF00) >> 8,
+			pickColor & 0x000000FF);
 
 		pickDraw = true;
 	}
@@ -1901,18 +1871,17 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	protected void drawIndirectImage() {
+		//REWRITE THIS SHIT
 		applet.g.pushMatrix();
 		applet.g.applyMatrix(matrix);
-		applet.g.image(drawPG, 0, 0);
+		applet.g.image(extra_graphics, 0, 0);
 		applet.g.popMatrix();
 	}
 
-	protected void drawDirectChildren(boolean picking) {
-		for (Zone child : children) {
-			if (child.direct) {
+	protected void drawDirectChildren( boolean picking) {
+		for( Zone child : children)
+			if( child.direct)
 				drawChild(child, picking);
-			}
-		}
 	}
 
 	protected void drawIndirectChildren(boolean picking) {
@@ -1943,10 +1912,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	void drawIndirectPick(){
 		//render the furthest indirect descendant first
-		for(Zone child: children){
+		for(Zone child: children)
 			child.drawIndirectPick();
-		}
-		drawIndirectChildren(true);
+		drawIndirectChildren( true);
 	}
 
 	/**

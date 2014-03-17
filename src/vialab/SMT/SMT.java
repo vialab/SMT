@@ -52,12 +52,12 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.World;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PImage;
-import processing.core.PVector;
+import processing.core.*;
+import processing.opengl.*;
 
 import TUIO.*;
+
+import vialab.SMT.renderer.P3DDSRenderer;
 
 /**
  * The Core class of the SMT library, it provides the TUIO/Touch Processing client
@@ -78,9 +78,6 @@ public class SMT {
 	protected static LinkedList<Process> tuioServerList =
 		new LinkedList<Process>();
 
-	/** Processing PApplet */
-	public static PApplet parent;
-
 	/** Gesture Handler */
 	// private static GestureHandler handler;
 
@@ -93,11 +90,15 @@ public class SMT {
 	/** Matrix used to test if the zone has gone off the screen */
 	// private PMatrix3D mTest = new PMatrix3D();
 
+
+
+	protected static PApplet applet;
 	protected static SMTZonePicker picker;
 	protected static SMTTuioListener listener;
 	protected static SMTTouchManager manager;
 	protected static Method touch;
 	protected static Boolean warnUnimplemented;
+	protected static P3DDSRenderer renderer = null;
 
 	/**
 	 * This controls whether we give a warning for uncalled methods which use
@@ -109,12 +110,8 @@ public class SMT {
 	 */
 	public static boolean warnUncalledMethods = true;
 
-	/**
-	 * The renderer to use as a default for zones, can be P3D, P2D, OPENGL, etc,
-	 * upon SMT initialization this is set to the same as the PApplet's
-	 * renderer
-	 */
-	public static String defaultRenderer;
+	public static final String RENDERER = P3DDSRenderer.class.getName();
+	public static final String zone_renderer = PConstants.P3D;
 
 	//default SMT.init() parameters
 	public static final int default_port = 3333;
@@ -150,9 +147,9 @@ public class SMT {
 	protected static int touch_sections = 24;
 
 	/**
-	 * Prevent SMT instantiation with protected constructor
+	 * Prevent SMT initialization (kinda) with protected constructor
 	 */
-	protected SMT() {}
+	protected SMT(){}
 
 	/**
 	 * Set whether to use fast picking or not.
@@ -181,75 +178,72 @@ public class SMT {
 	 * Initializes SMT, begining listening to a TUIO source on the
 	 * default port of 3333 and using automatic touch source selection.
 	 * 
-	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 */
-	public static void init(PApplet parent) {
-		init(parent, default_port);
+	public static void init(PApplet applet) {
+		init(applet, default_port);
 	}
 
 	/**
 	 * Initializes SMT, begining listening to a TUIO source on the
 	 * specified port and using automatic touch source selection.
 	 * 
-	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 * @param port The port to listen on
 	 */
-	public static void init(PApplet parent, int port) {
-		init(parent, port, default_touchsource);
+	public static void init(PApplet applet, int port) {
+		init(applet, port, default_touchsource);
 	}
 
 	/**
 	 * Initializes SMT, begining listening to a TUIO source on the
 	 * default port of 3333 and using the specified touch sources.
 	 * 
-	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
-	public static void init(PApplet parent, TouchSource... sources) {
-		init(parent, default_port, sources);
+	public static void init(PApplet applet, TouchSource... sources) {
+		init(applet, default_port, sources);
 	}
 
 	/**
 	 * Initializes SMT, begining listening to a TUIO source on the
 	 * specified port and using the specified touch sources.
 	 * 
-	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
+	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 * @param port The port to listen on
 	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
 	public static void init(
-			PApplet parent, int port, TouchSource... sources) {
-		if( parent == null)
+			PApplet applet, int port, TouchSource... sources) {
+		if( applet == null)
 			throw new NullPointerException(
-				"Null parent PApplet, pass 'this' to SMT.init() instead of null");
+				"Null applet parameter, pass 'this' to SMT.init() instead of null");
 
-		SMT.parent = parent;
+		//check renderer
+		if( ! P3DDSRenderer.class.isInstance( applet.g))
+			throw new RuntimeException(
+				String.format(
+					"To use this library you must use SMT.RENDERER as the renderer field in size(). For example: size( 800, 600, SMT.RENDERER). You used %s.",
+					applet.g.getClass().getName()));
+		renderer = (P3DDSRenderer) applet.g;
 
-		// This build of the toolkit cannot operate without OpenGL renderers
-		if( ! parent.g.is3D())
-			System.out.println(
-				"This build of SMT only supports using OpenGL renderers, please use either OPENGL or P3D in the size function; e.g: size( displayWidth, displayHeight, P3D);");
 		//load applet methods
-		SMTUtilities.loadMethods(parent.getClass());
+		SMT.applet = applet;
+		SMTUtilities.loadMethods( applet.getClass());
 
-		//load touch drawer
+		//load touch drawer ( if necessary )
 		if( touchDrawMethod == TouchDraw.TEXTURED)
 			texturedTouchDrawerNullCheck();
 
-		touch = SMTUtilities.getPMethod( parent, "touch");
-		SMT.sketch = new MainZone( 0, 0, parent.width, parent.height);
+		touch = SMTUtilities.getPMethod( applet, "touch");
+		SMT.sketch = new MainZone( 0, 0, applet.width, applet.height);
 
-		// set Zone.applet so that it is consistently set at this time, not
-		// after a zone is constructed
-		Zone.applet = parent;
-
-		// parent.registerMethod("dispose", this);
-		parent.registerMethod("draw", new SMT());
-		parent.registerMethod("pre", new SMT());
-		// handler = new GestureHandler();
+		//register extra methods
+		applet.registerMethod("draw", new SMT());
+		applet.registerMethod("pre", new SMT());
 
 		picker = new SMTZonePicker();
-		defaultRenderer = parent.g.getClass().getName();
 		listener = new SMTTuioListener();
 		manager = new SMTTouchManager( listener, picker);
 		mainListenerPort = port;
@@ -276,7 +270,7 @@ public class SMT {
 					"Opening a tuio listener on port %d failed. Tuio devices probably won't work.\n", port);
 			}
 			//increment port regardless of success so tuio devices don't get mistaken for other sources
-			// if this connection failed, the port is probably going to be incremented anyways when openning a new listener.
+			// if this connection failed, the port is probably going to be incremented anyways when opening a new listener.
 			port++;
 		}
 		//connect to every specified touch source
@@ -320,7 +314,7 @@ public class SMT {
 		}
 		if( auto_enabled) connect_auto( port);
 
-		parent.hint(PConstants.DISABLE_OPTIMIZED_STROKE);
+		parent.hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 		addJVMShutdownHook();
 
 		world = new World( new Vec2( 0.0f, 0.0f), true);
@@ -1307,12 +1301,13 @@ public class SMT {
 	 */
 	public static Touch getLastTouch( Touch current) {
 		Vector<TuioPoint> path = current.path;
-		if (path.size() > 1) {
+		if( path.size() > 1) {
 			TuioPoint last = path.get(path.size() - 2);
-			return new Touch(last.getTuioTime(), current.getSessionID(), current.getCursorID(),
-					last.getX(), last.getY());
+			return new Touch(
+				last.getTuioTime(), current.getSessionID(), current.getCursorID(),
+				last.getX(), last.getY());
 		}
-		return null;
+		else return null;
 	}
 
 	/**
@@ -1333,21 +1328,20 @@ public class SMT {
 		// TODO: provide some default assignment of touches
 		manager.handleTouches();
 
-		if (mtt != null) {
+		if( mtt != null) {
 			// update touches from mouseToTUIO joint cursors as they are a
 			// special case and need to be shown to user
-			for( Touch t : SMTTouchManager.currentTouchState)
-				t.isJointCursor = false;
-			for( Integer i : mtt.getJointCursors())
-				SMTTouchManager.currentTouchState.getById(i).isJointCursor = true;
+			for( Touch touch : SMTTouchManager.currentTouchState)
+				touch.isJointCursor = false;
+			for( Integer id : mtt.getJointCursors())
+				SMTTouchManager.currentTouchState.getById( id).isJointCursor = true;
 		}
 
-		parent.g.flush();
+		renderer.flush();
 		if( getTouches().length > 0)
 			SMTUtilities.invoke( touch, parent, null);
 
 		sketch.touch();
-
 		updateStep();
 	}
 

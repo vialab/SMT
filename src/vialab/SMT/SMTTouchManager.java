@@ -7,18 +7,12 @@ import processing.core.PGraphics;
 
 class SMTTouchManager {
 	private PApplet applet;
-
 	private SMTTuioListener tuioListener;
-
 	private SMTZonePicker picker;
-
 	private Method touchDown, touchMoved, touchUp;
-
-	static TouchState currentTouchState = new TouchState( );
-
+	static TouchState currentTouchState = new TouchState();
 	static TouchState previousTouchState;
-
-	static HashMap<Touch, Zone> touchPrevZone = new HashMap<Touch, Zone>( );
+	static HashMap<Touch, Zone> touchPrevZone = new HashMap<Touch, Zone>();
 
 	public SMTTouchManager( SMTTuioListener tuioListener, SMTZonePicker picker) {
 		this.tuioListener = tuioListener;
@@ -32,33 +26,32 @@ class SMTTouchManager {
 	 * Determines to which objects touch events should be sent, and then sends
 	 * them.
 	 */
-	public void handleTouches( ) {
+	public void handleTouches() {
 		SMT.sketch.drawIndirectPick();
 
-		PGraphics temp = applet.g;
-		applet.g = picker.pg;
-		applet.g.beginDraw( );
+		SMT.renderer.pushDelegate( SMT.picker.picking_context);
+		SMT.renderer.beginDraw();
 		
-		picker.renderPickBuffer( );
+		picker.renderPickBuffer();
 
 		previousTouchState = new TouchState( currentTouchState);
 
-		currentTouchState.update( tuioListener.getCurrentTuioState( ));
+		currentTouchState.update( tuioListener.getCurrentTuioState());
 
 		// forward events, each touch should go through one of these three
 		// methods, and they are mutually exclusive
-		handleTouchesDown( );
-		handleTouchesUp( );
-		handleTouchesMoved( );
+		handleTouchesDown();
+		handleTouchesUp();
+		handleTouchesMoved();
 		
-		applet.g.endDraw( );
-		applet.g = temp;
+		SMT.renderer.endDraw();
+		SMT.renderer.popDelegate();
 	}
 
 	/**
 	 * Handles every touch in the current but not the previous state.
 	 */
-	protected void handleTouchesDown( ) {
+	protected void handleTouchesDown() {
 		for ( Touch touch : currentTouchState) {
 			// touchDowns only happen on new touches
 			if ( !previousTouchState.contains( touch.sessionID)) {
@@ -74,12 +67,12 @@ class SMTTouchManager {
 	/**
 	 * Handles every touch in the previous but not in the current state.
 	 */
-	protected void handleTouchesUp( ) {
+	protected void handleTouchesUp() {
 		for ( Touch touch : previousTouchState) {
 			if ( !currentTouchState.contains( touch.sessionID)) {
 				// the touch existed, but no longer exists, so it went up
 				SMTUtilities.invoke( touchUp, applet, null, touch);
-				for ( Zone zone : touch.getAssignedZones( )) {
+				for ( Zone zone : touch.getAssignedZones()) {
 					doTouchUp( zone, touch);
 					if ( touchPrevZone.get( touch) == zone) {
 						doPress( zone, touch);
@@ -95,12 +88,12 @@ class SMTTouchManager {
 	 * Handles the movement of touches. A touch is "moved" if it is in both the
 	 * previous and current state
 	 */
-	protected void handleTouchesMoved( ) {
+	protected void handleTouchesMoved() {
 		for ( Touch touch : currentTouchState) {
 			if ( previousTouchState.contains( touch.sessionID)) {
 				SMTUtilities.invoke( touchMoved, applet, null, touch);
 				Zone z = null;
-				if ( !touch.isAssigned( )) {
+				if ( !touch.isAssigned()) {
 					z = picker.pick( touch);
 					// Assign the touch to the picked Zone, as long as the touch
 					// is not grabbed
@@ -110,7 +103,7 @@ class SMTTouchManager {
 				}
 				else {
 					boolean first = true;
-					for ( Zone zone : touch.getAssignedZones( )) {
+					for ( Zone zone : touch.getAssignedZones()) {
 						if ( zone.press || zone.pressMethod != null) {
 							// if the zone defines a press method, make sure to
 							// unassign when we no longer pick to the Zone,
@@ -132,7 +125,7 @@ class SMTTouchManager {
 						}
 					}
 				}
-				for ( Zone zone : touch.getAssignedZones( )) {
+				for ( Zone zone : touch.getAssignedZones()) {
 					doTouchMoved( zone, touch);
 				}
 				touchPrevZone.put( touch, z);

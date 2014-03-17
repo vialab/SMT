@@ -1,6 +1,6 @@
 #lists
 class_files = \
-	bin/vialab/SMT/SMTZonePicker.class \
+	bin/vialab/SMT/SMTProxyTuioListener.class \
 	bin/vialab/SMT/AndroidToTUIO.class \
 	bin/vialab/SMT/ButtonZone.class \
 	bin/vialab/SMT/CheckBoxZone.class \
@@ -14,17 +14,20 @@ class_files = \
 	bin/vialab/SMT/MainZone.class \
 	bin/vialab/SMT/MouseToTUIO.class \
 	bin/vialab/SMT/PatternUnlockZone.class \
-	bin/vialab/SMT/PGraphicsDelegate.class \
 	bin/vialab/SMT/PieMenuZone.class \
+	bin/vialab/SMT/renderer/P3DDSRenderer.class \
+	bin/vialab/SMT/renderer/PGLDSRenderer.class \
+	bin/vialab/SMT/renderer/PGraphics3DDelegate.class \
+	bin/vialab/SMT/renderer/PGraphicsOpenGLDelegate.class \
 	bin/vialab/SMT/ShapeZone.class \
 	bin/vialab/SMT/Simulation.class \
 	bin/vialab/SMT/SlideRevealZone.class \
 	bin/vialab/SMT/SliderZone.class \
 	bin/vialab/SMT/SMT.class \
-	bin/vialab/SMT/SMTProxyTuioListener.class \
 	bin/vialab/SMT/SMTTouchManager.class \
 	bin/vialab/SMT/SMTTuioListener.class \
 	bin/vialab/SMT/SMTUtilities.class \
+	bin/vialab/SMT/SMTZonePicker.class \
 	bin/vialab/SMT/swipekeyboard/AnchorZone.class \
 	bin/vialab/SMT/swipekeyboard/ArrowKeysLayout.class \
 	bin/vialab/SMT/swipekeyboard/CondensedLayout.class \
@@ -56,11 +59,11 @@ class_files = \
 	bin/vialab/SMT/TouchSource.class \
 	bin/vialab/SMT/TouchState.class \
 	bin/vialab/SMT/TuioConnectionException.class \
-	bin/vialab/SMT/Zone.class
+	bin/vialab/SMT/Zone.class \
 
 
 source_files = \
-	src/vialab/SMT/SMTZonePicker.java \
+	src/vialab/SMT/SMTProxyTuioListener.java \
 	src/vialab/SMT/AndroidToTUIO.java \
 	src/vialab/SMT/ButtonZone.java \
 	src/vialab/SMT/CheckBoxZone.java \
@@ -74,17 +77,20 @@ source_files = \
 	src/vialab/SMT/MainZone.java \
 	src/vialab/SMT/MouseToTUIO.java \
 	src/vialab/SMT/PatternUnlockZone.java \
-	src/vialab/SMT/PGraphicsDelegate.java \
 	src/vialab/SMT/PieMenuZone.java \
+	src/vialab/SMT/renderer/P3DDSRenderer.java \
+	src/vialab/SMT/renderer/PGLDSRenderer.java \
+	src/vialab/SMT/renderer/PGraphics3DDelegate.java \
+	src/vialab/SMT/renderer/PGraphicsOpenGLDelegate.java \
 	src/vialab/SMT/ShapeZone.java \
 	src/vialab/SMT/Simulation.java \
 	src/vialab/SMT/SlideRevealZone.java \
 	src/vialab/SMT/SliderZone.java \
 	src/vialab/SMT/SMT.java \
-	src/vialab/SMT/SMTProxyTuioListener.java \
 	src/vialab/SMT/SMTTouchManager.java \
 	src/vialab/SMT/SMTTuioListener.java \
 	src/vialab/SMT/SMTUtilities.java \
+	src/vialab/SMT/SMTZonePicker.java \
 	src/vialab/SMT/swipekeyboard/AnchorZone.java \
 	src/vialab/SMT/swipekeyboard/ArrowKeysLayout.java \
 	src/vialab/SMT/swipekeyboard/CondensedLayout.java \
@@ -116,6 +122,4 @@ source_files = \
 	src/vialab/SMT/TouchSource.java \
 	src/vialab/SMT/TouchState.java \
 	src/vialab/SMT/TuioConnectionException.java \
-	src/vialab/SMT/Zone.java
-
-
+	src/vialab/SMT/Zone.java \

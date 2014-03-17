@@ -17,7 +17,7 @@ import javax.media.opengl.GL;
 
 class SMTZonePicker {
 	
-	PGraphicsOpenGL pg;
+	PGraphics3D picking_context;
 	
 	private final static int BG_PICK_COLOR = 0x00ffffff;
 	private final int START_PICK_COLOR = 0;
@@ -31,8 +31,6 @@ class SMTZonePicker {
 
 	private int currentPickColor = START_PICK_COLOR;
 
-	private PApplet applet;
-
 	private Map<Integer, Zone> zonesByPickColor = Collections
 			.synchronizedMap(new LinkedHashMap<Integer, Zone>());
 
@@ -41,26 +39,25 @@ class SMTZonePicker {
 	int SIZEOF_INT = Integer.SIZE / 8;
 
 	public SMTZonePicker() {
-		this.applet = SMT.parent;
-		
-		this.pg = (PGraphicsOpenGL) applet.createGraphics(applet.width, applet.height, PConstants.OPENGL);
+		this.picking_context = (PGraphics3D) SMT.applet.createGraphics(
+			SMT.renderer.width, SMT.renderer.height, PConstants.P3D);
 
 		// add the background color mapping to null
 		zonesByPickColor.put(BG_PICK_COLOR, null);
 	}
 
 	public void add(Zone zone) {
-		if (activePickColors.size() == BG_PICK_COLOR) {
+		if (activePickColors.size() == BG_PICK_COLOR)
 			// This means every color from 0 to BG_PICK_COLOR-1 has been used,
 			// although this should not really occur in use
-			System.err.println("Warning, added zone is unpickable, maximum is " + BG_PICK_COLOR
-					+ " pickable zones");
-		}
+			System.err.printf(
+				"Warning, added zone is unpickable, maximum is %d pickable zones\n",
+				BG_PICK_COLOR);
 		else {
-			if (!zonesByPickColor.containsValue(zone)) {
-				zone.setPickColor(currentPickColor);
-				zonesByPickColor.put(currentPickColor, zone);
-				activePickColors.add(currentPickColor);
+			if( ! zonesByPickColor.containsValue( zone)) {
+				zone.setPickColor( currentPickColor);
+				zonesByPickColor.put( currentPickColor, zone);
+				activePickColors.add( currentPickColor);
 
 				do {
 					currentPickColor += PICK_COLOR_INC;
@@ -70,9 +67,8 @@ class SMTZonePicker {
 				} while (activePickColors.contains(currentPickColor)
 						&& activePickColors.size() < BG_PICK_COLOR);
 
-				for (Zone child : zone.children) {
+				for (Zone child : zone.children)
 					this.add(child);
-				}
 			}
 		}
 	}
@@ -82,9 +78,9 @@ class SMTZonePicker {
 	}
 
 	public Zone remove(Zone zone) {
-		activePickColors.remove(zone.getPickColor());
-		Zone removed = zonesByPickColor.remove(zone.getPickColor());
-		zone.setPickColor(-1);
+		activePickColors.remove( zone.getPickColor());
+		Zone removed = zonesByPickColor.remove( zone.getPickColor());
+		zone.setPickColor( -1);
 		return removed;
 	}
 
@@ -95,30 +91,25 @@ class SMTZonePicker {
 		// in Touch itself
 		int x = t.x;
 		int y = t.y;
-		if (t.y >= applet.g.height) {
-			y = applet.g.height - 1;
-		}
-		if (t.x >= applet.g.width) {
-			x = applet.g.width - 1;
-		}
-		if (t.y < 0) {
+		if (t.y >= SMT.renderer.height)
+			y = SMT.renderer.height - 1;
+		if (t.x >= SMT.renderer.width)
+			x = SMT.renderer.width - 1;
+		if (t.y < 0)
 			y = 0;
-		}
-		if (t.x < 0) {
+		if (t.x < 0)
 			x = 0;
-		}
 
-		PGL pgl = applet.g.beginPGL();
+		PGL pgl = SMT.renderer.beginPGL();
 		// force fallback until 2.0b10
-		if (!SMT.fastPicking || pgl == null) {
+		if( ! SMT.fastPicking || pgl == null)
 			// really slow way(max 70 fps on a high end card vs 200+ fps with
 			// readPixels), with loadPixels at the end of renderPickBuffer()
-			pickColor = applet.g.pixels[x + y * applet.g.width] & 0x00FFFFFF;
-		}
+			pickColor = SMT.renderer.pixels[ x + y * SMT.renderer.width] & 0x00FFFFFF;
 		else {
-			ByteBuffer buffer = ByteBuffer.allocateDirect(1 * 1 * SIZEOF_INT);
+			ByteBuffer buffer = ByteBuffer.allocateDirect( 1 * 1 * SIZEOF_INT);
 
-			pgl.readPixels(t.x, SMT.parent.height - t.y, 1, 1, GL.GL_RGBA,
+			pgl.readPixels(t.x, SMT.renderer.height - t.y, 1, 1, GL.GL_RGBA,
 					GL.GL_UNSIGNED_BYTE, buffer);
 
 			// get the first three bytes
@@ -129,52 +120,41 @@ class SMTZonePicker {
 			buffer.clear();
 		}
 
-		applet.g.endPGL();
+		SMT.renderer.endPGL();
 
-		if (zonesByPickColor.containsKey(pickColor)) {
+		if( zonesByPickColor.containsKey( pickColor)) {
 			// if mapped it is either a Zone or null (background)
-			Zone picked =  zonesByPickColor.get(pickColor);
+			Zone picked =  zonesByPickColor.get( pickColor);
 			Zone current = picked;
 			while (current != null){
 				//find the first ancestor (including itself) with stealChildrensTouch and give it to that one
-				if(current.stealChildrensTouch){
+				if(current.stealChildrensTouch)
 					return current;
-				}
 				current = current.getParent();
 			}
 			return picked;
 		}
 		else {
-			// only show error in debug mode, since it is much to prevalent
-			// still to always show
-			if (SMT.debug) {
-				// not mapped means a bug in the pickDrawn colors, or maybe that
-				// BG_PICK_COLOR or a Zone got unmapped when it should'nt have
-				System.err
-						.println("PickColor: "
-								+ pickColor
-								+ " doesn't match any known Zone's pickColor or the background, this indicates it was unmapped when it shouldn't be, or an incorrect color was drawn to the pickBuffer.");
-			}
+			// not mapped means a bug in the pickDrawn colors, or maybe that BG_PICK_COLOR or a Zone got unmapped when it should'nt have
+			// only show error in debug mode, since it is much to prevalent still to always show
+			if( SMT.debug) 
+				System.err.printf(
+					"PickColor: %x doesn't match any known Zone's pickColor or the background, this indicates it was unmapped when it shouldn't be, or an incorrect color was drawn to the pickBuffer.",
+					pickColor);
 			return null;
 		}
 	}
 
-	public void renderPickBuffer() {
+	public void renderPickBuffer(){
 		// make sure colorMode is correct for the pickBuffer
-		applet.g.colorMode(PConstants.RGB, 255);
-		applet.g.background(BG_PICK_COLOR, 255);
-		
+		SMT.renderer.colorMode( PConstants.RGB, 255);
+		SMT.renderer.background( BG_PICK_COLOR, 255);
 		SMT.sketch.drawForPickBuffer();
-		
-		applet.g.flush();
-		
-		// If fast picking disabled, use loadPixels() which is
-		// really slow (max 70 fps on a high end card vs 200+ fps with
-		// readPixels) as a backup
-		PGL pgl = applet.g.beginPGL();
-		if (!SMT.fastPicking || pgl == null) {
-			applet.g.loadPixels();
-		}
-		applet.g.endPGL();
+		SMT.renderer.flush();
+		// If fast picking disabled, use loadPixels() which is really slow (max 70 fps on a high end card vs 200+ fps with readPixels) as a backup.
+		PGL pgl = SMT.renderer.beginPGL();
+		if ( ! SMT.fastPicking || pgl == null)
+			SMT.renderer.loadPixels();
+		SMT.renderer.endPGL();
 	}
 }

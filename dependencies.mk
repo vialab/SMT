@@ -170,6 +170,7 @@ bin/vialab/SMT/TextZone.class: \
 bin/vialab/SMT/Touch.class: \
 	bin/vialab/SMT/event/TouchEvent.class \
 	bin/vialab/SMT/event/TouchListener.class \
+	bin/vialab/SMT/renderer/PGraphics3DDelegate.class \
 	bin/vialab/SMT/Zone.class
 
 bin/vialab/SMT/TouchClient.class:
@@ -186,6 +187,6 @@ bin/vialab/SMT/TouchState.class:
 
 bin/vialab/SMT/Zone.class: \
 	bin/vialab/SMT/ImageZone.class \
-	bin/vialab/SMT/PGraphicsDelegate.class \
+	bin/vialab/SMT/renderer/PGraphics3DDelegate.class \
 	bin/vialab/SMT/SMTUtilities.class \
 	bin/vialab/SMT/TouchPair.class

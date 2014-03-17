@@ -50,10 +50,6 @@ package: build jar docs
 	rm -rf SMT
 
 #extra commands
-git-prepare:
-	git add -u
-	git add -A
-
 relink:
 	rm -f lib/*
 	ln -s /opt/processing/core/library/ lib/processing
