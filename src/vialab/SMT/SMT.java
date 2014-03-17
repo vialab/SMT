@@ -26,25 +26,10 @@ package vialab.SMT;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -70,30 +55,23 @@ import vialab.SMT.renderer.P3DDSRenderer;
  * @version 1.0
  */
 public class SMT {
-
-	public static Zone sketch;
 	static float box2dScale = 0.1f;
 	static World world;
 	protected static int MAX_PATH_LENGTH = 50;
 	protected static LinkedList<Process> tuioServerList =
 		new LinkedList<Process>();
 
-	/** Gesture Handler */
-	// private static GestureHandler handler;
-
-	/** Tuio Client that listens for Tuio Messages via port 3333 UDP */
-	protected static LinkedList<TuioClient> tuioClientList = new LinkedList<TuioClient>();
+	// list of tuio clients
+	protected static LinkedList<TuioClient> tuioClientList =
+		new LinkedList<TuioClient>();
 
 	/** Flag for drawing touch points */
 	private static TouchDraw touchDrawMethod = TouchDraw.TEXTURED;
 
-	/** Matrix used to test if the zone has gone off the screen */
-	// private PMatrix3D mTest = new PMatrix3D();
-
-
-
+	protected static Zone sketch;
 	protected static PApplet applet;
-	protected static SMTZonePicker picker;
+	//picker is temporarily public for debugging purposes.
+	public static ZonePicker picker;
 	protected static SMTTuioListener listener;
 	protected static SMTTouchManager manager;
 	protected static Method touch;
@@ -105,7 +83,7 @@ public class SMT {
 	 * one of the reserved method prefixes (draw,pickDraw,touch,etc and any that
 	 * have been added by calls to SMTUtilities.getZoneMethod() with a unique
 	 * prefix).
-	 * <br/>
+	 * 
 	 * Default state is on.
 	 */
 	public static boolean warnUncalledMethods = true;
@@ -118,9 +96,9 @@ public class SMT {
 	public static final TouchSource default_touchsource =
 		TouchSource.TUIO_DEVICE;
 
-	/** TUIO adapter depending on which TouchSource is used */
-	static AndroidToTUIO att = null;
-	static MouseToTUIO mtt = null;
+	//TUIO adapters
+	protected static AndroidToTUIO att = null;
+	protected static MouseToTUIO mtt = null;
 
 	protected static LinkedList<BufferedReader> tuioServerErrList =
 		new LinkedList<BufferedReader>();
@@ -129,13 +107,13 @@ public class SMT {
 	protected static LinkedList<BufferedWriter> tuioServerInList =
 		new LinkedList<BufferedWriter>();
 
-	static Body groundBody;
-	static boolean fastPicking = true;
-	static Map<Integer, TouchSource> deviceMap =
+	protected static Body groundBody;
+	protected static boolean fastPicking = true;
+	protected static Map<Integer, TouchSource> deviceMap =
 		Collections.synchronizedMap(
 			new LinkedHashMap<Integer, TouchSource>());
 
-	static int mainListenerPort;
+	protected static int mainListenerPort;
 	protected static boolean inShutdown = false;
 	public static boolean debug = false;
 	public static File smt_tempdir = null;
@@ -150,29 +128,6 @@ public class SMT {
 	 * Prevent SMT initialization (kinda) with protected constructor
 	 */
 	protected SMT(){}
-
-	/**
-	 * Set whether to use fast picking or not.
-	 * IDK why you wouldn't want to, but hey, I didn't write this.
-	 * @param fastPicking whether to use fast picking
-	 */
-	public static void setFastPicking(boolean fastPicking) {
-		SMT.fastPicking = fastPicking;
-	}
-
-	/**
-	 * Calling this function overrides the default behavior of showing select
-	 * unimplemented based on defaults for each zone specified in loadMethods()
-	 * 
-	 * @param warn
-	 *            whether to warn when there are unimplemented methods for zones
-	 */
-	public static void setWarnUnimplemented(boolean warn) {
-		SMT.warnUnimplemented = warn;
-	}
-
-	/*
-	 */
 
 	/**
 	 * Initializes SMT, begining listening to a TUIO source on the
@@ -314,18 +269,18 @@ public class SMT {
 		}
 		if( auto_enabled) connect_auto( port);
 
-		parent.hint( PConstants.DISABLE_OPTIMIZED_STROKE);
+		applet.hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 		addJVMShutdownHook();
 
 		world = new World( new Vec2( 0.0f, 0.0f), true);
 		//top
-		groundBody = createStaticBox( 0, -10.0f, parent.width, 10.f);
+		groundBody = createStaticBox( 0, -10.0f, applet.width, 10.f);
 		//bottom
-		createStaticBox( 0, parent.height + 10.0f, parent.width, 10.f);
+		createStaticBox( 0, applet.height + 10.0f, applet.width, 10.f);
 		//left
-		createStaticBox( -10.0f, 0, 10.0f, parent.height);
+		createStaticBox( -10.0f, 0, 10.0f, applet.height);
 		//right
-		createStaticBox( parent.width + 10.0f, 0, 10.0f, parent.height);
+		createStaticBox( applet.width + 10.0f, 0, 10.0f, applet.height);
 	}
 
 	// touch server connection functions
@@ -396,7 +351,7 @@ public class SMT {
 	}
 	private static void connect_android( int port){
 		att = new AndroidToTUIO(
-			parent.width, parent.height, port);
+			applet.width, applet.height, port);
 		deviceMap.put( port, TouchSource.ANDROID);
 		printConnectMessage( "android touch", port);
 	}
@@ -406,8 +361,8 @@ public class SMT {
 		printConnectMessage( "leap motion", port);
 	}
 	private static void connect_mouse( int port){
-		mtt = new MouseToTUIO( parent.width, parent.height, port);
-		parent.registerMethod( "mouseEvent", mtt);
+		mtt = new MouseToTUIO( applet.width, applet.height, port);
+		applet.registerMethod( "mouseEvent", mtt);
 		deviceMap.put( port, TouchSource.MOUSE);
 		printConnectMessage( "mouse emulation", port);
 	}
@@ -429,6 +384,38 @@ public class SMT {
 			"127.0.0.1", port);
 		deviceMap.put( port, TouchSource.WM_TOUCH);
 		printConnectMessage( "windows touch", port);
+	}
+
+	public static P3DDSRenderer getRenderer(){
+		return renderer;
+	}
+	public static Zone getRootZone(){
+		return sketch;
+	}
+	public static PApplet getApplet(){
+		return applet;
+	}
+	public static boolean fastPickingEnabled(){
+		return fastPicking;
+	}
+
+	/**
+	 * Set whether to use fast picking or not.
+	 * IDK why you wouldn't want to, but hey, I didn't write this.
+	 * @param fastPicking whether to use fast picking
+	 */
+	public static void setFastPicking(boolean fastPicking) {
+		SMT.fastPicking = fastPicking;
+	}
+
+	/**
+	 * Calling this function overrides the default behavior of showing select
+	 * unimplemented based on defaults for each zone specified in loadMethods()
+	 * 
+	 * @param warn whether to warn when there are unimplemented methods for zones
+	 */
+	public static void setWarnUnimplemented(boolean warn) {
+		SMT.warnUnimplemented = warn;
 	}
 
 	// Connection utility methods
@@ -460,7 +447,7 @@ public class SMT {
 			public void run() {
 				SMT.inShutdown  = true;
 				if( warnUncalledMethods)
-					SMTUtilities.warnUncalledMethods(parent);
+					SMTUtilities.warnUncalledMethods(applet);
 				for( TuioClient client : tuioClientList)
 					if( client.isConnected())
 						client.disconnect();
@@ -496,7 +483,7 @@ public class SMT {
 		BodyDef boxDef = new BodyDef();
 		boxDef.position.set(
 			SMT.box2dScale * (x + w / 2),
-			SMT.box2dScale * (parent.height - (y + h / 2)));
+			SMT.box2dScale * (applet.height - (y + h / 2)));
 		Body box = world.createBody(boxDef);
 		PolygonShape boxShape = new PolygonShape();
 		boxShape.setAsBox(
@@ -850,41 +837,42 @@ public class SMT {
 
 	/** Implements the "Smooth" touch draw method */
 	public static void drawSmoothTouchPoints() {
-		parent.pushStyle();
-		for (Touch t : SMTTouchManager.currentTouchState) {
-			parent.strokeWeight(3);
+		renderer.pushStyle();
+		for (Touch touch : SMTTouchManager.currentTouchState) {
+			renderer.strokeWeight(3);
 
 			long time = System.currentTimeMillis() - t.startTimeMillis;
 
-			if (t.isAssigned() && time < 250) {
-				parent.noFill();
-				parent.stroke(155, 255, 155, 100);
-				parent.ellipse(t.x, t.y, 75 - time / 10, 75 - time / 10);
+			if (touch.isAssigned() && time < 250) {
+				renderer.noFill();
+				renderer.stroke(155, 255, 155, 100);
+				renderer.ellipse(touch.x, touch.y, 75 - time / 10, 75 - time / 10);
 			}
-			else if (!t.isAssigned() && time < 500) {
+			else if (!touch.isAssigned() && time < 500) {
 				{
-					parent.noFill();
-					parent.stroke(255, 155, 155, 100);
-					parent.ellipse(t.x, t.y, time / 10 + 50, time / 10 + 50);
+					renderer.noFill();
+					renderer.stroke(255, 155, 155, 100);
+					renderer.ellipse(touch.x, touch.y, time / 10 + 50, time / 10 + 50);
 				}
 			}
-			parent.noStroke();
-			parent.fill(0, 0, 0, 50);
-			parent.ellipse(t.x, t.y, 40, 40);
-			parent.fill(255, 255, 255, 50);
-			if (t.isJointCursor) {
-				parent.fill(0, 255, 0, 50);
+			renderer.noStroke();
+			renderer.fill(0, 0, 0, 50);
+			renderer.ellipse(t.x, t.y, 40, 40);
+			renderer.fill(255, 255, 255, 50);
+			if (touch.isJointCursor) {
+				renderer.fill(0, 255, 0, 50);
 			}
-			parent.ellipse(t.x, t.y, 30, 30);
-			parent.noFill();
-			parent.stroke(200, 240, 255, 50);
+			renderer.ellipse(touch.x, touch.y, 30, 30);
+			renderer.noFill();
+			renderer.stroke(200, 240, 255, 50);
 			Point[] path = t.getPathPoints();
 			if (path.length > 3) {
-				for (int j = 3 + Math.max(0, path.length - (SMT.MAX_PATH_LENGTH + 2)); j < path.length; j++) {
+				for (int j = 3 + Math.max(0, path.length - (SMT.MAX_PATH_LENGTH + 2));
+						j < path.length; j++) {
 					float weight = 10 - (path.length - j) / 5;
 					if (weight >= 1) {
-						parent.strokeWeight(weight);
-						parent.bezier(
+						renderer.strokeWeight(weight);
+						renderer.bezier(
 							path[j].x, path[j].y,
 							path[j - 1].x, path[j - 1].y,
 							path[j - 2].x, path[j - 2].y,
@@ -893,7 +881,7 @@ public class SMT {
 				}
 			}
 		}
-		parent.popStyle();
+		renderer.popStyle();
 	}
 
 	/** Implements the "Debug" touch draw method
@@ -901,48 +889,48 @@ public class SMT {
 	 * help with debugging
 	 */
 	public static void drawDebugTouchPoints() {
-		parent.pushStyle();
+		renderer.pushStyle();
 		for (Touch touch : SMTTouchManager.currentTouchState) {
-			parent.fill(255);
+			renderer.fill(255);
 			if (touch.isJointCursor)
-				parent.fill(0, 255, 0);
-			parent.stroke(0);
-			parent.ellipse(touch.x, touch.y, 30, 30);
-			parent.line(touch.x, touch.y - 15, touch.x, touch.y + 15);
-			parent.line(touch.x - 15, touch.y, touch.x + 15, touch.y);
+				renderer.fill(0, 255, 0);
+			renderer.stroke(0);
+			renderer.ellipse(touch.x, touch.y, 30, 30);
+			renderer.line(touch.x, touch.y - 15, touch.x, touch.y + 15);
+			renderer.line(touch.x - 15, touch.y, touch.x + 15, touch.y);
 			TuioPoint[] path = touch.path.toArray(new TuioPoint[touch.path.size()]);
 			TuioPoint lastText = null;
 			if( path.length > 3) {
 				for (int j = 1 + Math.max(0, path.length - (SMT.MAX_PATH_LENGTH + 2)); j < path.length; j++) {
-					String pointText = "#" + j + " x:" + path[j].getScreenX(parent.width) + " y:"
-							+ path[j].getScreenY(parent.height) + " touch:"
+					String pointText = "#" + j + " x:" + path[j].getScreenX(renderer.width) + " y:"
+							+ path[j].getScreenY(renderer.height) + " touch:"
 							+ path[j].getTuioTime().getTotalMilliseconds() + "ms";
-					parent.fill(255);
-					parent.line(path[j].getScreenX(parent.width),
-							path[j].getScreenY(parent.height),
-							path[j - 1].getScreenX(parent.width),
-							path[j - 1].getScreenY(parent.height));
-					parent.ellipse(path[j].getScreenX(parent.width),
-							path[j].getScreenY(parent.height), 5, 5);
+					renderer.fill(255);
+					renderer.line(path[j].getScreenX(renderer.width),
+							path[j].getScreenY(renderer.height),
+							path[j - 1].getScreenX(renderer.width),
+							path[j - 1].getScreenY(renderer.height));
+					renderer.ellipse(path[j].getScreenX(renderer.width),
+							path[j].getScreenY(renderer.height), 5, 5);
 					if (lastText == null
-							|| Math.abs(path[j].getScreenY(parent.height)
-									- lastText.getScreenY(parent.height)) > 13
-							|| Math.abs(path[j].getScreenX(parent.width)
-									- lastText.getScreenX(parent.width)) > parent
+							|| Math.abs(path[j].getScreenY(renderer.height)
+									- lastText.getScreenY(renderer.height)) > 13
+							|| Math.abs(path[j].getScreenX(renderer.width)
+									- lastText.getScreenX(renderer.width)) > renderer
 									.textWidth(pointText) * 1.5) {
-						parent.fill(0);
-						parent.textSize(12);
-						parent.text(pointText, path[j].getScreenX(parent.width) + 5,
-								path[j].getScreenY(parent.height));
+						renderer.fill(0);
+						renderer.textSize(12);
+						renderer.text(pointText, path[j].getScreenX(renderer.width) + 5,
+								path[j].getScreenY(renderer.height));
 						lastText = path[j];
-						parent.fill(255, 0, 0);
-						parent.ellipse(path[j].getScreenX(parent.width),
-								path[j].getScreenY(parent.height), 5, 5);
+						renderer.fill(255, 0, 0);
+						renderer.ellipse(path[j].getScreenX(renderer.width),
+								path[j].getScreenY(renderer.height), 5, 5);
 					}
 				}
 			}
 		}
-		parent.popStyle();
+		renderer.popStyle();
 	}
 
 	/** Adds a zone(s) to the sketch/application.
@@ -1088,12 +1076,12 @@ public class SMT {
 	 * the matrix, and when at the end of the list, it draws the touch points.
 	 */
 	public static void draw() {
-		sketch.draw();
+		sketch.invokeDraw();
 
 		switch (touchDrawMethod) {
 			case CUSTOM:
 				customTouchDrawer.draw( 
-					SMTTouchManager.currentTouchState, parent.g);
+					SMTTouchManager.currentTouchState, renderer);
 				break;
 			case DEBUG:
 				drawDebugTouchPoints();
@@ -1103,7 +1091,7 @@ public class SMT {
 				break;
 			case TEXTURED:
 				texturedTouchDrawer.draw( 
-					SMTTouchManager.currentTouchState, parent.g);
+					SMTTouchManager.currentTouchState, renderer);
 				break;
 			case NONE:
 				break;
@@ -1124,7 +1112,7 @@ public class SMT {
 	 *            - the height of the pickBuffer image to draw
 	 */
 	public static void drawPickBuffer(int x, int y, int w, int h) {
-		 parent.g.image(picker.pg, x, y, w, h);
+		 renderer.image( picker.picking_context, x, y, w, h);
 	}
 
 	/**
@@ -1324,13 +1312,12 @@ public class SMT {
 	 * released by a finger (cursor) Done before each call to draw. Uses the
 	 * zone's x and y friction values.
 	 */
-	public static void pre() {
+	public static void pre(){
 		// TODO: provide some default assignment of touches
 		manager.handleTouches();
 
 		if( mtt != null) {
-			// update touches from mouseToTUIO joint cursors as they are a
-			// special case and need to be shown to user
+			//update touches from mouseToTUIO joint cursors as they are a special case and need to be shown to user
 			for( Touch touch : SMTTouchManager.currentTouchState)
 				touch.isJointCursor = false;
 			for( Integer id : mtt.getJointCursors())
@@ -1339,7 +1326,7 @@ public class SMT {
 
 		renderer.flush();
 		if( getTouches().length > 0)
-			SMTUtilities.invoke( touch, parent, null);
+			SMTUtilities.invoke( touch, applet, null);
 
 		sketch.touch();
 		updateStep();
@@ -1372,7 +1359,7 @@ public class SMT {
 			}
 		}
 
-		world.step(1f / parent.frameRate, 8, 3);
+		world.step(1f / applet.frameRate, 8, 3);
 
 		for (Zone zone : getZones()) {
 			if (zone.getPhysicsEnabled()) {
@@ -1434,7 +1421,7 @@ public class SMT {
 				is64Bit ? "Touch2Tuio_x64.exe" : "Touch2Tuio.exe");
 
 			String touch2tuio_path = touch2tuio.getAbsolutePath();
-			String window_title = parent.frame.getTitle();
+			String window_title = applet.frame.getTitle();
 			String exec = String.format(
 				"%s %s %s %s", touch2tuio_path, window_title, address, port);
 			String error_message = "WM_TOUCH Process died early, make sure Visual C++ Redistributable for Visual Studio 2012 is installed (http://www.microsoft.com/en-us/download/details.aspx?id=30679), otherwise try restarting your computer.";

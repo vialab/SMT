@@ -140,7 +140,7 @@ public class ImageZone extends Zone {
 	 * @param url The URL of an image
 	 **/
 	public ImageZone( String url) {
-		this( applet.loadImage(url));
+		this( SMT.getApplet().loadImage( url));
 	}
 
 	/** Used to override what is drawn into the zone **/

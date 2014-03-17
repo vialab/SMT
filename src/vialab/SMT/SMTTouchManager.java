@@ -5,47 +5,40 @@ import java.util.HashMap;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
+//local imports
+import vialab.SMT.util.ZonePicker;
+
 class SMTTouchManager {
 	private PApplet applet;
 	private SMTTuioListener tuioListener;
-	private SMTZonePicker picker;
+	private ZonePicker picker;
 	private Method touchDown, touchMoved, touchUp;
 	static TouchState currentTouchState = new TouchState();
 	static TouchState previousTouchState;
 	static HashMap<Touch, Zone> touchPrevZone = new HashMap<Touch, Zone>();
 
-	public SMTTouchManager( SMTTuioListener tuioListener, SMTZonePicker picker) {
+	public SMTTouchManager( SMTTuioListener tuioListener, ZonePicker picker) {
 		this.tuioListener = tuioListener;
 		this.picker = picker;
-		this.applet = SMT.parent;
-
-		retrieveMethods( SMT.parent);
+		this.applet = SMT.applet;
+		retrieveMethods( SMT.applet);
 	}
 
 	/**
-	 * Determines to which objects touch events should be sent, and then sends
-	 * them.
+	 * Determines to which objects touch events should be sent, and then sends them.
 	 */
 	public void handleTouches() {
-		SMT.sketch.drawIndirectPick();
+		//render pick buffer
+		picker.render();
 
-		SMT.renderer.pushDelegate( SMT.picker.picking_context);
-		SMT.renderer.beginDraw();
-		
-		picker.renderPickBuffer();
-
+		//update touch state
 		previousTouchState = new TouchState( currentTouchState);
-
 		currentTouchState.update( tuioListener.getCurrentTuioState());
 
-		// forward events, each touch should go through one of these three
-		// methods, and they are mutually exclusive
+		//forward events, each touch should go through one of these three methods, and they are mutually exclusive
 		handleTouchesDown();
 		handleTouchesUp();
 		handleTouchesMoved();
-		
-		SMT.renderer.endDraw();
-		SMT.renderer.popDelegate();
 	}
 
 	/**
@@ -56,9 +49,9 @@ class SMTTouchManager {
 			// touchDowns only happen on new touches
 			if ( !previousTouchState.contains( touch.sessionID)) {
 				SMTUtilities.invoke( touchDown, applet, null, touch);
-				Zone z = picker.pick( touch);
-				touchPrevZone.put( touch, z);
-				doTouchDown( z, touch);
+				Zone zone = picker.pick( touch);
+				touchPrevZone.put( touch, zone);
+				doTouchDown( zone, touch);
 				touch.invokeTouchDownEvent();
 			}
 		}
@@ -68,20 +61,18 @@ class SMTTouchManager {
 	 * Handles every touch in the previous but not in the current state.
 	 */
 	protected void handleTouchesUp() {
-		for ( Touch touch : previousTouchState) {
-			if ( !currentTouchState.contains( touch.sessionID)) {
+		for ( Touch touch : previousTouchState)
+			if ( ! currentTouchState.contains( touch.sessionID)) {
 				// the touch existed, but no longer exists, so it went up
 				SMTUtilities.invoke( touchUp, applet, null, touch);
 				for ( Zone zone : touch.getAssignedZones()) {
 					doTouchUp( zone, touch);
-					if ( touchPrevZone.get( touch) == zone) {
+					if ( touchPrevZone.get( touch) == zone)
 						doPress( zone, touch);
-					}
 				}
 				touchPrevZone.remove( touch);
 				touch.invokeTouchUpEvent();
 			}
-		}
 	}
 
 	/**
@@ -172,10 +163,10 @@ class SMTTouchManager {
 		}
 	}
 
-	private void retrieveMethods( PApplet parent) {
-		touchDown = SMTUtilities.getAnyPMethod( parent, "touch", "Down", true, Touch.class);
-		touchMoved = SMTUtilities.getAnyPMethod( parent, "touch", "Moved", true, Touch.class);
-		touchUp = SMTUtilities.getAnyPMethod( parent, "touch", "Up", true, Touch.class);
+	private void retrieveMethods( PApplet applet) {
+		touchDown = SMTUtilities.getAnyPMethod( applet, "touch", "Down", true, Touch.class);
+		touchMoved = SMTUtilities.getAnyPMethod( applet, "touch", "Moved", true, Touch.class);
+		touchUp = SMTUtilities.getAnyPMethod( applet, "touch", "Up", true, Touch.class);
 		SMTUtilities.methodSet.add( "touchDown");
 		SMTUtilities.methodSet.add( "touchMoved");
 		SMTUtilities.methodSet.add( "touchUp");

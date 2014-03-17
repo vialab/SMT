@@ -25,17 +25,13 @@ public final class SMTUtilities {
 
 	private static class TuioTimeComparator implements Comparator<TuioTime> {
 		@Override
-		public int compare(TuioTime timeA, TuioTime timeB) {
-			Long timeALong = new Long(timeA.getSeconds());
-			int temp = timeALong.compareTo(timeB.getSeconds());
-			// int temp = Long.compare(timeA.getSeconds(), timeB.getSeconds());
-			if (temp != 0) {
+		public int compare( TuioTime timeA, TuioTime timeB) {
+			Long timeALong = new Long( timeA.getSeconds());
+			int temp = timeALong.compareTo( timeB.getSeconds());
+			if ( temp != 0)
 				return temp;
-			}
-			timeALong = new Long(timeA.getMicroseconds());
-			// return Long.compare(timeA.getMicroseconds(),
-			// timeB.getMicroseconds());
-			return timeALong.compareTo(timeB.getMicroseconds());
+			timeALong = new Long( timeA.getMicroseconds());
+			return timeALong.compareTo( timeB.getMicroseconds());
 		}
 	}
 
@@ -156,7 +152,7 @@ public final class SMTUtilities {
 	 */
 	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone,
 			boolean warnMissing) {
-		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name,
+		return SMTUtilities.getZoneMethod(callingClass, SMT.applet, methodPrefix, zone.name,
 				warnMissing, zone.getClass());
 	}
 
@@ -175,7 +171,7 @@ public final class SMTUtilities {
 	 */
 	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone,
 			boolean warnMissing, Class<?>... parameters) {
-		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name,
+		return SMTUtilities.getZoneMethod(callingClass, SMT.applet, methodPrefix, zone.name,
 				warnMissing, parameters);
 	}
 
@@ -368,7 +364,7 @@ public final class SMTUtilities {
 	 * @return The return of the method that was invoked
 	 */
 	public static Object invoke(Method method, Zone zone) {
-		return SMTUtilities.invoke(method, Zone.applet, zone);
+		return SMTUtilities.invoke(method, SMT.applet, zone);
 	}
 
 	/**

@@ -21,9 +21,6 @@ import vialab.SMT.event.*;
  */
 public class Touch extends TuioCursor {
 
-	/** Processing PApplet */
-	static PApplet applet = SMT.parent;
-
 	//Public Fields
 	/** The individual cursor ID number that is assigned to each TuioCursor. */
 	public int cursorID;
@@ -107,8 +104,8 @@ public class Touch extends TuioCursor {
 	public Touch(long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(sessionID, cursorID, xCoord, yCoord);
 		this.cursorID = getCursorID();
-		x = getScreenX( applet.width);
-		y = getScreenY( applet.height);
+		x = getScreenX( SMT.applet.width);
+		y = getScreenY( SMT.applet.height);
 		startTime = getStartTime();
 		currentTime = getTuioTime();
 		xSpeed = getXSpeed();
@@ -139,8 +136,8 @@ public class Touch extends TuioCursor {
 	public Touch( TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
 		super(ttime, sessionID, cursorID, xCoord, yCoord);
 		this.cursorID = getCursorID();
-		x = getScreenX(applet.width);
-		y = getScreenY(applet.height);
+		x = getScreenX( SMT.applet.width);
+		y = getScreenY( SMT.applet.height);
 		startTime = getStartTime();
 		currentTime = getTuioTime();
 		xSpeed = getXSpeed();
@@ -178,8 +175,8 @@ public class Touch extends TuioCursor {
 		prevUpdateTime = currentTime;
 
 		cursorID = t.getCursorID();
-		x = t.getScreenX(applet.width);
-		y = t.getScreenY(applet.height);
+		x = t.getScreenX( SMT.applet.width);
+		y = t.getScreenY( SMT.applet.height);
 
 		super.startTime = t.getStartTime();
 		startTime = t.getStartTime();
@@ -222,8 +219,8 @@ public class Touch extends TuioCursor {
 			return null;
 		else
 			return new Point(
-				path.get(index).getScreenX( applet.width),
-				path.get(index).getScreenY( applet.height));
+				path.get(index).getScreenX( SMT.applet.width),
+				path.get(index).getScreenY( SMT.applet.height));
 	}
 
 	/**
@@ -352,14 +349,14 @@ public class Touch extends TuioCursor {
 				if (join) {
 					// one further back if we want to join it up
 					points.add(new Point(
-						tp.getScreenX(applet.width),
-						tp.getScreenY(applet.height)));
+						tp.getScreenX( SMT.applet.width),
+						tp.getScreenY( SMT.applet.height)));
 				}
 				break;
 			}
 			points.add(new Point(
-				tp.getScreenX(applet.width),
-				tp.getScreenY(applet.height)));
+				tp.getScreenX( SMT.applet.width),
+				tp.getScreenY( SMT.applet.height)));
 		}
 		return points.toArray(new Point[points.size()]);
 	}

@@ -78,10 +78,10 @@ public class TexturedTouchDrawer
 		//update the circle's points
 		update();
 		//load touch texture
-		touch_texture = SMT.parent.loadImage(
+		touch_texture = SMT.getApplet().loadImage(
 			"resources/touch_texture.png");
 		//load trail texture
-		trail_texture = SMT.parent.loadImage(
+		trail_texture = SMT.getApplet().loadImage(
 			"resources/trail_texture.png");
 	}
 
