@@ -27,7 +27,6 @@ class_files = \
 	bin/vialab/SMT/SMTTouchManager.class \
 	bin/vialab/SMT/SMTTuioListener.class \
 	bin/vialab/SMT/SMTUtilities.class \
-	bin/vialab/SMT/SMTZonePicker.class \
 	bin/vialab/SMT/swipekeyboard/AnchorZone.class \
 	bin/vialab/SMT/swipekeyboard/ArrowKeysLayout.class \
 	bin/vialab/SMT/swipekeyboard/CondensedLayout.class \
@@ -46,7 +45,6 @@ class_files = \
 	bin/vialab/SMT/SwipeKeyboard.class \
 	bin/vialab/SMT/TabZone.class \
 	bin/vialab/SMT/test/TestGets.class \
-	bin/vialab/SMT/test/TestSwipeKeyboard.class \
 	bin/vialab/SMT/test/TestZoneAccessors.class \
 	bin/vialab/SMT/TexturedTouchDrawer.class \
 	bin/vialab/SMT/TextureZone.class \
@@ -59,6 +57,7 @@ class_files = \
 	bin/vialab/SMT/TouchSource.class \
 	bin/vialab/SMT/TouchState.class \
 	bin/vialab/SMT/TuioConnectionException.class \
+	bin/vialab/SMT/util/ZonePicker.class \
 	bin/vialab/SMT/Zone.class \
 
 
@@ -90,7 +89,6 @@ source_files = \
 	src/vialab/SMT/SMTTouchManager.java \
 	src/vialab/SMT/SMTTuioListener.java \
 	src/vialab/SMT/SMTUtilities.java \
-	src/vialab/SMT/SMTZonePicker.java \
 	src/vialab/SMT/swipekeyboard/AnchorZone.java \
 	src/vialab/SMT/swipekeyboard/ArrowKeysLayout.java \
 	src/vialab/SMT/swipekeyboard/CondensedLayout.java \
@@ -109,7 +107,6 @@ source_files = \
 	src/vialab/SMT/SwipeKeyboard.java \
 	src/vialab/SMT/TabZone.java \
 	src/vialab/SMT/test/TestGets.java \
-	src/vialab/SMT/test/TestSwipeKeyboard.java \
 	src/vialab/SMT/test/TestZoneAccessors.java \
 	src/vialab/SMT/TexturedTouchDrawer.java \
 	src/vialab/SMT/TextureZone.java \
@@ -122,4 +119,5 @@ source_files = \
 	src/vialab/SMT/TouchSource.java \
 	src/vialab/SMT/TouchState.java \
 	src/vialab/SMT/TuioConnectionException.java \
+	src/vialab/SMT/util/ZonePicker.java \
 	src/vialab/SMT/Zone.java \

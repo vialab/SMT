@@ -8,11 +8,7 @@ bin/vialab/SMT/event/TouchListener.class: \
 #test package
 bin/vialab/SMT/test/TestGets.class: \
 	bin/vialab/SMT/Zone.class
-bin/vialab/SMT/test/TestSwipeKeyboard.class: \
-	bin/vialab/SMT/SwipeKeyboard.class \
-	bin/vialab/SMT/TouchSource.class
-bin/vialab/SMT/test/TestSwipeKeyboard.class: \
-	bin/vialab/SMT/Zone.class
+bin/vialab/SMT/test/TestZoneAccessors.class: \
 
 #swipekeyboard package
 bin/vialab/SMT/swipekeyboard/AnchorZone.class: \
@@ -47,6 +43,10 @@ bin/vialab/SMT/swipekeyboard/SwipeKeyZone.class: \
 	bin/vialab/SMT/swipekeyboard/KeyZone.class
 
 bin/vialab/SMT/swipekeyboard/SwipeResolver.class:
+
+#util package
+bin/vialab/SMT/util/ZonePicker.class: \
+	bin/vialab/SMT/Zone.class
 
 #top level package
 bin/vialab/SMT/AndroidToTUIO.class: \
@@ -115,11 +115,11 @@ bin/vialab/SMT/SMT.class: \
 	bin/vialab/SMT/SMTTouchManager.class \
 	bin/vialab/SMT/SMTTuioListener.class \
 	bin/vialab/SMT/SMTUtilities.class \
-	bin/vialab/SMT/SMTZonePicker.class \
 	bin/vialab/SMT/TexturedTouchDrawer.class \
 	bin/vialab/SMT/TouchDraw.class \
 	bin/vialab/SMT/TouchSource.class \
 	bin/vialab/SMT/TouchState.class \
+	bin/vialab/SMT/util/ZonePicker.class \
 	bin/vialab/SMT/Zone.class
 
 bin/vialab/SMT/SMTProxyTuioListener.class:
@@ -127,7 +127,7 @@ bin/vialab/SMT/SMTProxyTuioListener.class:
 bin/vialab/SMT/SMTTouchManager.class: \
 	bin/vialab/SMT/SMTTuioListener.class \
 	bin/vialab/SMT/SMTUtilities.class \
-	bin/vialab/SMT/SMTZonePicker.class \
+	bin/vialab/SMT/util/ZonePicker.class \
 	bin/vialab/SMT/TouchState.class \
 	bin/vialab/SMT/Zone.class
 
@@ -135,9 +135,6 @@ bin/vialab/SMT/SMTTuioListener.class: \
 	bin/vialab/SMT/TouchState.class
 
 bin/vialab/SMT/SMTUtilities.class: \
-	bin/vialab/SMT/Zone.class
-
-bin/vialab/SMT/SMTZonePicker.class: \
 	bin/vialab/SMT/Zone.class
 
 bin/vialab/SMT/SwipeKeyboard.class: \

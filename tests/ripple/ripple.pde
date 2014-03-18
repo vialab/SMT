@@ -1,4 +1,3 @@
-
 //standard library imports
 import java.util.Vector;
 
@@ -6,10 +5,10 @@ import java.util.Vector;
 import vialab.SMT.*;
 
 //constants
-int display_width = 1200;
-int display_height = 800;
-int display_halfWidth;
-int display_halfHeight;
+int window_width = 1200;
+int window_height = 800;
+int window_halfWidth;
+int window_halfHeight;
 int fps_limit = 60;
 
 //other
@@ -23,13 +22,13 @@ int ripple_alpha = 255;
 
 //main functions
 void setup(){
-	display_halfWidth = display_width / 2;
-	display_halfHeight = display_height / 2;
+	window_halfWidth = window_width / 2;
+	window_halfHeight = window_height / 2;
 	//processing library setup
 	frameRate( fps_limit);
-	size( display_width, display_height, P3D);
+	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.MOUSE);
-	SMT.setTouchDraw( TouchDraw.TEXTURED);
+	//SMT.setTouchDraw( TouchDraw.TEXTURED);
 
 	//load texture and texture options
 	tex = loadImage("resources/ripple_texture.png");
@@ -52,9 +51,7 @@ void setup(){
 
 void draw(){
 	//draw background
-	fill( 0, 0, 0);
-	noStroke();
-	rect( 0, 0, display_width, display_height);
+	background( 30);
 }
 
 void drawRippleTest( Zone zone){

@@ -14,7 +14,7 @@ import processing.opengl.*;
 import vialab.SMT.*;
 import vialab.SMT.renderer.*;
 
-class ZonePicker {
+public class ZonePicker {
 	//constants
 	private final static int BACKGROUND_COLOR = 0;
 	private final static int START_COLOR = 0x000000;
@@ -31,7 +31,7 @@ class ZonePicker {
 			new LinkedHashMap<Integer, Zone>());
 	private P3DDSRenderer renderer;
 
-	public SMTZonePicker() {
+	public ZonePicker() {
 		renderer = SMT.getRenderer();
 		this.picking_context = (PGraphics3D) SMT.getApplet().createGraphics(
 			renderer.width, renderer.height, PConstants.P3D);
@@ -81,33 +81,27 @@ class ZonePicker {
 		return removed;
 	}
 
-	public Zone pick( Touch touch) {
-		int pickColor = -1;
-
-		// prevent ArrayOutOfBoundsException, although maybe this should be done
-		// in Touch itself
-		int x = touch.x;
-		int y = touch.y;
-		if (touch.y >= renderer.height)
+	public Zone pick( int x, int y) {
+		//clamp x and y
+		if( y >= renderer.height)
 			y = renderer.height - 1;
-		if (touch.x >= renderer.width)
+		if( x >= renderer.width)
 			x = renderer.width - 1;
-		if (touch.y < 0)
+		if( y < 0)
 			y = 0;
-		if (touch.x < 0)
+		if( x < 0)
 			x = 0;
 
 		PGL pgl = renderer.beginPGL();
-		// force fallback until 2.0b10
 		int pixel;
+		// force fallback until 2.0b10
 		if( ! SMT.fastPickingEnabled() || pgl == null)
-			// really slow way(max 70 fps on a high end card vs 200+ fps with
-			// readPixels), with loadPixels at the end of render()
-			pickColor = renderer.pixels[ x + y * renderer.width] & 0x00FFFFFF;
+			//really slow way(max 70 fps on a high end card vs 200+ fps with readPixels), with loadPixels at the end of render()
+			pixel = renderer.pixels[ x + y * renderer.width];
 		else {
 			buffer.clear();
 			pgl.readPixels(
-				touch.x, renderer.height - touch.y,
+				x, renderer.height - y,
 				1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE,
 				buffer);
 			pixel = buffer.getInt();
@@ -116,10 +110,10 @@ class ZonePicker {
 
 		if( zoneMap.containsKey( pixel)) {
 			// if mapped it is either a Zone or null (background)
-			Zone picked =  zoneMap.get( pickColor);
+			Zone picked =  zoneMap.get( pixel);
 			Zone current = picked;
-			while (current != null){
-				if(current.stealChildrensTouch)
+			while( current != null){
+				if( current.stealChildrensTouch)
 					return current;
 				current = current.getParent();
 			}

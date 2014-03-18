@@ -50,10 +50,10 @@ public class ArrowKeysLayout extends SwipeKeyboardLayout{
 		key_up.setLabel( "ʌ");
 		key_down.setLabel( "∨");
 
-		PShape icon_left = SMT.parent.loadShape( "resources/arrow_left.svg");
-		PShape icon_right = SMT.parent.loadShape( "resources/arrow_right.svg");
-		PShape icon_up = SMT.parent.loadShape( "resources/arrow_up.svg");
-		PShape icon_down = SMT.parent.loadShape( "resources/arrow_down.svg");
+		PShape icon_left = SMT.getApplet().loadShape( "resources/arrow_left.svg");
+		PShape icon_right = SMT.getApplet().loadShape( "resources/arrow_right.svg");
+		PShape icon_up = SMT.getApplet().loadShape( "resources/arrow_up.svg");
+		PShape icon_down = SMT.getApplet().loadShape( "resources/arrow_down.svg");
 
 		/*System.out.printf("left: %f, %f\n",
 			icon_left.width, icon_left.height);

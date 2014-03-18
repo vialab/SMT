@@ -18,7 +18,7 @@ public class TextureZone extends Zone {
 	}
 
 	public TextureZone(String name) {
-		this(name, SMT.defaultRenderer);
+		this(name, SMT.zone_renderer);
 	}
 
 	public TextureZone(String name, String renderer) {
@@ -26,7 +26,7 @@ public class TextureZone extends Zone {
 	}
 
 	public TextureZone(int x, int y, int width, int height) {
-		this(null, x, y, width, height, SMT.defaultRenderer);
+		this(null, x, y, width, height, SMT.zone_renderer);
 	}
 
 	public TextureZone(int x, int y, int width, int height, String renderer) {
@@ -34,7 +34,7 @@ public class TextureZone extends Zone {
 	}
 
 	public TextureZone(String name, int x, int y, int width, int height) {
-		this(name, x, y, width, height, SMT.defaultRenderer);
+		this(name, x, y, width, height, SMT.zone_renderer);
 	}
 
 	public TextureZone(String name, int x, int y, int width, int height, String renderer) {

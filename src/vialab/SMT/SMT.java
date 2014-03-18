@@ -24,6 +24,7 @@
 
 package vialab.SMT;
 
+//standard library imports
 import java.awt.Color;
 import java.awt.Point;
 import java.io.*;
@@ -31,18 +32,21 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.*;
 
+//jbox2d imports
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.*;
 
+//processing imports
 import processing.core.*;
 import processing.opengl.*;
 
+//libtuio imports
 import TUIO.*;
 
-import vialab.SMT.renderer.P3DDSRenderer;
+//local imports
+import vialab.SMT.renderer.*;
+import vialab.SMT.util.*;
 
 /**
  * The Core class of the SMT library, it provides the TUIO/Touch Processing client
@@ -198,7 +202,7 @@ public class SMT {
 		applet.registerMethod("draw", new SMT());
 		applet.registerMethod("pre", new SMT());
 
-		picker = new SMTZonePicker();
+		picker = new ZonePicker();
 		listener = new SMTTuioListener();
 		manager = new SMTTouchManager( listener, picker);
 		mainListenerPort = port;
@@ -841,7 +845,7 @@ public class SMT {
 		for (Touch touch : SMTTouchManager.currentTouchState) {
 			renderer.strokeWeight(3);
 
-			long time = System.currentTimeMillis() - t.startTimeMillis;
+			long time = System.currentTimeMillis() - touch.startTimeMillis;
 
 			if (touch.isAssigned() && time < 250) {
 				renderer.noFill();
@@ -857,15 +861,15 @@ public class SMT {
 			}
 			renderer.noStroke();
 			renderer.fill(0, 0, 0, 50);
-			renderer.ellipse(t.x, t.y, 40, 40);
+			renderer.ellipse( touch.x, touch.y, 40, 40);
 			renderer.fill(255, 255, 255, 50);
 			if (touch.isJointCursor) {
 				renderer.fill(0, 255, 0, 50);
 			}
-			renderer.ellipse(touch.x, touch.y, 30, 30);
+			renderer.ellipse( touch.x, touch.y, 30, 30);
 			renderer.noFill();
 			renderer.stroke(200, 240, 255, 50);
-			Point[] path = t.getPathPoints();
+			Point[] path = touch.getPathPoints();
 			if (path.length > 3) {
 				for (int j = 3 + Math.max(0, path.length - (SMT.MAX_PATH_LENGTH + 2));
 						j < path.length; j++) {

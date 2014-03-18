@@ -233,14 +233,6 @@ public class PGraphics3DDelegate extends PGraphics3D {
 			delegate.beginRaw(rawGraphics);
 	}
 
-	public void beginReadPixels() {
-		PGraphics3D delegate = this.getDelegate();
-		if( delegate == this)
-			super.beginReadPixels();
-		else
-			delegate.beginReadPixels();
-	}
-
 	public void beginShape(int kind) {
 		PGraphics3D delegate = this.getDelegate();
 		if( delegate == this)
@@ -663,14 +655,6 @@ public class PGraphics3DDelegate extends PGraphics3D {
 			super.endRaw();
 		else
 			delegate.endRaw();
-	}
-
-	public void endReadPixels() {
-		PGraphics3D delegate = this.getDelegate();
-		if( delegate == this)
-			super.endReadPixels();
-		else
-			delegate.endReadPixels();
 	}
 
 	public void endShape(int mode) {

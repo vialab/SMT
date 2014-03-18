@@ -125,11 +125,11 @@ public class TabZone extends Zone {
 	}
 
 	public TabZone(boolean closeButtons) {
-		this(0, 0, applet.width, applet.height, closeButtons);
+		this(0, 0, SMT.getApplet().width, SMT.getApplet().height, closeButtons);
 	}
 
 	public TabZone(String name, boolean closeButtons) {
-		this(name, 0, 0, applet.width, applet.height, closeButtons);
+		this(name, 0, 0, SMT.getApplet().width, SMT.getApplet().height, closeButtons);
 		// TODO Auto-generated constructor stub
 	}
 

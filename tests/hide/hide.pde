@@ -1,3 +1,4 @@
+//SMT library imports
 import vialab.SMT.*;
 
 //variables for this applet
@@ -8,8 +9,8 @@ Zone myZone;
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
-	size(displayWidth, displayHeight, P3D);
-	SMT.init(this, TouchSource.AUTOMATIC);
+	size( 800, 600, SMT.RENDERER);
+	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//Make a new Zone
 	myZone = new Zone( "MyZone");
@@ -30,38 +31,30 @@ void draw(){
 }
 
 // "MyZone" functions
-
-//Draw functions for "MyZone"
 void drawMyZone( Zone zone){
 	if( flag) return;
 	noStroke();
 	fill( myZone_color);
 	rect(0, 0, 100, 100);
 }
-
 void pickDrawMyZone( Zone zone){
 	if( flag) return;
 	rect(0, 0, 100, 100);
 }
-
 //Touch function for "MyZone"
 void touchMyZone( Zone zone){
 	zone.drag();
 }
 
 // "MyOtherZone" functions
-
-//Draw functions for "MyOtherZone"
 void drawMyOtherZone( Zone zone){
 	noStroke();
 	fill( #88dd88);
 	rect(0, 0, 100, 100);
 }
-
 void pickDrawMyOtherZone( Zone zone){
 	rect(0, 0, 100, 100);
 }
-
 void touchMyOtherZone( Zone zone){}
 void touchDownMyOtherZone( Zone zone){
 	flag = ! flag;

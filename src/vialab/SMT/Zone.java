@@ -20,6 +20,7 @@
  */
 package vialab.SMT;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyListener;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
-import org.jbox2d.dynamics.joints.*
+import org.jbox2d.dynamics.joints.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -213,8 +214,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}else{
 			//get offscreen graphics context
 			PGraphics extra_object = applet.createGraphics(
-				this.dimension.getWidth(),
-				this.dimension.getHeight(),
+				this.dimension.width,
+				this.dimension.height,
 				this.renderer_name);
 			//double-check the class
 			if( ! PGraphics.class.isInstance( extra_object))
@@ -358,96 +359,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	public void setPhysicsEnabled( boolean enabled){
 		physics = enabled;
 		physics_enabled = enabled;
-	}
-
-	/**
-	 * Override this if something needs to occur before any drawing commands
-	 */
-	@Override
-	public void beginDraw() {
-		//REWRITE THIS SHIT
-		if( direct){
-			this.pushMatrix();
-			this.applyMatrix( matrix);
-		}
-		else {
-			extra_graphics.beginDraw();
-			SMT.renderer.pushDelegate( extra_graphics);
-		}
-		pushStyle();
-	}
-
-	/**
-	 * Override this if something needs to occur after drawing commands
-	 */
-	@Override
-	public void endDraw() {
-		if( direct)
-			this.popMatrix();
-		else{
-			SMT.renderer.popDelegate();
-			extra_graphics.endDraw();
-		}
-		popStyle();
-	}
-
-	/**
-	 * Override this if something needs to occur before pickdrawing commands
-	 */
-	protected void beginPickDraw() {
-		// update with changes from zonePG
-		matrix.preApply((PMatrix3D) (pg.getMatrix()));
-		pg.popMatrix();
-		pg.pushMatrix();
-
-		if (direct) {
-			//REWRITE THIS SHIT
-			if (getParent() == null) {
-				extra_graphics = (PGraphics3D) applet.g;
-			}
-			else {
-				extra_graphics = getParent().extra_graphics;
-			}
-			pg = extra_graphics;
-			pg.pushMatrix();
-			pg.applyMatrix(matrix);
-		}
-		else {
-			pg = extra_graphics;
-			super.beginDraw();
-		}
-		pg.pushStyle();
-
-		pg.noLights();
-		pg.noTint();
-		pg.noStroke();
-
-		// make sure the colorMode makes sense for the components given to it
-		pg.colorMode( RGB, 255);
-		// extract the components using bitshifts with bitwise AND, to get RGB
-		// values 0-255
-		pg.fill(
-			( pickColor & 0x00FF0000) >> 16,
-			( pickColor & 0x0000FF00) >> 8,
-			pickColor & 0x000000FF);
-
-		pickDraw = true;
-	}
-
-	/**
-	 * Override this if something needs to occur after pickdrawing commands
-	 */
-	protected void endPickDraw() {
-		pickDraw = false;
-		
-		if (direct) {
-			pg.popMatrix();
-		}
-		else {
-			super.endDraw();
-		}
-		pg.popStyle();
-		pg = this;
 	}
 
 	public void invokeDraw(){}
@@ -707,9 +618,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * <P>
 	 * Override this if something needs to occur before touch commands
 	 */
-	public void beginTouch() {
+	/*public void beginTouch() {
 		pushMatrix();
-	}
+	}*/
 
 	/**
 	 * Call this to before matrix operations on a zone to make them apply
@@ -720,10 +631,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * <P>
 	 * Override this if something needs to occur after touch commands
 	 */
-	public void endTouch() {
+	/*public void endTouch() {
 		matrix.preApply((PMatrix3D) getMatrix());
 		popMatrix();
-	}
+	}*/
 
 	public Color getPickColor() {
 		return pickColor;
@@ -751,8 +662,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @return Whether the zone was successfully added or not
 	 */
 	public boolean add(Zone zone) {
-		if (zone != null) {
-			if(zone != this && !isAncestor(zone)){
+		if( zone != null) {
+			if( zone != this && ! isAncestor(zone)){
 				zone.removeFromParent();
 				zone.parent = this;
 				
@@ -761,20 +672,21 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				// make sure the matrix is up to date, these calls should not
 				// occur if we do not call begin/endTouch once per
 				// frame and once at Zone initialization
-				zone.endTouch();
-				zone.beginTouch();
+				//zone.endTouch();
+				//zone.beginTouch();
 				
 				if (!children.contains(zone)) {
 					return children.add(zone);
 				}
 			}
-			else {
-				System.err.println("Warning: Added a Zone to itself or an ancestor");
-			}
+			else
+				try { throw new RuntimeException(
+					"Warning: Added a Zone to itself or an ancestor");}
+				catch( RuntimeException exception){
+					exception.printStackTrace();}
 		}
-		else {
-			System.err.println("Warning: Added a null Zone");
-		}
+		else throw new NullPointerException(
+			"Tried to add null to a zone");
 		return false;
 	}
 	
@@ -1003,24 +915,15 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Changes the coordinates and size of the zone.
 	 * 
-	 * @param x
-	 *            int - The zone's new x-coordinate.
-	 * @param y
-	 *            int - The zone's new y-coordinate.
-	 * @param width
-	 *            int - The zone's new width.
-	 * @param height
-	 *            int - The zone's new height.
+	 * @param x int The zone's new x-coordinate.
+	 * @param y int The zone's new y-coordinate.
+	 * @param width int The zone's new width.
+	 * @param height int The zone's new height.
 	 */
+	@Deprecated
 	public void setData(int x, int y, int width, int height) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.dimension = new Dimension( width, height);
-		this.halfDimension = new Dimension( width/2, height/2);
-		init();
-		resetMatrix();
+		this.setSize( width, height);
+		this.setLocation( x, y);
 	}
 
 	/**
@@ -1814,7 +1717,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected void touch( boolean touchChildren, boolean isChild) {
 		if( ! touchUpList.isEmpty() || ! touchDownList.isEmpty() ||
 				! touchMovedList.isEmpty() || ! pressList.isEmpty()){
-			beginTouch();
+			//beginTouch();
 			pushStyle();
 
 			for( Touch t : touchUpList)
@@ -1841,7 +1744,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			pressList.clear();
 
 			popStyle();
-			endTouch();
+			//endTouch();
 		}
 
 		if( touchChildren) {
@@ -1849,20 +1752,20 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				if (child.isChildActive()) {
 					child.backupMatrix = child.matrix.get();
 
-					child.beginTouch();
+					//child.beginTouch();
 					child.applyMatrix(matrix);
-					child.endTouch();
+					//child.endTouch();
 
 					child.touch(touchChildren, true);
 
 					child.backupMatrix = null;
 
-					child.beginTouch();
+					//child.beginTouch();
 					PMatrix3D inverse = new PMatrix3D();
 					inverse.apply(matrix);
 					inverse.invert();
 					child.applyMatrix(inverse);
-					child.endTouch();
+					//child.endTouch();
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-package kiwi.pgdsr;
+package vialab.SMT.renderer;
 
 import java.awt.Image;
 import processing.core.*;

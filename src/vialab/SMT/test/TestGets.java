@@ -27,7 +27,7 @@ public class TestGets extends PApplet {
 
 		//processing library setup
 		frameRate( fps_limit);
-		size( window_width, window_height, P3D);
+		size( window_width, window_height, SMT.RENDERER);
 		frame.setTitle("Zone Get Accessor Test");
 
 		//smt library setup

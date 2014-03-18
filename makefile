@@ -86,24 +86,16 @@ test-tutorial3: build jar
 
 # prototypes
 test-ripple: build jar
-	pshell tests/Ripple
+	pshell tests/ripple
 test-trail: build jar
-	pshell tests/Trail
+	pshell tests/trail
 
 # other tests
 test-anon: build jar
-	pshell tests/Anon
-test-createshape: build jar
-	pshell tests/CreateShape
-test-touchsource: build jar
-	pshell tests/TouchSource
+	pshell tests/anon
+test-source: build jar
+	pshell tests/source
 test-count: build jar
 	pshell tests/count
-test-addremove: build jar
-	pshell tests/AddRemove
-test-count: build jar
-	pshell tests/count
-test-methodclasses: build jar
-	java $(cp) vialab.SMT.test.TestMethodClasses
 test-basic: build jar
-	pshell tests/Basic
+	pshell tests/basic

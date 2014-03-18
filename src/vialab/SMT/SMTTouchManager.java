@@ -6,7 +6,7 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 
 //local imports
-import vialab.SMT.util.ZonePicker;
+import vialab.SMT.util.*;
 
 class SMTTouchManager {
 	private PApplet applet;
@@ -49,7 +49,7 @@ class SMTTouchManager {
 			// touchDowns only happen on new touches
 			if ( !previousTouchState.contains( touch.sessionID)) {
 				SMTUtilities.invoke( touchDown, applet, null, touch);
-				Zone zone = picker.pick( touch);
+				Zone zone = pick( touch);
 				touchPrevZone.put( touch, zone);
 				doTouchDown( zone, touch);
 				touch.invokeTouchDownEvent();
@@ -85,7 +85,7 @@ class SMTTouchManager {
 				SMTUtilities.invoke( touchMoved, applet, null, touch);
 				Zone z = null;
 				if ( !touch.isAssigned()) {
-					z = picker.pick( touch);
+					z = pick( touch);
 					// Assign the touch to the picked Zone, as long as the touch
 					// is not grabbed
 					if ( z != null) {
@@ -103,7 +103,7 @@ class SMTTouchManager {
 							// the
 							// Touch to determine if the zone was pressed
 							if ( first) {
-								z = picker.pick( touch);
+								z = pick( touch);
 								first = false;
 							}
 							if ( z != zone) {
@@ -126,16 +126,13 @@ class SMTTouchManager {
 	}
 
 	private void doPress( Zone zone, Touch touch) {
-		if ( zone != null) {
+		if ( zone != null)
 			zone.pressRegister( touch);
-		}
 	}
 
 	/**
 	 * Called when a touch went down, or when an orphaned touch moves around.
-	 * 
-	 * @param zone
-	 *            may be null
+	 * @param zone may be null
 	 */
 	private void doTouchDown( Zone zone, Touch touchPoint) {
 		if ( zone != null) {
@@ -146,9 +143,7 @@ class SMTTouchManager {
 
 	/**
 	 * Called when a touch went up.
-	 * 
-	 * @param zone
-	 *            may be null
+	 * @param zone may be null
 	 */
 	private void doTouchUp( Zone zone, Touch touch) {
 		if ( zone != null) {
@@ -158,9 +153,12 @@ class SMTTouchManager {
 	}
 
 	private void doTouchMoved( Zone zone, Touch touch) {
-		if ( zone != null) {
+		if ( zone != null)
 			zone.touchMovedRegister( touch);
-		}
+	}
+
+	private Zone pick( Touch touch){
+		return picker.pick( touch.x, touch.y);
 	}
 
 	private void retrieveMethods( PApplet applet) {

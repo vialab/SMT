@@ -1,25 +1,21 @@
-//standard library imports
-
-
 //SMT library imports
 import vialab.SMT.*;
 
 //constants
-int display_width = 1200;
-int display_height = 800;
-int display_halfWidth;
-int display_halfHeight;
+int window_width = 1200;
+int window_height = 800;
+int window_halfWidth;
+int window_halfHeight;
 int fps_limit = 60;
 //other
 
-
 //main functions
 void setup(){
-	display_halfWidth = display_width / 2;
-	display_halfHeight = display_height / 2;
+	window_halfWidth = window_width / 2;
+	window_halfHeight = window_height / 2;
 	//processing window setup
 	frameRate( fps_limit);
-	size( display_width, display_height, P3D);
+	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//stuff
