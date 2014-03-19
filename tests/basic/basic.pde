@@ -17,14 +17,27 @@ void setup(){
 	frameRate( fps_limit);
 	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
-	SMT.add( new Zone( 0, 0, 100, 100));	
+	Zone asdf = new Zone( 220, 220, 100, 100);
+	asdf.add( new Zone( 220, 220, 100, 100));
+	SMT.add( asdf);	
 }
 
 void draw(){
 	//draw background
 	pushStyle();
 	background( 80, 80, 80);
+	fill( 240, 80, 80);
+	stroke( 220, 220, 220, 130);
 	strokeWeight( 5);
-	rect( 10, 10, 100, 100, 5);
+	rect( 110, 110, 100, 100, 5);
+	popStyle();
+}
+
+void drawZone( Zone zone){
+	pushStyle();
+	fill( 120, 200, 120);
+	stroke( 5, 5, 5, 130);
+	strokeWeight( 5);
+	rect( 0, 0, 100, 100, 5);
 	popStyle();
 }

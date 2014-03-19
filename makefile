@@ -50,6 +50,10 @@ package: build jar docs
 	rm -rf SMT
 
 #extra commands
+git-prepare:
+	git add -u
+	git add -A
+
 relink:
 	rm -f lib/*
 	ln -s /opt/processing/core/library/ lib/processing
@@ -58,7 +62,7 @@ relink:
 	ln -s ~/p/libs/jbox2d/jbox2d-library-2.1.2.2-jar-with-dependencies.jar lib/jbox2d.jar
 
 #test commands
-test: test-anon
+test: test-basic
 
 # feature tests
 test-android: build jar

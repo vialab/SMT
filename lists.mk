@@ -44,8 +44,6 @@ class_files = \
 	bin/vialab/SMT/swipekeyboard/SwipeResolver.class \
 	bin/vialab/SMT/SwipeKeyboard.class \
 	bin/vialab/SMT/TabZone.class \
-	bin/vialab/SMT/test/TestGets.class \
-	bin/vialab/SMT/test/TestZoneAccessors.class \
 	bin/vialab/SMT/TexturedTouchDrawer.class \
 	bin/vialab/SMT/TextureZone.class \
 	bin/vialab/SMT/TextZone.class \
@@ -106,8 +104,6 @@ source_files = \
 	src/vialab/SMT/swipekeyboard/SwipeResolver.java \
 	src/vialab/SMT/SwipeKeyboard.java \
 	src/vialab/SMT/TabZone.java \
-	src/vialab/SMT/test/TestGets.java \
-	src/vialab/SMT/test/TestZoneAccessors.java \
 	src/vialab/SMT/TexturedTouchDrawer.java \
 	src/vialab/SMT/TextureZone.java \
 	src/vialab/SMT/TextZone.java \

@@ -256,66 +256,61 @@ public final class SMTUtilities {
 	 *            methodPrefix, the first of this array should be the Zone class
 	 * @return Whether the given class has a method with the given Prefix
 	 */
-	public static boolean checkImpl(Class<?> callingClass, String methodPrefix,
-			Class<?>... parameters) {
+	public static boolean checkImpl(
+			Class<?> callingClass, String methodPrefix, Class<?>... parameters) {
 		if (parameters[0] == null) {
 			System.err.println("Error: CheckImpl() first class parameter was null.");
 			return false;
 		}
 
-		if (parameters[0] == callingClass) {
+		if( parameters[0] == callingClass) {
 			return false;
 		}
 
-		if (!(Zone.class.isAssignableFrom(parameters[0]))) {
-			System.err
-					.println("Error: CheckImpl() first class parameter ("
-							+ parameters[0]
-							+ ") was not Zone or a subclass, please give the current Zone class (using this.getClass()) as the first class parameter.");
+		if ( ! ( Zone.class.isAssignableFrom( parameters[0]))) {
+			System.err.printf(
+				"Error: CheckImpl() first class parameter (%s) was not Zone or a subclass, please give the current Zone class (using this.getClass()) as the first class parameter.\n",
+				parameters[0]);
 			return false;
 		}
 
 		Method impl = null;
-		Class<?>[] firstRemoved = new Class<?>[parameters.length - 1];
+		Class<?>[] firstRemoved = new Class<?>[ parameters.length - 1];
 		System.arraycopy(parameters, 1, firstRemoved, 0, parameters.length - 1);
 		try {
-			// get the method if the class declared the prefix+Impl
-			// method,
+			//get the method if the class declared the prefix+Impl method,
 			// otherwise null
-			impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl", firstRemoved);
+			impl = parameters[0].getDeclaredMethod(
+				methodPrefix + "Impl", firstRemoved);
 		}
 		catch (Exception e) {}
 		if (impl == null) {
 			try {
-				// check if we find the method with the parameter Zone,
-				// and
-				// give warning
-				impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl", parameters);
-				if (impl != null) {
-					System.err.println(methodPrefix + "Impl() in the class "
-							+ parameters[0].getName()
-							+ " should not have Zone as a parameter, please remove it to override "
-							+ methodPrefix + "Impl() correctly.");
-					// make sure we don't set impl as to return the
-					// wrong
-					// result when this method is called, as we just
-					// want to
-					// add the error
+				//check if we find the method with the parameter Zone, and give warning
+				impl = parameters[0].getDeclaredMethod(
+					methodPrefix + "Impl", parameters);
+				if( impl != null){
+					System.err.printf(
+						"%sImpl() in the class %s should not have Zone as a parameter, please remove it to override %sImpl() correctly.\n",
+						methodPrefix, parameters[0].getName(), methodPrefix);
+					//make sure we don't set impl as to return the wrong result when
+					// this method is called, as we just want to add the error
 					impl = null;
 				}
 			}
-			catch (Exception e) {}
+			catch( Exception e) {}
 		}
-		// check if a super-class implements it, and the superclass is not Zone,
+		//check if a super-class implements it, and the superclass is not Zone,
 		// and also that this class is not Zone, as we shouldn't check the
 		// superclass in that case either
-		if (impl == null && parameters[0].getSuperclass() != null
-				&& parameters[0].getSuperclass() != Zone.class && parameters[0] != Zone.class) {
+		if (impl == null && parameters[0].getSuperclass() != null &&
+				parameters[0].getSuperclass() != Zone.class &&
+				parameters[0] != Zone.class){
 			Class<?> superClass = parameters[0].getSuperclass();
-			Class<?>[] firstSupered = new Class<?>[parameters.length];
+			Class<?>[] firstSupered = new Class<?>[ parameters.length];
 			System.arraycopy(parameters, 0, firstSupered, 0, parameters.length);
 			firstSupered[0] = superClass;
-			if (checkImpl(callingClass, methodPrefix, firstSupered)) {
+			if ( checkImpl( callingClass, methodPrefix, firstSupered)) {
 				return true;
 			}
 		}

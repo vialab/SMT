@@ -79,6 +79,6 @@ public class ShapeZone extends Zone {
 	@Override
 	protected void pickDrawImpl() {
 		drawImpl();
-		SMTUtilities.invoke(drawMethod, applet, this);
+		SMTUtilities.invoke( method_draw, applet, this);
 	}
 }

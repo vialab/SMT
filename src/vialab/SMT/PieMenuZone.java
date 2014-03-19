@@ -48,9 +48,9 @@ public class PieMenuZone extends Zone {
 				if (image != null) {
 					image(image, 0, 0, width, height);
 				}
-				else if (drawMethod == null) {
+				else if ( method_draw == null) {
 					// only assume no image if both our own PImage is null and
-					// drawMethod is not implemented
+					// method_draw is not implemented
 					imageSize = 0;
 				}
 				if (text != null) {
