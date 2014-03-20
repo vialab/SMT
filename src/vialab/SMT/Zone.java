@@ -390,9 +390,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	public void invokeDraw(){
 		//setup
-		extraGraphicsNullCheck();
-		this.setDelegate(
-			this.isDirect() ? SMT.renderer : extra_graphics);
+		this.setDelegate( SMT.renderer);
+		if( ! this.isDirect()){
+			extraGraphicsNullCheck();
+			SMT.renderer.pushDelegate( extra_graphics);
+		}
 		beginDraw();
 		pushStyle();
 
@@ -409,16 +411,17 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		else
 			draw();
 
-		//prepare to draw children
 		//draw children
 		for( Zone child : children)
 			child.invokeDraw();
-		//cleanup from drawing children
 
-		//if we're direct, we can now draw for realz
+		//if we're not direct, we can now draw for realz
 		if( ! this.isDirect()){
+			SMT.renderer.popDelegate();
 			applyMatrix( matrix);
 			//draw extra_graphics
+			image( extra_graphics,
+				0, 0, dimension.width, dimension.height);
 		}
 		
 		//cleanup
@@ -429,7 +432,65 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	public void invokePickDraw(){
+		//setup
+		this.setDelegate( SMT.renderer);
+		if( ! this.isDirect()){
+			extraGraphicsNullCheck();
+			extra_graphics.beginDraw();
+			SMT.renderer.pushDelegate( extra_graphics);
+		}
+		beginPickDraw();
+		pushStyle();
 
+		//picking setup
+		picking_on = true;
+		noStroke();
+
+		System.out.printf(
+			"zone: %s, %s\n",
+			this, this.getPickColor());
+		if( pickColor != null)
+			fill(
+				pickColor.getRed(),
+				pickColor.getGreen(),
+				pickColor.getBlue(),
+				255);
+		else
+			noFill();
+
+		//push transformations
+		pushMatrix();
+		if( this.isDirect())
+			applyMatrix( matrix);
+
+		//invoke proper draw method
+		if( method_pickDraw != null)
+			SMTUtilities.invoke( method_pickDraw, applet, this);
+		else if( pickDrawImpl_overridden)
+			pickDrawImpl();
+		else
+			pickDraw();
+		picking_on = false;
+
+		//draw children
+		for( Zone child : children)
+			child.invokePickDraw();
+
+		//if we're not direct, we can now draw for realz
+		if( ! this.isDirect()){
+			SMT.renderer.popDelegate();
+			extra_graphics.endDraw();
+			applyMatrix( matrix);
+			//draw extra_graphics
+			image( extra_graphics,
+				0, 0, dimension.width, dimension.height);
+		}
+		
+		//cleanup
+		popMatrix();
+		popStyle();
+		endPickDraw();
+		this.setDelegate( null);
 	}
 
 	public void draw(){
@@ -440,6 +501,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		text("No Draw Method", 0, 0, width, height);
 	}
 	public void pickDraw(){
+		rect( 0, 0, width, height);
 	}
 
 	public void beginDraw(){}
@@ -774,9 +836,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *            The zone to add to this zone
 	 * @return Whether the zone was successfully added or not
 	 */
-	public boolean add(Zone zone) {
+	public boolean add( Zone zone) {
 		if( zone != null) {
-			if( zone != this && ! isAncestor(zone)){
+			if( zone != this && ! isAncestor( zone)){
 				zone.removeFromParent();
 				zone.parent = this;
 				
@@ -837,7 +899,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	private void add(NodeList zones, List<Zone> zoneList) {
 		for (int i = 0; i < zones.getLength(); i++) {
 			Node zoneNode = zones.item(i);
-			if (zoneNode.getNodeType() == Node.ELEMENT_NODE
+			if( zoneNode.getNodeType() == Node.ELEMENT_NODE
 					&& zoneNode.getNodeName().equalsIgnoreCase("zone")) {
 				add(zoneNode, zoneList);
 			}

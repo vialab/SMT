@@ -921,14 +921,6 @@ public class PGraphics3DDelegate extends PGraphics3D {
 			return delegate.getTexture(img);
 	}
 
-	public int hashCode() {
-		PGraphics3D delegate = this.getDelegate();
-		if( delegate == this)
-			return super.hashCode();
-		else
-			return delegate.hashCode();
-	}
-
 	public boolean haveRaw() {
 		PGraphics3D delegate = this.getDelegate();
 		if( delegate == this)
@@ -2207,14 +2199,6 @@ public class PGraphics3DDelegate extends PGraphics3D {
 			super.tint(v1, v2, v3, alpha);
 		else
 			delegate.tint(v1, v2, v3, alpha);
-	}
-
-	public String toString() {
-		PGraphics3D delegate = this.getDelegate();
-		if( delegate == this)
-			return super.toString();
-		else
-			return delegate.toString();
 	}
 
 	public void translate(float tx, float ty) {

@@ -944,14 +944,6 @@ public class PGraphicsOpenGLDelegate extends PGraphicsOpenGL {
 			return delegate.getTexture(img);
 	}
 
-	public int hashCode() {
-		PGraphicsOpenGL delegate = this.getDelegate();
-		if( delegate == this)
-			return super.hashCode();
-		else
-			return delegate.hashCode();
-	}
-
 	public boolean haveRaw() {
 		PGraphicsOpenGL delegate = this.getDelegate();
 		if( delegate == this)
@@ -2239,14 +2231,6 @@ public class PGraphicsOpenGLDelegate extends PGraphicsOpenGL {
 			super.tint(rgb);
 		else
 			delegate.tint(rgb);
-	}
-
-	public String toString() {
-		PGraphicsOpenGL delegate = this.getDelegate();
-		if( delegate == this)
-			return super.toString();
-		else
-			return delegate.toString();
 	}
 
 	public void translate(float tx, float ty, float tz) {

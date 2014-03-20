@@ -83,30 +83,30 @@ public class ZonePicker {
 
 	public Zone pick( int x, int y) {
 		//clamp x and y
-		if( y >= renderer.height)
-			y = renderer.height - 1;
-		if( x >= renderer.width)
-			x = renderer.width - 1;
+		if( y >= picking_context.height)
+			y = picking_context.height - 1;
+		if( x >= picking_context.width)
+			x = picking_context.width - 1;
 		if( y < 0)
 			y = 0;
 		if( x < 0)
 			x = 0;
 
-		PGL pgl = renderer.beginPGL();
+		PGL pgl = picking_context.beginPGL();
 		int pixel;
 		// force fallback until 2.0b10
 		if( ! SMT.fastPickingEnabled() || pgl == null)
 			//really slow way(max 70 fps on a high end card vs 200+ fps with readPixels), with loadPixels at the end of render()
-			pixel = renderer.pixels[ x + y * renderer.width];
+			pixel = picking_context.pixels[ x + y * picking_context.width];
 		else {
 			buffer.clear();
 			pgl.readPixels(
-				x, renderer.height - y,
+				x, picking_context.height - y,
 				1, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE,
 				buffer);
 			pixel = buffer.getInt();
 		}
-		renderer.endPGL();
+		picking_context.endPGL();
 
 		if( zoneMap.containsKey( pixel)) {
 			// if mapped it is either a Zone or null (background)
@@ -129,7 +129,6 @@ public class ZonePicker {
 		//render the pick buffer
 		SMT.getRootZone().invokePickDraw();
 		renderer.endDraw();
-		renderer.flush();
 		renderer.popDelegate();
 		// If fast picking disabled, use loadPixels() which is really slow (max 70 fps on a high end card vs 200+ fps with readPixels) as a backup.
 		PGL pgl = renderer.beginPGL();

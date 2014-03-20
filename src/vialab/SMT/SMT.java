@@ -1106,14 +1106,10 @@ public class SMT {
 	 * Draws a texture of the pickBuffer at the given x,y position with given
 	 * width and height
 	 * 
-	 * @param x
-	 *            - the x position to draw the pickBuffer image at
-	 * @param y
-	 *            - the y position to draw the pickBuffer image at
-	 * @param w
-	 *            - the width of the pickBuffer image to draw
-	 * @param h
-	 *            - the height of the pickBuffer image to draw
+	 * @param x the x position to draw the pickBuffer image at
+	 * @param y the y position to draw the pickBuffer image at
+	 * @param w the width of the pickBuffer image to draw
+	 * @param h the height of the pickBuffer image to draw
 	 */
 	public static void drawPickBuffer(int x, int y, int w, int h) {
 		 renderer.image( picker.picking_context, x, y, w, h);

@@ -17,27 +17,38 @@ void setup(){
 	frameRate( fps_limit);
 	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
-	Zone asdf = new Zone( 220, 220, 100, 100);
-	asdf.add( new Zone( 220, 220, 100, 100));
-	SMT.add( asdf);	
+
+	//other shit
+	Zone a = new Zone( 220, 220, 100, 100);
+	Zone b = new Zone( 220, 220, 100, 100);
+	SMT.add( a);	
+	a.add( b);
+	System.out.printf(
+		"a: %s, %s\nb: %s, %s\n",
+		a, a.getPickColor(),
+		b, b.getPickColor());
 }
 
 void draw(){
-	//draw background
+	background( 50, 50, 50);
 	pushStyle();
-	background( 80, 80, 80);
-	fill( 240, 80, 80);
+	fill( 25, 25, 25, 130);
 	stroke( 220, 220, 220, 130);
-	strokeWeight( 5);
-	rect( 110, 110, 100, 100, 5);
+	rect( 700, 10, 480, 320);
+	image(
+		SMT.picker.picking_context,
+		690, 10, 500, 333);
 	popStyle();
 }
 
 void drawZone( Zone zone){
 	pushStyle();
-	fill( 120, 200, 120);
-	stroke( 5, 5, 5, 130);
-	strokeWeight( 5);
-	rect( 0, 0, 100, 100, 5);
+	fill( 100, 170, 100);
+	stroke( 5, 5, 5, 255);
+	rect( 0, 0, 100, 100, 3);
 	popStyle();
+}
+
+void pickDrawZone( Zone zone){
+	rect( 0, 0, 100, 100, 5);
 }
