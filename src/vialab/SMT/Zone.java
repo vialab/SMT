@@ -394,14 +394,18 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		if( ! this.isDirect()){
 			extraGraphicsNullCheck();
 			SMT.renderer.pushDelegate( extra_graphics);
+			extra_graphics.beginDraw();
 		}
 		beginDraw();
-		pushStyle();
 
 		//push transformations
-		pushMatrix();
-		if( this.isDirect())
+		if( this.isDirect()){
+			pushMatrix();
 			applyMatrix( matrix);
+		}
+
+		//drawing setup
+		pushStyle();
 
 		//invoke proper draw method
 		if( method_draw != null)
@@ -411,44 +415,61 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		else
 			draw();
 
+		//drawing cleanup
+		popStyle();
+
 		//draw children
 		for( Zone child : children)
 			child.invokeDraw();
 
-		//if we're not direct, we can now draw for realz
+		//pop transformations
+		if( this.isDirect())
+			popMatrix();
+
+		//if we're indirect, we can now draw for realz
 		if( ! this.isDirect()){
+			extra_graphics.endDraw();
 			SMT.renderer.popDelegate();
+			//push transformations
+			pushMatrix();
 			applyMatrix( matrix);
 			//draw extra_graphics
+			pushStyle();
+			noTint();
 			image( extra_graphics,
 				0, 0, dimension.width, dimension.height);
+			popStyle();
+			popMatrix();
 		}
 		
 		//cleanup
-		popMatrix();
-		popStyle();
 		endDraw();
 		this.setDelegate( null);
 	}
 
 	public void invokePickDraw(){
 		//setup
-		this.setDelegate( SMT.renderer);
-		if( ! this.isDirect()){
+		//all calls need to be redirected through this so that color calls can be discarded
+		SMT.renderer.pushDelegate( this);
+		if( this.isDirect())
+			this.setDelegate( SMT.picker.picking_context);
+		else {
 			extraGraphicsNullCheck();
+			this.setDelegate( extra_graphics);
 			extra_graphics.beginDraw();
-			SMT.renderer.pushDelegate( extra_graphics);
 		}
 		beginPickDraw();
-		pushStyle();
+
+		//push transformations
+		if( this.isDirect()){
+			pushMatrix();
+			applyMatrix( matrix);
+		}
 
 		//picking setup
-		picking_on = true;
+		pushStyle();
+		colorMode( RGB, 255, 255, 255, 255);
 		noStroke();
-
-		System.out.printf(
-			"zone: %s, %s\n",
-			this, this.getPickColor());
 		if( pickColor != null)
 			fill(
 				pickColor.getRed(),
@@ -457,11 +478,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				255);
 		else
 			noFill();
-
-		//push transformations
-		pushMatrix();
-		if( this.isDirect())
-			applyMatrix( matrix);
+		picking_on = true;
 
 		//invoke proper draw method
 		if( method_pickDraw != null)
@@ -470,26 +487,38 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			pickDrawImpl();
 		else
 			pickDraw();
+
+		//picking cleanup
 		picking_on = false;
+		popStyle();
 
 		//draw children
 		for( Zone child : children)
 			child.invokePickDraw();
 
-		//if we're not direct, we can now draw for realz
+		//pop transformations
+		if( this.isDirect())
+			popMatrix();
+
+		//if we're indirect, we can now draw for realz
 		if( ! this.isDirect()){
-			SMT.renderer.popDelegate();
 			extra_graphics.endDraw();
+			this.setDelegate( SMT.picker.picking_context);
+			//push transformations
+			pushMatrix();
 			applyMatrix( matrix);
 			//draw extra_graphics
+			pushStyle();
+			noTint();
 			image( extra_graphics,
 				0, 0, dimension.width, dimension.height);
+			popStyle();
+			popMatrix();
 		}
 		
 		//cleanup
-		popMatrix();
-		popStyle();
 		endPickDraw();
+		SMT.renderer.popDelegate();
 		this.setDelegate( null);
 	}
 
@@ -2426,13 +2455,17 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected void pressImpl( Touch touch) {}
 
 	/** Override to specify a default behavior for draw */
-	protected void drawImpl(){}
+	protected void drawImpl(){
+		draw();
+	}
 
 	/** Override to specify a default behavior for touch */
 	protected void touchImpl() {}
 
 	/** Override to specify a default behavior for pickDraw */
-	protected void pickDrawImpl() {}
+	protected void pickDrawImpl() {
+		pickDraw();
+	}
 
 	/** Override to specify a default behavior for touchDown */
 	protected void touchDownImpl(Touch touch) {

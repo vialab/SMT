@@ -19,14 +19,18 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//other shit
-	Zone a = new Zone( 220, 220, 100, 100);
-	Zone b = new Zone( 220, 220, 100, 100);
-	SMT.add( a);	
+	Zone a = new Zone( 50, 50, 100, 100);
+	Zone b = new Zone( 50, 00, 100, 100);
+	Zone c = new Zone( 00, 50, 100, 100);
+	Zone d = new Zone( 10, 10, 100, 100);
+
 	a.add( b);
-	System.out.printf(
-		"a: %s, %s\nb: %s, %s\n",
-		a, a.getPickColor(),
-		b, b.getPickColor());
+	a.add( c);
+	c.add( d);
+
+	c.setDirect( false);
+
+	SMT.add( a);	
 }
 
 void draw(){
@@ -37,7 +41,7 @@ void draw(){
 	rect( 700, 10, 480, 320);
 	image(
 		SMT.picker.picking_context,
-		690, 10, 500, 333);
+		700, 10, 480, 320);
 	popStyle();
 }
 
