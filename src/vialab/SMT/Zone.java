@@ -1911,17 +1911,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	protected void touch() {
-		touch(true);
-	}
-
-	protected void touch( boolean touchChildren) {
-		touch(touchChildren, false);
-	}
-
-	protected void touch( boolean touchChildren, boolean isChild) {
 		if( ! touchUpList.isEmpty() || ! touchDownList.isEmpty() ||
 				! touchMovedList.isEmpty() || ! pressList.isEmpty()){
-			//beginTouch();
+			beginTouch();
 			pushStyle();
 
 			for( Touch touch : touchUpList)
@@ -1949,32 +1941,58 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			pressList.clear();
 
 			popStyle();
-			//endTouch();
+			endTouch();
 		}
 
-		if( touchChildren) {
-			for( Zone child : children) {
-				if (child.isChildActive()) {
-					child.backupMatrix = child.matrix.get();
+		for( Zone child : children) {
+			if (child.isChildActive()) {
+				child.backupMatrix = child.matrix.get();
 
-					//child.beginTouch();
-					child.applyMatrix(matrix);
-					//child.endTouch();
+				child.beginTouch();
+				child.applyMatrix(matrix);
+				child.endTouch();
 
-					child.touch(touchChildren, true);
+				child.touch();
 
-					child.backupMatrix = null;
+				child.backupMatrix = null;
 
-					//child.beginTouch();
-					PMatrix3D inverse = new PMatrix3D();
-					inverse.apply(matrix);
-					inverse.invert();
-					child.applyMatrix(inverse);
-					//child.endTouch();
-				}
+				child.beginTouch();
+				PMatrix3D inverse = new PMatrix3D();
+				inverse.apply(matrix);
+				inverse.invert();
+				child.applyMatrix(inverse);
+				child.endTouch();
 			}
 		}
 	}
+
+	/**
+	 * Call this to before matrix operations on a zone to make them apply
+	 * immediately
+	 * <P>
+	 * Needs a matching endTouch() call to be made afterwards, otherwise the
+	 * matrix stack will overflow with too many pushMatrix commands.
+	 * <P>
+	 * Override this if something needs to occur before touch commands
+	 */
+	protected void beginTouch() {
+		SMT.renderer.pushMatrix();
+	}
+
+	/**
+	 * Call this to before matrix operations on a zone to make them apply
+	 * immediately
+	 * <P>
+	 * Needs a matching beginTouch() call to be made beforehand, otherwise the
+	 * matrix stack will underflow with too many popMatrix commands.
+	 * <P>
+	 * Override this if something needs to occur after touch commands
+	 */
+	protected void endTouch() {
+		matrix.preApply((PMatrix3D) SMT.renderer.getMatrix());
+		SMT.renderer.popMatrix();
+	}
+
 
 	/**
 	 * Rotate and translate.\n Single finger gesture, Which only translates
