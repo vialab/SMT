@@ -309,7 +309,7 @@ public class Touch extends TuioCursor {
 		// device it came from
 		int portbits = (int) ( sessionID >> 48);
 		int port = ( portbits != 0) ?
-				portbits : SMT.mainListenerPort;
+			portbits : SMT.mainListenerPort;
 		//System.out.printf( "port: %d\n", port);
 		return SMT.deviceMap.get( port);
 	}

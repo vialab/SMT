@@ -377,7 +377,7 @@ public class SMT {
 	}
 	private static void connect_tuio( int port){
 		TuioClient client = openTuioClient( port);
-		client.addTuioListener( listener);
+		//client.addTuioListener( listener);
 		tuioClientList.add( client);
 		deviceMap.put( port, TouchSource.TUIO_DEVICE);
 		printConnectMessage( "tuio devices", port);
@@ -1178,7 +1178,18 @@ public class SMT {
 	 * @return Touch[] containing all touches that are currently mapped
 	 */
 	public static Touch[] getTouches() {
-		return getTouchMap().values().toArray(new Touch[0]);
+		return getTouchMap().values().toArray( new Touch[0]);
+	}
+
+	/**
+	 * Returns a Touch stored at the given index
+	 * 
+	 * @return Touch The touch at the desired index
+	 */
+	public static Touch getTouch( int index) {
+		Touch[] touches = getTouches();
+		return ( index < 0 || index >= touches.length) ?
+			null : touches[index];
 	}
 
 	/**
