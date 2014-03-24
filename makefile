@@ -97,6 +97,8 @@ test-trail: build jar
 # other tests
 test-anon: build jar
 	pshell tests/Anon
+test-id: build jar
+	pshell tests/id
 test-createshape: build jar
 	pshell tests/CreateShape
 test-touchsource: build jar

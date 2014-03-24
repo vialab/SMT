@@ -424,7 +424,6 @@ public class SMT {
 	}
 	private static void connect_tuio( int port){
 		TuioClient client = openTuioClient( port);
-		client.addTuioListener( listener);
 		tuioClientList.add( client);
 		deviceMap.put( port, TouchSource.TUIO_DEVICE);
 		printConnectMessage( "tuio devices", port);
