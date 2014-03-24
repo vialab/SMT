@@ -61,6 +61,14 @@ relink:
 	ln -s ~/p/libs/android/android.jar lib/android.jar
 	ln -s ~/p/libs/jbox2d/jbox2d-library-2.1.2.2-jar-with-dependencies.jar lib/jbox2d.jar
 
+cp-to-usb: package
+	rm -rf /mnt/stronghold/SMT
+	mkdir /mnt/stronghold/SMT
+	cp -r examples library library.properties \
+		$(docs_dir) release_notes.md readme.md src tests \
+		/mnt/stronghold/SMT
+	cp SMT.zip /mnt/stronghold/
+
 #test commands
 test: test-anon
 
