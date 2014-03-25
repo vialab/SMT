@@ -395,6 +395,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			extraGraphicsNullCheck();
 			SMT.renderer.pushDelegate( extra_graphics);
 			extra_graphics.beginDraw();
+			extra_graphics.clear();
 		}
 		beginDraw();
 
@@ -408,12 +409,14 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		pushStyle();
 
 		//invoke proper draw method
-		if( method_draw != null)
-			SMTUtilities.invoke( method_draw, applet, this);
-		else if( drawImpl_overridden)
-			drawImpl();
-		else
-			draw();
+		if( direct){
+			if( method_draw != null)
+				SMTUtilities.invoke( method_draw, applet, this);
+			else if( drawImpl_overridden)
+				drawImpl();
+			else
+				draw();
+		}
 
 		//drawing cleanup
 		popStyle();
@@ -438,6 +441,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			noTint();
 			image( extra_graphics,
 				0, 0, dimension.width, dimension.height);
+			noFill();
+			stroke( 220, 220, 220, 180);
+			rect( 0, 0, dimension.width, dimension.height);
 			popStyle();
 			popMatrix();
 		}
@@ -449,14 +455,17 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	public void invokePickDraw(){
 		//setup
-		//all calls need to be redirected through this so that color calls can be discarded
+		//all calls need to be redirected through this so that color calls can be discarded and background calls changed
 		SMT.renderer.pushDelegate( this);
 		if( this.isDirect())
-			this.setDelegate( SMT.picker.picking_context);
+			this.setDelegate(
+				parent != null ?
+					parent : SMT.picker.picking_context);
 		else {
 			extraGraphicsNullCheck();
 			this.setDelegate( extra_graphics);
 			extra_graphics.beginDraw();
+			extra_graphics.clear();
 		}
 		beginPickDraw();
 
@@ -503,7 +512,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		//if we're indirect, we can now draw for realz
 		if( ! this.isDirect()){
 			extra_graphics.endDraw();
-			this.setDelegate( SMT.picker.picking_context);
+			this.setDelegate(
+				parent != null ?
+					parent : SMT.picker.picking_context);
 			//push transformations
 			pushMatrix();
 			applyMatrix( matrix);
@@ -537,6 +548,51 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	public void beginPickDraw(){}
 	public void endDraw(){}
 	public void endPickDraw(){}
+
+
+	protected void touch(){
+		if( ! touchUpList.isEmpty() || ! touchDownList.isEmpty() ||
+				! touchMovedList.isEmpty() || ! pressList.isEmpty()){
+			for( Touch touch : touchUpList)
+				touchUpInvoker( touch);
+			for( Touch touch : pressList)
+				pressInvoker( touch);
+			for( Touch touch : touchDownList)
+				touchDownInvoker( touch);
+			for( Touch touch : touchMovedList)
+				touchMovedInvoker( touch);
+			if( ! touchMovedList.isEmpty()){
+				touchImpl();
+				SMTUtilities.invoke( method_touch, applet, this);
+			}
+			
+			if( method_touch == null && ! touchImpl_overridden &&
+					method_touchUp == null && method_touchDown == null &&
+					method_touchMoved == null && ! touchUDM_overridden &&
+					! pressImpl_overridden && method_press == null)
+				drag();
+
+			touchUpList.clear();
+			touchDownList.clear();
+			touchMovedList.clear();
+			pressList.clear();
+		}
+
+		for( Zone child : children) {
+			if (child.isChildActive()) {
+				child.backupMatrix = child.matrix.get();
+				child.matrix.apply( this.matrix);
+				child.touch();
+				child.backupMatrix = null;
+
+				PMatrix3D inverse = new PMatrix3D();
+				inverse.apply( this.matrix);
+				inverse.invert();
+				child.matrix.apply(inverse);
+			}
+		}
+	}
+
 
 	/**
 	 * @param name The name of the zone to load the methods from
@@ -1068,7 +1124,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * This disconnects this zone from its children and vice versa
 	 */
 	public void clearChildren() {
-		for (Zone zone : children) {
+		for( Zone zone : children) {
 			this.remove(zone);
 		}
 	}
@@ -1253,6 +1309,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			(world.x > 0) && (world.x < this.width) &&
 			(world.y > 0) && (world.y < this.height);
 	}
+
+	//touch methods
 
 	/**
 	 * Translates the zone, its group, and its children
@@ -1647,12 +1705,14 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param translateX
 	 * @param translateY
 	 */
-	protected void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale,
+	protected void rst(
+			TouchPair first, TouchPair second,
+			boolean rotate, boolean scale,
 			boolean translateX, boolean translateY) {
 
 		if (first.matches() && second.matches()) {
 			// nothing to do
-			lastUpdate = maxTime(first, second);
+			lastUpdate = maxTime( first, second);
 			return;
 		}
 
@@ -1661,20 +1721,20 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 
 		// PMatrix3D matrix = new PMatrix3D();
-		if (translateX || translateY) {
-			if (translateX) {
-				translate(first.to.x, 0);
+		/*if( translateX || translateY){
+			if( translateX){
+				matrix.translate(first.to.x, 0);
 			}
-			if (translateY) {
-				translate(0, first.to.y);
+			if( translateY){
+				matrix.translate(0, first.to.y);
 			}
 		}
-		else {
-			translate(this.x + this.width / 2, this.y + this.height / 2);
+		else{
+			matrix.translate( this.x + this.width / 2, this.y + this.height / 2);
 			// TODO: even better, add a centreOfRotation parameter
 			// TODO: even more better, add a moving vs. non-moving
 			// centreOfRotation
-		}
+		}*/
 
 		if (!second.isEmpty() && !second.isFirst() && (rotate || scale)) {
 			PVector fromVec = second.getFromVec();
@@ -1691,7 +1751,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				cross.normalize();
 
 				if (angle != 0 && cross.z != 0 && rotate) {
-					rotate(angle, cross.x, cross.y, cross.z);
+					matrix.rotate(angle, cross.x, cross.y, cross.z);
 				}
 				if (scale) {
 					float ratio = toDist / fromDist;
@@ -1715,22 +1775,24 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 							ratio = this.minHeight / h;
 						}
 					}
-					scale(ratio);
+					matrix.scale(ratio);
 				}
 			}
 		}
 
-		if (translateX || translateY) {
+		/*if (translateX || translateY) {
 			if (translateX) {
-				translate(-first.from.x, 0);
+				matrix.translate(-first.from.x, 0);
 			}
 			if (translateY) {
-				translate(0, -first.from.y);
+				matrix.translate(0, -first.from.y);
 			}
 		}
 		else {
-			translate(-(this.x + this.width / 2), -(this.y + this.height / 2));
-		}
+			matrix.translate(
+				- (this.x + this.width / 2),
+				- (this.y + this.height / 2));
+		}*/
 
 		lastUpdate = maxTime(first, second);
 	}
@@ -1794,9 +1856,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param y
 	 */
 	public void rotateAbout(float angle, int x, int y) {
-		translate(x, y);
-		rotate(angle);
-		translate(-x, -y);
+		matrix.translate( x, y);
+		matrix.rotate( angle);
+		matrix.translate( - x, - y);
 	}
 
 	/**
@@ -1809,10 +1871,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	public void rotateAbout(float angle, int mode) {
 		if (mode == CORNER) {
-			rotateAbout(angle, x, y);
+			rotateAbout( angle, 0, 0);
 		}
 		else if (mode == CENTER) {
-			rotateAbout(angle, x + width / 2, y + height / 2);
+			rotateAbout( angle, width / 2, height / 2);
 		}
 	}
 
@@ -1910,90 +1972,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		popStyle();
 	}
 
-	protected void touch() {
-		if( ! touchUpList.isEmpty() || ! touchDownList.isEmpty() ||
-				! touchMovedList.isEmpty() || ! pressList.isEmpty()){
-			beginTouch();
-			pushStyle();
-
-			for( Touch touch : touchUpList)
-				touchUpInvoker( touch);
-			for( Touch touch : pressList)
-				pressInvoker( touch);
-			for( Touch touch : touchDownList)
-				touchDownInvoker( touch);
-			for( Touch touch : touchMovedList)
-				touchMovedInvoker( touch);
-			if( ! touchMovedList.isEmpty()){
-				touchImpl();
-				SMTUtilities.invoke( method_touch, applet, this);
-			}
-			
-			if( method_touch == null && ! touchImpl_overridden &&
-					method_touchUp == null && method_touchDown == null &&
-					method_touchMoved == null && ! touchUDM_overridden &&
-					! pressImpl_overridden && method_press == null)
-				drag();
-
-			touchUpList.clear();
-			touchDownList.clear();
-			touchMovedList.clear();
-			pressList.clear();
-
-			popStyle();
-			endTouch();
-		}
-
-		for( Zone child : children) {
-			if (child.isChildActive()) {
-				child.backupMatrix = child.matrix.get();
-
-				child.beginTouch();
-				child.applyMatrix(matrix);
-				child.endTouch();
-
-				child.touch();
-
-				child.backupMatrix = null;
-
-				child.beginTouch();
-				PMatrix3D inverse = new PMatrix3D();
-				inverse.apply(matrix);
-				inverse.invert();
-				child.applyMatrix(inverse);
-				child.endTouch();
-			}
-		}
-	}
-
-	/**
-	 * Call this to before matrix operations on a zone to make them apply
-	 * immediately
-	 * <P>
-	 * Needs a matching endTouch() call to be made afterwards, otherwise the
-	 * matrix stack will overflow with too many pushMatrix commands.
-	 * <P>
-	 * Override this if something needs to occur before touch commands
-	 */
-	protected void beginTouch() {
-		SMT.renderer.pushMatrix();
-	}
-
-	/**
-	 * Call this to before matrix operations on a zone to make them apply
-	 * immediately
-	 * <P>
-	 * Needs a matching beginTouch() call to be made beforehand, otherwise the
-	 * matrix stack will underflow with too many popMatrix commands.
-	 * <P>
-	 * Override this if something needs to occur after touch commands
-	 */
-	protected void endTouch() {
-		matrix.preApply((PMatrix3D) SMT.renderer.getMatrix());
-		SMT.renderer.popMatrix();
-	}
-
-
 	/**
 	 * Rotate and translate.\n Single finger gesture, Which only translates
 	 * inside of the rotation radius, and rotates and translates outside of this
@@ -2077,7 +2055,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 
 		// PMatrix3D matrix = new PMatrix3D();
-		translate(pair.to.x, pair.to.y);
+		matrix.translate(pair.to.x, pair.to.y);
 
 		PVector centre = getCentre();
 
@@ -2095,12 +2073,29 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			cross.normalize();
 
 			if (angle != 0 && cross.z != 0) {
-				rotate(angle, cross.x, cross.y, cross.z);
+				matrix.rotate(angle, cross.x, cross.y, cross.z);
 			}
 		}
 
-		translate(-pair.from.x, -pair.from.y);
+		matrix.translate(-pair.from.x, -pair.from.y);
 		lastUpdate = maxTime(pair);
+	}
+
+	public void toss() {
+		// enable physics on this zone to make sure it can move from the toss
+		setPhysicsEnabled( true);
+		Touch t = getActiveTouch(0);
+		if (zoneBody != null && mJoint != null) {
+			mJoint.setTarget(new Vec2(t.x * SMT.box2dScale, (applet.height - t.y)
+					* SMT.box2dScale));
+		}
+	}
+
+	public void dragWithinParent() {
+		Zone parent = getParent();
+		if (parent != null) {
+			drag(true, true, 0, parent.width, 0, parent.height);
+		}
 	}
 
 	/**
@@ -2138,11 +2133,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				cross.normalize();
 
 				if (angle != 0 && cross.z != 0) {
-					rotate(angle, cross.x, cross.y, cross.z);
+					matrix.rotate(angle, cross.x, cross.y, cross.z);
 				}
 			}
 
-			translate(-centre.x, -centre.y);
+			matrix.translate(-centre.x, -centre.y);
 			lastUpdate = maxTime(pair);
 		}
 	}
@@ -2547,22 +2542,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 	}
 
-	public void toss() {
-		// enable physics on this zone to make sure it can move from the toss
-		setPhysicsEnabled( true);
-		Touch t = getActiveTouch(0);
-		if (zoneBody != null && mJoint != null) {
-			mJoint.setTarget(new Vec2(t.x * SMT.box2dScale, (applet.height - t.y)
-					* SMT.box2dScale));
-		}
-	}
-
-	public void dragWithinParent() {
-		Zone parent = getParent();
-		if (parent != null) {
-			drag(true, true, 0, parent.width, 0, parent.height);
-		}
-	}
 
 	/**
 	 * This method is for use by Processing, override it to change what occurs
@@ -2692,92 +2671,92 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	//background functions
 	@Override
 	public void background(float arg0, float arg1, float arg2, float arg3) {
-		if(direct){
+		if( picking_on) return;
+		if( direct){
 			pushStyle();
 			noStroke();
 			fill(arg0, arg1, arg2, arg3);
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else if( ! picking_on)
-			super.background(arg0, arg1, arg2, arg3);
+		else super.background(arg0, arg1, arg2, arg3);
 	}
 
 	@Override
 	public void background(float arg0, float arg1, float arg2) {
-		if(direct){
+		if( picking_on) return;
+		if( direct){
 			pushStyle();
 			noStroke();
 			fill(arg0, arg1, arg2);
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else if( ! picking_on)
-			super.background(arg0, arg1, arg2);
+		else super.background(arg0, arg1, arg2);
 	}
 
 	@Override
 	public void background(float arg0, float arg1) {
-		if(direct){
+		if( picking_on) return;
+		if( direct){
 			pushStyle();
 			noStroke();
 			fill(arg0, arg1);
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else if( ! picking_on)
-			super.background(arg0, arg1);
+		else super.background(arg0, arg1);
 	}
 
 	@Override
 	public void background(float arg0) {
-		if(direct){
+		if( picking_on) return;
+		if( direct){
 			pushStyle();
 			noStroke();
 			fill(arg0);
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else if( ! picking_on)
-			super.background(arg0);
+		else super.background(arg0);
 	}
 
 	@Override
 	public void background(int arg0, float arg1) {
-		if(direct){
+		if( picking_on) return;
+		if( direct){
 			pushStyle();
 			noStroke();
 			fill(arg0, arg1);
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else if( ! picking_on)
-			super.background(arg0, arg1);
+		else super.background(arg0, arg1);
 	}
 
 	@Override
 	public void background(int arg0) {
-		if(direct){
+		if( picking_on) return;
+		if( direct){
 			pushStyle();
 			noStroke();
 			fill(arg0);
 			rect(0,0,width,height);
 			popStyle();
 		}
-		else if( ! picking_on)
-			super.background(arg0);
+		else super.background(arg0);
 	}
 
 	@Override
 	public void background(PImage arg0) {
-		if(direct){
+		if( picking_on) return;
+		if( direct){
 			pushStyle();
 			noStroke();
 			image(arg0,0,0,width,height);
 			popStyle();
 		}
-		else if( ! picking_on)
-			super.background(arg0);
+		else super.background(arg0);
 	}
 
 	//color functions

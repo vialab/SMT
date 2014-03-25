@@ -126,6 +126,7 @@ public class ZonePicker {
 		//set up for rendering the pick buffer
 		renderer.pushDelegate( picking_context);
 		renderer.beginDraw();
+		renderer.clear();
 		//render the pick buffer
 		SMT.getRootZone().invokePickDraw();
 		renderer.endDraw();

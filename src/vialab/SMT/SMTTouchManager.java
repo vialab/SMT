@@ -47,7 +47,7 @@ class SMTTouchManager {
 	protected void handleTouchesDown() {
 		for ( Touch touch : currentTouchState) {
 			// touchDowns only happen on new touches
-			if ( !previousTouchState.contains( touch.sessionID)) {
+			if ( ! previousTouchState.contains( touch.sessionID)) {
 				SMTUtilities.invoke( touchDown, applet, null, touch);
 				Zone zone = pick( touch);
 				touchPrevZone.put( touch, zone);
@@ -83,36 +83,36 @@ class SMTTouchManager {
 		for ( Touch touch : currentTouchState) {
 			if ( previousTouchState.contains( touch.sessionID)) {
 				SMTUtilities.invoke( touchMoved, applet, null, touch);
-				Zone z = null;
+				Zone zone = null;
 				if ( ! touch.isAssigned()) {
-					z = pick( touch);
+					zone = pick( touch);
 					// Assign the touch to the picked Zone, as long as the touch
 					// is not grabbed
-					if ( z != null) {
-						z.assign( touch);
+					if ( zone != null) {
+						zone.assign( touch);
 					}
 				}
 				else {
 					boolean first = true;
-					for( Zone zone : touch.getAssignedZones()) {
-						if( zone.getCaptureTouchesEnabled()){
+					for( Zone assigned_zone : touch.getAssignedZones()) {
+						if( assigned_zone.getCaptureTouchesEnabled()){
 							//if the zone defines a press method, make sure to unassign when we no longer pick to the Zone, meaning that the touchUp can rely on the previous pick of the Touch to determine if the zone was pressed
 							if ( first) {
-								z = pick( touch);
+								zone = pick( touch);
 								first = false;
 							}
-							if ( z != zone) {
-								zone.unassign( touch);
+							if ( zone != assigned_zone) {
+								assigned_zone.unassign( touch);
 								// Assign the touch to the picked Zone
-								if ( z != null)
-									z.assign( touch);
+								if ( zone != null)
+									zone.assign( touch);
 							}
 						}
 					}
 				}
-				for ( Zone zone : touch.getAssignedZones())
-					doTouchMoved( zone, touch);
-				touchPrevZone.put( touch, z);
+				for ( Zone assigned_zone : touch.getAssignedZones())
+					doTouchMoved( assigned_zone, touch);
+				touchPrevZone.put( touch, zone);
 				touch.invokeTouchMovedEvent();
 			}
 		}

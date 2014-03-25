@@ -1339,7 +1339,9 @@ public class SMT {
 		if( getTouches().length > 0)
 			SMTUtilities.invoke( touch, applet, null);
 
+		renderer.pushMatrix();
 		sketch.touch();
+		renderer.popMatrix();
 		updateStep();
 	}
 
