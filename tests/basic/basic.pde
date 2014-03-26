@@ -66,5 +66,5 @@ void pickDrawZone( Zone zone){
 }
 
 void touchZone( Zone zone){
-	zone.drag();
+	zone.rst();
 }

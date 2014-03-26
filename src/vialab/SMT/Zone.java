@@ -1721,7 +1721,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 
 		// PMatrix3D matrix = new PMatrix3D();
-		/*if( translateX || translateY){
+		if( translateX || translateY){
 			if( translateX){
 				matrix.translate(first.to.x, 0);
 			}
@@ -1730,11 +1730,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			}
 		}
 		else{
-			matrix.translate( this.x + this.width / 2, this.y + this.height / 2);
+			matrix.translate( this.width / 2, this.height / 2);
 			// TODO: even better, add a centreOfRotation parameter
 			// TODO: even more better, add a moving vs. non-moving
 			// centreOfRotation
-		}*/
+		}
 
 		if (!second.isEmpty() && !second.isFirst() && (rotate || scale)) {
 			PVector fromVec = second.getFromVec();
@@ -1780,7 +1780,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			}
 		}
 
-		/*if (translateX || translateY) {
+		if (translateX || translateY) {
 			if (translateX) {
 				matrix.translate(-first.from.x, 0);
 			}
@@ -1792,7 +1792,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			matrix.translate(
 				- (this.x + this.width / 2),
 				- (this.y + this.height / 2));
-		}*/
+		}
 
 		lastUpdate = maxTime(first, second);
 	}
