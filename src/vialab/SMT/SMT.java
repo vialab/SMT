@@ -223,11 +223,18 @@ public class SMT {
 			throw new NullPointerException(
 				"Null parent PApplet, pass 'this' to SMT.init() instead of null");
 
+		//check processing version
+		int revision = processing.app.Base.getRevision();
+		String version_name = processing.app.Base.getVersionName();
+		System.out.printf(
+			"revison: %s\nversion name: %s\n",
+			revision, version_name);
+
 		SMT.parent = parent;
 
 		// This build of the toolkit cannot operate without OpenGL renderers
 		if( ! parent.g.is3D())
-			System.out.println(
+			System.err.println(
 				"This build of SMT only supports using OpenGL renderers, please use either OPENGL or P3D in the size function; e.g: size( displayWidth, displayHeight, P3D);");
 		//load applet methods
 		SMTUtilities.loadMethods(parent.getClass());
