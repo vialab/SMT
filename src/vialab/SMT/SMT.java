@@ -133,12 +133,12 @@ public class SMT {
 	private static int p211_revision = 224;
 	//supported processing versions
 	private static int revision_unknown = -1;
-	private static int revision_min = -1; //idk what the minimum is :S
-	private static String revision_min_name = "Unkown";
-	private static String revision_min_build = "unkown";
-	private static int revision_max = p21_revision;
-	private static String revision_max_name = "2.1";
-	private static String revision_max_build = "0223";
+	private static int revision_min = p211_revision; //idk what the minimum is :S
+	private static String revision_min_name = "2.1.1";
+	private static String revision_min_build = "0224";
+	private static int revision_max = revision_unknown;
+	private static String revision_max_name = "Unknown";
+	private static String revision_max_build = "unknown";
 	//supported processing version override
 	public static boolean pversion_override = false;
 
@@ -473,7 +473,7 @@ public class SMT {
 				revision_name, revision_min_name, revision_min_build);
 			return false;}
 		//check revision upper bound
-		if( revision > revision_max){
+		if( revision_max != revision_unknown && revision > revision_max){
 			System.out.printf(
 				"You are using Processing build %s. This build of SMT requires, at maximum, Processing %s ( build %s ). Either downgrade processing or upgrade SMT. You might find a compatible build of SMT at vialab.science.uoit.ca/smt/download.php. Alternatively, to disable this check, set SMT.pversion_override = true.\n",
 				revision_name, revision_max_name, revision_max_build);

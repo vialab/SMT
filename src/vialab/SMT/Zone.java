@@ -334,8 +334,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 		//get parent
 		this.applet = SMT.applet;
-		this.setParent( SMT.applet);
-		//this.setDelegate( SMT.renderer);
 
 		//initialize properties
 		this.direct = true;
