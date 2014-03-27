@@ -551,6 +551,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected void touch(){
 		if( ! touchUpList.isEmpty() || ! touchDownList.isEmpty() ||
 				! touchMovedList.isEmpty() || ! pressList.isEmpty()){
+
+			beginTouch();
+			pushStyle();
+
 			for( Touch touch : touchUpList)
 				touchUpInvoker( touch);
 			for( Touch touch : pressList)
@@ -574,23 +578,41 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			touchDownList.clear();
 			touchMovedList.clear();
 			pressList.clear();
+
+			popStyle();
+			endTouch();
 		}
 
 		for( Zone child : children) {
 			if (child.isChildActive()) {
 				child.backupMatrix = child.matrix.get();
+
+				child.beginTouch();
 				child.matrix.apply( this.matrix);
+				child.endTouch();
+				
 				child.touch();
 				child.backupMatrix = null;
 
+				child.beginTouch();
 				PMatrix3D inverse = new PMatrix3D();
 				inverse.apply( this.matrix);
 				inverse.invert();
 				child.matrix.apply(inverse);
+				child.endTouch();
 			}
 		}
 	}
 
+	protected void beginTouch(){
+		this.setDelegate( SMT.renderer);
+		pushMatrix();
+	}
+	protected void endTouch(){
+		matrix.preApply( (PMatrix3D) getMatrix());
+		popMatrix();
+		this.setDelegate( null);
+	}
 
 	/**
 	 * @param name The name of the zone to load the methods from
