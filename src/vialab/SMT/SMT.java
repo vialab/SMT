@@ -40,7 +40,6 @@ import org.jbox2d.dynamics.*;
 //processing imports
 import processing.core.*;
 import processing.opengl.*;
-
 //libtuio imports
 import TUIO.*;
 
@@ -128,6 +127,21 @@ public class SMT {
 	protected static float touch_radius = 15;
 	protected static int touch_sections = 24;
 
+	//processing revision numbers
+	private static int p203_revision = 221;
+	private static int p21_revision = 223;
+	private static int p211_revision = 224;
+	//supported processing versions
+	private static int revision_unknown = -1;
+	private static int revision_min = -1; //idk what the minimum is :S
+	private static String revision_min_name = "Unkown";
+	private static String revision_min_build = "unkown";
+	private static int revision_max = p21_revision;
+	private static String revision_max_name = "2.1";
+	private static String revision_max_build = "0223";
+	//supported processing version override
+	public static boolean pversion_override = false;
+
 	/**
 	 * Prevent SMT initialization (kinda) with protected constructor
 	 */
@@ -139,8 +153,8 @@ public class SMT {
 	 * 
 	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 */
-	public static void init(PApplet applet) {
-		init(applet, default_port);
+	public static void init(PApplet parent) {
+		init(parent, default_port, default_touchsource);
 	}
 
 	/**
@@ -178,6 +192,11 @@ public class SMT {
 		if( applet == null)
 			throw new NullPointerException(
 				"Null applet parameter, pass 'this' to SMT.init() instead of null");
+
+		//check processing version
+		if( ! pversion_override)
+			if( ! checkProcessingVersion())
+				return;
 
 		//check renderer
 		if( ! P3DDSRenderer.class.isInstance( applet.g))
@@ -377,7 +396,6 @@ public class SMT {
 	}
 	private static void connect_tuio( int port){
 		TuioClient client = openTuioClient( port);
-		//client.addTuioListener( listener);
 		tuioClientList.add( client);
 		deviceMap.put( port, TouchSource.TUIO_DEVICE);
 		printConnectMessage( "tuio devices", port);
@@ -440,6 +458,28 @@ public class SMT {
 	private static void printConnectMessage( String message, int port){
 		System.out.printf(
 			"Listening to %s using port %d\n", message, port);
+	}
+
+	/**
+	 * Check that this build of SMT is compatible with the current version of processing.
+	 */
+	public static boolean checkProcessingVersion(){
+		int revision = processing.app.Base.getRevision();
+		String revision_name = processing.app.Base.getVersionName();
+		//check revision lower bound
+		if( revision < revision_min){
+			System.out.printf(
+				"You are using Processing build %s. This build of SMT requires, at minimum, Processing %s ( build %s ). Either upgrade processing or downgrade SMT. You might find a compatible build of SMT at vialab.science.uoit.ca/smt/download.php. Alternatively, to disable this check, set SMT.pversion_override = true.\n",
+				revision_name, revision_min_name, revision_min_build);
+			return false;}
+		//check revision upper bound
+		if( revision > revision_max){
+			System.out.printf(
+				"You are using Processing build %s. This build of SMT requires, at maximum, Processing %s ( build %s ). Either downgrade processing or upgrade SMT. You might find a compatible build of SMT at vialab.science.uoit.ca/smt/download.php. Alternatively, to disable this check, set SMT.pversion_override = true.\n",
+				revision_name, revision_max_name, revision_max_build);
+			return false;}
+		//all's good :)
+		return true;
 	}
 
 	/**
