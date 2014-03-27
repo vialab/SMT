@@ -70,7 +70,7 @@ cp-to-usb: package
 	cp SMT.zip /mnt/stronghold/
 
 #test commands
-test: test-anon
+test: test-basic
 
 # feature tests
 test-android: build jar

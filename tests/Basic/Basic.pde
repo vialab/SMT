@@ -23,7 +23,7 @@ void setup(){
 	//processing window setup
 	frameRate( fps_limit);
 	size( display_width, display_height, P3D);
-	//SMT.init( this, TouchSource.AUTOMATIC);
+	SMT.init( this, TouchSource.AUTOMATIC);
 	println("SMT.init finished");
 	//throw new RuntimeException( "asdf");
 }

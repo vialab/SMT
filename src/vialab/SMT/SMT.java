@@ -26,36 +26,16 @@ package vialab.SMT;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.*;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PImage;
-import processing.core.PVector;
+import processing.core.*;
 
 import TUIO.*;
 
@@ -149,6 +129,21 @@ public class SMT {
 	protected static float touch_radius = 15;
 	protected static int touch_sections = 24;
 
+	//processing revision numbers
+	private static int p203_revision = 221;
+	private static int p21_revision = 223;
+	private static int p211_revision = 224;
+	//supported processing versions
+	private static int revision_unknown = -1;
+	private static int revision_min = -1; //idk what the minimum is :S
+	private static String revision_min_name = "Unkown";
+	private static String revision_min_build = "unkown";
+	private static int revision_max = p21_revision;
+	private static String revision_max_name = "2.1";
+	private static String revision_max_build = "0223";
+	//supported processing version override
+	public static boolean pversion_override = false;
+
 	/**
 	 * Prevent SMT instantiation with protected constructor
 	 */
@@ -184,7 +179,7 @@ public class SMT {
 	 * @param parent The Processing PApplet, usually just 'this' when using the Processing IDE
 	 */
 	public static void init(PApplet parent) {
-		init(parent, default_port);
+		init(parent, default_port, default_touchsource);
 	}
 
 	/**
@@ -224,20 +219,17 @@ public class SMT {
 				"Null parent PApplet, pass 'this' to SMT.init() instead of null");
 
 		//check processing version
-		int revision = processing.app.Base.getRevision();
-		String version_name = processing.app.Base.getVersionName();
-		System.out.printf(
-			"revison: %s\nversion name: %s\n",
-			revision, version_name);
-
-		SMT.parent = parent;
+		if( ! pversion_override)
+			if( ! checkProcessingVersion())
+				return;
 
 		// This build of the toolkit cannot operate without OpenGL renderers
 		if( ! parent.g.is3D())
 			System.err.println(
 				"This build of SMT only supports using OpenGL renderers, please use either OPENGL or P3D in the size function; e.g: size( displayWidth, displayHeight, P3D);");
 		//load applet methods
-		SMTUtilities.loadMethods(parent.getClass());
+		SMT.parent = parent;
+		SMTUtilities.loadMethods( parent.getClass());
 
 		//load touch drawer
 		if( touchDrawMethod == TouchDraw.TEXTURED)
@@ -461,6 +453,28 @@ public class SMT {
 	private static void printConnectMessage( String message, int port){
 		System.out.printf(
 			"Listening to %s using port %d\n", message, port);
+	}
+
+	/**
+	 * Check that this build of SMT is compatible with the current version of processing.
+	 */
+	public static boolean checkProcessingVersion(){
+		int revision = processing.app.Base.getRevision();
+		String revision_name = processing.app.Base.getVersionName();
+		//check revision lower bound
+		if( revision < revision_min){
+			System.out.printf(
+				"You are using Processing build %s. This build of SMT requires, at minimum, Processing %s ( build %s ). Either upgrade processing or downgrade SMT. You might find a compatible build of SMT at vialab.science.uoit.ca/smt/download.php. Alternatively, to disable this check, set SMT.pversion_override = true.\n",
+				revision_name, revision_min_name, revision_min_build);
+			return false;}
+		//check revision upper bound
+		if( revision > revision_max){
+			System.out.printf(
+				"You are using Processing build %s. This build of SMT requires, at maximum, Processing %s ( build %s ). Either downgrade processing or upgrade SMT. You might find a compatible build of SMT at vialab.science.uoit.ca/smt/download.php. Alternatively, to disable this check, set SMT.pversion_override = true.\n",
+				revision_name, revision_max_name, revision_max_build);
+			return false;}
+		//all's good :)
+		return true;
 	}
 
 	/**
