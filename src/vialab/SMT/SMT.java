@@ -1382,7 +1382,7 @@ public class SMT {
 		PGraphics extra = applet.createGraphics( 1, 1, PApplet.P3D);
 		renderer.pushDelegate( (PGraphics3D) extra);
 		renderer.beginDraw();
-		sketch.touch();
+		sketch.invokeTouch();
 		renderer.endDraw();
 		updateStep();
 		renderer.popDelegate();

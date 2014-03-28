@@ -125,7 +125,7 @@ public class TexturedTouchDrawer
 			//interpolate the points
 			Vector<CurvePoint> curvePoints = interpolatePoints( graphics, pathPoints);
 			//draw the points
-			drawCurvePoints( graphics, curvePoints, alpha);
+			drawCurvePoints( graphics, touch, curvePoints, alpha);
 		}
 		
 		//setup
@@ -137,11 +137,19 @@ public class TexturedTouchDrawer
 		graphics.pushMatrix();
 		graphics.beginShape( PGraphics.TRIANGLE_FAN);
 		graphics.texture( touch_texture);
-		graphics.tint( 
-			touch_tint_red,
-			touch_tint_green,
-			touch_tint_blue,
-			touch_tint_alpha * alpha);
+		Color touch_override = touch.getTint();
+		if( touch_override != null)
+			graphics.tint( 
+				(float) touch_override.getRed(),
+				(float) touch_override.getGreen(),
+				(float) touch_override.getBlue(),
+				(float) touch_override.getAlpha() * alpha);
+		else
+			graphics.tint( 
+				touch_tint_red,
+				touch_tint_green,
+				touch_tint_blue,
+				touch_tint_alpha * alpha);
 		graphics.translate( touch.x, touch.y);
 		graphics.vertex( 0, 0, 0, 1);
 		for( PVector vert : vertices)
@@ -315,7 +323,7 @@ public class TexturedTouchDrawer
 	 * @param alpha the desired transparency of the curve
 	 */
 	private void drawCurvePoints(
-			PGraphics graphics, Vector<CurvePoint> curvePoints, float alpha){
+			PGraphics graphics, Touch touch, Vector<CurvePoint> curvePoints, float alpha){
 		if( curvePoints == null) return;
 		int curvePoints_size = curvePoints.size();
 		//just a safety check
@@ -328,11 +336,19 @@ public class TexturedTouchDrawer
 		graphics.textureMode( PConstants.NORMAL);
 		graphics.beginShape( PConstants.QUAD_STRIP);
 		graphics.texture( trail_texture);
-		graphics.tint(
-			trail_tint_red,
-			trail_tint_green,
-			trail_tint_blue,
-			trail_tint_alpha * alpha);
+		Color trail_override = touch.getTrailTint();
+		if( trail_override != null)
+			graphics.tint( 
+				(float) trail_override.getRed(),
+				(float) trail_override.getGreen(),
+				(float) trail_override.getBlue(),
+				(float) trail_override.getAlpha() * alpha);
+		else
+			graphics.tint( 
+				trail_tint_red,
+				trail_tint_green,
+				trail_tint_blue,
+				trail_tint_alpha * alpha);
 		//for each curve point
 		for( int i = 0 ; i < curvePoints_size; i++){
 			CurvePoint point = curvePoints.get( i);
@@ -362,7 +378,10 @@ public class TexturedTouchDrawer
 
 	//Accessor methods
 
-	/** Sets whether trail drawing is enabled **/
+	/**
+	 * Sets whether touch drawing is enabled
+	 * @param enabled whether touch drawing should be enabled 
+	 **/
 	public void setTouchEnabled( boolean enabled){
 		touch_enabled = enabled;
 	}

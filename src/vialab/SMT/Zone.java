@@ -531,28 +531,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		this.setDelegate( null);
 	}
 
-	public void draw(){
-		fill( 50, 50, 50, 150);
-		stroke( 255, 255, 255, 150);
-		rect( 0, 0, width, height);
-		fill( 255, 255, 255, 150);
-		text("No Draw Method", 0, 0, width, height);
-	}
-	public void pickDraw(){
-		rect( 0, 0, width, height);
-	}
-
-	public void beginDraw(){}
-	public void beginPickDraw(){}
-	public void endDraw(){}
-	public void endPickDraw(){}
-
-
-	protected void touch(){
+	protected void invokeTouch(){
 		if( ! touchUpList.isEmpty() || ! touchDownList.isEmpty() ||
 				! touchMovedList.isEmpty() || ! pressList.isEmpty()){
 
-			beginTouch();
+			beginInvokeTouch();
 			pushStyle();
 
 			for( Touch touch : touchUpList)
@@ -580,39 +563,63 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			pressList.clear();
 
 			popStyle();
-			endTouch();
+			endInvokeTouch();
 		}
 
 		for( Zone child : children) {
 			if (child.isChildActive()) {
 				child.backupMatrix = child.matrix.get();
 
-				child.beginTouch();
+				child.beginInvokeTouch();
 				child.matrix.apply( this.matrix);
-				child.endTouch();
+				child.endInvokeTouch();
 				
-				child.touch();
+				child.invokeTouch();
 				child.backupMatrix = null;
 
-				child.beginTouch();
+				child.beginInvokeTouch();
 				PMatrix3D inverse = new PMatrix3D();
 				inverse.apply( this.matrix);
 				inverse.invert();
 				child.matrix.apply(inverse);
-				child.endTouch();
+				child.endInvokeTouch();
 			}
 		}
 	}
 
-	protected void beginTouch(){
+	protected void beginInvokeTouch(){
 		this.setDelegate( SMT.renderer);
 		pushMatrix();
 	}
-	protected void endTouch(){
+	protected void endInvokeTouch(){
 		matrix.preApply( (PMatrix3D) getMatrix());
 		popMatrix();
 		this.setDelegate( null);
 	}
+
+	//default methods
+	public void draw(){
+		fill( 50, 50, 50, 150);
+		stroke( 255, 255, 255, 150);
+		rect( 0, 0, width, height);
+		fill( 255, 255, 255, 150);
+		text("No Draw Method", 0, 0, width, height);
+	}
+	public void pickDraw(){
+		rect( 0, 0, width, height);
+	}
+
+	public void touch(){
+		this.drag();
+	}
+
+	//begin/end methods
+	public void beginDraw(){}
+	public void beginPickDraw(){}
+	public void beginTouch(){}
+	public void endDraw(){}
+	public void endPickDraw(){}
+	public void endTouch(){}
 
 	/**
 	 * @param name The name of the zone to load the methods from
@@ -1743,14 +1750,14 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		// PMatrix3D matrix = new PMatrix3D();
 		if( translateX || translateY){
 			if( translateX){
-				matrix.translate(first.to.x, 0);
+				translate(first.to.x, 0);
 			}
 			if( translateY){
-				matrix.translate(0, first.to.y);
+				translate(0, first.to.y);
 			}
 		}
 		else{
-			matrix.translate( this.width / 2, this.height / 2);
+			translate( this.width / 2, this.height / 2);
 			// TODO: even better, add a centreOfRotation parameter
 			// TODO: even more better, add a moving vs. non-moving
 			// centreOfRotation
@@ -1771,7 +1778,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				cross.normalize();
 
 				if (angle != 0 && cross.z != 0 && rotate) {
-					matrix.rotate(angle, cross.x, cross.y, cross.z);
+					rotate(angle, cross.x, cross.y, cross.z);
 				}
 				if (scale) {
 					float ratio = toDist / fromDist;
@@ -1795,21 +1802,21 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 							ratio = this.minHeight / h;
 						}
 					}
-					matrix.scale(ratio);
+					scale(ratio);
 				}
 			}
 		}
 
 		if (translateX || translateY) {
 			if (translateX) {
-				matrix.translate(-first.from.x, 0);
+				translate(-first.from.x, 0);
 			}
 			if (translateY) {
-				matrix.translate(0, -first.from.y);
+				translate(0, -first.from.y);
 			}
 		}
 		else {
-			matrix.translate(
+			translate(
 				- (this.x + this.width / 2),
 				- (this.y + this.height / 2));
 		}
@@ -1876,9 +1883,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param y
 	 */
 	public void rotateAbout(float angle, int x, int y) {
-		matrix.translate( x, y);
-		matrix.rotate( angle);
-		matrix.translate( - x, - y);
+		translate( x, y);
+		rotate( angle);
+		translate( - x, - y);
 	}
 
 	/**
@@ -2075,7 +2082,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 
 		// PMatrix3D matrix = new PMatrix3D();
-		matrix.translate(pair.to.x, pair.to.y);
+		translate(pair.to.x, pair.to.y);
 
 		PVector centre = getCentre();
 
@@ -2093,11 +2100,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			cross.normalize();
 
 			if (angle != 0 && cross.z != 0) {
-				matrix.rotate(angle, cross.x, cross.y, cross.z);
+				rotate(angle, cross.x, cross.y, cross.z);
 			}
 		}
 
-		matrix.translate(-pair.from.x, -pair.from.y);
+		translate(-pair.from.x, -pair.from.y);
 		lastUpdate = maxTime(pair);
 	}
 
@@ -2153,11 +2160,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				cross.normalize();
 
 				if (angle != 0 && cross.z != 0) {
-					matrix.rotate(angle, cross.x, cross.y, cross.z);
+					rotate(angle, cross.x, cross.y, cross.z);
 				}
 			}
 
-			matrix.translate(-centre.x, -centre.y);
+			translate(-centre.x, -centre.y);
 			lastUpdate = maxTime(pair);
 		}
 	}
