@@ -1371,8 +1371,11 @@ public class SMT {
 			//update touches from mouseToTUIO joint cursors as they are a special case and need to be shown to user
 			for( Touch touch : SMTTouchManager.currentTouchState)
 				touch.isJointCursor = false;
-			for( Integer id : mtt.getJointCursors())
-				SMTTouchManager.currentTouchState.getById( id).isJointCursor = true;
+			for( Integer id : mtt.getJointCursors()){
+				Touch touch = SMTTouchManager.currentTouchState.getById( id);
+				if( touch != null)
+					touch.isJointCursor = true;
+			}
 		}
 
 		renderer.flush();
