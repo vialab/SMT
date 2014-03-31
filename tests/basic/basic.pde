@@ -65,4 +65,6 @@ void pickDrawZone( Zone zone){
 	rect( 0, 0, zone.width, zone.height, 5);
 }
 
-void touchZone( Zone zone){}
+void touchZone( Zone zone){
+	zone.rst();
+}

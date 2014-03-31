@@ -719,6 +719,211 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			pressImpl_overridden || method_press != null);
 	}
 
+	/////////////////////////////////////
+	// Zone 'Gesture' Transformations //
+	/////////////////////////////////////
+
+	/**
+	 * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 */
+	public void rst() {
+		rst(true, true, true, true);
+	}
+
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param rotate
+	 *            true if rotation should happen
+	 * @param scale
+	 *            true if scale should happen
+	 * @param translate
+	 *            true if translation should happen
+	 */
+	public void rst(boolean rotate, boolean scale, boolean translate) {
+		rst(rotate, scale, translate, translate);
+	}
+
+	/**
+	 * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param rotate
+	 *            true if rotation should happen
+	 * @param scale
+	 *            true if scale should happen
+	 * @param translateX
+	 *            true if x-translation should happen
+	 * @param translateY
+	 *            true if y-translation should happen
+	 */
+	public void rst(boolean rotate, boolean scale, boolean translateX, boolean translateY) {
+		if (!activeTouches.isEmpty()) {
+			List<TouchPair> pairs = getTouchPairs(2);
+			rst(pairs.get(0), pairs.get(1), rotate, scale, translateX, translateY);
+		}
+	}
+
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param from1
+	 * @param from2
+	 * @param to1
+	 * @param to2
+	 */
+	public void rst(Touch from1, Touch from2, Touch to1, Touch to2) {
+		rst(from1, from2, to1, to2, true, true, true);
+	}
+
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param from1
+	 * @param from2
+	 * @param to1
+	 * @param to2
+	 * @param rotate
+	 * @param scale
+	 * @param translate
+	 */
+	public void rst(Touch from1, Touch from2, Touch to1, Touch to2, boolean rotate, boolean scale,
+			boolean translate) {
+		rst(from1, from2, to1, to2, rotate, scale, translate, translate);
+	}
+
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param from1
+	 * @param from2
+	 * @param to1
+	 * @param to2
+	 * @param rotate
+	 * @param scale
+	 * @param translateX
+	 * @param translateY
+	 */
+	public void rst(Touch from1, Touch from2, Touch to1, Touch to2, boolean rotate, boolean scale,
+			boolean translateX, boolean translateY) {
+		rst(new TouchPair(from1, to1), new TouchPair(from2, to2), rotate, scale, translateX,
+				translateY);
+	}
+
+	/**
+	 * * Performs rotate/scale/translate on the current graphics context. Should
+	 * typically be called inside a {@link Zone#beginTouch()} and
+	 * {@link Zone#endTouch()}.
+	 * 
+	 * @param first
+	 *            The first TouchPair
+	 * @param second
+	 *            The second TouchPair
+	 * @param rotate
+	 * @param scale
+	 * @param translateX
+	 * @param translateY
+	 */
+	protected void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale,
+			boolean translateX, boolean translateY) {
+
+		if (first.matches() && second.matches()) {
+			// nothing to do
+			lastUpdate = maxTime(first, second);
+			return;
+		}
+
+		if (first.from == null) {
+			first.from = first.to;
+		}
+
+		// PMatrix3D matrix = new PMatrix3D();
+		if (translateX || translateY) {
+			if (translateX) {
+				translate(first.to.x, 0);
+			}
+			if (translateY) {
+				translate(0, first.to.y);
+			}
+		}
+		else {
+			translate(this.x + this.width / 2, this.y + this.height / 2);
+			// TODO: even better, add a centreOfRotation parameter
+			// TODO: even more better, add a moving vs. non-moving
+			// centreOfRotation
+		}
+
+		if (!second.isEmpty() && !second.isFirst() && (rotate || scale)) {
+			PVector fromVec = second.getFromVec();
+			fromVec.sub(first.getFromVec());
+
+			PVector toVec = second.getToVec();
+			toVec.sub(first.getToVec());
+
+			float toDist = toVec.mag();
+			float fromDist = fromVec.mag();
+			if (toDist > 0 && fromDist > 0) {
+				float angle = PVector.angleBetween(fromVec, toVec);
+				PVector cross = PVector.cross(fromVec, toVec, new PVector());
+				cross.normalize();
+
+				if (angle != 0 && cross.z != 0 && rotate) {
+					rotate(angle, cross.x, cross.y, cross.z);
+				}
+				if (scale) {
+					float ratio = toDist / fromDist;
+					if (this.scalingLimit) {
+						// Limits have to be consistent; i.e. it should be
+						// possible
+						// to maintain aspect ratio while fulfilling all
+						// requirements
+						float w = this.getWidth();
+						float h = this.getHeight();
+						if (w * ratio > this.maxWidth) {
+							ratio = this.maxWidth / w;
+						}
+						else if (w * ratio < this.minWidth) {
+							ratio = this.minWidth / w;
+						}
+						if (h * ratio > this.maxHeight) {
+							ratio = this.maxHeight / h;
+						}
+						else if (h * ratio < this.minHeight) {
+							ratio = this.minHeight / h;
+						}
+					}
+					scale(ratio);
+				}
+			}
+		}
+
+		if (translateX || translateY) {
+			if (translateX) {
+				translate(-first.from.x, 0);
+			}
+			if (translateY) {
+				translate(0, -first.from.y);
+			}
+		}
+		else {
+			translate(-(this.x + this.width / 2), -(this.y + this.height / 2));
+		}
+
+		lastUpdate = maxTime(first, second);
+	}
+
 	/////////////////////
 	// Touch Accesors //
 	/////////////////////

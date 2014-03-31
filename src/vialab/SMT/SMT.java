@@ -1382,8 +1382,8 @@ public class SMT {
 		if( getTouches().length > 0)
 			SMTUtilities.invoke( touch, applet, null);
 
-		PGraphics extra = applet.createGraphics( 1, 1, PApplet.P3D);
-		renderer.pushDelegate( (PGraphics3D) extra);
+		//PGraphics extra = applet.createGraphics( 1, 1, PApplet.P3D);
+		//renderer.pushDelegate( (PGraphics3D) extra);
 		renderer.beginDraw();
 		sketch.invokeTouch();
 		renderer.endDraw();
