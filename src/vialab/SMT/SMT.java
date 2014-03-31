@@ -992,9 +992,9 @@ public class SMT {
 	 * @param xmlFilename The XML file to read in for zone configuration
 	 * @return The array of zones created from the XML File
 	 */
-	public static Zone[] add(String xmlFilename) {
+	/**public static Zone[] add(String xmlFilename) {
 		return SMT.sketch.addXMLZone(xmlFilename);
-	}
+	}*/
 
 	/**
 	 * This adds a set of zones to a parent Zone
@@ -1387,8 +1387,8 @@ public class SMT {
 		renderer.beginDraw();
 		sketch.invokeTouch();
 		renderer.endDraw();
-		updateStep();
 		renderer.popDelegate();
+		updateStep();
 	}
 
 	/**

@@ -471,75 +471,76 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	protected void invokeTouch(){
+		//setup
+		this.setDelegate( SMT.renderer);
+		pushMatrix();
+		applyMatrix( matrix);
+		pushStyle();
+		beginTouch();
+
+		//matrix setup
+		PMatrix3D pretouch = (PMatrix3D) super.getMatrix();
+		PMatrix3D pretouch_inv = new PMatrix3D( pretouch);
+		pretouch_inv.invert();
+
 		//if there are any touches to process
 		if( ! touchUpList.isEmpty() || ! touchDownList.isEmpty() ||
 				! touchMovedList.isEmpty() || ! pressList.isEmpty()){
 
-			//setup
-			beginInvokeTouch();
-			pushStyle();
-			beginTouch();
 
 			//invoke touch up
-			for( Touch touch : touchUpList)
-				touchUpInvoker( touch);
+			for( Touch touch : touchUpList){
+				touchUpImpl(touch);
+				SMTUtilities.invoke( method_touchUp, applet, this, touch);
+			}
 			touchUpList.clear();
 
-			//invoke touch press
-			for( Touch touch : pressList)
-				pressInvoker( touch);
-			pressList.clear();
-
 			//invoke touch down
-			for( Touch touch : touchDownList)
-				touchDownInvoker( touch);
+			for( Touch touch : touchDownList){
+				touchDownImpl( touch);
+				SMTUtilities.invoke( method_touchDown, applet, this, touch);
+			}
 			touchDownList.clear();
 
+			//invoke touch press
+			for( Touch touch : pressList){
+				pressImpl( touch);
+				SMTUtilities.invoke( method_press, applet, this, touch);
+			}
+			pressList.clear();
+
 			//invoke touch moved
-			for( Touch touch : touchMovedList)
-				touchMovedInvoker( touch);
+			for( Touch touch : touchMovedList){
+				touchMovedImpl( touch);
+				SMTUtilities.invoke( method_touchMoved, applet, this, touch);
+			}
 			//invoke touch
 			if( ! touchMovedList.isEmpty()){
 				touchImpl();
 				SMTUtilities.invoke( method_touch, applet, this);
 			}
 			touchMovedList.clear();
-
-			//clean up
-			endTouch();
-			popStyle();
-			endInvokeTouch();
 		}
 
-		for( Zone child : children) {
-			if (child.isChildActive()) {
-				child.backupMatrix = child.matrix.get();
+		//save it for later
+		PMatrix3D posttouch = (PMatrix3D) super.getMatrix();
 
-				child.beginInvokeTouch();
-				child.matrix.apply( this.matrix);
-				child.endInvokeTouch();
-
+		//tell our children to invoke touch
+		for( Zone child : children)
+			if( child.isActive() || child.hasActiveChild())
 				child.invokeTouch();
-				child.backupMatrix = null;
 
-				child.beginInvokeTouch();
-				PMatrix3D inverse = new PMatrix3D();
-				inverse.apply( this.matrix);
-				inverse.invert();
-				child.matrix.apply(inverse);
-				child.endInvokeTouch();
-			}
-		}
-	}
-
-	protected void beginInvokeTouch(){
-		this.setDelegate( SMT.renderer);
-		pushMatrix();
-	}
-	protected void endInvokeTouch(){
-		matrix.preApply( (PMatrix3D) getMatrix());
+		//clean up
+		endTouch();
+		popStyle();
 		popMatrix();
 		this.setDelegate( null);
+
+		//save any transformations
+		PMatrix3D change = new PMatrix3D();
+		change.apply( pretouch_inv);
+		change.apply( posttouch);
+		matrix.apply( change);
 	}
 
 	//default methods
@@ -555,7 +556,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	public void touch(){
-		this.drag();
+		//this.drag();
 	}
 
 	/** Override to specify a default behavior for draw */
@@ -589,24 +590,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 	public void touchMovedRegister(Touch touch) {
 		touchMovedList.add(touch);
-	}
-
-	//touch invokations
-	protected void touchUpInvoker( Touch touch) {
-		touchUpImpl(touch);
-		SMTUtilities.invoke( method_touchUp, applet, this, touch);
-	}
-	protected void touchDownInvoker( Touch touch) {
-		touchDownImpl( touch);
-		SMTUtilities.invoke( method_touchDown, applet, this, touch);
-	}
-	protected void pressInvoker( Touch touch) {
-		pressImpl( touch);
-		SMTUtilities.invoke( method_press, applet, this, touch);
-	}
-	protected void touchMovedInvoker( Touch touch) {
-		touchMovedImpl( touch);
-		SMTUtilities.invoke( method_touchMoved, applet, this, touch);
 	}
 
 	//begin/end methods
@@ -798,9 +781,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			i++;
 		}
 
-		for (long id : touchids) {
+		for (long id : touchids)
 			unassign(id);
-		}
 	}
 
 	/**
@@ -874,7 +856,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *            The XML file to read in for zone configuration
 	 * @return The array of zones created from the XML File
 	 */
-	public Zone[] addXMLZone(String xmlFilename) {
+	/**public Zone[] addXMLZone(String xmlFilename) {
 		List<Zone> zoneList = new ArrayList<Zone>();
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -960,11 +942,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		zoneList.add(zone);
 		add(zone);
 		add(node.getChildNodes(), zoneList);
-	}
+	}*/
 
 	/**
-	 * @param child
-	 *            The child of this zone to remove
+	 * @param child The child of this zone to remove
 	 * @return Whether the zone was successfully removed or not
 	 */
 	public boolean remove( Zone child){
@@ -1090,24 +1071,22 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @return Whether the zone has touches currently on it
 	 */
 	public boolean isActive() {
-		return !activeTouches.isEmpty() || !touchUpList.isEmpty() || !touchDownList.isEmpty()
-				|| !touchMovedList.isEmpty() || !pressList.isEmpty();
+		return ! (
+			activeTouches.isEmpty() && touchUpList.isEmpty() &&
+			touchDownList.isEmpty() && touchMovedList.isEmpty() &&
+			pressList.isEmpty());
 	}
 
 	/**
 	 * @return Whether the zone or one of its children has touches currently on
 	 *         it
 	 */
-	public boolean isChildActive() {
-		if (isActive()) {
-			return true;
-		}
-
-		for (Zone child : children) {
-			if (child.isChildActive()) {
+	public boolean hasActiveChild(){
+		for( Zone child : children)
+			if( child.isActive())
 				return true;
-			}
-		}
+			else if( child.hasActiveChild())
+				return true;
 		return false;
 	}
 

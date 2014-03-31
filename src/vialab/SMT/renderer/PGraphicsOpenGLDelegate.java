@@ -17,6 +17,9 @@ public class PGraphicsOpenGLDelegate extends PGraphicsOpenGL {
 	}
 
 	//accessor methods
+	public boolean hasDelegate(){
+		return delegate != null;
+	}
 	public PGraphicsOpenGL getDelegate(){
 		return delegate == null ? this : delegate;
 	}

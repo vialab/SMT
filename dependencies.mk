@@ -93,8 +93,7 @@ bin/vialab/SMT/ShapeZone.class: \
 	bin/vialab/SMT/Zone.class
 
 bin/vialab/SMT/Simulation.class: \
-	bin/vialab/SMT/Finger.class \
-	bin/vialab/SMT/MouseToTUIO.class
+	bin/vialab/SMT/Finger.class
 
 bin/vialab/SMT/SlideRevealZone.class: \
 	bin/vialab/SMT/Zone.class
@@ -178,7 +177,6 @@ bin/vialab/SMT/TouchSource.class:
 bin/vialab/SMT/TouchState.class:
 
 bin/vialab/SMT/Zone.class: \
-	bin/vialab/SMT/ImageZone.class \
 	bin/vialab/SMT/renderer/PGraphics3DDelegate.class \
 	bin/vialab/SMT/SMTUtilities.class \
 	bin/vialab/SMT/TouchPair.class

@@ -233,10 +233,10 @@ public class ButtonZone extends Zone {
 		 */
 	public void setAngle(float angle) {
 		this.angle = angle;
-
+/*
 		beginTouch();
 		rotateAbout(angle, CENTER);
-		endTouch();
+		endTouch();*/
 	}
 
 		/**
