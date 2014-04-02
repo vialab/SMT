@@ -1122,7 +1122,12 @@ public class SMT {
 	public static void draw() {
 		sketch.invokeDraw();
 
-		switch (touchDrawMethod) {
+		renderer.pushMatrix();
+		sketch.invokeTouch();
+		renderer.popMatrix();
+		updateStep();
+
+		switch( touchDrawMethod) {
 			case CUSTOM:
 				customTouchDrawer.draw( 
 					SMTTouchManager.currentTouchState, renderer);
@@ -1382,13 +1387,13 @@ public class SMT {
 		if( getTouches().length > 0)
 			SMTUtilities.invoke( touch, applet, null);
 
-		PGraphics extra = applet.createGraphics( 1, 1, PApplet.P3D);
-		renderer.pushDelegate( (PGraphics3D) extra);
-		renderer.beginDraw();
-		sketch.invokeTouch();
-		renderer.endDraw();
-		renderer.popDelegate();
-		updateStep();
+		//PGraphics extra = applet.createGraphics( 1, 1, PApplet.P3D);
+		//renderer.pushDelegate( (PGraphics3D) extra);
+		//renderer.beginDraw();
+		//sketch.invokeTouch();
+		//renderer.endDraw();
+		//renderer.popDelegate();
+		//updateStep();
 	}
 
 	/**

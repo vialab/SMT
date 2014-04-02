@@ -724,204 +724,65 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/////////////////////////////////////
 
 	/**
-	 * Performs rotate/scale/translate on the current graphics context. Should
-	 * typically be called inside a {@link Zone#beginTouch()} and
-	 * {@link Zone#endTouch()}.
-	 * 
+	 * Performs rotate/scale/translate 'gesture' on the zone.
 	 */
 	public void rst() {
-		rst(true, true, true, true);
+		rst( true, true, true, true);
 	}
 
 	/**
-	 * * Performs rotate/scale/translate on the current graphics context. Should
-	 * typically be called inside a {@link Zone#beginTouch()} and
-	 * {@link Zone#endTouch()}.
+	 * * Performs rotate/scale/translate 'gesture' on the zone.
 	 * 
-	 * @param rotate
-	 *            true if rotation should happen
-	 * @param scale
-	 *            true if scale should happen
-	 * @param translate
-	 *            true if translation should happen
+	 * @param rotate Whether rotation should happen
+	 * @param scale Whether scaling should happen
+	 * @param translate Whether tranlation should happen
 	 */
-	public void rst(boolean rotate, boolean scale, boolean translate) {
+	public void rst( boolean rotate, boolean scale, boolean translate) {
 		rst(rotate, scale, translate, translate);
 	}
 
 	/**
-	 * Performs rotate/scale/translate on the current graphics context. Should
-	 * typically be called inside a {@link Zone#beginTouch()} and
-	 * {@link Zone#endTouch()}.
+	 * Performs rotate/scale/translate 'gesture' on the zone.
 	 * 
-	 * @param rotate
-	 *            true if rotation should happen
-	 * @param scale
-	 *            true if scale should happen
-	 * @param translateX
-	 *            true if x-translation should happen
-	 * @param translateY
-	 *            true if y-translation should happen
+	 * @param rotate Whether rotation should happen
+	 * @param scale Whether scaling should happen
+	 * @param translateX Whether tranlation in the x direction should happen
+	 * @param translateY Whether tranlation in the y direction should happen
 	 */
-	public void rst(boolean rotate, boolean scale, boolean translateX, boolean translateY) {
-		if (!activeTouches.isEmpty()) {
-			List<TouchPair> pairs = getTouchPairs(2);
-			rst(pairs.get(0), pairs.get(1), rotate, scale, translateX, translateY);
-		}
-	}
+	public void rst( boolean rotate, boolean scale, boolean translateX, boolean translateY) {
 
-	/**
-	 * * Performs rotate/scale/translate on the current graphics context. Should
-	 * typically be called inside a {@link Zone#beginTouch()} and
-	 * {@link Zone#endTouch()}.
-	 * 
-	 * @param from1
-	 * @param from2
-	 * @param to1
-	 * @param to2
-	 */
-	public void rst(Touch from1, Touch from2, Touch to1, Touch to2) {
-		rst(from1, from2, to1, to2, true, true, true);
-	}
+		//draw origin
+		pushStyle();
+		noFill();
+		stroke( 100, 200, 100, 180);
+		strokeWeight( 5);
+		ellipse( 0, 0, 30, 30);
+		popStyle();
 
-	/**
-	 * * Performs rotate/scale/translate on the current graphics context. Should
-	 * typically be called inside a {@link Zone#beginTouch()} and
-	 * {@link Zone#endTouch()}.
-	 * 
-	 * @param from1
-	 * @param from2
-	 * @param to1
-	 * @param to2
-	 * @param rotate
-	 * @param scale
-	 * @param translate
-	 */
-	public void rst(Touch from1, Touch from2, Touch to1, Touch to2, boolean rotate, boolean scale,
-			boolean translate) {
-		rst(from1, from2, to1, to2, rotate, scale, translate, translate);
-	}
-
-	/**
-	 * * Performs rotate/scale/translate on the current graphics context. Should
-	 * typically be called inside a {@link Zone#beginTouch()} and
-	 * {@link Zone#endTouch()}.
-	 * 
-	 * @param from1
-	 * @param from2
-	 * @param to1
-	 * @param to2
-	 * @param rotate
-	 * @param scale
-	 * @param translateX
-	 * @param translateY
-	 */
-	public void rst(Touch from1, Touch from2, Touch to1, Touch to2, boolean rotate, boolean scale,
-			boolean translateX, boolean translateY) {
-		rst(new TouchPair(from1, to1), new TouchPair(from2, to2), rotate, scale, translateX,
-				translateY);
-	}
-
-	/**
-	 * * Performs rotate/scale/translate on the current graphics context. Should
-	 * typically be called inside a {@link Zone#beginTouch()} and
-	 * {@link Zone#endTouch()}.
-	 * 
-	 * @param first
-	 *            The first TouchPair
-	 * @param second
-	 *            The second TouchPair
-	 * @param rotate
-	 * @param scale
-	 * @param translateX
-	 * @param translateY
-	 */
-	protected void rst(TouchPair first, TouchPair second, boolean rotate, boolean scale,
-			boolean translateX, boolean translateY) {
-
-		if (first.matches() && second.matches()) {
-			// nothing to do
-			lastUpdate = maxTime(first, second);
+		//get touches
+		Touch[] touches = this.getTouches();
+		if( touches.length < 0)
 			return;
-		}
 
-		if (first.from == null) {
-			first.from = first.to;
-		}
-
-		// PMatrix3D matrix = new PMatrix3D();
-		if (translateX || translateY) {
-			if (translateX) {
-				translate(first.to.x, 0);
-			}
-			if (translateY) {
-				translate(0, first.to.y);
-			}
-		}
-		else {
-			translate(this.x + this.width / 2, this.y + this.height / 2);
-			// TODO: even better, add a centreOfRotation parameter
-			// TODO: even more better, add a moving vs. non-moving
-			// centreOfRotation
-		}
-
-		if (!second.isEmpty() && !second.isFirst() && (rotate || scale)) {
-			PVector fromVec = second.getFromVec();
-			fromVec.sub(first.getFromVec());
-
-			PVector toVec = second.getToVec();
-			toVec.sub(first.getToVec());
-
-			float toDist = toVec.mag();
-			float fromDist = fromVec.mag();
-			if (toDist > 0 && fromDist > 0) {
-				float angle = PVector.angleBetween(fromVec, toVec);
-				PVector cross = PVector.cross(fromVec, toVec, new PVector());
-				cross.normalize();
-
-				if (angle != 0 && cross.z != 0 && rotate) {
-					rotate(angle, cross.x, cross.y, cross.z);
-				}
-				if (scale) {
-					float ratio = toDist / fromDist;
-					if (this.scalingLimit) {
-						// Limits have to be consistent; i.e. it should be
-						// possible
-						// to maintain aspect ratio while fulfilling all
-						// requirements
-						float w = this.getWidth();
-						float h = this.getHeight();
-						if (w * ratio > this.maxWidth) {
-							ratio = this.maxWidth / w;
-						}
-						else if (w * ratio < this.minWidth) {
-							ratio = this.minWidth / w;
-						}
-						if (h * ratio > this.maxHeight) {
-							ratio = this.maxHeight / h;
-						}
-						else if (h * ratio < this.minHeight) {
-							ratio = this.minHeight / h;
-						}
-					}
-					scale(ratio);
-				}
-			}
-		}
-
-		if (translateX || translateY) {
-			if (translateX) {
-				translate(-first.from.x, 0);
-			}
-			if (translateY) {
-				translate(0, -first.from.y);
-			}
-		}
-		else {
-			translate(-(this.x + this.width / 2), -(this.y + this.height / 2));
-		}
-
-		lastUpdate = maxTime(first, second);
+		Touch first = touches[0];
+		//get global inverse
+		pushMatrix();
+		PMatrix3D global = (PMatrix3D) getGlobalMatrix();
+		PMatrix3D global_inv = new PMatrix3D( global);
+		global_inv.invert();
+		//get first touch location in current co-ordinate system
+		PVector t0_g = new PVector( first.getX(), first.getY());
+		PVector t0 = global_inv.mult( t0_g, null);
+		//PVector t0 = fromZoneVector( t0_g);
+		//get first touch location in current co-ordinate system
+		//draw first touch
+		pushStyle();
+		noFill();
+		stroke( 200, 100, 100, 180);
+		strokeWeight( 5);
+		ellipse( t0.x, t0.y, 30, 30);
+		popStyle();
+		popMatrix();
 	}
 
 	/////////////////////
@@ -1593,16 +1454,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		ellipse(width / 2, height / 2, rntRadius, rntRadius);
 		popMatrix();
 		popStyle();
-	}
-
-	public void toss() {
-		// enable physics on this zone to make sure it can move from the toss
-		setPhysicsEnabled( true);
-		Touch t = getActiveTouch(0);
-		if (zoneBody != null && mJoint != null) {
-			mJoint.setTarget(new Vec2(t.x * SMT.box2dScale, (applet.height - t.y)
-					* SMT.box2dScale));
-		}
 	}
 
 	/**
