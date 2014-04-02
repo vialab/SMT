@@ -29,7 +29,7 @@ $(class_files): bin/%.class : src/%.java
 #basic commands
 build: $(class_files)
 
-$(jarfile): build
+$(jarfile): $(class_files)
 	jar cf $(jarfile) -C bin vialab/
 	jar uf $(jarfile) resources/
 jar: $(jarfile)
@@ -41,7 +41,7 @@ docs: $(docs_dir)
 docs-test: docs
 	chromium-browser $(docs_dir)/index.html
 
-package: build jar docs
+package: build $(jarfile) docs
 	mkdir SMT
 	cp -r examples library library.properties \
 		$(docs_dir) release_notes.md readme.md src \
@@ -70,7 +70,7 @@ cp-to-usb: package
 	cp SMT.zip /mnt/stronghold/
 
 #test commands
-test: test-basic
+test: test-touchcolours
 
 # feature tests
 test-android: build jar
