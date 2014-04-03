@@ -758,31 +758,44 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		strokeWeight( 5);
 		ellipse( 0, 0, 30, 30);
 		popStyle();
-
 		//get touches
 		Touch[] touches = this.getTouches();
-		if( touches.length < 0)
-			return;
+		if( touches.length < 0);
 
 		Touch first = touches[0];
+		Touch first_old =
+			SMTUtilities.getLastTouchAtTime( first, lastUpdate);
+		if( first_old == null)
+			first_old = first;
 		//get global inverse
-		pushMatrix();
 		PMatrix3D global = (PMatrix3D) getGlobalMatrix();
 		PMatrix3D global_inv = new PMatrix3D( global);
 		global_inv.invert();
-		//get first touch location in current co-ordinate system
-		PVector t0_g = new PVector( first.getX(), first.getY());
-		PVector t0 = global_inv.mult( t0_g, null);
-		//PVector t0 = fromZoneVector( t0_g);
-		//get first touch location in current co-ordinate system
+		//get touch locations in current co-ordinate system
+		 PVector t00_g = new PVector( first.getX(), first.getY());
+		PVector t01_g = new PVector( first_old.getX(), first_old.getY());
+		PVector t00 = global_inv.mult( t00_g, null);
+		PVector t01 = global_inv.mult( t01_g, null);
+
 		//draw first touch
 		pushStyle();
 		noFill();
 		stroke( 200, 100, 100, 180);
 		strokeWeight( 5);
-		ellipse( t0.x, t0.y, 30, 30);
+		ellipse( t00.x, t00.y, 30, 30);
 		popStyle();
-		popMatrix();
+
+/*
+		PVector t10_g = new PVector( first.getX(), first.getY());
+		PVector t11_g = new PVector( first.getX(), first.getY());
+		PVector t10 = global_inv.mult( t10_g, null);
+		PVector t11 = global_inv.mult( t11_g, null);
+*/
+
+		//update time
+		lastUpdate = first.currentTime;
+		//lastUpdate = maxTime( lastUpdate, first.currentTime);
+		//lastUpdate = maxTime( first, second);
 	}
 
 	/////////////////////

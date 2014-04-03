@@ -1407,7 +1407,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 			ty = getParent().getLocalY( pair.to);
 		}
 		
-		if(!dragSeenTouch.contains(pair.from.sessionID)){
+		if( ! dragSeenTouch.contains( pair.from.sessionID)){
 			//the first time we see a touch we use its position for the offset
 			//of the Zone from the touch
 			offsetX = pair.from.x - getLocalX();
