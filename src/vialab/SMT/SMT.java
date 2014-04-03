@@ -1120,11 +1120,16 @@ public class SMT {
 	 * the matrix, and when at the end of the list, it draws the touch points.
 	 */
 	public static void draw() {
-		sketch.invokeDraw();
 
+		renderer.pushStyle();
 		renderer.pushMatrix();
+		renderer.ortho();
+		sketch.invokeDraw();
 		sketch.invokeTouch();
 		renderer.popMatrix();
+		renderer.popStyle();
+
+		//update jbox2d
 		updateStep();
 
 		switch( touchDrawMethod) {

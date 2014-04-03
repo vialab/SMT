@@ -8,7 +8,7 @@ import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 //processing imports
-import processing.core.PApplet;
+import processing.core.*;
 //tuio imports
 import TUIO.*;
 
@@ -290,6 +290,10 @@ public class Touch extends TuioCursor {
 	@Override
 	public float getY() {
 		return y;
+	}
+
+	public PVector getPositionVector(){
+		return new PVector( x, y);
 	}
 	
 	/**

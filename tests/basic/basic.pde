@@ -67,5 +67,5 @@ void pickDrawZone( Zone zone){
 
 void touchZone( Zone zone){
 	//rotate, scale, translate x, translate y
-	zone.rst( true, true, false, true);
+	zone.rst( true, true, true, true);
 }

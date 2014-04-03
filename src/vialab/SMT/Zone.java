@@ -359,8 +359,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		popStyle();
 
 		//draw children
-		for( Zone child : children)
+		for( Zone child : children){
+			//translate up a bit to prevent z-fighting
+			translate( 0f, 0f, 0.5f);
 			child.invokeDraw();
+		}
 
 		//pop transformations
 		if( this.isDirect())
@@ -439,8 +442,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		popStyle();
 
 		//draw children
-		for( Zone child : children)
+		for( Zone child : children){
+			//translate up a bit to prevent z-fighting
+			translate( 0f, 0f, 0.5f);
 			child.invokePickDraw();
+		}
 
 		//pop transformations
 		if( this.isDirect())
@@ -526,9 +532,12 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		PMatrix3D posttouch = (PMatrix3D) super.getMatrix();
 
 		//tell our children to invoke touch
-		for( Zone child : children)
+		for( Zone child : children){
+			//translate up a bit to prevent z-fighting
+			translate( 0f, 0f, 0.5f);
 			if( child.isActive() || child.hasActiveChild())
 				child.invokeTouch();
+		}
 
 		//clean up
 		endTouch();
@@ -749,7 +758,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param translateX Whether tranlation in the x direction should happen
 	 * @param translateY Whether tranlation in the y direction should happen
 	 */
-	public void rst( boolean rotate, boolean scale, boolean translateX, boolean translateY) {
+	public void rst( boolean rotate, boolean scale, boolean translate_x, boolean translate_y) {
 
 		//draw origin
 		pushStyle();
@@ -760,42 +769,105 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		popStyle();
 		//get touches
 		Touch[] touches = this.getTouches();
-		if( touches.length < 0);
+		if( touches.length < 0)
+			return;
 
+		//get global inverse
+		PMatrix3D global = (PMatrix3D) getGlobalMatrix();
+		PMatrix3D global_inv = new PMatrix3D( global);
+		global_inv.invert();
+
+		//get first touch
 		Touch first = touches[0];
 		Touch first_old =
 			SMTUtilities.getLastTouchAtTime( first, lastUpdate);
 		if( first_old == null)
 			first_old = first;
-		//get global inverse
-		PMatrix3D global = (PMatrix3D) getGlobalMatrix();
-		PMatrix3D global_inv = new PMatrix3D( global);
-		global_inv.invert();
+
 		//get touch locations in current co-ordinate system
-		 PVector t00_g = new PVector( first.getX(), first.getY());
-		PVector t01_g = new PVector( first_old.getX(), first_old.getY());
+		 PVector t00_g = first.getPositionVector();
+		PVector t01_g = first_old.getPositionVector();
 		PVector t00 = global_inv.mult( t00_g, null);
 		PVector t01 = global_inv.mult( t01_g, null);
 
-		//draw first touch
-		pushStyle();
-		noFill();
-		stroke( 200, 100, 100, 180);
-		strokeWeight( 5);
-		ellipse( t00.x, t00.y, 30, 30);
-		popStyle();
+		//if we only have one
+		if( touches.length == 1){
+		//just do translations
+			PVector dt = PVector.sub( t00, t01);
+			translate(
+				translate_x ? dt.x : 0,
+				translate_y ? dt.y : 0);
 
-/*
-		PVector t10_g = new PVector( first.getX(), first.getY());
-		PVector t11_g = new PVector( first.getX(), first.getY());
-		PVector t10 = global_inv.mult( t10_g, null);
-		PVector t11 = global_inv.mult( t11_g, null);
-*/
+			//update time
+			lastUpdate = maxTuioTime(
+				lastUpdate, first.currentTime);
 
-		//update time
-		lastUpdate = first.currentTime;
-		//lastUpdate = maxTime( lastUpdate, first.currentTime);
-		//lastUpdate = maxTime( first, second);
+			//we're done
+			return;
+		}
+		//if we have two or more touches
+		else {
+			//get second touch
+			Touch second = touches[1];
+			Touch second_old =
+				SMTUtilities.getLastTouchAtTime( second, lastUpdate);
+			if( second_old == null)
+				second_old = second;
+
+			//get touch locations in current co-ordinate system
+			PVector t10_g = second.getPositionVector();
+			PVector t11_g = second_old.getPositionVector();
+			PVector t10 = global_inv.mult( t10_g, null);
+			PVector t11 = global_inv.mult( t11_g, null);
+
+			//get line between first and second at both times
+			PVector bar0 = PVector.sub( t10, t00);
+			PVector bar1 = PVector.sub( t11, t01);
+			float bar0_mag = bar0.mag();
+			float bar1_mag = bar1.mag();
+			PVector bar_cross = PVector.cross( bar1, bar0, null);
+			bar_cross.normalize();
+
+			//push to new location
+			if( ! ( translate_x || translate_y))
+				translate(
+					halfDimension.width,
+					halfDimension.height);
+			else
+				translate(
+					translate_x ? t00.x : 0,
+					translate_y ? t00.y : 0);
+
+			if( bar0_mag > 0 && bar1_mag > 0){
+				//apply rotate
+				if( rotate && bar_cross.z != 0){
+					float theta = PVector.angleBetween( bar1, bar0);
+					rotate( theta,
+						bar_cross.x, bar_cross.y, bar_cross.z);
+				}
+
+				//apply scale
+				if( scale){
+					//clamp ratio
+					float ratio = bar0_mag / bar1_mag;
+					scale( ratio, ratio, 1);
+				}
+			}
+
+			//pull from old location
+			if( ! ( translate_x || translate_y))
+				translate(
+					- halfDimension.width,
+					- halfDimension.height);
+			else
+				translate(
+					translate_x ? - t01.x : 0,
+					translate_y ? - t01.y : 0);
+
+			//update time
+			lastUpdate = maxTuioTime(
+				lastUpdate, first.currentTime, second.currentTime);
+		}
 	}
 
 	/////////////////////
@@ -1501,6 +1573,20 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			touches.add(pair.to);
 		}
 		return maxTime(touches);
+	}
+
+	public static TuioTime maxTuioTime( TuioTime... times){
+		return times.length != 0 ?
+			Collections.max(
+				Arrays.asList( times),
+				SMTUtilities.tuioTimeComparator) :
+			null;
+	}
+
+	private float clampScale( float scale){
+		float width = this.getWidth();
+		float height = this.getHeight();
+		return scale;
 	}
 
 	/**

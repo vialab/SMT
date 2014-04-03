@@ -151,9 +151,9 @@ public class TexturedTouchDrawer
 				touch_tint_blue,
 				touch_tint_alpha * alpha);
 		graphics.translate( touch.x, touch.y);
-		graphics.vertex( 0, 0, 0, 1);
+		graphics.vertex( 0, 0, 100, 0, 1);
 		for( PVector vert : vertices)
-			graphics.vertex( vert.x, vert.y, 0, 0);
+			graphics.vertex( vert.x, vert.y, 100, 0, 0);
 		graphics.endShape();
 		graphics.popMatrix();
 		graphics.popStyle();
@@ -364,11 +364,11 @@ public class TexturedTouchDrawer
 			//place the next two bits of the quad strip
 			graphics.vertex(
 				(float) ( point.x + nx * scale),
-				(float) ( point.y + ny * scale),
+				(float) ( point.y + ny * scale), 100f,
 				(float) t, 0.0f);
 			graphics.vertex(
 				(float) ( point.x - nx * scale),
-				(float) ( point.y - ny * scale),
+				(float) ( point.y - ny * scale), 100f,
 				(float) t, 1.0f);
 		}
 		//clean up
