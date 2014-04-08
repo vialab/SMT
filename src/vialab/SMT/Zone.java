@@ -492,36 +492,26 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 
 			//invoke touch up
-			for( Touch touch : touchUpList){
-				touchUpImpl(touch);
-				SMTUtilities.invoke( method_touchUp, applet, this, touch);
-			}
+			for( Touch touch : touchUpList)
+				this.invokeTouchUpMethod( touch);
 			touchUpList.clear();
 
 			//invoke touch down
-			for( Touch touch : touchDownList){
-				touchDownImpl( touch);
-				SMTUtilities.invoke( method_touchDown, applet, this, touch);
-			}
+			for( Touch touch : touchDownList)
+				this.invokeTouchDownMethod( touch);
 			touchDownList.clear();
 
 			//invoke touch press
-			for( Touch touch : pressList){
-				pressImpl( touch);
-				SMTUtilities.invoke( method_press, applet, this, touch);
-			}
+			for( Touch touch : pressList)
+				this.invokePressMethod( touch);
 			pressList.clear();
 
 			//invoke touch moved
-			for( Touch touch : touchMovedList){
-				touchMovedImpl( touch);
-				SMTUtilities.invoke( method_touchMoved, applet, this, touch);
-			}
+			for( Touch touch : touchMovedList)
+				this.invokeTouchMovedMethod( touch);
 			//invoke touch
-			if( ! touchMovedList.isEmpty()){
-				touchImpl();
-				SMTUtilities.invoke( method_touch, applet, this);
-			}
+			if( ! touchMovedList.isEmpty())
+				this.invokeTouchMethod();
 			touchMovedList.clear();
 		}
 
@@ -547,6 +537,27 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		change.apply( pretouch_inv);
 		change.apply( posttouch);
 		matrix.apply( change);
+	}
+
+	protected void invokeTouchUpMethod( Touch touch){
+		touchUpImpl( touch);
+		SMTUtilities.invoke( method_touchUp, applet, this, touch);
+	}
+	protected void invokeTouchDownMethod( Touch touch){
+		touchDownImpl( touch);
+		SMTUtilities.invoke( method_touchDown, applet, this, touch);
+	}
+	protected void invokePressMethod( Touch touch){
+		pressImpl( touch);
+		SMTUtilities.invoke( method_press, applet, this, touch);
+	}
+	protected void invokeTouchMovedMethod( Touch touch){
+		touchMovedImpl( touch);
+		SMTUtilities.invoke( method_touchMoved, applet, this, touch);
+	}
+	protected void invokeTouchMethod(){
+		touchImpl();
+		SMTUtilities.invoke( method_touch, applet, this);
 	}
 
 	//default methods
