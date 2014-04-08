@@ -133,12 +133,12 @@ public class SMT {
 	private static int p211_revision = 224;
 	//supported processing versions
 	private static int revision_unknown = -1;
-	private static int revision_min = -1; //idk what the minimum is :S
-	private static String revision_min_name = "Unkown";
-	private static String revision_min_build = "unkown";
-	private static int revision_max = p21_revision;
-	private static String revision_max_name = "2.1";
-	private static String revision_max_build = "0223";
+	private static int revision_min = p211_revision; //idk what the minimum is :S
+	private static String revision_min_name = "2.1.1";
+	private static String revision_min_build = "0224";
+	private static int revision_max = revision_unknown;
+	private static String revision_max_name = "Unknown";
+	private static String revision_max_build = "unknown";
 	//supported processing version override
 	public static boolean pversion_override = false;
 
@@ -292,7 +292,7 @@ public class SMT {
 		}
 		if( auto_enabled) connect_auto( port);
 
-		applet.hint( PConstants.DISABLE_OPTIMIZED_STROKE);
+		//there's got to be a better way
 		addJVMShutdownHook();
 
 		world = new World( new Vec2( 0.0f, 0.0f), true);
@@ -473,7 +473,7 @@ public class SMT {
 				revision_name, revision_min_name, revision_min_build);
 			return false;}
 		//check revision upper bound
-		if( revision > revision_max){
+		if( revision_max != revision_unknown && revision > revision_max){
 			System.out.printf(
 				"You are using Processing build %s. This build of SMT requires, at maximum, Processing %s ( build %s ). Either downgrade processing or upgrade SMT. You might find a compatible build of SMT at vialab.science.uoit.ca/smt/download.php. Alternatively, to disable this check, set SMT.pversion_override = true.\n",
 				revision_name, revision_max_name, revision_max_build);
@@ -992,9 +992,9 @@ public class SMT {
 	 * @param xmlFilename The XML file to read in for zone configuration
 	 * @return The array of zones created from the XML File
 	 */
-	public static Zone[] add(String xmlFilename) {
+	/**public static Zone[] add(String xmlFilename) {
 		return SMT.sketch.addXMLZone(xmlFilename);
-	}
+	}*/
 
 	/**
 	 * This adds a set of zones to a parent Zone
@@ -1120,9 +1120,19 @@ public class SMT {
 	 * the matrix, and when at the end of the list, it draws the touch points.
 	 */
 	public static void draw() {
-		sketch.invokeDraw();
 
-		switch (touchDrawMethod) {
+		renderer.pushStyle();
+		renderer.pushMatrix();
+		renderer.ortho();
+		sketch.invokeDraw();
+		sketch.invokeTouch();
+		renderer.popMatrix();
+		renderer.popStyle();
+
+		//update jbox2d
+		updateStep();
+
+		switch( touchDrawMethod) {
 			case CUSTOM:
 				customTouchDrawer.draw( 
 					SMTTouchManager.currentTouchState, renderer);
@@ -1371,18 +1381,24 @@ public class SMT {
 			//update touches from mouseToTUIO joint cursors as they are a special case and need to be shown to user
 			for( Touch touch : SMTTouchManager.currentTouchState)
 				touch.isJointCursor = false;
-			for( Integer id : mtt.getJointCursors())
-				SMTTouchManager.currentTouchState.getById( id).isJointCursor = true;
+			for( Integer id : mtt.getJointCursors()){
+				Touch touch = SMTTouchManager.currentTouchState.getById( id);
+				if( touch != null)
+					touch.isJointCursor = true;
+			}
 		}
 
 		renderer.flush();
 		if( getTouches().length > 0)
 			SMTUtilities.invoke( touch, applet, null);
 
-		renderer.pushMatrix();
-		sketch.touch();
-		renderer.popMatrix();
-		updateStep();
+		//PGraphics extra = applet.createGraphics( 1, 1, PApplet.P3D);
+		//renderer.pushDelegate( (PGraphics3D) extra);
+		//renderer.beginDraw();
+		//sketch.invokeTouch();
+		//renderer.endDraw();
+		//renderer.popDelegate();
+		//updateStep();
 	}
 
 	/**

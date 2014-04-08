@@ -1,13 +1,14 @@
 package vialab.SMT;
 
 //standard library imports
+import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 //processing imports
-import processing.core.PApplet;
+import processing.core.*;
 //tuio imports
 import TUIO.*;
 
@@ -71,6 +72,12 @@ public class Touch extends TuioCursor {
 	long originalTimeMillis;
 	long startTimeMillis;
 	private Vector<TouchListener> listeners;
+
+	//colors
+	//touch's tint
+	private Color touch_tint = null;
+	//trail's tint
+	private Color trail_tint = null;
 
 
 	//Constructors
@@ -284,6 +291,10 @@ public class Touch extends TuioCursor {
 	public float getY() {
 		return y;
 	}
+
+	public PVector getPositionVector(){
+		return new PVector( x, y);
+	}
 	
 	/**
 	 * @param zone
@@ -386,5 +397,38 @@ public class Touch extends TuioCursor {
 	}
 	public void removeTouchListener( TouchListener listener){
 		listeners.remove( listener);
+	}
+
+	/** Sets the desired tint of drawn touches.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public void setTint( float red, float green, float blue, float alpha){
+		//do validation?
+		touch_tint = new Color( (int) red, (int) green, (int) blue, (int) alpha);
+	}
+	/** Gets the tint of this touch.
+	 * @return The touch's tint
+	 */
+	public Color getTint(){
+		return touch_tint;
+	}
+
+	/** Sets the desired tint of drawn trails.
+	 * @param red The desired tint's red element
+	 * @param green The desired tint's green element
+	 * @param blue The desired tint's blue element
+	 * @param alpha The desired tint's alpha element
+	 */
+	public void setTrailTint( float red, float green, float blue, float alpha){
+		trail_tint = new Color( (int) red, (int) green, (int) blue, (int) alpha);
+	}
+	/** Gets the red aspect of tint of the drawn trail.
+	 * @return The desired tint's red element
+	 */
+	public Color getTrailTint(){
+		return trail_tint;
 	}
 }

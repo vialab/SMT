@@ -19,7 +19,7 @@ void setup(){
 	display_halfHeight = display_height / 2;
 	//processing window setup
 	frameRate( fps_limit);
-	size( display_width, display_height, P3D);
+	size( display_width, display_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//create zones
@@ -83,6 +83,7 @@ private class ColourSetter extends Zone {
 		popStyle();
 	}
 	public void touchImpl(){}
+	public void pressImpl( Touch touch){}
 }
 
 private class TouchColourSetter extends ColourSetter {
@@ -92,8 +93,9 @@ private class TouchColourSetter extends ColourSetter {
 			colour_red, colour_green, colour_blue, colour_alpha);
 	}
 	//touch method
-	public void touchDownImpl( Touch touch){
-		SMT.setTouchColour(
+	public void touchImpl(){
+		 Touch touch = getActiveTouch( 0);
+		touch.setTint(
 			colour_red, colour_green, colour_blue, colour_alpha);
 	}
 }
@@ -104,8 +106,9 @@ private class TrailColourSetter extends ColourSetter {
 			colour_red, colour_green, colour_blue, colour_alpha);
 	}
 	//touch method
-	public void touchDownImpl( Touch touch){
-		SMT.setTrailColour(
+	public void touchImpl(){
+		 Touch touch = getActiveTouch( 0);
+		touch.setTrailTint(
 			colour_red, colour_green, colour_blue, colour_alpha);
 	}
 }

@@ -7,15 +7,14 @@
 import vialab.SMT.*;
 
 void setup() {
-    size(displayWidth, displayHeight, P3D);  
-    SMT.init(this, TouchSource.MULTIPLE);
-    
-    // Creates a zone
-    Zone z = new Zone("myZone", 10, 10, 50, 50);
+	size(displayWidth, displayHeight, SMT.RENDERER);
+	SMT.init( this, TouchSource.AUTOMATIC);
+	
+	// Creates a zone
+	Zone z = new Zone("myZone", 10, 10, 50, 50);
 
-    // Need to add the zone to the SMT
-    SMT.add(z);
+	// Need to add the zone to the SMT
+	SMT.add(z);
 }
-                    
-void draw() { 
-}
+
+void draw(){}

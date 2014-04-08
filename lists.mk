@@ -58,7 +58,6 @@ class_files = \
 	bin/vialab/SMT/util/ZonePicker.class \
 	bin/vialab/SMT/Zone.class \
 
-
 source_files = \
 	src/vialab/SMT/SMTProxyTuioListener.java \
 	src/vialab/SMT/AndroidToTUIO.java \

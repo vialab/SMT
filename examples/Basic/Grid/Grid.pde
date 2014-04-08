@@ -6,8 +6,8 @@
 import vialab.SMT.*;
 
 void setup() {
-  size(800, 800, P3D);
-  SMT.init(this, TouchSource.MULTIPLE);
+  size(800, 800, SMT.RENDERER);
+  SMT.init(this, TouchSource.AUTOMATIC);
   for(int i=0; i<12; i++){
     SMT.add(new Zone("Zone",200,400, 50, 50));
   }

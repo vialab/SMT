@@ -17,6 +17,9 @@ public class PGraphics3DDelegate extends PGraphics3D {
 	}
 
 	//accessor methods
+	public boolean hasDelegate(){
+		return delegate != null;
+	}
 	public PGraphics3D getDelegate(){
 		return delegate == null ? this : delegate;
 	}

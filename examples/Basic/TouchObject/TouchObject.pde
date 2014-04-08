@@ -9,8 +9,8 @@ import vialab.SMT.*;
 Touch first=null;
 
 void setup() {
-  size(800, 800, P3D);
-  SMT.init(this, TouchSource.MULTIPLE);
+  size(800, 800, SMT.RENDERER);
+  SMT.init(this, TouchSource.AUTOMATIC);
 }
 
 void draw(){ 

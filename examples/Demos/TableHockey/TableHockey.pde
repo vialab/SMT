@@ -40,9 +40,9 @@ void setup(){
 	display_halfHeight = display_height / 2;
 	//processing library setup
 	frameRate( fps_limit);
-	size( display_width, display_height, P3D);
+	size( display_width, display_height, SMT.RENDERER);
 	//smt library setup
-	SMT.init( this, TouchSource.TUIO_DEVICE);
+	SMT.init( this, TouchSource.AUTOMATIC);
 	SMT.setTouchColour( 30, 30, 30, 150);
 	SMT.setTrailColour( 30, 30, 30, 150);
 	SMT.setTouchRadius( 10);

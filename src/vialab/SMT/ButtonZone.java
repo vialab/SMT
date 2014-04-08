@@ -233,10 +233,10 @@ public class ButtonZone extends Zone {
 		 */
 	public void setAngle(float angle) {
 		this.angle = angle;
-
-		//beginTouch();
+/*
+		beginTouch();
 		rotateAbout(angle, CENTER);
-		//endTouch();
+		endTouch();*/
 	}
 
 		/**
@@ -299,10 +299,10 @@ public class ButtonZone extends Zone {
 	}
 
 	@Override
-	protected void pressInvoker(Touch t) {
+	protected void invokePressMethod( Touch touch) {
 		if (!deactivated) {
 			// only allow press if we are not deactivated
-			super.pressInvoker(t);
+			super.invokePressMethod( touch);
 		}
 	}
 }
