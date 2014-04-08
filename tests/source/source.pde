@@ -18,7 +18,7 @@ void setup(){
 	//processing library setup
 	frameRate( fps_limit);
 	size( window_width, window_height, SMT.RENDERER);
-	SMT.init( this, TouchSource.MULTIPLE);
+	SMT.init( this, TouchSource.AUTOMATIC);
 }
 
 void draw(){

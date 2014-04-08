@@ -12,9 +12,10 @@ class BubbleZone extends Zone {
     translate(random(displayWidth-100), random(displayHeight-100));
   }
 }
+
 void setup() {
-  size(displayWidth, displayHeight, P3D);
-  SMT.init(this, TouchSource.MULTIPLE);
+  size(displayWidth, displayHeight, SMT.RENDERER);
+  SMT.init(this, TouchSource.AUTOMATIC);
 }
 
 void draw() {

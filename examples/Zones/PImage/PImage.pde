@@ -4,8 +4,8 @@
 
 import vialab.SMT.*;
 void setup() {
-  size(800, 800, P3D);
-  SMT.init(this, TouchSource.MULTIPLE);
+  size(800, 800, SMT.RENDERER);
+  SMT.init(this, TouchSource.AUTOMATIC);
   SMT.add(new ImageZone(loadImage("moonwalk.jpg")));
 }
 void draw() {

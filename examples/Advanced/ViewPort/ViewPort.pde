@@ -8,12 +8,14 @@ import vialab.SMT.*;
 
 void setup(){
 	//initial setup
-	size(displayWidth, displayHeight, P3D);
-	SMT.init(this, TouchSource.MULTIPLE);
+	size( displayWidth, displayHeight, SMT.RENDERER);
+	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//create zones
-	Zone viewport = new ContainerZone("ViewPort", displayWidth/4, displayHeight/4, displayWidth/2, displayHeight/2);
-	Zone moving = new Zone("MovingZone", 0, 0, displayWidth/2, displayHeight/2);
+	Zone viewport = new ContainerZone(
+		"ViewPort", displayWidth/4, displayHeight/4, displayWidth/2, displayHeight/2);
+	Zone moving = new Zone(
+		"MovingZone", 0, 0, displayWidth/2, displayHeight/2);
 
 	//add zones and stuff
 	SMT.add( viewport);

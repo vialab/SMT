@@ -25,12 +25,12 @@ void draw() {
 import vialab.SMT.*;
 
 void setup() {
-  size(displayWidth, displayHeight, P3D);
+  size(displayWidth, displayHeight, SMT.RENDERER);
   
   //This provides the multi-touch functionality, and TouchSource selection
   //change MOUSE to SMART to switch from using the mouse for
   //input to Smart table multitouch input for example 
-  SMT.init(this, TouchSource.MULTIPLE);
+  SMT.init(this, TouchSource.AUTOMATIC);
   
   //this adds a zone to the SMT, with the given parameters
   //String name, int x, int y, int width, int height

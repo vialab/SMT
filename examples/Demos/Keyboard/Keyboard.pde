@@ -48,10 +48,10 @@ public void setup(){
 	window_halfHeight = window_height / 2;
 	//processing library setup
 	frameRate( fps_limit);
-	size( window_width, window_height, P3D);
+	size( window_width, window_height, SMT.RENDERER);
 	frame.setTitle("Swipe Keyboard Test");
 	//smt library setup
-	SMT.init( this, TouchSource.WM_TOUCH);
+	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//add keyboards
 	keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);

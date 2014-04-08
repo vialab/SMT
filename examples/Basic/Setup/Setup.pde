@@ -12,10 +12,10 @@
 import vialab.SMT.*;
 
 void setup() {
-    size(displayWidth, displayHeight , P3D);
+    size(displayWidth, displayHeight , SMT.RENDERER);
     
     // Initializes SMT
-    SMT.init(this, TouchSource.MULTIPLE); 
+    SMT.init(this, TouchSource.AUTOMATIC); 
 }
                     
 void draw() { 

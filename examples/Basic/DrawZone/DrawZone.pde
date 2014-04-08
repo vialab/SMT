@@ -14,17 +14,16 @@
 import vialab.SMT.*;
 
 void setup() {
-    size(displayWidth, displayHeight, P3D);  
-    SMT.init(this, TouchSource.MULTIPLE);
-    
-    Zone z = new Zone("myZone", 10, 10, 50, 50);
-    SMT.add(z);
+	size(displayWidth, displayHeight, P3D);  
+	SMT.init(this, TouchSource.MULTIPLE);
+	
+	Zone z = new Zone("myZone", 10, 10, 50, 50);
+	SMT.add(z);
 }
-                    
 void draw() {
 }
 
 // Draw function for "myZone"
 void drawMyZone(Zone z){ 
-    rect(0, 0, 50, 50);
+	rect(0, 0, 50, 50);
 }

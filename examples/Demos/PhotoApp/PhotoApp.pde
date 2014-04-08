@@ -10,8 +10,8 @@ import vialab.SMT.*;
 void setup() {
   //make a fullscreen sketch and start the touchclient with the
   //multiple backend, to use any device detected
-  size(displayWidth, displayHeight, P3D);
-  SMT.init(this, TouchSource.MULTIPLE);
+  size(displayWidth, displayHeight, SMT.RENDERER);
+  SMT.init(this, TouchSource.AUTOMATIC);
 
   //load 5 image zones with random size + position
   for (int i=0; i<5; i++) {  

@@ -5,8 +5,8 @@
 import vialab.SMT.*;
 
 void setup() {
-  size(displayWidth, displayHeight, OPENGL);
-  SMT.init(this, TouchSource.MULTIPLE);
+  size(displayWidth, displayHeight, SMT.RENDERER);
+  SMT.init(this, TouchSource.AUTOMATIC);
   
   //create a "UserArea" Zone for each user
   Zone z1=new Zone("UserArea",0, 0, 800, 200);

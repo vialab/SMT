@@ -27,7 +27,7 @@ void setup(){
 	//processing library setup
 	frameRate( fps_limit);
 	size( window_width, window_height, SMT.RENDERER);
-	SMT.init( this, TouchSource.MOUSE);
+	SMT.init( this, TouchSource.AUTOMATIC);
 	//SMT.setTouchDraw( TouchDraw.TEXTURED);
 
 	//load texture and texture options
