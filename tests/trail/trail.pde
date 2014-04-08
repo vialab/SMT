@@ -268,6 +268,9 @@ void keyPressed(){
 		case 'd':{
 			drawnnt = ! drawnnt;
 			break;}
+		case 'f':{
+			SMT.setTrailEnabled( ! SMT.getTrailEnabled());
+			break;}
 		default: break;
 	}
 }
