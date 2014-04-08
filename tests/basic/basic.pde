@@ -27,8 +27,8 @@ void setup(){
 	e = new Zone( 10, 10, 100, 100);
 	f = new Zone( 10, 10, 100, 100);
 
-	a.add( c);
 	a.add( b);
+	a.add( c);
 
 	b.add( e);
 
@@ -67,5 +67,5 @@ void pickDrawZone( Zone zone){
 
 void touchZone( Zone zone){
 	//rotate, scale, translate x, translate y
-	zone.rst( true, true, true, true);
+	zone.drag();
 }
