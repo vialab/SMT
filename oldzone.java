@@ -1986,7 +1986,7 @@ public class Zone extends PGraphicsDelegate implements PConstants, KeyListener {
 	 * or between calls to beginTouch() and endTouch().
 	 */
 	public void rnt() {
-		rnt(rntRadius);
+		rnt( rntRadius);
 	}
 
 	/**

@@ -267,10 +267,12 @@ class asdf {
 	public void toss() {
 		// enable physics on this zone to make sure it can move from the toss
 		setPhysicsEnabled( true);
-		Touch t = getActiveTouch(0);
-		if (zoneBody != null && mJoint != null) {
-			mJoint.setTarget(new Vec2(t.x * SMT.box2dScale, (applet.height - t.y)
-					* SMT.box2dScale));
+		Touch t = getActiveTouch( 0);
+		if( zoneBody != null && mJoint != null) {
+			mJoint.setTarget(
+				new Vec2(
+					t.x * SMT.box2dScale,
+					( applet.height - t.y) * SMT.box2dScale));
 		}
 	}
 

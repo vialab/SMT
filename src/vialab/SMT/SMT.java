@@ -292,6 +292,7 @@ public class SMT {
 		}
 		if( auto_enabled) connect_auto( port);
 
+		//there's got to be a better way
 		addJVMShutdownHook();
 
 		world = new World( new Vec2( 0.0f, 0.0f), true);
