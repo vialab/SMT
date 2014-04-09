@@ -8,7 +8,7 @@ int window_halfWidth;
 int window_halfHeight;
 int fps_limit = 60;
 //other
-Zone a, b, c, d, e, f, indirect;
+Zone indirect, frame, a, b, c, d, e, f;
 
 //main functions
 void setup(){
@@ -20,24 +20,20 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//other shit
-	indirect = new Zone( "IndirectZone", 00, 50, 300, 300);
-	a = new Zone( 50, 50, 100, 100);
+	frame = new Zone( "Frame", 100, 100, 300, 300);
+	indirect = new Zone( "IndirectZone", 00, 00, 300, 300);
+	a = new Zone( 100, 50, 100, 100);
 	b = new Zone( 50, 00, 100, 100);
+	c = new Zone( 10, 10, 100, 100);
 	d = new Zone( 10, 10, 100, 100);
 	e = new Zone( 10, 10, 100, 100);
 	f = new Zone( 10, 10, 100, 100);
 
-	a.add( b);
-	a.add( indirect);
-
-	b.add( e);
-
-	indirect.add( d);
-	indirect.add( f);
-
+	SMT.add( frame);
+	frame.add( indirect);
 	indirect.setDirect( false);
-
-	SMT.add( a);
+	indirect.add( a);
+	indirect.add( b);
 }
 
 void draw(){
@@ -67,14 +63,33 @@ void pickDrawZone( Zone zone){
 }
 
 void touchZone( Zone zone){
-	zone.drag();
+	zone.rst();
 }
 
+//void pickDrawIndirectZone( Zone zone){}
 void drawIndirectZone( Zone zone){
+	//background( 150);
 	pushStyle();
 	fill( 180, 100, 100);
 	stroke( 5, 5, 5, 255);
 	strokeWeight( 5);
-	rect( 0, 0, zone.width, zone.height, 15);
+	rect( - 10, - 10, zone.width + 20, zone.height + 20, 15);
 	popStyle();
+}
+
+void touchIndirectZone( Zone zone){
+	zone.rst();
+}
+
+void drawFrame( Zone zone){
+	pushStyle();
+	fill( 5, 5, 5, 180);
+	stroke( 240, 240, 240, 220);
+	strokeWeight( 5);
+	rect( - 5, - 5, zone.width + 00, zone.height + 00, 10);
+	popStyle();
+}
+
+void touchFrame( Zone zone){
+	zone.rst();
 }
