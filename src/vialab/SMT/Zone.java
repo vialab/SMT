@@ -347,14 +347,14 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 
 		//invoke proper draw method
-		if( this.isDirect()){}
+		if( this.isDirect()){
 			if( method_draw != null)
 				SMTUtilities.invoke( method_draw, applet, this);
 			else if( drawImpl_overridden)
 				drawImpl();
 			else
 				draw();
-		//}
+		}
 
 		//drawing cleanup
 		popStyle();
@@ -374,6 +374,19 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			//push transformations
 			pushMatrix();
 			applyMatrix( matrix);
+			//drawing setup
+			pushStyle();
+			hint( PConstants.DISABLE_OPTIMIZED_STROKE);
+
+			if( method_draw != null)
+				SMTUtilities.invoke( method_draw, applet, this);
+			else if( drawImpl_overridden)
+				drawImpl();
+			else
+				draw();
+
+			//drawing cleanup
+			popStyle();
 			//draw extra_graphics
 			pushStyle();
 			noTint();
