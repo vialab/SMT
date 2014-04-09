@@ -382,7 +382,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			//indirect zone debug thingy
 			noFill();
 			stroke( 220, 220, 220, 180);
-			rect( 0, 0, dimension.width, dimension.height);
+			//rect( 0, 0, dimension.width, dimension.height);
 			//cleanup
 			popStyle();
 			popMatrix();
