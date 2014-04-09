@@ -67,7 +67,7 @@ void pickDrawZone( Zone zone){
 }
 
 void touchZone( Zone zone){
-	zone.drag();
+	zone.rst();
 }
 
 void drawIndirectZone( Zone zone){
@@ -75,6 +75,10 @@ void drawIndirectZone( Zone zone){
 	fill( 180, 100, 100);
 	stroke( 5, 5, 5, 255);
 	strokeWeight( 5);
-	rect( 0, 0, zone.width, zone.height, 5);
+	rect( - 10, - 10, zone.width + 20, zone.height + 20, 15);
 	popStyle();
+}
+
+void touchIndirectZone( Zone zone){
+	zone.rst();
 }

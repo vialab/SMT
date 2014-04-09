@@ -394,7 +394,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				0, 0, dimension.width, dimension.height);
 			//indirect zone debug thingy
 			noFill();
-			stroke( 220, 220, 220, 180);
+			stroke( 240, 240, 240, 220);
 			rect( 0, 0, dimension.width, dimension.height);
 			//cleanup
 			popStyle();
