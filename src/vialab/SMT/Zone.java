@@ -347,7 +347,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 
 		//invoke proper draw method
-		if( direct){}
+		if( this.isDirect()){}
 			if( method_draw != null)
 				SMTUtilities.invoke( method_draw, applet, this);
 			else if( drawImpl_overridden)
@@ -380,9 +380,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			image( extra_graphics,
 				0, 0, dimension.width, dimension.height);
 			//indirect zone debug thingy
-			/*noFill();
+			noFill();
 			stroke( 220, 220, 220, 180);
-			rect( 0, 0, dimension.width, dimension.height);*/
+			rect( 0, 0, dimension.width, dimension.height);
 			//cleanup
 			popStyle();
 			popMatrix();
@@ -573,15 +573,21 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	public void touch(){
-		//this.drag();
+		this.drag();
 	}
 
 	/** Override to specify a default behavior for draw */
-	protected void drawImpl(){}
+	protected void drawImpl(){
+		draw();
+	}
 	/** Override to specify a default behavior for pickDraw */
-	protected void pickDrawImpl(){}
+	protected void pickDrawImpl(){
+		pickDraw();
+	}
 	/** Override to specify a default behavior for touch */
-	protected void touchImpl(){}
+	protected void touchImpl(){
+		touch();
+	}
 	/** Override to specify a default behavior for touchDown */
 	protected void touchDownImpl( Touch touch) {
 		addPhysicsMouseJoint();
@@ -991,13 +997,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	public void rst( boolean rotate, boolean scale, boolean translate_x, boolean translate_y) {
 
-		//draw origin
-		pushStyle();
-		noFill();
-		stroke( 100, 200, 100, 180);
-		strokeWeight( 5);
-		ellipse( 0, 0, 30, 30);
-		popStyle();
 		//get touches
 		Touch[] touches = this.getTouches();
 		if( touches.length < 0)

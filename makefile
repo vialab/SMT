@@ -70,11 +70,9 @@ cp-to-usb: package
 	cp SMT.zip /mnt/stronghold/
 
 #test commands
-test: test-touchcolours
+test: test-basic
 
 # feature tests
-test-android: build jar
-	pshell -a tests/android
 test-gets: build
 	java $(cp) vialab.SMT.test.TestGets
 test-keyboard: build jar
@@ -105,11 +103,11 @@ test-trail: build jar
 # other tests
 test-anon: build jar
 	pshell tests/anon
+test-basic: build jar
+	pshell tests/basic
+test-count: build jar
+	pshell tests/count
 test-id: build jar
 	pshell tests/id
 test-source: build jar
 	pshell tests/source
-test-count: build jar
-	pshell tests/count
-test-basic: build jar
-	pshell tests/basic
