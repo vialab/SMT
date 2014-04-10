@@ -329,6 +329,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	public void invokeDraw(){
 		//setup
+		drawing_on = true;
 		this.setDelegate( SMT.renderer);
 		if( ! this.isDirect()){
 			extraGraphicsNullCheck();
@@ -347,7 +348,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		//drawing setup
 		pushStyle();
 		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
-		drawing_on = true;
 
 		//invoke proper draw method
 		if( method_draw != null)
@@ -358,7 +358,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			draw();
 
 		//drawing cleanup
-		drawing_on = false;
 		popStyle();
 
 		//draw children
@@ -388,11 +387,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 		//cleanup
 		this.setDelegate( null);
+		drawing_on = false;
 	}
 
 	public void invokePickDraw(){
 		//setup
 		//all calls need to be redirected through this so that color calls can be discarded and background calls changed
+		drawing_on = true;
 		SMT.renderer.pushDelegate( this);
 		if( this.isDirect())
 			this.setDelegate(
@@ -468,15 +469,16 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		endPickDraw();
 		SMT.renderer.popDelegate();
 		this.setDelegate( null);
+		drawing_on = false;
 	}
 
 	protected void invokeTouch(){
 		//setup
 		this.setDelegate( SMT.renderer);
+		touching_on = true;
 		pushMatrix();
 		applyMatrix( matrix);
 		pushStyle();
-		touching_on = true;
 		beginTouch();
 
 		//matrix setup
@@ -520,10 +522,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 		//clean up
 		endTouch();
-		touching_on = false;
 		popStyle();
 		popMatrix();
 		this.setDelegate( null);
+		touching_on = false;
 
 		//save any transformations
 		PMatrix3D change = new PMatrix3D();
@@ -2680,5 +2682,63 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			super.setMatrix( source);
 		else
 			matrix.set( source);
+	}
+	@Override
+	public void applyMatrix(
+			float n00, float n01, float n02, float n10, float n11, float n12){
+		if( drawing_on || picking_on || touching_on)
+			super.applyMatrix( n00, n01, n02, n10, n11, n12);
+		else
+			matrix.apply( n00, n01, n02, n10, n11, n12);
+	}
+	@Override
+	public void applyMatrix(
+			float n00, float n01, float n02, float n03,
+			float n10, float n11, float n12, float n13,
+			float n20, float n21, float n22, float n23,
+			float n30, float n31, float n32, float n33){
+		if( drawing_on || picking_on || touching_on)
+			super.applyMatrix(
+				n00, n01, n02, n03, n10, n11, n12, n13,
+				n20, n21, n22, n23, n30, n31, n32, n33);
+		else
+			matrix.apply(
+				n00, n01, n02, n03, n10, n11, n12, n13,
+				n20, n21, n22, n23, n30, n31, n32, n33);
+	}
+	@Override
+	public void applyMatrix( PMatrix source){
+		if( drawing_on || picking_on || touching_on)
+			super.applyMatrix( source);
+		else
+			matrix.apply( source);
+	}
+	@Override
+	public void applyMatrix( PMatrix2D source){
+		if( drawing_on || picking_on || touching_on)
+			super.applyMatrix( source);
+		else
+			matrix.apply( source);
+	}
+	@Override
+	public void applyMatrix( PMatrix3D source){
+		if( drawing_on || picking_on || touching_on)
+			super.applyMatrix( source);
+		else
+			matrix.apply( source);
+	}
+	@Override
+	public void shearX( float angle){
+		if( drawing_on || picking_on || touching_on)
+			super.shearX( angle);
+		else
+			matrix.shearX( angle);
+	}
+	@Override
+	public void shearY( float angle){
+		if( drawing_on || picking_on || touching_on)
+			super.shearY( angle);
+		else
+			matrix.shearY( angle);
 	}
 }
