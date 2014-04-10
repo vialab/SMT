@@ -102,7 +102,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	private boolean pressImpl_overridden = false;
 
 	//picking variables
+	private boolean drawing_on = false;
 	private boolean picking_on = false;
+	private boolean touching_on = false;
 	protected Color pickColor = null;
 
 	// A LinkedHashMap will allow insertion order to be maintained.  A synchronised one will prevent concurrent modification (which can happen pretty easily with the draw loop + touch event handling).
@@ -345,6 +347,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		//drawing setup
 		pushStyle();
 		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
+		drawing_on = true;
 
 		//invoke proper draw method
 		if( method_draw != null)
@@ -355,6 +358,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			draw();
 
 		//drawing cleanup
+		drawing_on = false;
 		popStyle();
 
 		//draw children
@@ -472,6 +476,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		pushMatrix();
 		applyMatrix( matrix);
 		pushStyle();
+		touching_on = true;
 		beginTouch();
 
 		//matrix setup
@@ -515,6 +520,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 		//clean up
 		endTouch();
+		touching_on = false;
 		popStyle();
 		popMatrix();
 		this.setDelegate( null);
@@ -2580,5 +2586,99 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	public void tint(int arg0) {
 		if( ! picking_on)
 			super.tint(arg0);
+	}
+
+	//tranformation overrides
+	//when we're not drawing or not touching, we want to send tranformations to our transformation matrix instead.
+	@Override
+	public void rotate( float angle){
+		if( drawing_on || picking_on || touching_on)
+			super.rotate( angle);
+		else
+			matrix.rotate( angle);
+	}
+	@Override
+	public void rotate( float angle, float x, float y, float z){
+		if( drawing_on || picking_on || touching_on)
+			super.rotate( angle, x, y, z);
+		else
+			matrix.rotate( angle, x, y, z);
+	}
+	@Override
+	public void rotateX( float angle){
+		if( drawing_on || picking_on || touching_on)
+			super.rotateX( angle);
+		else
+			matrix.rotateX( angle);
+	}
+	@Override
+	public void rotateY( float angle){
+		if( drawing_on || picking_on || touching_on)
+			super.rotateY( angle);
+		else
+			matrix.rotateY( angle);
+	}
+	@Override
+	public void rotateZ( float angle){
+		if( drawing_on || picking_on || touching_on)
+			super.rotateZ( angle);
+		else
+			matrix.rotateZ( angle);
+	}
+	@Override
+	public void scale( float s){
+		if( drawing_on || picking_on || touching_on)
+			super.scale( s);
+		else
+			matrix.scale( s);
+	}
+	@Override
+	public void scale( float x, float y){
+		if( drawing_on || picking_on || touching_on)
+			super.scale( x, y);
+		else
+			matrix.scale( x, y);
+	}
+	@Override
+	public void scale( float x, float y, float z) {
+		if( drawing_on || picking_on || touching_on)
+			super.scale( x, y, z);
+		else
+			matrix.scale( x, y, z);
+	}
+	@Override
+	public void translate( float x, float y){
+		if( drawing_on || picking_on || touching_on)
+			super.translate( x, y);
+		else
+			matrix.translate( x, y);
+	}
+	@Override
+	public void translate( float x, float y, float z) {
+		if( drawing_on || picking_on || touching_on)
+			super.translate( x, y, z);
+		else
+			matrix.translate( x, y, z);
+	}
+	@Override
+	public void setMatrix( PMatrix source){
+		if( drawing_on || picking_on || touching_on)
+			super.setMatrix( source);
+		else
+			matrix.set( source);
+	}
+	@Override
+	public void setMatrix( PMatrix2D source){
+		if( drawing_on || picking_on || touching_on)
+			super.setMatrix( source);
+		else
+			matrix.set( source);
+	}
+	@Override
+	public void setMatrix( PMatrix3D source){
+		if( drawing_on || picking_on || touching_on)
+			super.setMatrix( source);
+		else
+			matrix.set( source);
 	}
 }

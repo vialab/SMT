@@ -30,6 +30,8 @@ void setup(){
 	e = new Zone( 10, 10, 100, 100);
 	f = new Zone( 10, 10, 100, 100);
 
+	d.translate( 110, 0);
+
 	SMT.add( c);
 	SMT.add( d);
 	SMT.add( e);
@@ -74,7 +76,7 @@ void touchZone( Zone zone){
 
 void drawContainer( Zone zone){
 	pushStyle();
-	fill( 5, 5, 5, 180);
+	fill( 5, 5, 5, 80);
 	noStroke();
 	rect( 0, 0, zone.width + 00, zone.height + 00, 0);
 	popStyle();
