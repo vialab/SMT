@@ -8,7 +8,7 @@ int window_halfWidth;
 int window_halfHeight;
 int fps_limit = 60;
 //other
-Zone container, viewport, frame, a, b, c, d, e, f;
+Zone container, viewport, frame, a, b;
 
 //main functions
 void setup(){
@@ -25,15 +25,6 @@ void setup(){
 	frame = new Zone( "Frame", 00, 00, 300, 300);
 	a = new Zone( 100, 50, 100, 100);
 	b = new Zone( 50, 00, 100, 100);
-	c = new Zone( 10, 10, 100, 100);
-	d = new Zone( 10, 10, 100, 100);
-	e = new Zone( 10, 10, 100, 100);
-	f = new Zone( 10, 10, 100, 100);
-
-	SMT.add( c);
-	SMT.add( d);
-	SMT.add( e);
-	SMT.add( f);
 
 	SMT.add( container);
 	container.add( viewport);
@@ -41,10 +32,10 @@ void setup(){
 	viewport.add( a);
 	viewport.add( b);
 	container.add( frame);
+
 }
 
 void draw(){
-	//a.translate( 10, 0);
 	background( 50, 50, 50);
 	pushStyle();
 	fill( 25, 25, 25, 130);
@@ -56,6 +47,7 @@ void draw(){
 	popStyle();
 }
 
+//draw methods for unnamed zones
 void drawZone( Zone zone){
 	pushStyle();
 	fill( 100, 170, 100);
@@ -72,6 +64,7 @@ void touchZone( Zone zone){
 	zone.rst();
 }
 
+//method for the bottom "container" zone
 void drawContainer( Zone zone){
 	pushStyle();
 	fill( 5, 5, 5, 180);
@@ -83,14 +76,19 @@ void touchContainer( Zone zone){
 	zone.rst();
 }
 
+//methods for the "viewport" zone
 void drawViewport( Zone zone){
 	background( 30f, 180);
 }
+//methods for the "viewport" zone
+//disable picking and touching
 void pickDrawViewport( Zone zone){}
 void touchViewport( Zone zone){}
 
+//methods for the "frame" zone
 void drawFrame( Zone zone){
 	pushMatrix();
+	translate( 0, 0, 0.5);
 	pushStyle();
 	//fill( 5, 5, 5, 180);
 	noFill();
@@ -100,5 +98,6 @@ void drawFrame( Zone zone){
 	popStyle();
 	popMatrix();
 }
+//disable picking and touching
 void pickDrawFrame( Zone zone){}
 void touchFrame( Zone zone){}

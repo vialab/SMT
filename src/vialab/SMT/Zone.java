@@ -333,8 +333,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			SMT.renderer.pushDelegate( extra_graphics);
 			extra_graphics.beginDraw();
 			extra_graphics.clear();
+			extra_graphics.ortho();
 		}
-		beginDraw();
 
 		//push transformations
 		if( this.isDirect()){
@@ -347,14 +347,12 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 
 		//invoke proper draw method
-		if( this.isDirect()){
-			if( method_draw != null)
-				SMTUtilities.invoke( method_draw, applet, this);
-			else if( drawImpl_overridden)
-				drawImpl();
-			else
-				draw();
-		}
+		if( method_draw != null)
+			SMTUtilities.invoke( method_draw, applet, this);
+		else if( drawImpl_overridden)
+			drawImpl();
+		else
+			draw();
 
 		//drawing cleanup
 		popStyle();
@@ -374,35 +372,17 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			//push transformations
 			pushMatrix();
 			applyMatrix( matrix);
-			//drawing setup
-			pushStyle();
-			hint( PConstants.DISABLE_OPTIMIZED_STROKE);
-
-			if( method_draw != null)
-				SMTUtilities.invoke( method_draw, applet, this);
-			else if( drawImpl_overridden)
-				drawImpl();
-			else
-				draw();
-
-			//drawing cleanup
-			popStyle();
 			//draw extra_graphics
 			pushStyle();
 			noTint();
 			image( extra_graphics,
 				0, 0, dimension.width, dimension.height);
-			//indirect zone debug thingy
-			noFill();
-			stroke( 240, 240, 240, 220);
-			rect( 0, 0, dimension.width, dimension.height);
 			//cleanup
 			popStyle();
 			popMatrix();
 		}
 
 		//cleanup
-		endDraw();
 		this.setDelegate( null);
 	}
 
@@ -499,34 +479,28 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		PMatrix3D pretouch_inv = new PMatrix3D( pretouch);
 		pretouch_inv.invert();
 
-		//if there are any touches to process
-		if( ! touchUpList.isEmpty() || ! touchDownList.isEmpty() ||
-				! touchMovedList.isEmpty() || ! pressList.isEmpty()){
+		//invoke touch up
+		for( Touch touch : touchUpList)
+			this.invokeTouchUpMethod( touch);
+		touchUpList.clear();
 
+		//invoke touch down
+		for( Touch touch : touchDownList)
+			this.invokeTouchDownMethod( touch);
+		touchDownList.clear();
 
-			//invoke touch up
-			for( Touch touch : touchUpList)
-				this.invokeTouchUpMethod( touch);
-			touchUpList.clear();
+		//invoke touch press
+		for( Touch touch : pressList)
+			this.invokePressMethod( touch);
+		pressList.clear();
 
-			//invoke touch down
-			for( Touch touch : touchDownList)
-				this.invokeTouchDownMethod( touch);
-			touchDownList.clear();
-
-			//invoke touch press
-			for( Touch touch : pressList)
-				this.invokePressMethod( touch);
-			pressList.clear();
-
-			//invoke touch moved
-			for( Touch touch : touchMovedList)
-				this.invokeTouchMovedMethod( touch);
-			//invoke touch
-			if( ! touchMovedList.isEmpty())
-				this.invokeTouchMethod();
-			touchMovedList.clear();
-		}
+		//invoke touch moved
+		for( Touch touch : touchMovedList)
+			this.invokeTouchMovedMethod( touch);
+		//invoke touch
+		if( ! touchMovedList.isEmpty())
+			this.invokeTouchMethod();
+		touchMovedList.clear();
 
 		//save it for later
 		PMatrix3D posttouch = (PMatrix3D) super.getMatrix();
@@ -586,7 +560,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	public void touch(){
-		this.drag();
+		//this.drag();
 	}
 
 	/** Override to specify a default behavior for draw */
@@ -629,8 +603,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	//begin/end methods
-	public void beginDraw(){}
-	public void endDraw(){}
 	public void beginPickDraw(){}
 	public void endPickDraw(){}
 	public void beginTouch(){}
@@ -695,6 +667,12 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			pickDraw_overridden = actual_pickDraw_class != Zone.class;}
 		//wtf why?
 		catch( NoSuchMethodException exception){}
+		/*try {
+			Method actual_touch = current_class.getMethod( "touch");
+			Class<?> actual_touch_class = actual_touch.getDeclaringClass();
+			touch_overridden = actual_touch_class != Zone.class;}
+		//wtf why?
+		catch( NoSuchMethodException exception){}*/
 
 		/*/debug
 		System.out.printf( "draw_overridden: %b\n", draw_overridden);
