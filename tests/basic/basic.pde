@@ -8,7 +8,7 @@ int window_halfWidth;
 int window_halfHeight;
 int fps_limit = 60;
 //other
-Zone indirect, frame, a, b, c, d, e, f;
+Zone container, viewport, frame, a, b, c, d, e, f;
 
 //main functions
 void setup(){
@@ -20,8 +20,9 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//other shit
-	frame = new Zone( "Frame", 100, 100, 300, 300);
-	indirect = new Zone( "IndirectZone", 00, 00, 300, 300);
+	container = new Zone( "Container", 100, 100, 300, 300);
+	viewport = new Zone( "Viewport", 00, 00, 300, 300);
+	frame = new Zone( "Frame", 00, 00, 300, 300);
 	a = new Zone( 100, 50, 100, 100);
 	b = new Zone( 50, 00, 100, 100);
 	c = new Zone( 10, 10, 100, 100);
@@ -29,11 +30,13 @@ void setup(){
 	e = new Zone( 10, 10, 100, 100);
 	f = new Zone( 10, 10, 100, 100);
 
-	SMT.add( frame);
-	frame.add( indirect);
-	indirect.setDirect( false);
-	indirect.add( a);
-	indirect.add( b);
+	SMT.add( container);
+	container.add( viewport);
+	viewport.setDirect( false);
+	viewport.add( a);
+	viewport.add( b);
+	//container.add( frame);
+
 }
 
 void draw(){
@@ -61,35 +64,38 @@ void drawZone( Zone zone){
 void pickDrawZone( Zone zone){
 	rect( 0, 0, zone.width, zone.height, 5);
 }
-
 void touchZone( Zone zone){
 	zone.rst();
 }
 
-//void pickDrawIndirectZone( Zone zone){}
-void drawIndirectZone( Zone zone){
-	//background( 150);
-	pushStyle();
-	fill( 180, 100, 100);
-	stroke( 5, 5, 5, 255);
-	strokeWeight( 5);
-	rect( - 10, - 10, zone.width + 20, zone.height + 20, 15);
-	popStyle();
-}
-
-void touchIndirectZone( Zone zone){
-	zone.rst();
-}
-
-void drawFrame( Zone zone){
+void drawContainer( Zone zone){
 	pushStyle();
 	fill( 5, 5, 5, 180);
-	stroke( 240, 240, 240, 220);
-	strokeWeight( 5);
-	rect( - 5, - 5, zone.width + 00, zone.height + 00, 10);
+	noStroke();
+	rect( 0, 0, zone.width + 00, zone.height + 00, 0);
 	popStyle();
 }
-
-void touchFrame( Zone zone){
+void touchContainer( Zone zone){
 	zone.rst();
 }
+
+void drawViewport( Zone zone){
+	background( 30f, 180);
+}
+void pickDrawViewport( Zone zone){}
+void touchViewport( Zone zone){}
+
+void drawFrame( Zone zone){
+	pushMatrix();
+	translate( 0, 0, 0.5);
+	pushStyle();
+	//fill( 5, 5, 5, 180);
+	noFill();
+	stroke( 240, 240, 240, 220);
+	strokeWeight( 5);
+	rect( 0, 0, zone.width + 00, zone.height + 00, 0);
+	popStyle();
+	popMatrix();
+}
+void pickDrawFrame( Zone zone){}
+void touchFrame( Zone zone){}
