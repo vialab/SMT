@@ -94,8 +94,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected Method method_press = null;
 	//override detection flags
 	private boolean draw_overridden = false;
-	private boolean drawImpl_overridden = false;
 	private boolean pickDraw_overridden = false;
+	private boolean touch_overridden = false;
+	//imple override detection fields
+	private boolean drawImpl_overridden = false;
 	private boolean pickDrawImpl_overridden = false;
 	private boolean touchImpl_overridden = false;
 	private boolean touchUDM_overridden = false;
@@ -551,8 +553,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		SMTUtilities.invoke( method_touchMoved, applet, this, touch);
 	}
 	protected void invokeTouchMethod(){
-		touchImpl();
-		SMTUtilities.invoke( method_touch, applet, this);
+		//invoke proper touch method
+		if( method_touch != null)
+			SMTUtilities.invoke( method_draw, applet, this);
+		else if( touchImpl_overridden)
+			touchImpl();
+		else
+			touch();
 	}
 
 	//default methods
@@ -675,12 +682,12 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			pickDraw_overridden = actual_pickDraw_class != Zone.class;}
 		//wtf why?
 		catch( NoSuchMethodException exception){}
-		/*try {
+		try {
 			Method actual_touch = current_class.getMethod( "touch");
 			Class<?> actual_touch_class = actual_touch.getDeclaringClass();
 			touch_overridden = actual_touch_class != Zone.class;}
 		//wtf why?
-		catch( NoSuchMethodException exception){}*/
+		catch( NoSuchMethodException exception){}
 
 		/*/debug
 		System.out.printf( "draw_overridden: %b\n", draw_overridden);
