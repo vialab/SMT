@@ -555,7 +555,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected void invokeTouchMethod(){
 		//invoke proper touch method
 		if( method_touch != null)
-			SMTUtilities.invoke( method_draw, applet, this);
+			SMTUtilities.invoke( method_touch, applet, this);
 		else if( touchImpl_overridden)
 			touchImpl();
 		else
@@ -575,7 +575,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	public void touch(){
-		//this.drag();
+		this.drag();
 	}
 
 	/** Override to specify a default behavior for draw */

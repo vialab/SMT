@@ -30,7 +30,7 @@ void setup(){
 			rect( 0, 0, 100, 100, 5);
 		}
 		public void touchImpl(){
-			rst();
+			drag();
 		}
 	};
 	SMT.add( asdf);
