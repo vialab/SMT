@@ -44,7 +44,7 @@ docs-test: docs
 package: build $(jarfile) docs
 	mkdir SMT
 	cp -r examples library library.properties \
-		$(docs_dir) release_notes.md readme.md src tests\
+		$(docs_dir) readme.md release_notes.md src tests\
 		SMT
 	zip -r SMT.zip SMT
 	rm -rf SMT
