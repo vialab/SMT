@@ -13,13 +13,11 @@ void setup(){
 
 	//Make a child Zone
 	Zone child = new Zone( "ChildZone");
-	SMT.add( child);
 	zone.add( child);
 	child.translate( 100, 100);
 
 	//Make a grandchild Zone
 	Zone grandchild = new Zone( "GrandChildZone");
-	SMT.add( grandchild);
 	child.add( grandchild);
 	grandchild.translate( 50, 50);
 }
@@ -32,30 +30,22 @@ void draw(){
 
 // "MyZone" functions
 
-//Draw functions for "MyZone"
+//Functions for "MyZone"
 void drawMyZone( Zone zone){
 	noStroke();
 	fill( #00bbbb);
 	rect(0, 0, 400, 400);
 }
-void pickDrawMyZone( Zone zone){
-	rect(0, 0, 400, 400);
-}
 void touchMyZone( Zone zone){
 	zone.rst();
-	System.out.printf("%d\n",
-		zone.getTouches().length);
 }
 
 // "ChildZone" functions
 
-//Draw functions for "MyZone"
+//Functions for "MyZone"
 void drawChildZone( Zone zone){
 	noStroke();
 	fill( #88dd88);
-	rect(0, 0, 200, 200);
-}
-void pickDrawChildZone( Zone zone){
 	rect(0, 0, 200, 200);
 }
 void touchChildZone( Zone zone){
@@ -63,13 +53,10 @@ void touchChildZone( Zone zone){
 }
 // "GrandChildZone" functions
 
-//Draw functions for "MyZone"
+//Functions for "MyZone"
 void drawGrandChildZone( Zone zone){
 	noStroke();
 	fill( #aa66aa);
-	rect(0, 0, 100, 100);
-}
-void pickDrawGrandChildZone( Zone zone){
 	rect(0, 0, 100, 100);
 }
 void touchGrandChildZone( Zone zone){
