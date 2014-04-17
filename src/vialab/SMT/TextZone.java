@@ -527,8 +527,8 @@ public class TextZone extends Zone {
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		this.addChar(e.getKey());
-		super.keyTyped(e);
+	public void keyTyped( KeyEvent event) {
+		this.addChar( event.getKey());
+		super.keyTyped( event);
 	}
 }

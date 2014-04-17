@@ -109,5 +109,7 @@ test-count: build jar
 	pshell tests/count
 test-id: build jar
 	pshell tests/id
+test-methods: build jar
+	pshell tests/methods
 test-source: build jar
 	pshell tests/source

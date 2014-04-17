@@ -93,15 +93,27 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected Method method_touchMoved = null;
 	protected Method method_press = null;
 	//override detection flags
-	private boolean draw_overridden = false;
-	private boolean pickDraw_overridden = false;
-	private boolean touch_overridden = false;
+	protected boolean draw_overridden = false;
+	protected boolean pickDraw_overridden = false;
+	protected boolean touch_overridden = false;
+	protected boolean keyPressed_overridden = false;
+	protected boolean keyReleased_overridden = false;
+	protected boolean keyTyped_overridden = false;
+	protected boolean touchUp_overridden = false;
+	protected boolean touchDown_overridden = false;
+	protected boolean touchMoved_overridden = false;
+	protected boolean press_overridden = false;
 	//imple override detection fields
-	private boolean drawImpl_overridden = false;
-	private boolean pickDrawImpl_overridden = false;
-	private boolean touchImpl_overridden = false;
-	private boolean touchUDM_overridden = false;
-	private boolean pressImpl_overridden = false;
+	protected boolean drawImpl_overridden = false;
+	protected boolean pickDrawImpl_overridden = false;
+	protected boolean touchImpl_overridden = false;
+	protected boolean keyPressedImpl_overridden = false;
+	protected boolean keyReleasedImpl_overridden = false;
+	protected boolean keyTypedImpl_overridden = false;
+	protected boolean touchUpImpl_overridden = false;
+	protected boolean touchDownImpl_overridden = false;
+	protected boolean touchMovedImpl_overridden = false;
+	protected boolean pressImpl_overridden = false;
 
 	//picking variables
 	private boolean drawing_on = false;
@@ -181,7 +193,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *
 	 * @param enabled Whether the direct flag should be enabled
 	 */
-	public void setDirect( boolean enabled) {
+	public void setDirect( boolean enabled){
 		if( enabled){
 			this.vertices = null;
 			this.tessGeo = null;
@@ -241,7 +253,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *   are 1
 	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
 	 */
-	public Zone(String name) {
+	public Zone(String name){
 		this(name, SMT.zone_renderer);
 	}
 
@@ -251,7 +263,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param name  - String: Name of the zone, used in the draw, touch ,etc methods
 	 * @param renderer - String: The PGraphics renderer that draws the Zone
 	 */
-	public Zone(String name, String renderer) {
+	public Zone(String name, String renderer){
 		this(name, 0, 0, 100, 100, renderer);
 	}
 
@@ -261,7 +273,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param width The width of the zone
 	 * @param height The height of the zone
 	 */
-	public Zone(int x, int y, int width, int height) {
+	public Zone(int x, int y, int width, int height){
 		this(x, y, width, height, SMT.zone_renderer);
 	}
 
@@ -272,7 +284,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param height The height of the zone
 	 * @param renderer The renderer that draws the zone
 	 */
-	public Zone( int x, int y, int width, int height, String renderer) {
+	public Zone( int x, int y, int width, int height, String renderer){
 		this( null, x, y, width, height, renderer);
 	}
 
@@ -284,7 +296,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param width The width of the zone
 	 * @param height The height of the zone
 	 */
-	public Zone( String name, int x, int y, int width, int height) {
+	public Zone( String name, int x, int y, int width, int height){
 		this( name, x, y, width, height, SMT.zone_renderer);
 	}
 
@@ -296,7 +308,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param height The height of the zone
 	 * @param renderer The renderer that draws the zone
 	 */
-	public Zone( String name, int x, int y, int width, int height, String renderer) {
+	public Zone( String name, int x, int y, int width, int height, String renderer){
 		super();
 		//check if smt has been initialized
 		if( SMT.applet == null)
@@ -537,20 +549,36 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	protected void invokeTouchUpMethod( Touch touch){
-		touchUpImpl( touch);
-		SMTUtilities.invoke( method_touchUp, applet, this, touch);
+		if( method_touchUp != null)
+			SMTUtilities.invoke( method_touchUp, applet, this, touch);
+		else if( touchUpImpl_overridden)
+			touchUpImpl( touch);
+		else
+			touchUp( touch);
 	}
 	protected void invokeTouchDownMethod( Touch touch){
-		touchDownImpl( touch);
-		SMTUtilities.invoke( method_touchDown, applet, this, touch);
+		if( method_touchDown != null)
+			SMTUtilities.invoke( method_touchDown, applet, this, touch);
+		else if( touchDownImpl_overridden)
+			touchDownImpl( touch);
+		else
+			touchDown( touch);
 	}
 	protected void invokePressMethod( Touch touch){
-		pressImpl( touch);
-		SMTUtilities.invoke( method_press, applet, this, touch);
+		if( method_press != null)
+			SMTUtilities.invoke( method_press, applet, this, touch);
+		else if( pressImpl_overridden)
+			pressImpl( touch);
+		else
+			press( touch);
 	}
 	protected void invokeTouchMovedMethod( Touch touch){
-		touchMovedImpl( touch);
-		SMTUtilities.invoke( method_touchMoved, applet, this, touch);
+		if( method_touchMoved != null)
+			SMTUtilities.invoke( method_touchMoved, applet, this, touch);
+		else if( touchMovedImpl_overridden)
+			touchMovedImpl( touch);
+		else
+			touchMoved( touch);
 	}
 	protected void invokeTouchMethod(){
 		//invoke proper touch method
@@ -562,7 +590,35 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			touch();
 	}
 
+	public void invokeKeyPressedMethod( KeyEvent event){
+		if( method_keyPressed != null)
+			SMTUtilities.invoke( method_keyPressed, applet, this, event);
+		else if( keyPressedImpl_overridden)
+			keyPressedImpl( event);
+		else
+			keyPressed( event);
+	}
+
+	public void invokeKeyReleasedMethod( KeyEvent event){
+		if( method_keyReleased != null)
+			SMTUtilities.invoke( method_keyReleased, applet, this, event);
+		else if( keyReleasedImpl_overridden)
+			keyReleasedImpl( event);
+		else
+			keyReleased( event);
+	}
+
+	public void invokeKeyTypedMethod( KeyEvent event){
+		if( method_keyTyped != null)
+			SMTUtilities.invoke( method_keyTyped, applet, this, event);
+		else if( keyTypedImpl_overridden)
+			keyTypedImpl( event);
+		else
+			keyTyped( event);
+	}
+
 	//default methods
+	/** Override to specify a behavior for draw */
 	public void draw(){
 		fill( 50, 50, 50, 150);
 		stroke( 255, 255, 255, 150);
@@ -570,50 +626,147 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		fill( 255, 255, 255, 150);
 		text("No Draw Method", 0, 0, width, height);
 	}
+	/** Override to specify a behavior for pickDraw */
 	public void pickDraw(){
 		rect( 0, 0, width, height);
 	}
 
+	/** Override to specify a behavior for touch */
 	public void touch(){
 		this.drag();
 	}
+	//other touch methods
+	/** Override to specify a behavior for touchDown */
+	public void touchDown( Touch touch){
+		addPhysicsMouseJoint();
+	}
+	/** Override to specify a behavior for touchMoved */
+	public void touchMoved( Touch touch){
+		addPhysicsMouseJoint();
+	}
+	/** Override to specify a behavior for touchUp */
+	public void touchUp( Touch touch){}
+	/** Override to specify a behavior for press */
+	public void press( Touch touch){}
 
-	/** Override to specify a default behavior for draw */
+	//keyboard methods
+	/**
+	 * This method is for use by Processing, override it to change what occurs
+	 * when a Processing KeyEvent is passed to the Zone
+	 * @param event The Processing KeyEvent that is sent to the Zone
+	 */
+	public void keyEvent( KeyEvent event){
+		switch ( event.getAction()){
+			case KeyEvent.RELEASE:
+				invokeKeyReleasedMethod( event);
+				break;
+			case KeyEvent.TYPE:
+				invokeKeyTypedMethod( event);
+				break;
+			case KeyEvent.PRESS:
+				invokeKeyPressedMethod( event);
+				break;
+		}
+	}
+
+	/**
+	 * Override to specify a behavior for keyPressed 
+	 */
+	@Deprecated
+	protected void keyPressed( KeyEvent event){}
+	/**
+	 * Override to specify a behavior for keyReleased
+	 */
+	@Deprecated
+	protected void keyReleased( KeyEvent event){}
+	/**
+	 * Override to specify a behavior for keyTyped 
+	 */
+	@Deprecated
+	protected void keyTyped( KeyEvent event){}
+
+	//impl methods
+
+	/**
+	 * Override to specify a default behavior for draw 
+	 * @deprecated override draw instead
+	 */
+	@Deprecated
 	protected void drawImpl(){
 		draw();
 	}
-	/** Override to specify a default behavior for pickDraw */
+	/**
+	 * Override to specify a default behavior for pickDraw 
+	 * @deprecated override pickDraw instead
+	 */
+	@Deprecated
 	protected void pickDrawImpl(){
 		pickDraw();
 	}
-	/** Override to specify a default behavior for touch */
+	/**
+	 * Override to specify a default behavior for touch 
+	 * @deprecated override touch instead
+	 */
+	@Deprecated
 	protected void touchImpl(){
 		touch();
 	}
-	/** Override to specify a default behavior for touchDown */
-	protected void touchDownImpl( Touch touch) {
-		addPhysicsMouseJoint();
-	}
-	/** Override to specify a default behavior for touchUp */
-	protected void touchUpImpl( Touch touch) {}
-	/** Override to specify a default behavior for press */
-	protected void pressImpl( Touch touch) {}
-	/** Override to specify a default behavior for touchMoved */
-	protected void touchMovedImpl(Touch touch) {
-		addPhysicsMouseJoint();
-	}
+	/**
+	 * Override to specify a default behavior for touchDown 
+	 * @deprecated override touchDown instead
+	 */
+	@Deprecated
+	protected void touchDownImpl( Touch touch){}
+	/**
+	 * Override to specify a default behavior for touchUp 
+	 * @deprecated override touchUp instead
+	 */
+	@Deprecated
+	protected void touchUpImpl( Touch touch){}
+	/**
+	 * Override to specify a default behavior for press 
+	 * @deprecated override press instead
+	 */
+	@Deprecated
+	protected void pressImpl( Touch touch){}
+	/**
+	 * Override to specify a default behavior for touchMoved 
+	 * @deprecated override touchMoved instead
+	 */
+	@Deprecated
+	protected void touchMovedImpl(Touch touch){}
+
+	/**
+	 * Override to specify a default behavior for keyPressed 
+	 * @deprecated override keyPressed instead
+	 */
+	@Deprecated
+	protected void keyPressedImpl( KeyEvent event){}
+	/**
+	 * Override to specify a default behavior for keyReleased
+	 * @deprecated override keyReleased instead
+	 */
+	@Deprecated
+	protected void keyReleasedImpl( KeyEvent event){}
+	/**
+	 * Override to specify a default behavior for keyTyped 
+	 * @deprecated override keyTyped instead
+	 */
+	@Deprecated
+	protected void keyTypedImpl( KeyEvent event){}
+
 
 	//touch registration methods
-	public void touchDownRegister(Touch touch) {
+	public void touchDownRegister(Touch touch){
 		touchDownList.add(touch);
 	}
-	public void touchUpRegister(Touch touch) {
+	public void touchUpRegister(Touch touch){
 		touchUpList.add(touch);
 	}
-	public void pressRegister(Touch touch) {
+	public void pressRegister(Touch touch){
 		pressList.add(touch);
 	}
-	public void touchMovedRegister(Touch touch) {
+	public void touchMovedRegister(Touch touch){
 		touchMovedList.add(touch);
 	}
 
@@ -626,8 +779,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * @param name The name of the zone to load the methods from
 	 */
-	protected void loadMethods( String name) {
-		if ( SMT.warnUnimplemented != null) {
+	protected void loadMethods( String name){
+		if ( SMT.warnUnimplemented != null){
 			if ( SMT.warnUnimplemented.booleanValue())
 				loadMethods( name, true, true, true, true, true, true);
 			else
@@ -651,52 +804,112 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	protected void loadMethods(
 			String name, boolean warnDraw, boolean warnTouch, boolean warnKeys,
-			boolean warnPick, boolean warnTouchUDM, boolean warnPress) {
+			boolean warnPick, boolean warnTouchUDM, boolean warnPress){
 
-		touchUDM_overridden =
-			SMTUtilities.checkImpl( Zone.class, "touchDown", this.getClass(), Touch.class) ||
-			SMTUtilities.checkImpl( Zone.class, "touchUp", this.getClass(), Touch.class) ||
-			SMTUtilities.checkImpl( Zone.class, "touchMoved", this.getClass(), Touch.class);
 
 		//check for extended class implementations
-		pressImpl_overridden =
-			SMTUtilities.checkImpl( Zone.class, "press", this.getClass(), Touch.class);
-		touchImpl_overridden =
-			SMTUtilities.checkImpl( Zone.class, "touch", this.getClass());
 		drawImpl_overridden =
 			SMTUtilities.checkImpl( Zone.class, "draw", this.getClass());
 		pickDrawImpl_overridden =
 			SMTUtilities.checkImpl( Zone.class, "pickDraw", this.getClass());
+		touchImpl_overridden =
+			SMTUtilities.checkImpl( Zone.class, "touch", this.getClass());
+		touchUpImpl_overridden =
+			SMTUtilities.checkImpl( Zone.class, "touchUp", this.getClass(), Touch.class);
+		touchDownImpl_overridden =
+			SMTUtilities.checkImpl( Zone.class, "touchDown", this.getClass(), Touch.class);
+		touchMovedImpl_overridden =
+			SMTUtilities.checkImpl( Zone.class, "touchMoved", this.getClass(), Touch.class);
+		pressImpl_overridden =
+			SMTUtilities.checkImpl( Zone.class, "press", this.getClass(), Touch.class);
+		keyPressedImpl_overridden =
+			SMTUtilities.checkImpl( Zone.class, "keyPressed", this.getClass(), KeyEvent.class);
+		keyReleasedImpl_overridden =
+			SMTUtilities.checkImpl( Zone.class, "keyReleased", this.getClass(), KeyEvent.class);
+		keyTypedImpl_overridden =
+			SMTUtilities.checkImpl( Zone.class, "keyTyped", this.getClass(), KeyEvent.class);
 
-		//check draw/pick draw
+		//check normal methods
 		Class<?> current_class = this.getClass();
+		//check draw method overridden
 		try {
 			Method actual_draw = current_class.getMethod( "draw");
 			Class<?> actual_draw_class = actual_draw.getDeclaringClass();
 			draw_overridden = actual_draw_class != Zone.class;}
 		//wtf why?
 		catch( NoSuchMethodException exception){}
+		//check pickDraw method overridden
 		try {
 			Method actual_pickDraw = current_class.getMethod( "pickDraw");
 			Class<?> actual_pickDraw_class = actual_pickDraw.getDeclaringClass();
 			pickDraw_overridden = actual_pickDraw_class != Zone.class;}
 		//wtf why?
 		catch( NoSuchMethodException exception){}
+		//check touch method overridden
 		try {
 			Method actual_touch = current_class.getMethod( "touch");
 			Class<?> actual_touch_class = actual_touch.getDeclaringClass();
 			touch_overridden = actual_touch_class != Zone.class;}
 		//wtf why?
 		catch( NoSuchMethodException exception){}
+		//check touch up method overridden
+		try {
+			Method actual_touchUp = current_class.getMethod( "touchUp", Touch.class);
+			Class<?> actual_touchUp_class = actual_touchUp.getDeclaringClass();
+			touchUp_overridden = actual_touchUp_class != Zone.class;}
+		//wtf why?
+		catch( NoSuchMethodException exception){}
+		//check touch down method overridden
+		try {
+			Method actual_touchDown = current_class.getMethod( "touchDown", Touch.class);
+			Class<?> actual_touchDown_class = actual_touchDown.getDeclaringClass();
+			touchDown_overridden = actual_touchDown_class != Zone.class;}
+		//wtf why?
+		catch( NoSuchMethodException exception){}
+		//check touch moved method overridden
+		try {
+			Method actual_touchMoved = current_class.getMethod( "touchMoved", Touch.class);
+			Class<?> actual_touchMoved_class = actual_touchMoved.getDeclaringClass();
+			touchMoved_overridden = actual_touchMoved_class != Zone.class;}
+		//wtf why?
+		catch( NoSuchMethodException exception){}
+		//check press method overridden
+		try {
+			Method actual_press = current_class.getMethod( "press", Touch.class);
+			Class<?> actual_press_class = actual_press.getDeclaringClass();
+			press_overridden = actual_press_class != Zone.class;}
+		//wtf why?
+		catch( NoSuchMethodException exception){}
+		//check keyPressed method overridden
+		try {
+			Method actual_keyPressed = current_class.getMethod( "keyPressed", KeyEvent.class);
+			Class<?> actual_keyPressed_class = actual_keyPressed.getDeclaringClass();
+			keyPressed_overridden = actual_keyPressed_class != Zone.class;}
+		//wtf why?
+		catch( NoSuchMethodException exception){}
+		//check keyReleased method overridden
+		try {
+			Method actual_keyReleased = current_class.getMethod( "keyReleased", KeyEvent.class);
+			Class<?> actual_keyReleased_class = actual_keyReleased.getDeclaringClass();
+			keyReleased_overridden = actual_keyReleased_class != Zone.class;}
+		//wtf why?
+		catch( NoSuchMethodException exception){}
+		//check keyTyped method overridden
+		try {
+			Method actual_keyTyped = current_class.getMethod( "keyTyped", KeyEvent.class);
+			Class<?> actual_keyTyped_class = actual_keyTyped.getDeclaringClass();
+			keyTyped_overridden = actual_keyTyped_class != Zone.class;}
+		//wtf why?
+		catch( NoSuchMethodException exception){}
 
-		/*/debug
+		/*//debug
 		System.out.printf( "draw_overridden: %b\n", draw_overridden);
 		System.out.printf( "pickDraw_overridden: %b\n", pickDraw_overridden);
 		System.out.printf( "drawImpl_overridden: %b\n", drawImpl_overridden);
 		System.out.printf( "pickDrawImpl_overridden: %b\n", pickDrawImpl_overridden);
 		System.out.println();*/
 
-		if (name != null) {
+		if (name != null){
 			//get draw method
 			method_draw = SMTUtilities.getZoneMethod(
 				Zone.class, applet, "draw", name, warnDraw,
@@ -734,11 +947,16 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				Zone.class, applet, "press", name, warnPress,
 				this.getClass(), Touch.class);
 
-			//get touch method
+			//check if any other touch functions have been overridden
+			boolean touchUDM_overridden =
+				touchUpImpl_overridden ||
+				touchDownImpl_overridden ||
+				touchMovedImpl_overridden;
 			if( method_touchUp != null || method_touchDown != null ||
 					method_touchMoved != null || touchUDM_overridden ||
 					pressImpl_overridden || method_press != null) 
 				warnTouch = false;
+			//get touch method
 			method_touch = SMTUtilities.getZoneMethod(
 				Zone.class, applet, "touch", name, warnTouch,
 					this.getClass());
@@ -764,7 +982,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param dragX Whether to drag along the x-axis
 	 * @param dragY Whether to drag along the y-axis
 	 */
-	public void drag( boolean dragX, boolean dragY) {
+	public void drag( boolean dragX, boolean dragY){
 		drag( dragX, dragX, dragY, dragY);
 	}
 
@@ -779,7 +997,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	public void drag(
 			boolean dragLeft, boolean dragRight,
-			boolean dragUp, boolean dragDown) {
+			boolean dragUp, boolean dragDown){
 		drag(
 			dragLeft, dragRight, dragUp, dragDown,
 			Integer.MIN_VALUE, Integer.MAX_VALUE,
@@ -801,8 +1019,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	public void drag(
 			boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown,
-			int leftLimit, int rightLimit, int upLimit, int downLimit) {
-		if (!activeTouches.isEmpty()) {
+			int leftLimit, int rightLimit, int upLimit, int downLimit){
+		if (!activeTouches.isEmpty()){
 			List<TouchPair> pairs = getTouchPairs(1);
 			drag( pairs.get(0),
 				dragLeft, dragRight, dragUp, dragDown,
@@ -823,7 +1041,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	public void drag(
 			boolean dragX, boolean dragY,
-			int leftLimit, int rightLimit, int upLimit, int downLimit) {
+			int leftLimit, int rightLimit, int upLimit, int downLimit){
 		drag(
 			dragX, dragX, dragY, dragY,
 			leftLimit, rightLimit, upLimit, downLimit);
@@ -836,7 +1054,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param from The Touch to drag from
 	 * @param to The Touch to drag to
 	 */
-	public void drag( Touch from, Touch to) {
+	public void drag( Touch from, Touch to){
 		drag( from, to, true, true);
 	}
 
@@ -849,7 +1067,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param dragX Whether to drag along the x-axis
 	 * @param dragY Whether to drag along the y-axis
 	 */
-	public void drag(Touch from, Touch to, boolean dragX, boolean dragY) {
+	public void drag(Touch from, Touch to, boolean dragX, boolean dragY){
 		drag(from, to, dragX, dragX, dragY, dragY);
 	}
 
@@ -865,7 +1083,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param dragDown Allow dragging Down
 	 */
 	public void drag(Touch from, Touch to, boolean dragLeft, boolean dragRight, boolean dragUp,
-			boolean dragDown) {
+			boolean dragDown){
 		drag(new TouchPair(from, to), dragLeft, dragRight, dragUp, dragDown);
 	}
 
@@ -880,7 +1098,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param dragDown Allow dragging Down
 	 */
 	protected void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp,
-			boolean dragDown) {
+			boolean dragDown){
 		drag(pair, dragLeft, dragRight, dragUp, dragDown, Integer.MIN_VALUE, Integer.MAX_VALUE,
 				Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
@@ -902,8 +1120,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected void drag(
 			TouchPair pair,
 			boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown,
-			int leftLimit, int rightLimit, int upLimit, int downLimit) {
-		if (pair.matches()) {
+			int leftLimit, int rightLimit, int upLimit, int downLimit){
+		if (pair.matches()){
 			lastUpdate = maxTime(pair);
 			return;
 		}
@@ -951,7 +1169,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param toX The x value to drag to
 	 * @param toY The y value to drag to
 	 */
-	public void drag(int fromX, int fromY, int toX, int toY) {
+	public void drag(int fromX, int fromY, int toX, int toY){
 		drag(fromX, fromY, toX, toY, true, true);
 	}
 
@@ -967,7 +1185,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param dragY Whether to drag along the y-axis
 	 */
 	public void drag(
-			int fromX, int fromY, int toX, int toY, boolean dragX, boolean dragY) {
+			int fromX, int fromY, int toX, int toY, boolean dragX, boolean dragY){
 		if (dragX)
 			translate(toX - fromX, 0);
 		if (dragY)
@@ -989,7 +1207,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param scale Whether scaling should happen
 	 * @param translate Whether tranlation should happen
 	 */
-	public void rst( boolean rotate, boolean scale, boolean translate) {
+	public void rst( boolean rotate, boolean scale, boolean translate){
 		rst(rotate, scale, translate, translate);
 	}
 
@@ -1001,7 +1219,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param translateX Whether tranlation in the x direction should happen
 	 * @param translateY Whether tranlation in the y direction should happen
 	 */
-	public void rst( boolean rotate, boolean scale, boolean translate_x, boolean translate_y) {
+	public void rst( boolean rotate, boolean scale, boolean translate_x, boolean translate_y){
 
 		//get touches
 		Touch[] touches = this.getTouches();
@@ -1032,7 +1250,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			PVector dt = PVector.sub( t00, t01);
 			translate(
 				translate_x ? dt.x : 0,
-				translate_y ? dt.y : 0);
+				translate_y ? dt.y : 0, 0);
 
 			//update time
 			lastUpdate = maxTuioTime(
@@ -1068,11 +1286,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			if( ! ( translate_x || translate_y))
 				translate(
 					halfDimension.width,
-					halfDimension.height);
+					halfDimension.height, 0);
 			else
 				translate(
 					translate_x ? t00.x : 0,
-					translate_y ? t00.y : 0);
+					translate_y ? t00.y : 0, 0);
 
 			if( bar0_mag > 0 && bar1_mag > 0){
 				//apply rotate
@@ -1094,11 +1312,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			if( ! ( translate_x || translate_y))
 				translate(
 					- halfDimension.width,
-					- halfDimension.height);
+					- halfDimension.height, 0);
 			else
 				translate(
 					translate_x ? - t01.x : 0,
-					translate_y ? - t01.y : 0);
+					translate_y ? - t01.y : 0, 0);
 
 			//update time
 			lastUpdate = maxTuioTime(
@@ -1120,7 +1338,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *
 	 * Using a default radius of min(width, height)/4, A quarter of the smallest side of the zone. Only works inside the zone's touch method, or between calls to beginTouch() and endTouch().
 	 */
-	public void rnt() {
+	public void rnt(){
 		rst( true, false, true, true);
 	}
 
@@ -1149,7 +1367,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param x
 	 * @param y
 	 */
-	public void rotateAbout( float angle, int x, int y) {
+	public void rotateAbout( float angle, int x, int y){
 		translate(x, y);
 		rotate(angle);
 		translate(-x, -y);
@@ -1163,11 +1381,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param mode
 	 *            CENTER or CORNER
 	 */
-	public void rotateAbout(float angle, int mode) {
-		if (mode == CORNER) {
+	public void rotateAbout(float angle, int mode){
+		if (mode == CORNER){
 			rotateAbout(angle, x, y);
 		}
-		else if (mode == CENTER) {
+		else if (mode == CENTER){
 			rotateAbout(angle, x + width / 2, y + height / 2);
 		}
 	}
@@ -1191,7 +1409,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param rightLimit
 	 *            Limit on how far to be able to drag right
 	 */
-	public void hSwipe(int leftLimit, int rightLimit) {
+	public void hSwipe(int leftLimit, int rightLimit){
 		drag(true, false, leftLimit, rightLimit, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 
@@ -1214,7 +1432,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param downLimit
 	 *            Limit on how far to be able to drag down
 	 */
-	public void vSwipe(int upLimit, int downLimit) {
+	public void vSwipe(int upLimit, int downLimit){
 		drag(false, true, Integer.MIN_VALUE, Integer.MAX_VALUE, upLimit, downLimit);
 	}
 
@@ -1278,7 +1496,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Assigns a touch to this zone, maintaining the order of touches.
 	 * @param touches A number of Touch objects, variable number of arguments
 	 */
-	public void assign(Touch... touches) {
+	public void assign(Touch... touches){
 		assign( Arrays.asList( touches));
 	}
 
@@ -1287,7 +1505,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param touches A number of Touch objects, in an Iterable object that
 	 * contains Touch objects
 	 */
-	public void assign( Iterable<? extends Touch> touches) {
+	public void assign( Iterable<? extends Touch> touches){
 		for( Touch touch : touches){
 			activeTouches.put( touch.sessionID, touch);
 			touch.assignZone( this);
@@ -1298,7 +1516,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Unassigns the given Touch from this zone, removing it from activeTouches.
 	 * @param touch
 	 */
-	public void unassign( Touch touch) {
+	public void unassign( Touch touch){
 		unassign( touch.sessionID);
 	}
 
@@ -1307,14 +1525,14 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * removing it from activeTouches.
 	 * @param sessionID
 	 */
-	public void unassign( long sessionID) {
+	public void unassign( long sessionID){
 		Touch t = activeTouches.get(sessionID);
 		// only removes if it exists in the touch mapping
-		if (t != null) {
+		if (t != null){
 			activeTouches.remove(sessionID);
 			t.unassignZone(this);
 			// at unassign if we have a mJoint destroy it
-			if (mJoint != null) {
+			if (mJoint != null){
 				SMT.world.destroyJoint(mJoint);
 				mJoint = null;
 			}
@@ -1327,7 +1545,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	public void unassignAll(){
 		long[] touchids = new long[activeTouches.keySet().size()];
 		int i = 0;
-		for (long id : activeTouches.keySet()) {
+		for (long id : activeTouches.keySet()){
 			touchids[i] = id;
 			i++;
 		}
@@ -1340,7 +1558,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param touch
 	 * @return Whether the given touch is assigned to this zone
 	 */
-	public boolean isAssigned( Touch touch) {
+	public boolean isAssigned( Touch touch){
 		return isAssigned( touch.sessionID);
 	}
 
@@ -1349,7 +1567,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @return Whether the Touch corresponding to the given id is assigned to
 	 * this zone
 	 */
-	public boolean isAssigned( long id) {
+	public boolean isAssigned( long id){
 		return activeTouches.containsKey( id);
 	}
 
@@ -1369,8 +1587,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param zone The zone to add to this zone
 	 * @return Whether the zone was successfully added or not
 	 */
-	public boolean add( Zone zone) {
-		if( zone != null) {
+	public boolean add( Zone zone){
+		if( zone != null){
 			if( zone != this && ! isAncestor( zone)){
 				zone.removeFromParent();
 				zone.parent = this;
@@ -1383,7 +1601,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				//zone.endTouch();
 				//zone.beginTouch();
 
-				if (!children.contains(zone)) {
+				if (!children.contains(zone)){
 					return children.add(zone);
 				}
 			}
@@ -1407,7 +1625,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *            The XML file to read in for zone configuration
 	 * @return The array of zones created from the XML File
 	 */
-	/**public Zone[] addXMLZone(String xmlFilename) {
+	/**public Zone[] addXMLZone(String xmlFilename){
 		List<Zone> zoneList = new ArrayList<Zone>();
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -1417,29 +1635,29 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			NodeList zones = doc.getElementsByTagName("zone");
 			add(zones, zoneList);
 		}
-		catch (ParserConfigurationException e) {
+		catch (ParserConfigurationException e){
 			e.printStackTrace();
 		}
-		catch (SAXException e) {
+		catch (SAXException e){
 			e.printStackTrace();
 		}
-		catch (IOException e) {
+		catch (IOException e){
 			e.printStackTrace();
 		}
 		return zoneList.toArray(new Zone[zoneList.size()]);
 	}
 
-	private void add(NodeList zones, List<Zone> zoneList) {
-		for (int i = 0; i < zones.getLength(); i++) {
+	private void add(NodeList zones, List<Zone> zoneList){
+		for (int i = 0; i < zones.getLength(); i++){
 			Node zoneNode = zones.item(i);
 			if( zoneNode.getNodeType() == Node.ELEMENT_NODE
-					&& zoneNode.getNodeName().equalsIgnoreCase("zone")) {
+					&& zoneNode.getNodeName().equalsIgnoreCase("zone")){
 				add(zoneNode, zoneList);
 			}
 		}
 	}
 
-	private void add(Node node, List<Zone> zoneList) {
+	private void add(Node node, List<Zone> zoneList){
 		NamedNodeMap map = node.getAttributes();
 		Node nameNode = map.getNamedItem("name");
 		Node xNode = map.getNamedItem("x");
@@ -1453,18 +1671,18 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 		String name = null;
 		int x, y, width, height;
-		if (nameNode != null) {
+		if (nameNode != null){
 			name = nameNode.getNodeValue();
 		}
 
-		if (imgNode != null) {
+		if (imgNode != null){
 			String imgFilename = imgNode.getNodeValue();
 			PImage img = applet.loadImage(imgFilename);
 
-			if (xNode != null && yNode != null) {
+			if (xNode != null && yNode != null){
 				x = Integer.parseInt(xNode.getNodeValue());
 				y = Integer.parseInt(yNode.getNodeValue());
-				if (widthNode != null && heightNode != null) {
+				if (widthNode != null && heightNode != null){
 					width = Integer.parseInt(widthNode.getNodeValue());
 					height = Integer.parseInt(heightNode.getNodeValue());
 					zone = new ImageZone(name, img, x, y, width, height);
@@ -1478,7 +1696,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			}
 		}
 		else {
-			if (xNode != null && yNode != null && widthNode != null && heightNode != null) {
+			if (xNode != null && yNode != null && widthNode != null && heightNode != null){
 				x = Integer.parseInt(xNode.getNodeValue());
 				y = Integer.parseInt(yNode.getNodeValue());
 				width = Integer.parseInt(widthNode.getNodeValue());
@@ -1501,7 +1719,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	public boolean remove( Zone child){
 		if (child != null){
-			if(children.contains(child)) {
+			if(children.contains(child)){
 				child.cleanUp();
 				child.parent = null;
 				return children.remove(child);
@@ -1538,7 +1756,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		return pickColor;
 	}
 
-	public void setPickColor( Color color) {
+	public void setPickColor( Color color){
 		this.pickColor = color;
 	}
 
@@ -1549,7 +1767,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * @param name The new name of the zone
 	 */
-	public void setName( String name) {
+	public void setName( String name){
 		if( name != null){
 			if( name.length() < 1)
 				throw new IllegalArgumentException(
@@ -1674,7 +1892,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param touch
 	 * @return the x position of zone in parent coordinates
 	 */
-	public float getLocalX( Touch touch) {
+	public float getLocalX( Touch touch){
 		return toZoneVector( new PVector(
 			touch.x, touch.y)).x;
 	}
@@ -1683,7 +1901,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param touch
 	 * @return the y position of the touch in local coordinates
 	 */
-	public float getLocalY( Touch touch) {
+	public float getLocalY( Touch touch){
 		return toZoneVector( new PVector(
 			touch.x, touch.y)).y;
 	}
@@ -1692,7 +1910,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Sets the local x position
 	 * @param x
 	 */
-	public void setX(float x) {
+	public void setX(float x){
 		if (getParent() == null)
 			setLocation( x, getOrigin().y);
 		else
@@ -1703,7 +1921,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Sets the local y position
 	 * @param y
 	 */
-	public void setY(float y) {
+	public void setY(float y){
 		if (getParent() == null)
 			setLocation( getOrigin().x, y);
 		else
@@ -1740,7 +1958,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 		// destroy the Zones Body, so it does not collide with other Zones any
 		// more
-		if (zoneBody != null) {
+		if (zoneBody != null){
 			SMT.world.destroyBody(zoneBody);
 			zoneBody = null;
 			zoneFixture = null;
@@ -1752,7 +1970,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * This disconnects this zone from its children and vice versa
 	 */
 	public void clearChildren(){
-		for( Zone zone : children) {
+		for( Zone zone : children){
 			this.remove(zone);
 		}
 	}
@@ -1761,11 +1979,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param index
 	 * @return The child at the given index, or null if the index is invalid
 	 */
-	public Zone getChild( int index) {
+	public Zone getChild( int index){
 		try {
 			return children.get(index);
 		}
-		catch (Exception e) {
+		catch (Exception e){
 			return null;
 		}
 	}
@@ -1809,7 +2027,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param height int The zone's new height.
 	 */
 	@Deprecated
-	public void setData(int x, int y, int width, int height) {
+	public void setData(int x, int y, int width, int height){
 		this.setSize( width, height);
 		this.setLocation( x, y);
 	}
@@ -1820,7 +2038,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param x
 	 * @param y
 	 */
-	public void setLocation( float x, float y) {
+	public void setLocation( float x, float y){
 		this.x = Math.round( x);
 		this.y = Math.round( y);
 		resetMatrix();
@@ -1907,7 +2125,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *            The new rotation radius of the zone, which is used by at least
 	 *            rnt() for now, controlling when rotation is done
 	 */
-	public void setRntRadius(float rntRadius) {
+	public void setRntRadius(float rntRadius){
 		this.rntRadius = rntRadius;
 	}
 
@@ -1920,7 +2138,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *            float - Y-coordinate to test
 	 * @return boolean True if x and y is in the zone, false otherwise.
 	 */
-	public boolean contains(float x, float y) {
+	public boolean contains(float x, float y){
 		PVector mouse = new PVector(x, y);
 		PVector world = this.toZoneVector(mouse);
 		return
@@ -1960,19 +2178,19 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		return fromZoneVector( new PVector(0, 0));
 	}
 
-	protected TuioTime maxTime(Iterable<Touch> touches) {
+	protected TuioTime maxTime(Iterable<Touch> touches){
 		ArrayList<TuioTime> times = new ArrayList<TuioTime>();
-		for (Touch t : touches) {
-			if (t != null) {
+		for (Touch t : touches){
+			if (t != null){
 				times.add(t.currentTime);
 			}
 		}
 		return Collections.max(times, SMTUtilities.tuioTimeComparator);
 	}
 
-	protected TuioTime maxTime(TouchPair... pairs) {
+	protected TuioTime maxTime(TouchPair... pairs){
 		ArrayList<Touch> touches = new ArrayList<Touch>(pairs.length * 2);
-		for (TouchPair pair : pairs) {
+		for (TouchPair pair : pairs){
 			touches.add(pair.from);
 			touches.add(pair.to);
 		}
@@ -1999,10 +2217,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param n Which touch to get
 	 * @return The Nth touch on the zone, or null if there is no such touch
 	 */
-	public Touch getActiveTouch(int n) {
+	public Touch getActiveTouch(int n){
 		int i = 0;
-		for (Touch t : activeTouches.values()) {
-			if (i == n) {
+		for (Touch t : activeTouches.values()){
+			if (i == n){
 				return t;
 			}
 			i++;
@@ -2035,11 +2253,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Zone, each TouchPair is the Touch at its current state, and its
 	 * previous state
 	 */
-	protected List<TouchPair> getTouchPairs(int size) {
+	protected List<TouchPair> getTouchPairs(int size){
 		ArrayList<TouchPair> pairs = new ArrayList<TouchPair>(size);
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++){
 			Touch touch = getActiveTouch(i);
-			if (touch == null) {
+			if (touch == null){
 				pairs.add(new TouchPair());
 			}
 			else {
@@ -2069,7 +2287,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *            None, 1 - First Generation children, ... , Integer.MAX_VALUE -
 	 *            All generations of children)
 	 */
-	public Zone clone(int cloneMaxChildGenerations) {
+	public Zone clone(int cloneMaxChildGenerations){
 		return clone(cloneMaxChildGenerations, null);
 	}
 
@@ -2087,13 +2305,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *            that is an inner class and refereneces its data, otherwise
 	 *            passing null is fine)
 	 */
-	public Zone clone(int cloneMaxChildGenerations, Object enclosingClass) {
+	public Zone clone(int cloneMaxChildGenerations, Object enclosingClass){
 		Zone clone;
 		try {
 			// if inner class, call its constructor properly by passing its
 			// enclosing class too
 			if (this.getClass().getEnclosingClass() != null
-					&& this.getClass().getEnclosingClass() == enclosingClass.getClass()) {
+					&& this.getClass().getEnclosingClass() == enclosingClass.getClass()){
 				// clone a Zone using a copy constructor
 				clone = this.getClass()
 						.getConstructor(this.getClass().getEnclosingClass(), this.getClass())
@@ -2104,14 +2322,14 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				clone = this.getClass().getConstructor(this.getClass()).newInstance(this);
 			}
 		}
-		catch (Exception e) {
+		catch (Exception e){
 			// if no copy constructor, use the old way of making a normal Zone
 			clone = new Zone(this.getName(), this.x, this.y, this.width, this.height);
 		}
 
 		// use the backupMatrix if the zone being clone has its matrix modified
 		// by parent, and so has backupMatrix set
-		if (this.backupMatrix != null) {
+		if (this.backupMatrix != null){
 			clone.matrix = this.backupMatrix.get();
 		}
 		else {
@@ -2119,8 +2337,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 		clone.inverse = this.inverse.get();
 
-		if (cloneMaxChildGenerations > 0) {
-			for (Zone child : this.getChildren()) {
+		if (cloneMaxChildGenerations > 0){
+			for (Zone child : this.getChildren()){
 				clone.add(child.clone(cloneMaxChildGenerations - 1, clone));
 			}
 		}
@@ -2133,7 +2351,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param global The PVector to put into relative coordinate space
 	 * @return A PVector relative to the zone's coordinate space
 	 */
-	public PVector toZoneVector(PVector global) {
+	public PVector toZoneVector(PVector global){
 		PMatrix3D temp = getGlobalMatrix();
 		temp.invert();
 		return temp.mult(global, null);
@@ -2147,7 +2365,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *            The PVector to put into global coordinate space
 	 * @return A PVector relative to the global coordinate space
 	 */
-	public PVector fromZoneVector( PVector local) {
+	public PVector fromZoneVector( PVector local){
 		return getGlobalMatrix().mult(local, null);
 	}
 
@@ -2162,15 +2380,15 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		// apply their matrix's in order
 		LinkedList<Zone> ancestors = new LinkedList<Zone>();
 		Zone zone = this;
-		while (zone.getParent() != null) {
+		while (zone.getParent() != null){
 			zone = zone.getParent();
 			ancestors.addFirst(zone);
 		}
 		// apply ancestors matrix's in proper order to make sure image is
 		// correctly oriented, but not when backupMatrix is set, as then it
 		// already has its parents applied to it.
-		if (backupMatrix == null) {
-			for (Zone i : ancestors) {
+		if (backupMatrix == null){
+			for (Zone i : ancestors){
 				temp.apply(i.matrix);
 			}
 		}
@@ -2185,11 +2403,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param zone
 	 *            The child to place on top of the others
 	 */
-	public void putChildOnTop( Zone zone) {
+	public void putChildOnTop( Zone zone){
 		// only remove and add if actually in the children arraylist and not
 		// already the last(top) already
 		if ( this.children.contains(zone) &&
-				(children.indexOf(zone) < children.size() - 1)) {
+				(children.indexOf(zone) < children.size() - 1)){
 			this.children.remove(zone);
 			this.children.add(zone);
 		}
@@ -2198,7 +2416,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	// changing the return of this method to true will cause indirect zones only redraw if setModified(true) is called on it.
 	protected boolean updateOnlyWhenModified(){ return false;}
 
-	public void enableScalingLimit( int maxW, int maxH, int minW, int minH) {
+	public void enableScalingLimit( int maxW, int maxH, int minW, int minH){
 		this.scalingLimit = true;
 		this.maxWidth = maxW;
 		this.maxHeight = maxH;
@@ -2257,7 +2475,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	public void addPhysicsMouseJoint(){
-		if( zoneBody != null && mJoint == null && physics) {
+		if( zoneBody != null && mJoint == null && physics){
 			mJointDef = new MouseJointDef();
 			mJointDef.maxForce = 1000000.0f;
 			mJointDef.frequencyHz = applet.frameRate;
@@ -2282,7 +2500,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * <a href="https://github.com/vialab/SMT/issues/174">this github issue</a>
 	 */
 	@Deprecated
-	public void setBoundObject(Object obj) {
+	public void setBoundObject(Object obj){
 		this.boundObject = obj;
 	}
 
@@ -2306,7 +2524,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	@Override
 	public void keyPressed( java.awt.event.KeyEvent event){
-		this.keyPressed(
+		this.invokeKeyPressedMethod(
 			new KeyEvent(
 				event,
 				event.getWhen(),
@@ -2323,7 +2541,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	@Override
 	public void keyReleased( java.awt.event.KeyEvent event){
-		this.keyReleased(
+		this.invokeKeyReleasedMethod(
 			new KeyEvent(
 				event,
 				event.getWhen(),
@@ -2340,7 +2558,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	@Override
 	public void keyTyped( java.awt.event.KeyEvent event){
-		this.keyTyped(
+		this.invokeKeyTypedMethod(
 			new KeyEvent(
 				event,
 				event.getWhen(),
@@ -2350,56 +2568,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				event.getKeyCode()));
 	}
 
-	public void keyPressed( KeyEvent event) {
-		keyPressedImpl( event);
-		SMTUtilities.invoke( method_keyPressed, applet, this, event);
-	}
-
-	public void keyReleased( KeyEvent event) {
-		keyReleasedImpl( event);
-		SMTUtilities.invoke( method_keyReleased, applet, this, event);
-	}
-
-	public void keyTyped( KeyEvent event) {
-		keyTypedImpl( event);
-		SMTUtilities.invoke( method_keyTyped, applet, this, event);
-	}
-
-	/** Override to specify a default behavior for keyPressed */
-	protected void keyPressedImpl(KeyEvent e) {}
-
-	/** Override to specify a default behavior for keyReleased */
-	protected void keyReleasedImpl(KeyEvent e) {}
-
-	/** Override to specify a default behavior for keyTyped */
-	protected void keyTypedImpl(KeyEvent e) {}
-
-	/**
-	 * This method is for use by Processing, override it to change what occurs
-	 * when a Processing KeyEvent is passed to the Zone
-	 * @param event The Processing KeyEvent that is sent to the Zone
-	 */
-	public void keyEvent(KeyEvent event) {
-		switch (event.getAction()) {
-		case KeyEvent.RELEASE:
-			keyReleased(event);
-			break;
-		case KeyEvent.TYPE:
-			keyTyped(event);
-			break;
-		case KeyEvent.PRESS:
-			keyPressed(event);
-			break;
-		}
-	}
-
 	//////////////////////////////
 	// Color protection methods //
 	//////////////////////////////
 
 	//background functions
 	@Override
-	public void background(float arg0, float arg1, float arg2, float arg3) {
+	public void background(float arg0, float arg1, float arg2, float arg3){
 		if( picking_on) return;
 		if( direct){
 			pushStyle();
@@ -2412,7 +2587,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	@Override
-	public void background(float arg0, float arg1, float arg2) {
+	public void background(float arg0, float arg1, float arg2){
 		if( picking_on) return;
 		if( direct){
 			pushStyle();
@@ -2425,7 +2600,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	@Override
-	public void background(float arg0, float arg1) {
+	public void background(float arg0, float arg1){
 		if( picking_on) return;
 		if( direct){
 			pushStyle();
@@ -2438,7 +2613,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	@Override
-	public void background(float arg0) {
+	public void background(float arg0){
 		if( picking_on) return;
 		if( direct){
 			pushStyle();
@@ -2451,7 +2626,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	@Override
-	public void background(int arg0, float arg1) {
+	public void background(int arg0, float arg1){
 		if( picking_on) return;
 		if( direct){
 			pushStyle();
@@ -2464,7 +2639,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	@Override
-	public void background(int arg0) {
+	public void background(int arg0){
 		if( picking_on) return;
 		if( direct){
 			pushStyle();
@@ -2477,7 +2652,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	@Override
-	public void background(PImage arg0) {
+	public void background(PImage arg0){
 		if( picking_on) return;
 		if( direct){
 			pushStyle();
@@ -2490,109 +2665,109 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	//color functions
 	@Override
-	public void fill(float arg0, float arg1, float arg2, float arg3) {
+	public void fill(float arg0, float arg1, float arg2, float arg3){
 		if( ! picking_on)
 			super.fill(arg0, arg1, arg2, arg3);
 	}
 
 	@Override
-	public void fill(float arg0, float arg1, float arg2) {
+	public void fill(float arg0, float arg1, float arg2){
 		if( ! picking_on)
 			super.fill(arg0, arg1, arg2);
 	}
 
 	@Override
-	public void fill(float arg0, float arg1) {
+	public void fill(float arg0, float arg1){
 		if( ! picking_on)
 			super.fill(arg0, arg1);
 	}
 
 	@Override
-	public void fill(float arg0) {
+	public void fill(float arg0){
 		if( ! picking_on)
 			super.fill(arg0);
 	}
 
 	@Override
-	public void fill(int arg0, float arg1) {
+	public void fill(int arg0, float arg1){
 		if( ! picking_on)
 			super.fill(arg0, arg1);
 	}
 
 	@Override
-	public void fill(int arg0) {
+	public void fill(int arg0){
 		if( ! picking_on)
 			super.fill(arg0);
 	}
 
 	@Override
-	public void stroke(float arg0, float arg1, float arg2, float arg3) {
+	public void stroke(float arg0, float arg1, float arg2, float arg3){
 		if( ! picking_on)
 			super.stroke(arg0, arg1, arg2, arg3);
 	}
 
 	@Override
-	public void stroke(float arg0, float arg1, float arg2) {
+	public void stroke(float arg0, float arg1, float arg2){
 		if( ! picking_on)
 			super.stroke(arg0, arg1, arg2);
 	}
 
 	@Override
-	public void stroke(float arg0, float arg1) {
+	public void stroke(float arg0, float arg1){
 		if( ! picking_on)
 			super.stroke(arg0, arg1);
 	}
 
 	@Override
-	public void stroke(float arg0) {
+	public void stroke(float arg0){
 		if( ! picking_on)
 			super.stroke(arg0);
 	}
 
 	@Override
-	public void stroke(int arg0, float arg1) {
+	public void stroke(int arg0, float arg1){
 		if( ! picking_on)
 			super.stroke(arg0, arg1);
 	}
 
 	@Override
-	public void stroke(int arg0) {
+	public void stroke(int arg0){
 		if( ! picking_on)
 			super.stroke(arg0);
 	}
 
 	@Override
-	public void tint(float arg0, float arg1, float arg2, float arg3) {
+	public void tint(float arg0, float arg1, float arg2, float arg3){
 		if( ! picking_on)
 			super.tint(arg0, arg1, arg2, arg3);
 	}
 
 	@Override
-	public void tint(float arg0, float arg1, float arg2) {
+	public void tint(float arg0, float arg1, float arg2){
 		if( ! picking_on)
 			super.tint(arg0, arg1, arg2);
 	}
 
 	@Override
-	public void tint(float arg0, float arg1) {
+	public void tint(float arg0, float arg1){
 		if( ! picking_on)
 			super.tint(arg0, arg1);
 	}
 
 	@Override
-	public void tint(float arg0) {
+	public void tint(float arg0){
 		if( ! picking_on)
 			super.tint(arg0);
 	}
 
 	@Override
-	public void tint(int arg0, float arg1) {
+	public void tint(int arg0, float arg1){
 		if( ! picking_on)
 			super.tint(arg0, arg1);
 	}
 
 	@Override
-	public void tint(int arg0) {
+	public void tint(int arg0){
 		if( ! picking_on)
 			super.tint(arg0);
 	}
@@ -2649,7 +2824,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			matrix.scale( x, y);
 	}
 	@Override
-	public void scale( float x, float y, float z) {
+	public void scale( float x, float y, float z){
 		if( drawing_on || picking_on || touching_on)
 			super.scale( x, y, z);
 		else
@@ -2663,7 +2838,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			matrix.translate( x, y);
 	}
 	@Override
-	public void translate( float x, float y, float z) {
+	public void translate( float x, float y, float z){
 		if( drawing_on || picking_on || touching_on)
 			super.translate( x, y, z);
 		else
