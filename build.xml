@@ -1,0 +1,61 @@
+<project>
+	<!-- properties -->
+	<property name="lib.dir" value="lib"/>
+	<property name="docs_dir" value="javadoc"/>
+
+	<!-- stuff -->
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+		<fileset dir="${lib.dir}/processing" includes="**/*.jar"/>
+	</path>
+	
+	<!-- targets -->
+	<target name="clean">
+		<delete dir="bin/vialab"/>
+		<delete dir="javadoc"/>
+		<delete dir="SMT"/>
+		<delete file="SMT.zip"/>
+		<delete file="library/SMT.jar"/>
+	</target>
+
+	<target name="compile">
+		<javac srcdir="src" destdir="bin"/>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar destfile="library/SMT.jar">
+			<fileset dir="bin"/>
+			<fileset dir="resources"/>
+		</jar>
+	</target>
+
+	<target name="build" depends="compile,jar">
+	</target>
+
+	<target name="package" depends="build">
+		<!-- copy files to SMT folder -->
+		<mkdir dir="SMT"/>
+		<copy todir="SMT">
+			<fileset dir="examples"/>
+		</copy>
+			<fileset dir="library"/>
+		<copy todir="SMT">
+		</copy>
+		<copy todir="SMT">
+			<fileset dir="${docs_dir}"/>
+		</copy>
+		<copy todir="SMT">
+			<fileset dir="src"/>
+		</copy>
+		<copy todir="SMT">
+			<fileset dir="tests"/>
+		</copy>
+		<copy file="library.properties" todir="SMT">
+		<copy file="release_notes.md" todir="SMT">
+		<copy file="readme.md" todir="SMT">
+		<!-- zip up files -->
+		<zip destfile="SMT.zip" basedir="SMT"/>
+		<!-- clean up -->
+		<delete dir="SMT"/>
+	</target>
+</project>
