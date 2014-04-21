@@ -1,5 +1,12 @@
 ## SMT :: Simple Multi-Touch Toolkit for Processing
 
+**Latest Release:** [4.0](https://github.com/vialab/SMT/releases/tag/v4.0)  
+**Latest Beta:** [4.0b1](https://github.com/vialab/SMT/releases/tag/v4.0b1)  
+**Latest Auto-Build:** [![Build Status](https://drone.io/github.com/vialab/SMT/status.png)](https://drone.io/github.com/vialab/SMT/latest)  
+**Research Portfolio:** [vialab.science.uoit.ca/portfolio/smt-toolkit](http://vialab.science.uoit.ca/portfolio/smt-toolkit)  
+
+--------------------------------------------
+
 ### Project Website: [vialab.science.uoit.ca/SMT](http://vialab.science.uoit.ca/SMT/)
 
 The project website includes:  
@@ -10,12 +17,6 @@ The project website includes:
  * Contact Information
 
 --------------------------------------------
-
-**Latest Release:** [4.0](https://github.com/vialab/SMT/releases/tag/v4.0)  
-**Latest Beta:** [4.0b1](https://github.com/vialab/SMT/releases/tag/v4.0b1)  
-**Latest Auto-Build:** [drone.io/github.com/KiwiStrongis/SMT/latest ![Build Status](https://drone.io/github.com/KiwiStrongis/SMT/status.png)](https://drone.io/github.com/KiwiStrongis/SMT/latest)  
-**Project Website:** [vialab.science.uoit.ca/SMT](http://vialab.science.uoit.ca/SMT/)  
-**Research Portfolio:** [vialab.science.uoit.ca/portfolio/smt-toolkit](http://vialab.science.uoit.ca/portfolio/smt-toolkit)  
 
 SMT (Simple Multi-Touch Toolkit) is a project to support the learning of HCI concepts.
 It provides an easy to use library for processing sketches to handle touch input and associated matrix and drawing functions, to allow quick development of the desired application.
