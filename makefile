@@ -8,13 +8,13 @@ clean-specials:
 	rm -rf javadoc/ SMT/
 
 #variables
-cp = -cp src:bin:lib/*:lib/processing/*
+cp = src:bin:lib/*:lib/processing/*
 dest = -d bin
-docscp = -classpath src:bin:lib/*:lib/processing/*
+docscp = src:lib/*:lib/processing/*
 docs_dir = javadoc
-documentation = -d javadoc
-jarfile = library/SMT.jar
-version = -source 1.6 -target 1.6
+jar_file = library/SMT.jar
+package_file = pkg/game-$(version).tar.gz
+java_version = -source 1.6 -target 1.6
 #warnings = -Xlint:-options
 warnings = -Xlint:-deprecation -Xlint:-options
 
@@ -24,42 +24,36 @@ include lists.mk
 
 #compilation definitions
 $(class_files): bin/%.class : src/%.java
-	javac $(cp) $(dest) $(version) $(warnings) $<
+	javac -cp $(cp) $(dest) $(java_version) $(warnings) $<
 
 #basic commands
 build: $(class_files)
 
-$(jarfile): $(class_files)
-	jar cf $(jarfile) -C bin vialab/
-	jar uf $(jarfile) resources/
-jar: $(jarfile)
+$(jar_file): $(class_files)
+	jar cf $(jar_file) -C bin vialab/
+	jar uf $(jar_file) resources/
+jar: $(jar_file)
 
 $(docs_dir): $(source_files)
 	rm -rf $(docs_dir)
-	$(docs_dir) $(docscp) $(documentation) $(source_files)
+	javadoc -classpath $(docscp) -d $(docs_dir) $(source_files)
 docs: $(docs_dir)
 docs-test: docs
-	chromium-browser $(docs_dir)/index.html
+	chromium $(docs_dir)/index.html
 
-package: build $(jarfile) docs
+$(package_file): $(class_files) $(jar_file) $(docs_dir)
 	mkdir SMT
 	cp -r examples library library.properties \
 		$(docs_dir) readme.md release_notes.md src tests\
 		SMT
 	zip -r SMT.zip SMT
 	rm -rf SMT
+package: $(package_file)
 
 #extra commands
 git-prepare:
 	git add -u
 	git add -A
-
-relink:
-	rm -f lib/*
-	ln -s /opt/processing/core/library/ lib/processing
-	ln -s ~/p/libs/libTUIO/libTUIO.jar lib/libTUIO.jar
-	ln -s ~/p/libs/android/android.jar lib/android.jar
-	ln -s ~/p/libs/jbox2d/jbox2d-library-2.1.2.2-jar-with-dependencies.jar lib/jbox2d.jar
 
 cp-to-usb: package
 	rm -rf /mnt/stronghold/SMT
@@ -73,14 +67,10 @@ cp-to-usb: package
 test: test-basic
 
 # feature tests
-test-gets: build
-	java $(cp) vialab.SMT.test.TestGets
 test-keyboard: build jar
 	pshell examples/Demos/Keyboard
 test-touchcolours: build jar
 	pshell examples/Demos/TouchColours
-test-zoneaccessors: build
-	java $(cp) vialab.SMT.test.TestZoneAccessors
 
 # examples
 test-tablehockey: build jar
