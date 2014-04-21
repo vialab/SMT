@@ -2,7 +2,7 @@
 
 **Latest Release:** [4.0](https://github.com/vialab/SMT/releases/tag/v4.0)  
 **Latest Beta:** [4.0b1](https://github.com/vialab/SMT/releases/tag/v4.0b1)  
-**Latest Auto-Build:** [![Build Status](https://drone.io/github.com/vialab/SMT/status.png)](https://drone.io/github.com/vialab/SMT/latest)  
+**Auto-Build:** [![Build Status](https://drone.io/github.com/vialab/SMT/status.png)](https://drone.io/github.com/vialab/SMT/latest)  
 **Research Portfolio:** [vialab.science.uoit.ca/portfolio/smt-toolkit](http://vialab.science.uoit.ca/portfolio/smt-toolkit)  
 
 --------------------------------------------
