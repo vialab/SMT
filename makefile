@@ -64,7 +64,7 @@ cp-to-usb: package
 	cp SMT.zip /mnt/stronghold/
 
 #test commands
-test: test-basic
+test: test-window
 
 # feature tests
 test-keyboard: build jar
@@ -103,3 +103,5 @@ test-methods: build jar
 	pshell tests/methods
 test-source: build jar
 	pshell tests/source
+test-window: build jar
+	pshell tests/window
