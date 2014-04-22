@@ -178,39 +178,41 @@ public class Touch extends TuioCursor {
 	/**
 	 * @param t TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
 	 */
-	public void updateTouch(TuioCursor t) {
+	public void updateTouch(TuioCursor tuioCursor) {
 		prevUpdateTime = currentTime;
 
-		cursorID = t.getCursorID();
-		x = t.getScreenX( SMT.applet.width);
-		y = t.getScreenY( SMT.applet.height);
+		cursorID = tuioCursor.getCursorID();
+		xpos = tuioCursor.getX();
+		ypos = tuioCursor.getY();
+		x = tuioCursor.getScreenX( SMT.applet.width);
+		y = tuioCursor.getScreenY( SMT.applet.height);
 
-		super.startTime = t.getStartTime();
-		startTime = t.getStartTime();
+		super.startTime = tuioCursor.getStartTime();
+		startTime = tuioCursor.getStartTime();
 
-		super.currentTime = t.getTuioTime();
-		currentTime = t.getTuioTime();
+		super.currentTime = tuioCursor.getTuioTime();
+		currentTime = tuioCursor.getTuioTime();
 
-		super.x_speed = t.getXSpeed();
-		xSpeed = t.getXSpeed();
+		super.x_speed = tuioCursor.getXSpeed();
+		xSpeed = tuioCursor.getXSpeed();
 
-		super.y_speed = t.getYSpeed();
-		ySpeed = t.getYSpeed();
+		super.y_speed = tuioCursor.getYSpeed();
+		ySpeed = tuioCursor.getYSpeed();
 
-		super.motion_speed = t.getMotionSpeed();
-		motionSpeed = t.getMotionSpeed();
+		super.motion_speed = tuioCursor.getMotionSpeed();
+		motionSpeed = tuioCursor.getMotionSpeed();
 
-		super.motion_accel = t.getMotionAccel();
-		motionAcceleration = t.getMotionAccel();
+		super.motion_accel = tuioCursor.getMotionAccel();
+		motionAcceleration = tuioCursor.getMotionAccel();
 
-		super.path = t.getPath();
-		path = t.getPath();
+		super.path = tuioCursor.getPath();
+		path = tuioCursor.getPath();
 
-		super.session_id = t.getSessionID();
-		sessionID = t.getSessionID();
+		super.session_id = tuioCursor.getSessionID();
+		sessionID = tuioCursor.getSessionID();
 
-		super.state = t.getTuioState();
-		state = t.getTuioState();
+		super.state = tuioCursor.getTuioState();
+		state = tuioCursor.getTuioState();
 	}
 
 	/**
@@ -290,6 +292,24 @@ public class Touch extends TuioCursor {
 	@Override
 	public float getY() {
 		return y;
+	}
+
+	//raw gets
+	public float getRawX(){
+		return super.getX();
+	}
+
+	public float getRawY(){
+		return super.getY();
+	}
+
+	//raw gets
+	public float getFittedX(){
+		return super.getX();
+	}
+
+	public float getFittedY(){
+		return super.getY();
 	}
 
 	public PVector getPositionVector(){

@@ -2,14 +2,14 @@
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
-
+import vialab.SMT.*;
 
 //vars
 int window_width = 1200;
 int window_height = 800;
 //screen info
-Dimension screen = null;
-Dimension screen2 = new Dimension();
+Dimension screen2 = null;
+Rectangle screen = new Rectangle();
 String screen_text;
 //frame info
 JFrame jframe = null;
@@ -22,7 +22,9 @@ Rectangle2D.Float vscreen = new Rectangle2D.Float();
 PMatrix2D vmatrix = new PMatrix2D();
 
 void setup(){
-	size( window_width, window_height, P2D);
+	size( window_width, window_height, SMT.RENDERER);
+	SMT.init( this, TouchSource.AUTOMATIC);
+	println("asdf");
 	GraphicsEnvironment environment =
 		GraphicsEnvironment.getLocalGraphicsEnvironment();
 	GraphicsDevice[] devices = environment.getScreenDevices();
@@ -36,6 +38,10 @@ void setup(){
 	int i = 0;
 	device_bounds = new Rectangle[ device_n];
 	device_ids = new String[ device_n];
+	int minx = 0;
+	int miny = 0;
+	int maxx = 0;
+	int maxy = 0;
 	for( GraphicsDevice device : devices){
 		//get device info
 		GraphicsConfiguration config = device.getDefaultConfiguration();
@@ -46,25 +52,32 @@ void setup(){
 		System.out.printf( "Device %d: %d, %d :: %d, %d\n",
 			i++, bounds.x, bounds.y,
 			bounds.width, bounds.height);
-		//stretch screen2
+		//stretch screen
 		int device_maxx = bounds.x + bounds.width;
 		int device_maxy = bounds.y + bounds.height;
-		if( device_maxx > screen2.width)
-			screen2.width = device_maxx;
-		if( device_maxy > screen2.height)
-			screen2.height = device_maxy;}
+		if( device_maxx > maxx)
+			maxx = device_maxx;
+		if( device_maxy > maxy)
+			maxy = device_maxy;
+		if( bounds.x < minx)
+			minx = bounds.x;
+		if( bounds.y < miny)
+			miny = bounds.y;}
+	screen.x = minx;
+	screen.y = miny;
+	screen.width = maxx - minx;
+	screen.height = maxy - miny;
 
 	//get screen size
 	Toolkit toolkit = Toolkit.getDefaultToolkit();
-	screen = screen2
 	screen2 = toolkit.getScreenSize();
 	screen_text = String.format(
-		"Total screen size: %d, %d",
+		"Screen: %d, %d :: %d, %d\n",
+		screen.x, screen.y,
 		screen.width, screen.height);
-	System.out.printf( "Screen size: %d, %d\n",
-		screen.width, screen.height);
-	System.out.printf( "Screen2 size: %d, %d\n",
-		screen2.width, screen2.height);
+	/*System.out.printf( "Screen2 size: %d, %d\n",
+		screen2.width, screen2.height);*/
+	System.out.printf( screen_text);
 	//scale screen size into 95% of window size
 	double max_width = window_width * 0.95;
 	double max_height = window_height * 0.95;
@@ -83,6 +96,7 @@ void setup(){
 	vmatrix.scale(
 		(float) ( 1 / ratio),
 		(float) ( 1 / ratio));
+	vmatrix.translate( - screen.x, - screen.y);
 }
 
 void draw(){
@@ -137,7 +151,8 @@ void draw(){
 	noFill();
 	stroke( 180, 230, 200, 180);
 	strokeWeight( 20);
-	rect( 0, 0,
+	rect(
+		screen.x, screen.y,
 		screen.width, screen.height);
 
 	//get window info
@@ -211,4 +226,24 @@ void draw(){
 	textAlign( CENTER, BOTTOM);
 	textSize( 25);
 	text( screen_text, window_width / 2, window_height);
+
+	//draw touch info
+	for( Touch touch : SMT.getTouches()){
+		String text = touch == null ? "null" :
+			String.format(
+				"cursor id: %d\n" +
+					"port: %d\n" +
+					"source: %s\n" +
+					"raw position: %.3f, %.3f",
+				touch.cursorID, touch.sessionID >> 48,
+				touch.getTouchSource(),
+				touch.getRawX(),touch.getRawY());
+		
+		pushStyle();
+		fill( 240, 240, 240, 200);
+		textAlign(LEFT, TOP);
+		textSize( 30);
+		text( text, touch.x+10, touch.y);
+		popStyle();
+	}
 }

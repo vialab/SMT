@@ -24,8 +24,7 @@ void setup(){
 void draw(){
 	//draw background
 	noStroke();
-	fill( 0, 0, 0);
-	rect( 0, 0, window_width, window_height);
+	background( 20);
 }
 
 
