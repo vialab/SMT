@@ -95,13 +95,9 @@ test-anon: build jar
 	pshell tests/anon
 test-basic: build jar
 	pshell tests/basic
-test-count: build jar
-	pshell tests/count
-test-id: build jar
-	pshell tests/id
 test-methods: build jar
 	pshell tests/methods
-test-source: build jar
-	pshell tests/source
+test-touch: build jar
+	pshell tests/touch
 test-window: build jar
 	pshell tests/window
