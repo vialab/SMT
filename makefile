@@ -89,6 +89,8 @@ test-ripple: build jar
 	pshell tests/ripple
 test-trail: build jar
 	pshell tests/trail
+test-viewport: build jar
+	pshell tests/viewport
 
 # other tests
 test-anon: build jar

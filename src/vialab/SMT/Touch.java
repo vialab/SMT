@@ -303,15 +303,6 @@ public class Touch extends TuioCursor {
 		return super.getY();
 	}
 
-	//raw gets
-	public float getFittedX(){
-		return super.getX();
-	}
-
-	public float getFittedY(){
-		return super.getY();
-	}
-
 	public PVector getPositionVector(){
 		return new PVector( x, y);
 	}

@@ -11,7 +11,7 @@ void setup(){
 
 void draw(){
 	background( 30);
-	//drawTouchCount();
+	drawTouchCount();
 	drawTouchInfo();
 }
 

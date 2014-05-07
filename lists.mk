@@ -55,7 +55,15 @@ class_files = \
 	bin/vialab/SMT/TouchSource.class \
 	bin/vialab/SMT/TouchState.class \
 	bin/vialab/SMT/TuioConnectionException.class \
+	bin/vialab/SMT/util/ActiveDisplayTouchBinder.class \
+	bin/vialab/SMT/util/DisplayTouchBinder.class \
+	bin/vialab/SMT/util/RectTouchBinder.class \
+	bin/vialab/SMT/util/ScreenTouchBinder.class \
+	bin/vialab/SMT/util/SketchTouchBinder.class \
+	bin/vialab/SMT/util/SystemAdapter.class \
+	bin/vialab/SMT/util/TouchBinder.class \
 	bin/vialab/SMT/util/ZonePicker.class \
+	bin/vialab/SMT/ViewPortZone.class \
 	bin/vialab/SMT/Zone.class \
 
 source_files = \
@@ -114,5 +122,13 @@ source_files = \
 	src/vialab/SMT/TouchSource.java \
 	src/vialab/SMT/TouchState.java \
 	src/vialab/SMT/TuioConnectionException.java \
+	src/vialab/SMT/util/ActiveDisplayTouchBinder.java \
+	src/vialab/SMT/util/DisplayTouchBinder.java \
+	src/vialab/SMT/util/RectTouchBinder.java \
+	src/vialab/SMT/util/ScreenTouchBinder.java \
+	src/vialab/SMT/util/SketchTouchBinder.java \
+	src/vialab/SMT/util/SystemAdapter.java \
+	src/vialab/SMT/util/TouchBinder.java \
 	src/vialab/SMT/util/ZonePicker.java \
+	src/vialab/SMT/ViewPortZone.java \
 	src/vialab/SMT/Zone.java \

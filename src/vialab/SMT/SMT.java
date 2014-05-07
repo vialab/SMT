@@ -25,8 +25,8 @@
 package vialab.SMT;
 
 //standard library imports
-import java.awt.Color;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.Socket;
@@ -37,11 +37,12 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
 
+//libtuio imports
+import TUIO.*;
+
 //processing imports
 import processing.core.*;
 import processing.opengl.*;
-//libtuio imports
-import TUIO.*;
 
 //local imports
 import vialab.SMT.renderer.*;
@@ -77,6 +78,7 @@ public class SMT {
 	public static ZonePicker picker;
 	protected static SMTTuioListener listener;
 	protected static SMTTouchManager manager;
+	private static SystemAdapter systemAdapter = null;;
 	protected static Method touch;
 	protected static Boolean warnUnimplemented;
 	protected static P3DDSRenderer renderer = null;
@@ -115,6 +117,9 @@ public class SMT {
 	protected static Map<Integer, TouchSource> deviceMap =
 		Collections.synchronizedMap(
 			new LinkedHashMap<Integer, TouchSource>());
+	private static EnumMap<TouchSource, TouchBinder> touchBinders =
+		new EnumMap<TouchSource, TouchBinder>( TouchSource.class);
+	private static TouchSource[] sources_notmouse = null;
 
 	protected static int mainListenerPort;
 	protected static boolean inShutdown = false;
@@ -131,6 +136,7 @@ public class SMT {
 	private static int p203_revision = 221;
 	private static int p21_revision = 223;
 	private static int p211_revision = 224;
+	private static int p212_revision = 225;
 	//supported processing versions
 	private static int revision_unknown = -1;
 	private static int revision_min = p211_revision; //idk what the minimum is :S
@@ -209,6 +215,19 @@ public class SMT {
 		//load applet methods
 		SMT.applet = applet;
 		SMTUtilities.loadMethods( applet.getClass());
+
+		//load system adapter
+		systemAdapter = new SystemAdapter( applet);
+
+		//load touch binders
+		EnumSet<TouchSource> sources_notmouse_set =
+			EnumSet.allOf( TouchSource.class);
+		sources_notmouse_set.remove( TouchSource.MOUSE);
+		sources_notmouse = (TouchSource[])
+			sources_notmouse_set.toArray(
+				new TouchSource[ 0]);
+		setTouchSourceBoundsSketch( TouchSource.MOUSE);
+		setTouchSourceBoundsActiveDisplay( sources_notmouse);
 
 		//load touch drawer ( if necessary )
 		if( touchDrawMethod == TouchDraw.TEXTURED)
@@ -401,15 +420,145 @@ public class SMT {
 		printConnectMessage( "tuio devices", port);
 	}
 	private static void connect_windows( int port){
+		boolean system_is32 = ! System.getProperty( "os.arch").equals("x86");
 		SMT.runWinTouchTuioServer(
-			! System.getProperty( "os.arch").equals("x86"),
-			"127.0.0.1", port);
+			system_is32, "127.0.0.1", port);
 		deviceMap.put( port, TouchSource.WM_TOUCH);
 		printConnectMessage( "windows touch", port);
 	}
 
+	//touch fitting functions
+
+	// active display binding method
+	/**
+	 * Sets the touch fitting method for all touch sources (except mouse) to active display mode.
+	 * Uses the window's current display. This is the default touch fitting method for all touch sources, except TouchSource.MOUSE.
+	 **/
+	public static void setTouchSourceBoundsActiveDisplay(){
+		setTouchSourceBoundsActiveDisplay( sources_notmouse);
+	}
+	/**
+	 * Sets the touch fitting method for the given touch sources to active display mode.
+	 * Uses the window's current display. This is the default touch fitting method for all touch sources, except TouchSource.MOUSE.
+	 * @param sources The touch sources that should should be bound by this method
+	 **/
+	public static void setTouchSourceBoundsActiveDisplay(
+			TouchSource... sources){}
+
+	// display binding method
+	/**
+	 * Sets the touch fitting method for all touch sources (except mouse) to display mode.
+	 * Interprets which display to fit to by the index in the graphics environment's display array.
+	 * @param index
+	 **/
+	public static void setTouchSourceBoundsDisplay( int index){
+		setTouchSourceBoundsDisplay( index, sources_notmouse);
+	}
+	/**
+	 * Sets the touch fitting method for all touch sources (except mouse) to display mode.
+	 *
+	 * Uses the display in the graphics environment's display array that matches id.equals( device.getIDString()). The display id string format is different on every platform. I recommend you use the indexed version of this function instead.
+	 * @param id The string id for the desired display.
+	 **/
+	public static void setTouchSourceBoundsDisplay( String id){
+		setTouchSourceBoundsDisplay( id, sources_notmouse);
+	}
+	/**
+	 * Sets the touch fitting method for the given touch sources to display mode.
+	 * Interprets which display to fit to by the index in the graphics environment's display array.
+	 * @param index
+	 * @param sources The touch sources that should should be bound by this method
+	 **/
+	public static void setTouchSourceBoundsDisplay( int index,
+			TouchSource... sources){}
+	/**
+	 * Sets the touch fitting method for the given touch sources to display mode.
+	 *
+	 * Uses the display in the graphics environment's display array that matches id.equals( device.getIDString()). The display id string format is different on every platform. I recommend you use the indexed version of this function instead.
+	 * @param id The string id for the desired display.
+	 * @param sources The touch sources that should should be bound by this method
+	 **/
+	public static void setTouchSourceBoundsDisplay( String id,
+			TouchSource... sources){}
+
+	// manual bounds binding method
+	/**
+	 * Sets the touch fitting method for all touch sources (except mouse) to rect mode.
+	 * Use this function if you want to manually change the touch source bounds.
+	 * @param bounds a rectangle describing the desired touch bounds.
+	 * @param 
+	 **/
+	public static void setTouchSourceBoundsRect( Rectangle bounds){
+		setTouchSourceBoundsRect( bounds, sources_notmouse);
+	}
+	/**
+	 * Sets the touch fitting method for the given touch sources to rect mode.
+	 * Use this function if you want to manually change the touch source bounds.
+	 * @param bounds a rectangle describing the desired touch bounds.
+	 * @param 
+	 **/
+	public static void setTouchSourceBoundsRect( Rectangle bounds,
+			TouchSource... sources){}
+
+	// screen binding method
+	/**
+	 * Sets the touch fitting method for all touch sources (except mouse) to screen mode.
+	 * This fits touches onto the entire screen space, covering all displays.
+	 **/
+	public static void setTouchSourceBoundsScreen(){
+		setTouchSourceBoundsScreen( sources_notmouse);
+	}
+	/**
+	 * Sets the touch fitting method for the given touch sources to screen mode.
+	 * This fits touches onto the entire screen space, covering all displays.
+	 * @param sources The touch sources that should should be bound by this method
+	 **/
+	public static void setTouchSourceBoundsScreen(
+			TouchSource... sources){}
+
+	// window binding method
+	/**
+	 * Sets the touch fitting method for all touch sources (except mouse) to window mode.
+	 * This fits touches onto the current window's space.
+	 **/
+	public static void setTouchSourceBoundsSketch(){
+		setTouchSourceBoundsSketch( sources_notmouse);
+	}
+	/**
+	 * Sets the touch fitting method for the given touch sources to window mode.
+	 * This fits touches onto the current window's space.
+	 * @param sources The touch sources that should should be bound by this method
+	 **/
+	public static void setTouchSourceBoundsSketch(
+			TouchSource... sources){}
+
+	// window binding method
+	/**
+	 * Sets the touch fitting method for all touch sources (except mouse) to use the custom specified TouchBinder.
+	 * @param binder The custom touch binder that should be used for mapping touches into sketch space
+	 **/
+	public static void setTouchSourceBoundsCustom( TouchBinder binder){
+		setTouchSourceBoundsCustom( binder, sources_notmouse);
+	}
+	/**
+	 * Sets the touch fitting method for the given touch sources to use the custom specified TouchBinder.
+	 * @param binder The custom touch binder that should be used for mapping touches into sketch space
+	 * @param sources The touch sources that should should be bound by this method
+	 **/
+	public static void setTouchSourceBoundsCustom(
+			TouchBinder binder, TouchSource... sources){}
+
+
+	//other functions
+
 	public static P3DDSRenderer getRenderer(){
 		return renderer;
+	}
+	public static SystemAdapter getSystemAdapter(){
+		return systemAdapter;
+	}
+	public static TouchBinder getTouchBinder( TouchSource source){
+		return touchBinders.get( source);
 	}
 	public static Zone getRootZone(){
 		return sketch;
@@ -1374,6 +1523,10 @@ public class SMT {
 	 * zone's x and y friction values.
 	 */
 	public static void pre(){
+		//update touch binders
+		systemAdapter.update();
+		for( TouchBinder binder : touchBinders.values())
+			binder.update();
 		// TODO: provide some default assignment of touches
 		manager.handleTouches();
 
