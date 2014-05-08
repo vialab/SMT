@@ -27,21 +27,25 @@ public void drawTouchCount(){
 }
 public void drawTouchInfo(){
 	for( Touch touch : SMT.getTouches()){
+		PVector position = touch.getBoundPosition();
 		String text = String.format(
 			"id: %d\n" +
 				"port: %d\n" +
 				"source: %s\n" +
 				"raw: %.3f, %.3f\n" +
-				"fitted: %.3f, %.3f",
+				"fitted: %.3f, %.3f\n" +
+				"bound: %.3f, %.3f",
 			touch.cursorID, touch.sessionID >> 48,
 			touch.getTouchSource(),
-			touch.getRawX(),touch.getRawY(),
-			touch.getX(),touch.getY());
+			touch.getRawX(), touch.getRawY(),
+			touch.getX(), touch.getY(),
+			position.x, position.y);
 		
 		pushStyle();
 		fill( 240, 240, 240, 180);
 		textAlign(LEFT, TOP);
 		textSize( 30);
+		textMode( SHAPE);
 		text( text, touch.x + 10, touch.y);
 		popStyle();
 	}

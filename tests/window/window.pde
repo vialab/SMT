@@ -29,9 +29,6 @@ void setup(){
 void draw(){
 	//update info
 	adapter.update();
-	System.out.printf(
-		"last update: %d\n",
-		adapter.getLastUpdateTime());
 
 	//draw background
 	background( 30);

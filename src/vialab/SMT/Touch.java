@@ -14,6 +14,7 @@ import TUIO.*;
 
 //local imports
 import vialab.SMT.event.*;
+import vialab.SMT.util.*;
 
 /**
  * Touch has state information of one touch and extends TuioCursor.
@@ -72,6 +73,9 @@ public class Touch extends TuioCursor {
 	long originalTimeMillis;
 	long startTimeMillis;
 	private Vector<TouchListener> listeners;
+	private TouchSource source = null;
+	private PVector position = null;
+
 
 	//colors
 	//touch's tint
@@ -85,11 +89,11 @@ public class Touch extends TuioCursor {
 	 * This constructor takes the attributes of the provided TuioCursor and
 	 * assigns these values to the newly created Touch.
 	 * 
-	 * @param tuioCursor  - TuioCursor: The TUIO Cursor
+	 * @param tuioCursor TuioCursor: The TUIO Cursor
 	 */
-	public Touch(TuioCursor tuioCursor) {
-		super(tuioCursor);
-		this.updateTouch(tuioCursor);
+	public Touch( TuioCursor tuioCursor) {
+		super( tuioCursor);
+		this.updateTouch( tuioCursor);
 		this.startTimeMillis = System.currentTimeMillis();
 		this.originalTimeMillis = this.startTimeMillis;
 		//private fields
@@ -108,11 +112,12 @@ public class Touch extends TuioCursor {
 	 * @param xCoord X Coordinate
 	 * @param yCoord Y Coordinate
 	 */
-	public Touch(long sessionID, int cursorID, float xCoord, float yCoord) {
-		super(sessionID, cursorID, xCoord, yCoord);
+	public Touch( long sessionID, int cursorID, float xCoord, float yCoord) {
+		super( sessionID, cursorID, xCoord, yCoord);
 		this.cursorID = getCursorID();
-		x = getScreenX( SMT.applet.width);
-		y = getScreenY( SMT.applet.height);
+		position = this.getBoundPosition();
+		x = Math.round( position.x);
+		y = Math.round( position.y);
 		startTime = getStartTime();
 		currentTime = getTuioTime();
 		xSpeed = getXSpeed();
@@ -141,10 +146,11 @@ public class Touch extends TuioCursor {
 	 * @param yCoord Y Coordinate
 	 */
 	public Touch( TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
-		super(ttime, sessionID, cursorID, xCoord, yCoord);
+		super( ttime, sessionID, cursorID, xCoord, yCoord);
 		this.cursorID = getCursorID();
-		x = getScreenX( SMT.applet.width);
-		y = getScreenY( SMT.applet.height);
+		position = this.getBoundPosition();
+		x = Math.round( position.x);
+		y = Math.round( position.y);
 		startTime = getStartTime();
 		currentTime = getTuioTime();
 		xSpeed = getXSpeed();
@@ -184,8 +190,6 @@ public class Touch extends TuioCursor {
 		cursorID = tuioCursor.getCursorID();
 		xpos = tuioCursor.getX();
 		ypos = tuioCursor.getY();
-		x = tuioCursor.getScreenX( SMT.applet.width);
-		y = tuioCursor.getScreenY( SMT.applet.height);
 
 		super.startTime = tuioCursor.getStartTime();
 		startTime = tuioCursor.getStartTime();
@@ -213,6 +217,10 @@ public class Touch extends TuioCursor {
 
 		super.state = tuioCursor.getTuioState();
 		state = tuioCursor.getTuioState();
+
+		position = this.getBoundPosition();
+		x = Math.round( position.x);
+		y = Math.round( position.y);
 	}
 
 	/**
@@ -226,10 +234,13 @@ public class Touch extends TuioCursor {
 	public Point getPointOnPath(int index) {
 		if (index < 0 || index >= path.size())
 			return null;
-		else
-			return new Point(
-				path.get(index).getScreenX( SMT.applet.width),
-				path.get(index).getScreenY( SMT.applet.height));
+	
+		TuioPoint tuioPoint = path.get( index);
+		PVector boundPoint = getTouchBinder().bind(
+			tuioPoint.getX(), tuioPoint.getY());
+		return new Point(
+			Math.round( boundPoint.x),
+			Math.round( boundPoint.y));
 	}
 
 	/**
@@ -271,16 +282,17 @@ public class Touch extends TuioCursor {
 	 * @return Whether this Touch is currently assigned to a Zone
 	 */
 	public boolean isAssigned() {
-		return !assignedZones.isEmpty();
+		return ! assignedZones.isEmpty();
 	}
 
 	/**
-	 * @param t
-	 *            Touch to calculate distance from
+	 * @param other Touch to calculate distance from
 	 * @return The distance between this and the given Touch
 	 */
-	float distance(Touch t) {
-		return (float) getCurrentPoint().distance(t.getCurrentPoint());
+	float distance( Touch other) {
+		return (float)
+			getCurrentPoint().distance(
+				other.getCurrentPoint());
 	}
 
 	//accessor methods
@@ -304,7 +316,12 @@ public class Touch extends TuioCursor {
 	}
 
 	public PVector getPositionVector(){
-		return new PVector( x, y);
+		return position;
+	}
+	public PVector getBoundPosition(){
+		PVector position = getTouchBinder().bind(
+			this.getRawX(), this.getRawY());
+		return position;
 	}
 	
 	/**
@@ -312,7 +329,7 @@ public class Touch extends TuioCursor {
 	 * @return the x position of this Touch in local coordinates of the given zone
 	 */
 	public float getLocalX( Zone zone){
-		return zone.getLocalX(this);
+		return zone.getLocalX( this);
 	}
 	
 	/**
@@ -320,29 +337,37 @@ public class Touch extends TuioCursor {
 	 * @return the y position of this Touch in local coordinates of the given zone
 	 */
 	public float getLocalY( Zone zone){
-		return zone.getLocalY(this);
+		return zone.getLocalY( this);
 	}
 
-	public TouchSource getTouchSource() {
-		// bottom 48 bits of sessionID are used for actual IDs, top 16 bits for
-		// partitioning by port, 0th partition/non partitioned will be used only
-		// by the main tuiolistener, all others use the port number for the
-		// partition index, and so can be used to find the port, and so the
-		// device it came from
-		int portbits = (int) ( sessionID >> 48);
-		int port = ( portbits != 0) ?
-			portbits : SMT.mainListenerPort;
-		//System.out.printf( "port: %d\n", port);
-		return SMT.deviceMap.get( port);
+	public TouchSource getTouchSource(){
+		if( source == null){
+			// bottom 48 bits of sessionID are used for actual IDs, top 16 bits for
+			// partitioning by port, 0th partition/non partitioned will be used only
+			// by the main tuiolistener, all others use the port number for the
+			// partition index, and so can be used to find the port, and so the
+			// device it came from
+			int portbits = (int) ( sessionID >> 48);
+			int port = ( portbits != 0) ?
+				portbits : SMT.mainListenerPort;
+			//System.out.printf( "port: %d\n", port);
+			source = SMT.deviceMap.get( port);
+		}
+		return source;
+	}
+
+	public TouchBinder getTouchBinder(){
+		return SMT.getTouchBinder(
+			this.getTouchSource());
 	}
 
 	/**
 	 * @return All the points on the path
 	 */
 	public Point[] getPathPoints() {
-		ArrayList<Point> points = new ArrayList<Point>();
+		Vector<Point> points = new Vector<Point>();
 		for (int i = 0; i < path.size(); i++) {
-			points.add(getPointOnPath(i));
+			points.add( getPointOnPath(i));
 		}
 		return points.toArray(new Point[points.size()]);
 	}
@@ -359,26 +384,22 @@ public class Touch extends TuioCursor {
 	 *            Whether to start at the previous frame end point
 	 * @return All the points on the path since the previous update
 	 */
-	public Point[] getNewPathPoints(boolean join) {
-		ArrayList<Point> points = new ArrayList<Point>();
-		for (int i = path.size() - 1; i >= 0; i--) {
-			TuioPoint tp = path.get(i);
+	public Point[] getNewPathPoints( boolean join){
+		Vector<Point> points = new Vector<Point>();
+		for( int i = path.size() - 1; i >= 0; i--) {
+			TuioPoint tuioPoint = path.get( i);
+			TuioTime point_time = tuioPoint.getTuioTime();
 			// once the TuioTimes are greater than the prevUpdateTime we have
 			// got all of the new Points
-			if (prevUpdateTime != null &&
-					tp.getTuioTime().getTotalMilliseconds() <= prevUpdateTime
-							.getTotalMilliseconds()) {
-				if (join) {
+			if( prevUpdateTime != null &&
+					point_time.getTotalMilliseconds() <=
+					prevUpdateTime.getTotalMilliseconds()) {
+				if( join)
 					// one further back if we want to join it up
-					points.add(new Point(
-						tp.getScreenX( SMT.applet.width),
-						tp.getScreenY( SMT.applet.height)));
-				}
+					points.add( getPointOnPath( i));
 				break;
 			}
-			points.add(new Point(
-				tp.getScreenX( SMT.applet.width),
-				tp.getScreenY( SMT.applet.height)));
+			points.add( getPointOnPath( i));
 		}
 		return points.toArray(new Point[points.size()]);
 	}

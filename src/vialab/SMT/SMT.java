@@ -349,7 +349,7 @@ public class SMT {
 				catch( TuioConnectionException exception){
 					port++;
 				}
-			System.out.printf("Trying to connect to %s on port %d\n",
+			if( debug) System.out.printf("Trying to connect to %s on port %d\n",
 				"android touch", port);
 			connect_android( port);
 		}
@@ -362,7 +362,7 @@ public class SMT {
 				catch( TuioConnectionException exception){
 					port++;
 				}
-			System.out.printf("Trying to connect to %s on port %d\n",
+			if( debug) System.out.printf("Trying to connect to %s on port %d\n",
 				"leap motion", port);
 			connect_leap( port);
 
@@ -373,7 +373,7 @@ public class SMT {
 				catch( TuioConnectionException exception){
 					port++;
 				}
-			System.out.printf("Trying to connect to %s on port %d\n",
+			if( debug) System.out.printf("Trying to connect to %s on port %d\n",
 				"windows touch", port);
 			connect_windows( port);
 		}
@@ -386,7 +386,7 @@ public class SMT {
 				catch( TuioConnectionException exception){
 					port++;
 				}
-			System.out.printf("Trying to connect to %s on port %d\n",
+			if( debug) System.out.printf("Trying to connect to %s on port %d\n",
 				"mouse emulation", port);
 			connect_mouse( port);
 		}
@@ -530,7 +530,11 @@ public class SMT {
 	 * @param sources The touch sources that should should be bound by this method
 	 **/
 	public static void setTouchSourceBoundsSketch(
-			TouchSource... sources){}
+			TouchSource... sources){
+		TouchBinder binder = new SketchTouchBinder();
+		for( TouchSource source : sources)
+			touchBinders.put( source, binder);
+	}
 
 	// window binding method
 	/**
@@ -605,7 +609,7 @@ public class SMT {
 	}
 
 	private static void printConnectMessage( String message, int port){
-		System.out.printf(
+		if( debug) System.out.printf(
 			"Listening to %s using port %d\n", message, port);
 	}
 

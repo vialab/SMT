@@ -23,10 +23,13 @@ public abstract class TouchBinder {
 	/**
 	 * Binds the x and y components into 
 	 **/
-	public PVector bind( TuioPoint point){
-		PVector raw = new PVector(
-			point.getX(), point.getY());
+	public PVector bind( float x, float y){
+		PVector raw = new PVector( x, y);
+		//System.out.printf( "raw: %f, %f\n",
+		//	raw.x, raw.y);
 		PVector real = bind_matrix.mult( raw, null);
+		//System.out.printf( "real: %f, %f\n",
+		//	real.x, real.y);
 		//clamp min bounds
 		if( real.x < clamp_min.x)
 			real.x = clamp_min.x;
@@ -37,6 +40,8 @@ public abstract class TouchBinder {
 			real.x = clamp_max.x;
 		if( real.y > clamp_max.y)
 			real.y = clamp_max.y;
+		//System.out.printf( "clamped: %f, %f\n",
+		//	real.x, real.y);
 		return real;
 	}
 
@@ -51,5 +56,14 @@ public abstract class TouchBinder {
 	}
 	public void setClampMax( PVector max){
 		clamp_max = max;
+	}
+	protected PMatrix2D getBindMatrix(){
+		return bind_matrix;
+	}
+	public PVector getClampMin(){
+		return clamp_min;
+	}
+	public PVector getClampMax(){
+		return clamp_max;
 	}
 }

@@ -68,9 +68,9 @@ public class MouseToTUIO {
 	 * @param height height of the screen
 	 * @param port port to connect to
 	 */
-	public MouseToTUIO(int width, int height, int port) {
+	public MouseToTUIO( int width, int height, int port){
 		super();
-		sim = new Simulation(width, height, port);
+		sim = new Simulation( width, height, port);
 		this.width = width;
 		this.height = height;
 	}
@@ -80,30 +80,30 @@ public class MouseToTUIO {
 	 * 
 	 * @param me MouseEvent - The mouse dragged event
 	 */
-	public void mouseDragged(MouseEvent me) {
+	public void mouseDragged( MouseEvent me){
 		Point pt = new Point(me.getX(), me.getY());
 
-		if (selectedCursor != null) {
-			if (sim.contains(pt)) {
-				if (jointCursors.contains(selectedCursor.sessionID)) {
+		if( selectedCursor != null){
+			if( sim.contains(pt)){
+				if( jointCursors.contains(selectedCursor.sessionID)){
 					Point selPoint = selectedCursor.getPosition();
 					int dx = pt.x - selPoint.x;
 					int dy = pt.y - selPoint.y;
 
-					for (Iterator<Integer> jointIter = jointCursors.iterator(); jointIter.hasNext();) {
+					for (Iterator<Integer> jointIter = jointCursors.iterator(); jointIter.hasNext();){
 						int jointId = jointIter.next();
-						if (jointId == selectedCursor.sessionID)
+						if( jointId == selectedCursor.sessionID)
 							continue;
 						Finger joint_cursor = sim.getCursor(jointId);
 						Point joint_point = joint_cursor.getPosition();
-						if ((joint_point.x + dx) < 0 || (joint_point.x + dx) > (width - 1)
-								|| (joint_point.y + dy) < 0 || (joint_point.y + dy) > (height - 1)) {
+						if( (joint_point.x + dx) < 0 || (joint_point.x + dx) > (width - 1)
+								|| (joint_point.y + dy) < 0 || (joint_point.y + dy) > (height - 1)){
 							// remove the joint cursor if it leaves the window
 							joint_cursor.stop();
 							sim.cursorMessage(joint_cursor);
-							if (stickyCursors.contains(jointId))
+							if( stickyCursors.contains(jointId))
 								stickyCursors.removeElement(jointId);
-							if (jointCursors.contains(jointId))
+							if( jointCursors.contains(jointId))
 								jointIter.remove();
 							sim.removeCursor(joint_cursor);
 						}
@@ -122,16 +122,16 @@ public class MouseToTUIO {
 			else {
 				selectedCursor.stop();
 				sim.cursorMessage(selectedCursor);
-				if (stickyCursors.contains(selectedCursor.sessionID))
+				if( stickyCursors.contains(selectedCursor.sessionID))
 					stickyCursors.removeElement(selectedCursor.sessionID);
-				if (jointCursors.contains(selectedCursor.sessionID))
+				if( jointCursors.contains(selectedCursor.sessionID))
 					jointCursors.removeElement(selectedCursor.sessionID);
 				sim.removeCursor(selectedCursor);
 				selectedCursor = null;
 			}
 		}
 		else {
-			if (sim.contains(pt)) {
+			if( sim.contains(pt)){
 				selectedCursor = sim.addCursor(pt.x, pt.y);
 				sim.cursorMessage(selectedCursor);
 				if (me.isShiftDown() || me.getButton() == PConstants.RIGHT)
@@ -145,22 +145,22 @@ public class MouseToTUIO {
 	 * 
 	 * @param me MouseEvent - The mouse pressed event
 	 */
-	public void mousePressed(MouseEvent me) {
+	public void mousePressed( MouseEvent me){
 		int x = me.getX();
 		int y = me.getY();
 
 		Enumeration<Finger> cursorList = Simulation.cursorList.elements();
-		while (cursorList.hasMoreElements()) {
+		while (cursorList.hasMoreElements()){
 			Finger cursor = cursorList.nextElement();
 			Point point = cursor.getPosition();
 
-			if (point.distance(x, y) < SMT.touch_radius) {
+			if (point.distance(x, y) < SMT.touch_radius){
 				int selCur = -1;
 				if (selectedCursor != null)
 					selCur = selectedCursor.sessionID;
 
 				if ((me.isShiftDown() || me.getButton() == PConstants.RIGHT)
-						&& selCur != cursor.sessionID) {
+						&& selCur != cursor.sessionID){
 					stickyCursors.removeElement(cursor.sessionID);
 					if (jointCursors.contains(cursor.sessionID))
 						jointCursors.removeElement(cursor.sessionID);
@@ -168,7 +168,7 @@ public class MouseToTUIO {
 					selectedCursor = null;
 					return;
 				}
-				else if (me.isControlDown() || me.getButton() == PConstants.CENTER) {
+				else if (me.isControlDown() || me.getButton() == PConstants.CENTER){
 					if (jointCursors.contains(cursor.sessionID))
 						jointCursors.removeElement(cursor.sessionID);
 					else
@@ -184,14 +184,14 @@ public class MouseToTUIO {
 			}
 		}
 
-		if (me.isControlDown() || me.getButton() == PConstants.CENTER) {
+		if (me.isControlDown() || me.getButton() == PConstants.CENTER){
 			return;
 		}
 
-		if (sim.contains(new Point(x, y))) {
+		if (sim.contains(new Point(x, y))){
 			selectedCursor = sim.addCursor(x, y);
 			sim.cursorMessage(selectedCursor);
-			if (me.isShiftDown() || me.getButton() == PConstants.RIGHT) {
+			if (me.isShiftDown() || me.getButton() == PConstants.RIGHT){
 				stickyCursors.addElement(selectedCursor.sessionID);
 			}
 			return;
@@ -206,9 +206,9 @@ public class MouseToTUIO {
 	 * @param me
 	 *            MouseEvent - The mouse released event
 	 */
-	public void mouseReleased(MouseEvent me) {
-		if ((selectedCursor != null)) {
-			if (!stickyCursors.contains(selectedCursor.sessionID)) {
+	public void mouseReleased( MouseEvent me){
+		if ((selectedCursor != null)){
+			if (!stickyCursors.contains(selectedCursor.sessionID)){
 				selectedCursor.stop();
 				sim.cursorMessage(selectedCursor);
 				if (jointCursors.contains(selectedCursor.sessionID))
@@ -229,7 +229,7 @@ public class MouseToTUIO {
 	 * 
 	 * @param me MouseEvent
 	 */
-	public void mouseMoved(MouseEvent me) {
+	public void mouseMoved( MouseEvent me){
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class MouseToTUIO {
 	 * 
 	 * @param me MouseEvent
 	 */
-	public void mouseClicked(MouseEvent me) {
+	public void mouseClicked( MouseEvent me){
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class MouseToTUIO {
 	 * 
 	 * @param me MouseEvent
 	 */
-	public void mouseEntered(MouseEvent me) {
+	public void mouseEntered( MouseEvent me){
 	}
 
 	/**
@@ -253,34 +253,34 @@ public class MouseToTUIO {
 	 * 
 	 * @param me MouseEvent
 	 */
-	public void mouseExited(MouseEvent me) {
+	public void mouseExited( MouseEvent me){
 		// prevent touches getting stuck down by making them release on exit
 		this.mouseReleased(me);
 	}
 
-	public void mouseEvent(MouseEvent event) {
-		switch (event.getAction()) {
-		case MouseEvent.PRESS:
-			mousePressed(event);
-			break;
-		case MouseEvent.RELEASE:
-			mouseReleased(event);
-			break;
-		case MouseEvent.CLICK:
-			mouseClicked(event);
-			break;
-		case MouseEvent.DRAG:
-			mouseDragged(event);
-			break;
-		case MouseEvent.MOVE:
-			mouseMoved(event);
-			break;
-		case MouseEvent.ENTER:
-			mouseEntered(event);
-			break;
-		case MouseEvent.EXIT:
-			mouseExited(event);
-			break;
+	public void mouseEvent( MouseEvent event){
+		switch( event.getAction()){
+			case MouseEvent.PRESS:
+				mousePressed( event);
+				break;
+			case MouseEvent.RELEASE:
+				mouseReleased( event);
+				break;
+			case MouseEvent.CLICK:
+				mouseClicked( event);
+				break;
+			case MouseEvent.DRAG:
+				mouseDragged( event);
+				break;
+			case MouseEvent.MOVE:
+				mouseMoved( event);
+				break;
+			case MouseEvent.ENTER:
+				mouseEntered( event);
+				break;
+			case MouseEvent.EXIT:
+				mouseExited( event);
+				break;
 		}
 	}
 
@@ -288,13 +288,14 @@ public class MouseToTUIO {
 	 * Resets MouseToTUIO state, just making the already available functionality
 	 * visible
 	 */
-	public void reset() {
+	public void reset(){
 		sim.reset();
 		stickyCursors.clear();
 		jointCursors.clear();
 	}
 
-	public Integer[] getJointCursors() {
-		return jointCursors.toArray(new Integer[jointCursors.size()]);
+	public Integer[] getJointCursors(){
+		return jointCursors.toArray(
+			new Integer[ jointCursors.size()]);
 	}
 }
