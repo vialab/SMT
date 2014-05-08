@@ -1,4 +1,5 @@
 import vialab.SMT.*;
+import java.awt.*;
 
 //vars
 int window_width = 1200;
@@ -7,6 +8,22 @@ int window_height = 800;
 void setup(){
 	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
+	System.out.printf( "display count: %d\n",
+		SMT.getSystemAdapter().getDisplayCount());
+
+	System.out.println( "display id:");
+	for( GraphicsDevice device : SMT.getSystemAdapter().getDisplays())
+		System.out.println( device.getIDstring());
+
+	//SMT.setTouchSourceBoundsActiveDisplay( TouchSource.MOUSE);
+	//SMT.setTouchSourceBoundsDisplay( 0, TouchSource.MOUSE);
+	//SMT.setTouchSourceBoundsDisplay( 1, TouchSource.MOUSE);
+	//SMT.setTouchSourceBoundsDisplay( ":0.0", TouchSource.MOUSE);
+	//SMT.setTouchSourceBoundsDisplay( ":0.1", TouchSource.MOUSE);
+	//SMT.setTouchSourceBoundsRect( Rectangle, TouchSource.MOUSE);
+	//SMT.setTouchSourceBoundsScreen( TouchSource.MOUSE);
+	//SMT.setTouchSourceBoundsSketch( TouchSource.MOUSE);
+	//SMT.setTouchSourceBoundsCustom( TouchBinder, TouchSource.MOUSE);
 }
 
 void draw(){

@@ -443,7 +443,11 @@ public class SMT {
 	 * @param sources The touch sources that should should be bound by this method
 	 **/
 	public static void setTouchSourceBoundsActiveDisplay(
-			TouchSource... sources){}
+			TouchSource... sources){
+		TouchBinder binder = new ActiveDisplayTouchBinder();
+		for( TouchSource source : sources)
+			touchBinders.put( source, binder);
+	}
 
 	// display binding method
 	/**
@@ -470,7 +474,11 @@ public class SMT {
 	 * @param sources The touch sources that should should be bound by this method
 	 **/
 	public static void setTouchSourceBoundsDisplay( int index,
-			TouchSource... sources){}
+			TouchSource... sources){
+		TouchBinder binder = new DisplayTouchBinder( index);
+		for( TouchSource source : sources)
+			touchBinders.put( source, binder);
+	}
 	/**
 	 * Sets the touch fitting method for the given touch sources to display mode.
 	 *
@@ -479,7 +487,11 @@ public class SMT {
 	 * @param sources The touch sources that should should be bound by this method
 	 **/
 	public static void setTouchSourceBoundsDisplay( String id,
-			TouchSource... sources){}
+			TouchSource... sources){
+		TouchBinder binder = new DisplayTouchBinder( id);
+		for( TouchSource source : sources)
+			touchBinders.put( source, binder);
+	}
 
 	// manual bounds binding method
 	/**
@@ -498,7 +510,11 @@ public class SMT {
 	 * @param 
 	 **/
 	public static void setTouchSourceBoundsRect( Rectangle bounds,
-			TouchSource... sources){}
+			TouchSource... sources){
+		TouchBinder binder = new RectTouchBinder();
+		for( TouchSource source : sources)
+			touchBinders.put( source, binder);
+	}
 
 	// screen binding method
 	/**
@@ -514,7 +530,11 @@ public class SMT {
 	 * @param sources The touch sources that should should be bound by this method
 	 **/
 	public static void setTouchSourceBoundsScreen(
-			TouchSource... sources){}
+			TouchSource... sources){
+		TouchBinder binder = new ScreenTouchBinder();
+		for( TouchSource source : sources)
+			touchBinders.put( source, binder);
+	}
 
 	// window binding method
 	/**
@@ -550,7 +570,10 @@ public class SMT {
 	 * @param sources The touch sources that should should be bound by this method
 	 **/
 	public static void setTouchSourceBoundsCustom(
-			TouchBinder binder, TouchSource... sources){}
+			TouchBinder binder, TouchSource... sources){
+		for( TouchSource source : sources)
+			touchBinders.put( source, binder);
+	}
 
 
 	//other functions

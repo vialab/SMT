@@ -30,14 +30,18 @@ public class SketchTouchBinder extends TouchBinder {
 	//touch binder overrides
 	@Override
 	public void update(){
+		//only update when needed
 		if( adapter.getLastUpdateTime() > last_update){
+			//get sketch bounds
 			Rectangle sketch_bounds = adapter.getSketchBounds();
+			//create bind matrix
 			PMatrix2D bind_matrix = new PMatrix2D();
-			bind_matrix.scale( 100, 100);
-			//bind_matrix.scale( sketch_bounds.width, sketch_bounds.height);
+			bind_matrix.scale( sketch_bounds.width, sketch_bounds.height);
+			//set bind matrix and clamp bounds
 			this.setBindMatrix( bind_matrix);
-			this.setClampMin( new PVector( 30, 30));
-			this.setClampMax( new PVector( 70, 70));
+			this.setClampMax( new PVector(
+				sketch_bounds.width, sketch_bounds.height));
+			//update last time
 			last_update = adapter.getLastUpdateTime();
 		}
 	}

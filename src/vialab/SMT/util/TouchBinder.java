@@ -13,6 +13,7 @@ public abstract class TouchBinder {
 	private PMatrix2D bind_matrix;
 	private PVector clamp_min;
 	private PVector clamp_max;
+	private boolean debug = true;
 
 	protected TouchBinder(){
 		bind_matrix = new PMatrix2D();
@@ -25,11 +26,13 @@ public abstract class TouchBinder {
 	 **/
 	public PVector bind( float x, float y){
 		PVector raw = new PVector( x, y);
-		//System.out.printf( "raw: %f, %f\n",
-		//	raw.x, raw.y);
+		if( debug)
+			System.out.printf( "raw: %f, %f\n",
+				raw.x, raw.y);
 		PVector real = bind_matrix.mult( raw, null);
-		//System.out.printf( "real: %f, %f\n",
-		//	real.x, real.y);
+		if( debug)
+			System.out.printf( "real: %f, %f\n",
+				real.x, real.y);
 		//clamp min bounds
 		if( real.x < clamp_min.x)
 			real.x = clamp_min.x;
@@ -40,8 +43,9 @@ public abstract class TouchBinder {
 			real.x = clamp_max.x;
 		if( real.y > clamp_max.y)
 			real.y = clamp_max.y;
-		//System.out.printf( "clamped: %f, %f\n",
-		//	real.x, real.y);
+		if( debug)
+			System.out.printf( "clamped: %f, %f\n",
+				real.x, real.y);
 		return real;
 	}
 
@@ -65,5 +69,8 @@ public abstract class TouchBinder {
 	}
 	public PVector getClampMax(){
 		return clamp_max;
+	}
+	public void setDebug( boolean enabled){
+		this.debug = enabled;
 	}
 }

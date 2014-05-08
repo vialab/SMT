@@ -104,7 +104,7 @@ public class SystemAdapter implements ComponentListener {
 		for( GraphicsDevice device : devices){
 			GraphicsConfiguration config = device.getDefaultConfiguration();
 			Rectangle bounds = config.getBounds();
-			display_bounds[ i] = bounds;
+			display_bounds[ i++] = bounds;
 			//stretch screen bounds
 			int device_maxx = bounds.x + bounds.width;
 			int device_maxy = bounds.y + bounds.height;
@@ -147,6 +147,12 @@ public class SystemAdapter implements ComponentListener {
 	}
 
 	//accessors
+	public Rectangle getActiveDisplayBounds(){
+		GraphicsDevice active_device =
+			window.getGraphicsConfiguration().getDevice();
+		String active_id = active_device.getIDstring();
+		return getDisplayBounds( active_id);
+	}
 	public Rectangle getDisplayBounds( int index){
 		if( index >= 0 || index < display_bounds.length)
 			return display_bounds[ index];
@@ -160,8 +166,20 @@ public class SystemAdapter implements ComponentListener {
 			String.format(
 				"Could not find a display with the id %s", id));
 	}
+	public Rectangle[] getDisplayBounds(){
+		return display_bounds;
+	}
 	public int getDisplayCount(){
 		return device_count;
+	}
+	public GraphicsDevice getDisplay( int index){
+		return devices[ index];
+	}
+	public GraphicsDevice getDisplay( String id){
+		for( GraphicsDevice device : devices)
+			if( device.getIDstring().equals( id))
+				return device;
+		return null;
 	}
 	public GraphicsDevice[] getDisplays(){
 		return devices;
