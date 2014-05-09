@@ -188,6 +188,7 @@ public class Touch extends TuioCursor {
 		prevUpdateTime = currentTime;
 
 		cursorID = tuioCursor.getCursorID();
+		//System.out.println( tuioCursor.getClass().getName());
 		xpos = tuioCursor.getX();
 		ypos = tuioCursor.getY();
 
@@ -298,12 +299,12 @@ public class Touch extends TuioCursor {
 	//accessor methods
 	@Override
 	public float getX() {
-		return x;
+		return getRawX();
 	}
 
 	@Override
 	public float getY() {
-		return y;
+		return getRawX();
 	}
 
 	//raw gets

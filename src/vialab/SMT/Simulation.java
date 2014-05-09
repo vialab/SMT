@@ -77,7 +77,7 @@ class Simulation {
 		this.windowHeight = height;
 
 		try {
-			oscPort = new OSCPortOut(java.net.InetAddress.getByName(host), port);
+			oscPort = new OSCPortOut( java.net.InetAddress.getByName( host), port);
 		}
 		catch (SocketException exception){
 			oscPort = null;
@@ -109,8 +109,9 @@ class Simulation {
 		OSCMessage aliveMessage = new OSCMessage("/tuio/2Dcur");
 		aliveMessage.addArgument("alive");
 		Enumeration<Finger> cursorList = Simulation.cursorList.elements();
-		while (cursorList.hasMoreElements()){
-			aliveMessage.addArgument(cursorList.nextElement().sessionID);
+		while( cursorList.hasMoreElements()){
+			aliveMessage.addArgument(
+				cursorList.nextElement().sessionID);
 		}
 		return aliveMessage;
 	}

@@ -3,9 +3,6 @@ package vialab.SMT.util;
 //standard library imports
 import java.awt.Rectangle;
 
-//libtuio imports
-import TUIO.*;
-
 //processing imports
 import processing.core.*;
 

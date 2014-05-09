@@ -81,6 +81,7 @@ class SMTProxyTuioListener implements TuioListener {
 	private class TouchObject extends TuioObject {
 		public TouchObject( long si, int sym, TuioObject tobj) {
 			super(tobj.getTuioTime(), si, sym, tobj.getX(), tobj.getY(), tobj.getAngle());
+			System.out.println( tobj.getClass().getName());
 			startTime = tobj.getStartTime();
 			x_speed = tobj.getXSpeed();
 			y_speed = tobj.getYSpeed();
@@ -96,6 +97,7 @@ class SMTProxyTuioListener implements TuioListener {
 	private class TouchCursor extends TuioCursor {
 		public TouchCursor(long si, int ci, TuioCursor tcur) {
 			super(tcur.getTuioTime(), si, ci, tcur.getX(), tcur.getY());
+			//System.out.println( tcur.getClass().getName());
 			startTime = tcur.getStartTime();
 			x_speed = tcur.getXSpeed();
 			y_speed = tcur.getYSpeed();

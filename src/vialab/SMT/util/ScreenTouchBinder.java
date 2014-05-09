@@ -1,7 +1,7 @@
 package vialab.SMT.util;
 
-//libtuio imports
-import TUIO.*;
+//standard library imports
+import java.awt.*;
 
 //processing imports
 import processing.core.*;
@@ -16,16 +16,36 @@ public class ScreenTouchBinder extends TouchBinder {
 
 	//fields
 	private SystemAdapter adapter;
-	private long last_update;
+	private long last_update = - 1;
 
 	//contructors
 	public ScreenTouchBinder(){
 		super();
+		adapter = SMT.getSystemAdapter();
 	}
 
 	//touch binder overrides
 	@Override
-	public void update(){}
+	public void update(){
+		//only update when needed
+		if( adapter.getLastUpdateTime() > last_update){
+			//get sketch bounds
+			Rectangle sketch_bounds = adapter.getSketchBounds();
+			//get display bounds
+			Rectangle screen_bounds = adapter.getScreenBounds();
+			//create bind matrix
+			PMatrix2D bind_matrix = new PMatrix2D();
+			bind_matrix.translate( - sketch_bounds.x, - sketch_bounds.y);
+			bind_matrix.translate( screen_bounds.x, screen_bounds.y);
+			bind_matrix.scale( screen_bounds.width, screen_bounds.height);
+			//set bind matrix and clamp bounds
+			this.setBindMatrix( bind_matrix);
+			this.setClampMax( new PVector(
+				sketch_bounds.width, sketch_bounds.height));
+			//update last time
+			last_update = adapter.getLastUpdateTime();
+		}
+	}
 
 	//accessors
 }

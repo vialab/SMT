@@ -3,9 +3,6 @@ package vialab.SMT.util;
 //standard library imports
 import java.awt.Rectangle;
 
-//libtuio imports
-import TUIO.*;
-
 //processing imports
 import processing.core.*;
 
@@ -19,11 +16,11 @@ public class DisplayTouchBinder extends TouchBinder {
 
 	//fields
 	private SystemAdapter adapter;
-	private long last_update;
+	private long last_update = - 1;
 	private boolean mode_id = false;
 	private boolean mode_index = false;
 	private String id = null;
-	private int index = -1;
+	private int index = - 1;
 
 	//constructors
 	public DisplayTouchBinder( String id){

@@ -1,21 +1,18 @@
 package vialab.SMT.util;
 
-//libtuio imports
-import TUIO.*;
-
 //processing imports
 import processing.core.*;
 
 /**
  * Just a little class for describing how to map ([0,1], [0,1]) tuio coordinates to ([0,applet.width], [0,applet.height]) touch coordinates.
  **/
-public abstract class TouchBinder {
+public class TouchBinder {
 	private PMatrix2D bind_matrix;
 	private PVector clamp_min;
 	private PVector clamp_max;
-	private boolean debug = true;
+	private boolean debug = false;
 
-	protected TouchBinder(){
+	public TouchBinder(){
 		bind_matrix = new PMatrix2D();
 		clamp_min = new PVector( 0, 0);
 		clamp_max = new PVector( 1, 1);
@@ -49,10 +46,10 @@ public abstract class TouchBinder {
 		return real;
 	}
 
-	public abstract void update();
+	public void update(){}
 
-	//accessors
-	protected void setBindMatrix( PMatrix2D matrix){
+	//set accessors
+	public void setBindMatrix( PMatrix2D matrix){
 		this.bind_matrix = matrix;
 	}
 	public void setClampMin( PVector min){
@@ -61,7 +58,12 @@ public abstract class TouchBinder {
 	public void setClampMax( PVector max){
 		clamp_max = max;
 	}
-	protected PMatrix2D getBindMatrix(){
+	public void setDebug( boolean enabled){
+		this.debug = enabled;
+	}
+
+	//get accessors
+	public PMatrix2D getBindMatrix(){
 		return bind_matrix;
 	}
 	public PVector getClampMin(){
@@ -69,8 +71,5 @@ public abstract class TouchBinder {
 	}
 	public PVector getClampMax(){
 		return clamp_max;
-	}
-	public void setDebug( boolean enabled){
-		this.debug = enabled;
 	}
 }

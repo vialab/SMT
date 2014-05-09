@@ -51,7 +51,7 @@ public class TexturedTouchDrawer
 
 	// Trail drawing options
 	//whether to draw the trail
-	private boolean trail_enabled = true;
+	private boolean trail_enabled = false;
 	//the time window within which to include points
 	private int trail_time_threshold = 300;
 	//the maximum number of points on to include
@@ -191,12 +191,13 @@ public class TexturedTouchDrawer
 	private Vector<TuioPoint> selectPoints( Touch touch, long currentTime){
 		//result points
 		Vector<TuioPoint> points = new Vector<TuioPoint>();
+		Vector<TuioPoint> touch_path = touch.getPath();
 		//for every point along the path
 		TuioPoint previous = null;
-		for( int i = touch.path.size() - 1; i >= 0; i--){
+		for( int i = touch_path.size() - 1; i >= 0; i--){
 			//stop when we have too many points
 			if( points.size() >= trail_point_threshold) break;
-			TuioPoint point = touch.path.get( i);
+			TuioPoint point = touch_path.get( i);
 			//get point time
 			long pointTime = point.getTuioTime().getTotalMilliseconds();
 			//add points that are within the time threshold

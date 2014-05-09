@@ -1,7 +1,7 @@
 package vialab.SMT.util;
 
-//libtuio imports
-import TUIO.*;
+//standard library imports
+import java.awt.Rectangle;
 
 //processing imports
 import processing.core.*;
@@ -15,12 +15,12 @@ import vialab.SMT.*;
 public class RectTouchBinder extends TouchBinder {
 
 	//fields
-	private SystemAdapter adapter;
-	private long last_update;
+	private Rectangle bind_rect;
 
 	//contructors
-	public RectTouchBinder(){
+	public RectTouchBinder( Rectangle rect){
 		super();
+		this.setBindRect( rect);
 	}
 
 	//touch binder overrides
@@ -28,4 +28,15 @@ public class RectTouchBinder extends TouchBinder {
 	public void update(){}
 
 	//accessors
+	public void setBindRect( Rectangle rect){
+		this.bind_rect = rect;
+		PMatrix2D bind_matrix = new PMatrix2D();
+		bind_matrix.translate( rect.x, rect.y);
+		bind_matrix.scale( rect.width, rect.height);
+		this.setBindMatrix( bind_matrix);
+		this.setClampMin(
+			new PVector( rect.x, rect.y));
+		this.setClampMax(
+			new PVector( rect.x + rect.width, rect.y + rect.height));
+	}
 }

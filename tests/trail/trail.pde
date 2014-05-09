@@ -29,6 +29,7 @@ void setup(){
 	frameRate( fps_limit);
 	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
+	SMT.setTouchSourceBoundsActiveDisplay( TouchSource.MOUSE);
 	//SMT.setTouchDraw( TouchDraw.NONE);
 	SMT.setTouchDraw( TouchDraw.TEXTURED);
 	SMT.setTouchRadius( 10);

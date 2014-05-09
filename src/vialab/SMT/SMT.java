@@ -511,7 +511,7 @@ public class SMT {
 	 **/
 	public static void setTouchSourceBoundsRect( Rectangle bounds,
 			TouchSource... sources){
-		TouchBinder binder = new RectTouchBinder();
+		TouchBinder binder = new RectTouchBinder( bounds);
 		for( TouchSource source : sources)
 			touchBinders.put( source, binder);
 	}
