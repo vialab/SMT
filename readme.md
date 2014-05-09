@@ -28,7 +28,7 @@ SMT supports multiple input sources for Touch events:
  * SmartSDK
  * Mouse Emulation
 
-SMT can be used in **Windows**, **Mac** and **Linux** environments.  
+SMT can be used in **Windows**, **Mac** and **GNU/Linux** environments.  
   
 Installation Instructions:  
  **1.**  Install Processing 2.1.1+ if you do not have it already  
