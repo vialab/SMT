@@ -3,18 +3,18 @@ package vialab.SMT;
 //processing imports
 import processing.core.*;
 
-public class ViewPortZone extends Zone {
+public class ViewportZone extends Zone {
 	//fields
 	private Container container;
 
 	//constructor
-	public ViewPortZone(){
+	public ViewportZone(){
 		super();
 		this.setDirect( false);
 		container = new Container();
 		super.add( container);
 	}
-	public ViewPortZone( int x, int y, int width, int height){
+	public ViewportZone( int x, int y, int width, int height){
 		super( x, y, width, height);
 		this.setDirect( false);
 		container = new Container();
