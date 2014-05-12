@@ -99,7 +99,7 @@ public class SMT {
 	//default SMT.init() parameters
 	public static final int default_port = 3333;
 	public static final TouchSource default_touchsource =
-		TouchSource.TUIO_DEVICE;
+		TouchSource.AUTOMATIC;
 
 	//TUIO adapters
 	protected static AndroidToTUIO att = null;
