@@ -12,6 +12,8 @@ void setup(){
 	size( window_width, window_height, SMT.RENDERER);
 	frame.setResizable( true);
 	SMT.init( this, TouchSource.AUTOMATIC);
+	SMT.setTrailEnabled( true);
+	SMT.setTouchSourceBoundsActiveDisplay( TouchSource.MOUSE);
 	adapter = SMT.getSystemAdapter();
 	adapter.update();
 

@@ -3,27 +3,26 @@ import vialab.SMT.*;
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
-	size( 800, 600, SMT.RENDERER);
+	size( 1200, 800, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
 
-	//Make a new Zone
 	//Single transformation zones
-	Zone spinny = new Zone( "SpinnyZone", 110, 10, 100, 100);
-	Zone draggy = new Zone( "DraggyZone", 220, 10, 100, 100);
-	Zone scaley = new Zone( "ScaleyZone", 330, 10, 100, 100);
+	Zone spinny = new Zone( "SpinnyZone", 110, 110, 100, 100);
+	Zone draggy = new Zone( "DraggyZone", 220, 110, 100, 100);
+	Zone scaley = new Zone( "ScaleyZone", 330, 110, 100, 100);
 
 	//Double transformations
-	Zone spinnydrag = new Zone( "SpinnyDragZone", 110, 210, 100, 100);
-	Zone draggyscale = new Zone( "DraggyScaleZone", 220, 210, 100, 100);
-	Zone scaleyspin = new Zone( "ScaleySpinZone", 330, 210, 100, 100);
+	Zone spinnydrag = new Zone( "SpinnyDragZone", 110, 310, 100, 100);
+	Zone draggyscale = new Zone( "DraggyScaleZone", 220, 310, 100, 100);
+	Zone scaleyspin = new Zone( "ScaleySpinZone", 330, 310, 100, 100);
 
 	//Rst Zones
-	Zone rst_a = new Zone( "RstZoneA", 110, 410, 100, 100);
-	Zone rst_b = new Zone( "RstZoneB", 220, 410, 100, 100);
-	Zone rst_c = new Zone( "RstZoneC", 330, 410, 100, 100);
-	Zone rst_d = new Zone( "RstZoneD", 440, 410, 100, 100);
-	Zone rst_e = new Zone( "RstZoneE", 550, 410, 100, 100);
-	Zone rst_f = new Zone( "RstZoneF", 660, 410, 100, 100);
+	Zone rst_a = new Zone( "RstZoneA", 110, 510, 100, 100);
+	Zone rst_b = new Zone( "RstZoneB", 220, 510, 100, 100);
+	Zone rst_c = new Zone( "RstZoneC", 330, 510, 100, 100);
+	Zone rst_d = new Zone( "RstZoneD", 440, 510, 100, 100);
+	Zone rst_e = new Zone( "RstZoneE", 550, 510, 100, 100);
+	Zone rst_f = new Zone( "RstZoneF", 660, 510, 100, 100);
 
 	//add all the zones
 	SMT.add( spinny);
@@ -43,9 +42,18 @@ void setup(){
 //Draw function for the sketch
 void draw(){
 	background( 30);
+	pushStyle();
+	noStroke();
+	fill( 200, 200);
+	textAlign( LEFT, BOTTOM);
+	textSize( 54);
+	text( "Single Transformation Zones", 130, 100);
+	text( "Double Transformation Zones", 130, 300);
+	text( "Rst Zones", 130, 500);
+	popStyle();
 }
 
-//touch functions for zones
+//Single transformation zone functions
 
 void drawSpinnyZone( Zone zone){
 	noStroke();
@@ -59,7 +67,7 @@ void touchSpinnyZone( Zone zone){
 
 void drawDraggyZone( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 200, 160, 140, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchDraggyZone( Zone zone){
@@ -69,17 +77,19 @@ void touchDraggyZone( Zone zone){
 
 void drawScaleyZone( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 140, 200, 160, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchScaleyZone( Zone zone){
 	//this zone only scales
-	//zone.scale();
+	zone.scale();
 }
+
+//Double transformation zone functions
 
 void drawSpinnyDragZone( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 200, 140, 160, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchSpinnyDragZone( Zone zone){
@@ -89,7 +99,7 @@ void touchSpinnyDragZone( Zone zone){
 
 void drawDraggyScaleZone( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 180, 200, 140, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchDraggyScaleZone( Zone zone){
@@ -99,7 +109,7 @@ void touchDraggyScaleZone( Zone zone){
 
 void drawScaleySpinZone( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 160, 140, 120, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchScaleySpinZone( Zone zone){
@@ -107,64 +117,59 @@ void touchScaleySpinZone( Zone zone){
 	zone.rs();
 }
 
+//Rst zone functions
 
-//Overloads are available for rst()
 void drawRstZoneA( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 140, 120, 120, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchRstZoneA( Zone zone){
-	//this zone spins
+	//this zone spins, scales, and drags
 	zone.rst();
 }
 
 void drawRstZoneB( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 180, 160, 200, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchRstZoneB( Zone zone){
-	//this zone spins
 	zone.rst( false, true, true);
 }
 
 void drawRstZoneC( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 180, 200, 160, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchRstZoneC( Zone zone){
-	//this zone spins
 	zone.rst( true, false, true);
 }
 
 void drawRstZoneD( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 220, 180, 110, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchRstZoneD( Zone zone){
-	//this zone spins
 	zone.rst( true, true, false);
 }
 
 void drawRstZoneE( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 180, 1140, 220, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchRstZoneE( Zone zone){
-	//this zone spins
 	zone.rst( true, true, true, false);
 }
 
 void drawRstZoneF( Zone zone){
 	noStroke();
-	fill( 140, 160, 200, 180);
+	fill( 240, 240, 240, 180);
 	rect( 0, 0, zone.width, zone.height);
 }
 void touchRstZoneF( Zone zone){
-	//this zone spins
 	zone.rst( true, true, false, true);
 }
