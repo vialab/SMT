@@ -63,7 +63,7 @@ class_files = \
 	bin/vialab/SMT/util/SystemAdapter.class \
 	bin/vialab/SMT/util/TouchBinder.class \
 	bin/vialab/SMT/util/ZonePicker.class \
-	bin/vialab/SMT/ViewPortZone.class \
+	bin/vialab/SMT/ViewportZone.class \
 	bin/vialab/SMT/Zone.class \
 
 source_files = \
@@ -130,5 +130,5 @@ source_files = \
 	src/vialab/SMT/util/SystemAdapter.java \
 	src/vialab/SMT/util/TouchBinder.java \
 	src/vialab/SMT/util/ZonePicker.java \
-	src/vialab/SMT/ViewPortZone.java \
+	src/vialab/SMT/ViewportZone.java \
 	src/vialab/SMT/Zone.java \

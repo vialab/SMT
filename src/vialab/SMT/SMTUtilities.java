@@ -180,11 +180,12 @@ public final class SMTUtilities {
 		// uppercase the first letter of the name so that we have consistent
 		// naming warnings
 		name = name.substring(0, 1).toUpperCase() + name.substring(1);
-		Method method = getAnyPMethod(parent, methodPrefix, name, true, parameters);
-		if (method == null) {
-			method = getAnyPMethod(parent, methodPrefix, name, false, parameters);
-		}
-		if (method == null) {
+		Method method = getAnyPMethod(
+			parent, methodPrefix, name, true, parameters);
+		if( method == null)
+			method = getAnyPMethod(
+				parent, methodPrefix, name, false, parameters);
+		if( method == null){
 
 			// warn only if the flag is set, the methodSet doesn't contain it(to
 			// only warn once per method)
@@ -192,7 +193,7 @@ public final class SMTUtilities {
 			// itself
 			if( warnMissing && ! methodSet.contains( methodPrefix + name)
 					&& ! checkImpl( callingClass, methodPrefix, parameters)) {
-				if(! warned) {
+				if( ! warned) {
 					System.err.println(
 						"Call SMT.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
 					warned = true;
@@ -204,7 +205,7 @@ public final class SMTUtilities {
 						first = false;
 					else
 						System.err.print(", ");
-					System.err.print(c.getName());
+					System.err.print( c.getName());
 				}
 				System.err.print( "), using default " + methodPrefix + " method");
 				for( Method methodInMap : methodMap.values()){

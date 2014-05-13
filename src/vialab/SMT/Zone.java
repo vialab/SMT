@@ -1239,7 +1239,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			first_old = first;
 
 		//get touch locations in current co-ordinate system
-		 PVector t00_g = first.getPositionVector();
+		PVector t00_g = first.getPositionVector();
 		PVector t01_g = first_old.getPositionVector();
 		PVector t00 = global_inv.mult( t00_g, null);
 		PVector t01 = global_inv.mult( t01_g, null);
