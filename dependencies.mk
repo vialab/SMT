@@ -208,7 +208,7 @@ bin/vialab/SMT/TouchSource.class:
 
 bin/vialab/SMT/TouchState.class:
 
-bin/vialab/SMT/ViewPortZone.class: \
+bin/vialab/SMT/ViewportZone.class: \
 	bin/vialab/SMT/Zone.class
 
 bin/vialab/SMT/Zone.class: \

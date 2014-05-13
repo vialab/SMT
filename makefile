@@ -83,6 +83,8 @@ test-tutorial2: build jar
 	pshell -p examples/Tutorial/Two
 test-tutorial3: build jar
 	pshell -p examples/Tutorial/Three
+test-tutorial4: build jar
+	pshell examples/Tutorial/Four
 
 # prototypes
 test-ripple: build jar
