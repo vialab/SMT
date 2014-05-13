@@ -1355,6 +1355,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Rotates the zone, using two touches, about the centre Only works inside
 	 * the zone's touch method, or between calls to beginTouch() and endTouch()
 	 */
+	public void scale(){
+		rst( false, true, false);
+	}
+	/**
+	 * Rotates the zone, using two touches, about the centre Only works inside
+	 * the zone's touch method, or between calls to beginTouch() and endTouch()
+	 */
 	public void rotate(){
 		rst( true, false, false);
 	}
