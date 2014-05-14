@@ -42,7 +42,7 @@ void touchMyZone( Zone zone){
 
 // "ChildZone" functions
 
-//Functions for "MyZone"
+//Functions for "ChildZone"
 void drawChildZone( Zone zone){
 	noStroke();
 	fill( #88dd88);
@@ -51,9 +51,10 @@ void drawChildZone( Zone zone){
 void touchChildZone( Zone zone){
 	zone.rst();
 }
+
 // "GrandChildZone" functions
 
-//Functions for "MyZone"
+//Functions for "GrandChildZone"
 void drawGrandChildZone( Zone zone){
 	noStroke();
 	fill( #aa66aa);
