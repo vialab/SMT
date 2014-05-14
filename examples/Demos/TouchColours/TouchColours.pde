@@ -1,6 +1,3 @@
-//standard library imports
-
-
 //SMT library imports
 import vialab.SMT.*;
 
@@ -21,6 +18,18 @@ void setup(){
 	frameRate( fps_limit);
 	size( display_width, display_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
+	SMT.setTrailEnabled( true);
+
+	//customize some of touch drawing options
+	// make the touch a bit smaller
+	SMT.setTouchRadius( 15);
+	// set the default colours to black
+	SMT.setTouchColour( 30, 30, 30, 220);
+	SMT.setTrailColour( 30, 30, 30, 220);
+	// make the touch a bit smaller
+	SMT.setTrailT_N( 20);
+	// make the touch a bit smaller
+	SMT.setTrailPointThreshold( 10);
 
 	//create zones
 	//touch colour setters
@@ -95,7 +104,7 @@ void draw(){
 	//draw background
 	background( 50, 50, 50);
 	pushStyle();
-	fill( 140, 140, 140, 140);
+	fill( 240, 240, 240, 180);
 	textSize( 25);
 	textMode( SHAPE);
 	textAlign( LEFT, CENTER);

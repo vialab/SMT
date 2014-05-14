@@ -38,7 +38,7 @@ public class TexturedTouchDrawer
 	private int touch_sections;
 	//the radius to use when drawing touches
 	private float touch_radius;
-	//the duration of the fade-out animation
+	//the duration of the fade-out animation in seconds
 	private static long death_duration = 250;
 	//touch tinting's red element
 	private float touch_tint_red = 255f;
@@ -384,7 +384,14 @@ public class TexturedTouchDrawer
 	 * @param enabled whether touch drawing should be enabled 
 	 **/
 	public void setTouchEnabled( boolean enabled){
-		touch_enabled = enabled;
+		this.touch_enabled = enabled;
+	}
+	/**
+	 * Sets how long it takes for a touch to got from 100% visible to 0% visible after it "dies".
+	 * @param duration desired length of the death animation
+	 **/
+	public void setDeathDuration( long duration){
+		this.death_duration = duration;
 	}
 	/** Sets the desired tint of drawn touches.
 	 * @param red The desired tint's red element
@@ -394,10 +401,24 @@ public class TexturedTouchDrawer
 	 */
 	public void setTouchTint( float red, float green, float blue, float alpha){
 		//do validation?
-		touch_tint_red = red;
-		touch_tint_green = green;
-		touch_tint_blue = blue;
-		touch_tint_alpha = alpha;
+		this.touch_tint_red = red;
+		this.touch_tint_green = green;
+		this.touch_tint_blue = blue;
+		this.touch_tint_alpha = alpha;
+	}
+	/**
+	 * Gets whether touch drawing is enabled
+	 * @return whether touch drawing is enabled 
+	 **/
+	public boolean getTouchEnabled(){
+		return touch_enabled;
+	}
+	/**
+	 * Gets how long it takes for a touch to got from 100% visible to 0% visible after it "dies".
+	 * @return the current length of the death animation 
+	 **/
+	public long getDeathDuration(){
+		return death_duration;
 	}
 	/** Gets the red aspect of tint of drawn touches.
 	 * @return The desired tint's red element
@@ -434,10 +455,10 @@ public class TexturedTouchDrawer
 	 */
 	public void setTrailTint( float red, float green, float blue, float alpha){
 		//do validation?
-		trail_tint_red = red;
-		trail_tint_green = green;
-		trail_tint_blue = blue;
-		trail_tint_alpha = alpha;
+		this.trail_tint_red = red;
+		this.trail_tint_green = green;
+		this.trail_tint_blue = blue;
+		this.trail_tint_alpha = alpha;
 	}
 	/** Gets the red aspect of tint of the drawn trail.
 	 * @return The desired tint's red element
@@ -469,35 +490,35 @@ public class TexturedTouchDrawer
 	 * @param enabled whether trail drawing should be enabled 
 	 **/
 	public void setTrailEnabled( boolean enabled){
-		trail_enabled = enabled;
+		this.trail_enabled = enabled;
 	}
 	/**
 	 * Set the time threshold for touch path point selection 
 	 * @param threshold the desired time threshold for touch path point selection
 	 **/
 	public void setTrailTimeThreshold( int threshold){
-		trail_time_threshold = threshold;
+		this.trail_time_threshold = threshold;
 	}
 	/**
 	 * Set the point count threshold for touch path point selection 
 	 * @param threshold the desired point count threshold for touch path point selection
 	 **/
 	public void setTrailPointThreshold( int threshold){
-		trail_point_threshold = threshold;
+		this.trail_point_threshold = threshold;
 	}
 	/**
 	 * Set the C parameter of the smoothing function 
 	 * @param c the desired C parameter of the smoothing function
 	 **/
 	public void setTrailC( float c){
-		trail_c = c;
+		this.trail_c = c;
 	}
 	/**
 	 * Set the base number of points on the curve 
 	 * @param t_n the desired base number of points on the curve
 	 **/
 	public void setTrailT_N( int t_n){
-		trail_t_n = t_n;
+		this.trail_t_n = t_n;
 	}
 	/**
 	 * Set the desired width of the trail.
@@ -505,7 +526,7 @@ public class TexturedTouchDrawer
 	 * @param width the desired width of the trail
 	 **/
 	public void setTrailWidth( float width){
-		trail_width = width;
+		this.trail_width = width;
 	}
 
 	/**

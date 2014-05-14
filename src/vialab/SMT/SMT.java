@@ -159,7 +159,7 @@ public class SMT {
 	 * 
 	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 */
-	public static void init(PApplet parent) {
+	public static void init(PApplet parent){
 		init(parent, default_port, default_touchsource);
 	}
 
@@ -170,7 +170,7 @@ public class SMT {
 	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 * @param port The port to listen on
 	 */
-	public static void init(PApplet applet, int port) {
+	public static void init(PApplet applet, int port){
 		init(applet, port, default_touchsource);
 	}
 
@@ -181,7 +181,7 @@ public class SMT {
 	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
-	public static void init(PApplet applet, TouchSource... sources) {
+	public static void init(PApplet applet, TouchSource... sources){
 		init(applet, default_port, sources);
 	}
 
@@ -194,7 +194,7 @@ public class SMT {
 	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
 	public static void init(
-			PApplet applet, int port, TouchSource... sources) {
+			PApplet applet, int port, TouchSource... sources){
 		if( applet == null)
 			throw new NullPointerException(
 				"Null applet parameter, pass 'this' to SMT.init() instead of null");
@@ -280,7 +280,7 @@ public class SMT {
 					port++;
 				}
 
-			switch (source) {
+			switch (source){
 				case ANDROID:
 					//connect_auto will take care of this later - ignore
 					if( ! auto_enabled)
@@ -602,7 +602,7 @@ public class SMT {
 	 * IDK why you wouldn't want to, but hey, I didn't write this.
 	 * @param fastPicking whether to use fast picking
 	 */
-	public static void setFastPicking(boolean fastPicking) {
+	public static void setFastPicking(boolean fastPicking){
 		SMT.fastPicking = fastPicking;
 	}
 
@@ -612,7 +612,7 @@ public class SMT {
 	 * 
 	 * @param warn whether to warn when there are unimplemented methods for zones
 	 */
-	public static void setWarnUnimplemented(boolean warn) {
+	public static void setWarnUnimplemented(boolean warn){
 		SMT.warnUnimplemented = warn;
 	}
 
@@ -664,7 +664,7 @@ public class SMT {
 	 */
 	private static void addJVMShutdownHook(){
 		Runtime.getRuntime().addShutdownHook( new Thread( new Runnable(){
-			public void run() {
+			public void run(){
 				SMT.inShutdown  = true;
 				if( warnUncalledMethods)
 					SMTUtilities.warnUncalledMethods(applet);
@@ -699,7 +699,7 @@ public class SMT {
 	 * @param w Width
 	 * @param h Height
 	 */
-	public static Body createStaticBox( float x, float y, float w, float h) {
+	public static Body createStaticBox( float x, float y, float w, float h){
 		BodyDef boxDef = new BodyDef();
 		boxDef.position.set(
 			SMT.box2dScale * (x + w / 2),
@@ -722,18 +722,18 @@ public class SMT {
 	 *            MotionEvent - the motion event triggered in Android
 	 * @return Should the event get consumed elsewhere or not
 	 */
-	public static boolean passAndroidTouchEvent(Object me) {
+	public static boolean passAndroidTouchEvent(Object me){
 		return att.onTouchEvent(me);
 	}
 
 	/** Gets all zones recognized by SMT
 	 * @return A array of all the zones that have been added to SMT
 	 */
-	public static Zone[] getZones() {
+	public static Zone[] getZones(){
 		return getDescendents( sketch).toArray( new Zone[0]);
 	}
 
-	private static List<Zone> getDescendents(Zone parent) {
+	private static List<Zone> getDescendents(Zone parent){
 		ArrayList<Zone> descendents = new ArrayList<Zone>();
 		for(Zone child : parent.getChildren()){
 			descendents.add(child);
@@ -748,7 +748,7 @@ public class SMT {
 	 * @param drawers the optional touch drawer parameter. only to be used when using TouchDraw.CUSTOM
 	 */
 	public static void setTouchDraw(
-			TouchDraw drawMethod, TouchDrawer... drawers) {
+			TouchDraw drawMethod, TouchDrawer... drawers){
 		if( drawMethod != TouchDraw.CUSTOM){
 			//return if no change necessary
 			if( SMT.touchDrawMethod == drawMethod)
@@ -773,7 +773,7 @@ public class SMT {
 			if( drawers.length > 1)
 				System.err.println(
 					"[SMT Warning] SMT.setTouchDraw() expected one optional parameter, but was given multiple. The first one will be used.");
-			customTouchDrawer = drawers[0];
+			customTouchDrawer = drawers[ 0];
 			if( customTouchDrawer == null)
 				throw new NullPointerException(
 					"The optional TouchDrawer parameter given to SMT.setTouchDraw() was null.");
@@ -822,6 +822,22 @@ public class SMT {
 		SMT.MAX_PATH_LENGTH = maxPathLength;
 	}
 
+	/** Sets the desired radius of a drawn touch
+	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
+	 * @param radius the desired radius of a drawn touch, in pixels
+	 */
+	public static void setTouchDeathDuration( long duration){
+		texturedTouchDrawerNullCheck();
+		texturedTouchDrawer.setDeathDuration( duration);
+	}
+	/** Gets the current radius of a drawn touch
+	 * Note: this function is only accurate when using TouchDraw.TEXTURED
+	 * @return the current radius of a drawn touch, in pixels
+	 */
+	public static long getTouchDeathDuration(){
+		texturedTouchDrawerNullCheck();
+		return texturedTouchDrawer.getDeathDuration();
+	}
 	/** Sets the desired radius of a drawn touch
 	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
 	 * @param radius the desired radius of a drawn touch, in pixels
@@ -1056,19 +1072,19 @@ public class SMT {
 	}
 
 	/** Implements the "Smooth" touch draw method */
-	public static void drawSmoothTouchPoints() {
+	public static void drawSmoothTouchPoints(){
 		renderer.pushStyle();
-		for (Touch touch : SMTTouchManager.currentTouchState) {
+		for (Touch touch : SMTTouchManager.currentTouchState){
 			renderer.strokeWeight(3);
 
 			long time = System.currentTimeMillis() - touch.startTimeMillis;
 
-			if (touch.isAssigned() && time < 250) {
+			if (touch.isAssigned() && time < 250){
 				renderer.noFill();
 				renderer.stroke(155, 255, 155, 100);
 				renderer.ellipse(touch.x, touch.y, 75 - time / 10, 75 - time / 10);
 			}
-			else if (!touch.isAssigned() && time < 500) {
+			else if (!touch.isAssigned() && time < 500){
 				{
 					renderer.noFill();
 					renderer.stroke(255, 155, 155, 100);
@@ -1079,18 +1095,18 @@ public class SMT {
 			renderer.fill(0, 0, 0, 50);
 			renderer.ellipse( touch.x, touch.y, 40, 40);
 			renderer.fill(255, 255, 255, 50);
-			if (touch.isJointCursor) {
+			if (touch.isJointCursor){
 				renderer.fill(0, 255, 0, 50);
 			}
 			renderer.ellipse( touch.x, touch.y, 30, 30);
 			renderer.noFill();
 			renderer.stroke(200, 240, 255, 50);
 			Point[] path = touch.getPathPoints();
-			if (path.length > 3) {
+			if (path.length > 3){
 				for (int j = 3 + Math.max(0, path.length - (SMT.MAX_PATH_LENGTH + 2));
-						j < path.length; j++) {
+						j < path.length; j++){
 					float weight = 10 - (path.length - j) / 5;
-					if (weight >= 1) {
+					if (weight >= 1){
 						renderer.strokeWeight(weight);
 						renderer.bezier(
 							path[j].x, path[j].y,
@@ -1108,9 +1124,9 @@ public class SMT {
 	 * Draws all Touch objects and their path history, with some data to try to
 	 * help with debugging
 	 */
-	public static void drawDebugTouchPoints() {
+	public static void drawDebugTouchPoints(){
 		renderer.pushStyle();
-		for (Touch touch : SMTTouchManager.currentTouchState) {
+		for (Touch touch : SMTTouchManager.currentTouchState){
 			renderer.fill(255);
 			if (touch.isJointCursor)
 				renderer.fill(0, 255, 0);
@@ -1120,8 +1136,8 @@ public class SMT {
 			renderer.line(touch.x - 15, touch.y, touch.x + 15, touch.y);
 			TuioPoint[] path = touch.path.toArray(new TuioPoint[touch.path.size()]);
 			TuioPoint lastText = null;
-			if( path.length > 3) {
-				for (int j = 1 + Math.max(0, path.length - (SMT.MAX_PATH_LENGTH + 2)); j < path.length; j++) {
+			if( path.length > 3){
+				for (int j = 1 + Math.max(0, path.length - (SMT.MAX_PATH_LENGTH + 2)); j < path.length; j++){
 					String pointText = "#" + j + " x:" + path[j].getScreenX(renderer.width) + " y:"
 							+ path[j].getScreenY(renderer.height) + " touch:"
 							+ path[j].getTuioTime().getTotalMilliseconds() + "ms";
@@ -1137,7 +1153,7 @@ public class SMT {
 									- lastText.getScreenY(renderer.height)) > 13
 							|| Math.abs(path[j].getScreenX(renderer.width)
 									- lastText.getScreenX(renderer.width)) > renderer
-									.textWidth(pointText) * 1.5) {
+									.textWidth(pointText) * 1.5){
 						renderer.fill(0);
 						renderer.textSize(12);
 						renderer.text(pointText, path[j].getScreenX(renderer.width) + 5,
@@ -1157,7 +1173,7 @@ public class SMT {
 	 * @param zones The zones to add to the sketch/application
 	 * @return Whether all zones were sucessfully added
 	 */
-	public static boolean add(Zone... zones) {
+	public static boolean add(Zone... zones){
 		return SMT.sketch.add(zones);
 	}
 
@@ -1168,7 +1184,7 @@ public class SMT {
 	 * @param xmlFilename The XML file to read in for zone configuration
 	 * @return The array of zones created from the XML File
 	 */
-	/**public static Zone[] add(String xmlFilename) {
+	/**public static Zone[] add(String xmlFilename){
 		return SMT.sketch.addXMLZone(xmlFilename);
 	}*/
 
@@ -1177,8 +1193,8 @@ public class SMT {
 	 * @param parent The Zone to add the given zones to
 	 * @param zones The zones to add to the parent as children
 	 */
-	public static boolean addChild(Zone parent, Zone... zones) {
-		if (parent != null) {
+	public static boolean addChild(Zone parent, Zone... zones){
+		if (parent != null){
 			return parent.add(zones);
 		}
 		else {
@@ -1195,7 +1211,7 @@ public class SMT {
 	 * @param zones
 	 *            The zones to add to the parent as children
 	 */
-	public static boolean addChild(String parentName, Zone... zones) {
+	public static boolean addChild(String parentName, Zone... zones){
 		return addChild(get(parentName), zones);
 	}
 
@@ -1207,8 +1223,8 @@ public class SMT {
 	 * @param zones
 	 *            The zones to add to the parent as children
 	 */
-	public static boolean removeChild(Zone parent, Zone... zones) {
-		if (parent != null) {
+	public static boolean removeChild(Zone parent, Zone... zones){
+		if (parent != null){
 			return parent.remove(zones);
 		}
 		else {
@@ -1225,7 +1241,7 @@ public class SMT {
 	 * @param zones
 	 *            The zones to add to the parent as children
 	 */
-	public static boolean removeChild(String parentName, Zone... zones) {
+	public static boolean removeChild(String parentName, Zone... zones){
 		return removeChild(get(parentName), zones);
 	}
 
@@ -1240,14 +1256,14 @@ public class SMT {
 	 * @param ySpace
 	 * @param zones
 	 */
-	public static void grid(int x, int y, int width, int xSpace, int ySpace, Zone... zones) {
+	public static void grid(int x, int y, int width, int xSpace, int ySpace, Zone... zones){
 		int currentX = x;
 		int currentY = y;
 
 		int rowHeight = 0;
 
-		for (Zone zone : zones) {
-			if (currentX + zone.width > x + width) {
+		for (Zone zone : zones){
+			if (currentX + zone.width > x + width){
 				currentX = x;
 				currentY += rowHeight + ySpace;
 				rowHeight = 0;
@@ -1269,7 +1285,7 @@ public class SMT {
 	 *            The name of the zone to remove
 	 * @return Whether all of the zones were removed successfully
 	 */
-	public static boolean remove(String name) {
+	public static boolean remove(String name){
 		return remove(get(name));
 	}
 
@@ -1281,7 +1297,7 @@ public class SMT {
 	 * @param zones  The zones to remove
 	 * @return Whether all of the zones were removed successfully
 	 */
-	public static boolean remove(Zone... zones) {
+	public static boolean remove(Zone... zones){
 		return SMT.sketch.remove(zones);
 	}
 
@@ -1295,7 +1311,7 @@ public class SMT {
 	 * transformation matrix, applies the zone's matrix, draws the zone, pops
 	 * the matrix, and when at the end of the list, it draws the touch points.
 	 */
-	public static void draw() {
+	public static void draw(){
 
 		renderer.pushStyle();
 		renderer.pushMatrix();
@@ -1308,7 +1324,7 @@ public class SMT {
 		//update jbox2d
 		updateStep();
 
-		switch( touchDrawMethod) {
+		switch( touchDrawMethod){
 			case CUSTOM:
 				customTouchDrawer.draw( 
 					SMTTouchManager.currentTouchState, renderer);
@@ -1337,7 +1353,7 @@ public class SMT {
 	 * @param w the width of the pickBuffer image to draw
 	 * @param h the height of the pickBuffer image to draw
 	 */
-	public static void drawPickBuffer(int x, int y, int w, int h) {
+	public static void drawPickBuffer(int x, int y, int w, int h){
 		 renderer.image( picker.picking_context, x, y, w, h);
 	}
 
@@ -1346,7 +1362,7 @@ public class SMT {
 	 * 
 	 * @return Vector<TuioObject>
 	 */
-	public static Vector<TuioObject> getTuioObjects() {
+	public static Vector<TuioObject> getTuioObjects(){
 		return new Vector<TuioObject>(listener.getTuioObjects());
 	}
 
@@ -1354,9 +1370,9 @@ public class SMT {
 	 * @return An array containing all touches that are currently NOT assigned
 	 *         to zones
 	 */
-	public static Touch[] getUnassignedTouches() {
+	public static Touch[] getUnassignedTouches(){
 		List<Touch> touches = new ArrayList<Touch>();
-		for (Touch touch : getTouches()) {
+		for (Touch touch : getTouches()){
 			if(!touch.isAssigned()){
 				touches.add(touch);
 			}
@@ -1368,10 +1384,10 @@ public class SMT {
 	 * @return An array containing all touches that are currently assigned to
 	 *         zones
 	 */
-	public static Touch[] getAssignedTouches() {
+	public static Touch[] getAssignedTouches(){
 		List<Touch> touches = new ArrayList<Touch>();
-		for (Zone zone : getZones()) {
-			for (Touch touch : zone.getTouches()) {
+		for (Zone zone : getZones()){
+			for (Touch touch : zone.getTouches()){
 				touches.add(touch);
 			}
 		}
@@ -1385,7 +1401,7 @@ public class SMT {
 	 *            The touches to assign to the zone, variable number of
 	 *            arguments
 	 */
-	public static void assignTouches(Zone zone, Touch... touches) {
+	public static void assignTouches(Zone zone, Touch... touches){
 		zone.assign(touches);
 	}
 
@@ -1394,7 +1410,7 @@ public class SMT {
 	 * 
 	 * @return Collection<Touch>
 	 */
-	public static Collection<Touch> getTouchCollection() {
+	public static Collection<Touch> getTouchCollection(){
 		return getTouchMap().values();
 	}
 
@@ -1403,7 +1419,7 @@ public class SMT {
 	 * 
 	 * @return Touch[] containing all touches that are currently mapped
 	 */
-	public static Touch[] getTouches() {
+	public static Touch[] getTouches(){
 		return getTouchMap().values().toArray( new Touch[0]);
 	}
 
@@ -1412,7 +1428,7 @@ public class SMT {
 	 * 
 	 * @return Touch The touch at the desired index
 	 */
-	public static Touch getTouch( int index) {
+	public static Touch getTouch( int index){
 		Touch[] touches = getTouches();
 		return ( index < 0 || index >= touches.length) ?
 			null : touches[index];
@@ -1421,7 +1437,7 @@ public class SMT {
 	/**
 	 * @return A Map<Long,Touch> indexing all touches by their session_id's
 	 */
-	public static Map<Long, Touch> getTouchMap() {
+	public static Map<Long, Touch> getTouchMap(){
 		return SMTTouchManager.currentTouchState.idToTouches;
 	}
 
@@ -1431,12 +1447,12 @@ public class SMT {
 	// *
 	// * @return the array
 	// */
-	// public static Touch[] getUnassignedTouches() {
+	// public static Touch[] getUnassignedTouches(){
 	// Vector<TuioCursor> cursors = tuioClient.getTuioCursors();
 	// ArrayList<Touch> touches = new ArrayList<>();
-	// for (TuioCursor c : cursors) {
+	// for (TuioCursor c : cursors){
 	// Zone z = picker.getZoneFromId(c.getSessionID());
-	// if (z == null) {
+	// if (z == null){
 	// touches.add(new Touch(c));
 	// }
 	// }
@@ -1446,10 +1462,10 @@ public class SMT {
 	/**
 	 * @return An array of all zones that currently have touches/are active.
 	 */
-	public static Zone[] getActiveZones() {
+	public static Zone[] getActiveZones(){
 		ArrayList<Zone> zones = new ArrayList<Zone>();
-		for (Zone zone : getZones()) {
-			if (zone.isActive()) {
+		for (Zone zone : getZones()){
+			if (zone.isActive()){
 				zones.add(zone);
 			}
 		}
@@ -1461,7 +1477,7 @@ public class SMT {
 	 *            The zone to get the touches of
 	 * @return A Collection<Touch> containing all touches from the given zone
 	 */
-	public static Collection<Touch> getTouchCollectionFromZone(Zone zone) {
+	public static Collection<Touch> getTouchCollectionFromZone(Zone zone){
 		return zone.getTouchCollection();
 	}
 
@@ -1470,7 +1486,7 @@ public class SMT {
 	 *            The zone to get the touches of
 	 * @return A Touch[] containing all touches from the given zone
 	 */
-	public static Touch[] getTouchesFromZone(Zone zone) {
+	public static Touch[] getTouchesFromZone(Zone zone){
 		return zone.getTouches();
 	}
 
@@ -1481,7 +1497,7 @@ public class SMT {
 	 *            long - Session ID of the TuioObject
 	 * @return TuioObject
 	 */
-	public static TuioObject getTuioObject(long s_id) {
+	public static TuioObject getTuioObject(long s_id){
 		return listener.getTuioObject(s_id);
 	}
 
@@ -1492,7 +1508,7 @@ public class SMT {
 	 *            long - Session ID of the Touch(TuioCursor)
 	 * @return TuioCursor
 	 */
-	public static Touch getTouch(long s_id) {
+	public static Touch getTouch(long s_id){
 		return SMTTouchManager.currentTouchState.getById(s_id);
 	}
 
@@ -1501,7 +1517,7 @@ public class SMT {
 	 *            The session_id of the Touch to get the path start of
 	 * @return A new Touch containing the state of the touch at path start
 	 */
-	public static Touch getPathStartTouch(long s_id) {
+	public static Touch getPathStartTouch(long s_id){
 		TuioCursor c = listener.getTuioCursor(s_id);
 		Vector<TuioPoint> path = new Vector<TuioPoint>(c.getPath());
 
@@ -1524,9 +1540,9 @@ public class SMT {
 	 *         consistent
 	 * @deprecated
 	 */
-	public static Touch getLastTouch( Touch current) {
+	public static Touch getLastTouch( Touch current){
 		Vector<TuioPoint> path = current.path;
-		if( path.size() > 1) {
+		if( path.size() > 1){
 			TuioPoint last = path.get(path.size() - 2);
 			return new Touch(
 				last.getTuioTime(), current.getSessionID(), current.getCursorID(),
@@ -1540,7 +1556,7 @@ public class SMT {
 	 * 
 	 * @return number of current touches
 	 */
-	public static int getTouchCount() {
+	public static int getTouchCount(){
 		return getTouches().length;
 	}
 
@@ -1557,7 +1573,7 @@ public class SMT {
 		// TODO: provide some default assignment of touches
 		manager.handleTouches();
 
-		if( mtt != null) {
+		if( mtt != null){
 			//update touches from mouseToTUIO joint cursors as they are a special case and need to be shown to user
 			for( Touch touch : SMTTouchManager.currentTouchState)
 				touch.isJointCursor = false;
@@ -1585,11 +1601,11 @@ public class SMT {
 	 * perform a step of physics using jbox2d, update bodies before and matrix
 	 * after of each Zone to keep the matrix and bodies synchronized
 	 */
-	private static void updateStep() {
-		for( Zone zone : getZones()) {
-			if( zone.getPhysicsEnabled()) {
+	private static void updateStep(){
+		for( Zone zone : getZones()){
+			if( zone.getPhysicsEnabled()){
 				// generate body and fixture for zone if they do not exist
-				if( zone.zoneBody == null && zone.zoneFixture == null) {
+				if( zone.zoneBody == null && zone.zoneFixture == null){
 					zone.zoneBody = world.createBody( zone.zoneBodyDef);
 					zone.zoneFixture = zone.zoneBody.createFixture(
 						zone.zoneFixtureDef);
@@ -1599,7 +1615,7 @@ public class SMT {
 			else {
 				// make sure to destroy body for Zones that do not have physics
 				// on, as they should not collide with others
-				if( zone.zoneBody != null) {
+				if( zone.zoneBody != null){
 					world.destroyBody(zone.zoneBody);
 					zone.zoneBody = null;
 					zone.zoneFixture = null;
@@ -1610,8 +1626,8 @@ public class SMT {
 
 		world.step(1f / applet.frameRate, 8, 3);
 
-		for (Zone zone : getZones()) {
-			if (zone.getPhysicsEnabled()) {
+		for (Zone zone : getZones()){
+			if (zone.getPhysicsEnabled()){
 				zone.setMatrixFromBody();
 			}
 		}
@@ -1645,7 +1661,7 @@ public class SMT {
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeTempFile));
 		byte[] tempexe = new byte[4 * 1024];
 		int rc;
-		while ((rc = src.read(tempexe)) > 0) {
+		while ((rc = src.read(tempexe)) > 0){
 			out.write(tempexe, 0, rc);
 		}
 		src.close();
@@ -1660,7 +1676,7 @@ public class SMT {
 	 * @param is64Bit Whether to use the 64-bit version of the exe
 	 */
 	private static void runWinTouchTuioServer(
-			boolean is64Bit, final String address, final int port) {
+			boolean is64Bit, final String address, final int port){
 		try {
 			File temp = tempDir();
 
@@ -1679,12 +1695,12 @@ public class SMT {
 				"WM_TOUCH", exec, error_message);
 			wintouch_thread.start();
 		}
-		catch( IOException exception) {
+		catch( IOException exception){
 			exception.printStackTrace();
 		}
 	}
 
-	private static void runSmart2TuioServer() {
+	private static void runSmart2TuioServer(){
 		try {
 			File temp = tempDir();
 
@@ -1698,7 +1714,7 @@ public class SMT {
 				"SMART", exec, "SMART Process died");
 			smart_thread.start();
 		}
-		catch (IOException exception) {
+		catch (IOException exception){
 			exception.printStackTrace();
 		}
 	}
@@ -1709,7 +1725,7 @@ public class SMT {
 	 * @param is64Bit
 	 *            Whether to use the 64-bit version of the exe
 	 */
-	private static void runLeapTuioServer(final int port) {
+	private static void runLeapTuioServer(final int port){
 		try {
 			File temp = tempDir();
 			File leap = loadFile( temp, "Leap.dll");
@@ -1723,7 +1739,7 @@ public class SMT {
 				"LEAP", exec, error_message);
 			leap_thread.start();
 		}
-		catch (IOException exception) {
+		catch (IOException exception){
 			exception.printStackTrace();
 		}
 	}
@@ -1731,14 +1747,14 @@ public class SMT {
 	/**
 	 * Runs an exe from a path, presumably for translating native events to tuio events
 	 */
-	public static void runExe(final String path) {
+	public static void runExe(final String path){
 		new TouchSourceThread( path, path, path + " Process died").start();
 	}
 
 	/**
 	 * @param zone The zone to place on top of the others
 	 */
-	public static void putZoneOnTop(Zone zone) {
+	public static void putZoneOnTop(Zone zone){
 		sketch.putChildOnTop( zone);
 	}
 
@@ -1755,7 +1771,7 @@ public class SMT {
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
 	@Deprecated
-	public static <T extends Zone> T get( String name, Class<T> type) {
+	public static <T extends Zone> T get( String name, Class<T> type){
 		for( Zone zone : getZones())
 			if( name.equals( zone.name) && type.isInstance( zone))
 				return type.cast( zone);
@@ -1768,7 +1784,7 @@ public class SMT {
 	 * @param name The name of the zone to find
 	 * @return a Zone with the given name or null if it cannot be found
 	 */
-	public static Zone get( String name) {
+	public static Zone get( String name){
 		for( Zone zone : getZones())
 			if( name.equals( zone.name))
 				return zone;
@@ -1805,7 +1821,7 @@ public class SMT {
 		}
 
 		@Override
-		public void run() {
+		public void run(){
 			try {
 				Process tuioServer = Runtime.getRuntime().exec( execArg);
 				BufferedReader tuioServerErr = new BufferedReader(
@@ -1820,7 +1836,7 @@ public class SMT {
 				tuioServerOutList.add(tuioServerOut);
 				tuioServerInList.add(tuioServerIn);
 
-				while( true) {
+				while( true){
 					if( SMT.debug && tuioServerErr.ready())
 						System.err.println(
 							label + ": " + tuioServerErr.readLine());
@@ -1836,7 +1852,7 @@ public class SMT {
 							System.err.println( prematureShutdownError);
 						break;
 					}
-					catch( IllegalThreadStateException exception) {
+					catch( IllegalThreadStateException exception){
 						// still running... sleep time
 						Thread.sleep(100);
 					}
