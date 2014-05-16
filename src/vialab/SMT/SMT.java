@@ -56,7 +56,7 @@ import vialab.SMT.util.*;
  * 
  * @author Erik Paluka
  * @author Zach Cook
- * @version 1.0
+ * @version 4.0
  */
 public class SMT {
 	static float box2dScale = 0.1f;
@@ -139,7 +139,7 @@ public class SMT {
 	private static int p212_revision = 225;
 	//supported processing versions
 	private static int revision_unknown = -1;
-	private static int revision_min = p211_revision; //idk what the minimum is :S
+	private static int revision_min = p211_revision;
 	private static String revision_min_name = "2.1.1";
 	private static String revision_min_build = "0224";
 	private static int revision_max = revision_unknown;
@@ -826,15 +826,15 @@ public class SMT {
 	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
 	 * @param radius the desired radius of a drawn touch, in pixels
 	 */
-	public static void setTouchDeathDuration( long duration){
+	public static void setTouchFadeDuration( long duration_milliseconds){
 		texturedTouchDrawerNullCheck();
-		texturedTouchDrawer.setDeathDuration( duration);
+		texturedTouchDrawer.setDeathDuration( duration_milliseconds);
 	}
 	/** Gets the current radius of a drawn touch
 	 * Note: this function is only accurate when using TouchDraw.TEXTURED
 	 * @return the current radius of a drawn touch, in pixels
 	 */
-	public static long getTouchDeathDuration(){
+	public static long getTouchFadeDuration(){
 		texturedTouchDrawerNullCheck();
 		return texturedTouchDrawer.getDeathDuration();
 	}

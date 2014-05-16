@@ -902,22 +902,26 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		//wtf why?
 		catch( NoSuchMethodException exception){}
 
-		/*//debug
-		System.out.printf( "draw_overridden: %b\n", draw_overridden);
-		System.out.printf( "pickDraw_overridden: %b\n", pickDraw_overridden);
+		//debug
+		/*System.out.printf( "draw_overridden: %b\n", draw_overridden);
 		System.out.printf( "drawImpl_overridden: %b\n", drawImpl_overridden);
+		System.out.printf( "pickDraw_overridden: %b\n", pickDraw_overridden);
 		System.out.printf( "pickDrawImpl_overridden: %b\n", pickDrawImpl_overridden);
+		System.out.printf( "touch_overridden: %b\n", touch_overridden);
+		System.out.printf( "touchImpl_overridden: %b\n", touchImpl_overridden);
 		System.out.println();*/
 
 		if (name != null){
 			//get draw method
 			method_draw = SMTUtilities.getZoneMethod(
-				Zone.class, applet, "draw", name, warnDraw,
+				Zone.class, applet, "draw", name,
+				draw_overridden || drawImpl_overridden ? false : warnDraw,
 				this.getClass());
 
 			//get pick draw method
 			method_pickDraw = SMTUtilities.getZoneMethod(
-				Zone.class, applet, "pickDraw", name, warnPick,
+				Zone.class, applet, "pickDraw", name,
+				pickDraw_overridden || pickDrawImpl_overridden ? false : warnPick,
 				this.getClass());
 
 			//get key methods
@@ -958,7 +962,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				warnTouch = false;
 			//get touch method
 			method_touch = SMTUtilities.getZoneMethod(
-				Zone.class, applet, "touch", name, warnTouch,
+				Zone.class, applet, "touch", name,
+				touch_overridden || touchImpl_overridden ? false : warnTouch,
 					this.getClass());
 		}
 
