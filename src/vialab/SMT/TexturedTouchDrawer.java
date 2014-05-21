@@ -51,7 +51,7 @@ public class TexturedTouchDrawer
 
 	// Trail drawing options
 	//whether to draw the trail
-	private boolean trail_enabled = false;
+	private boolean trail_enabled = true;
 	//the time window within which to include points
 	private int trail_time_threshold = 300;
 	//the maximum number of points on to include
