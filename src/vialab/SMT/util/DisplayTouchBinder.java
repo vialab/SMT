@@ -10,7 +10,7 @@ import processing.core.*;
 import vialab.SMT.*;
 
 /**
- * Just a little class for describing how to map ([0,1], [0,1]) tuio coordinates to ([0,applet.width], [0,applet.height]) touch coordinates.
+ * A class that maps touch coordinates onto the specified display.
  **/
 public class DisplayTouchBinder extends TouchBinder {
 
@@ -23,12 +23,20 @@ public class DisplayTouchBinder extends TouchBinder {
 	private int index = - 1;
 
 	//constructors
+	/**
+	 * Create a new touch binder that maps touches onto the display with the specified id string.
+	 * @param  id the id string of the desired display
+	 */
 	public DisplayTouchBinder( String id){
 		super();
 		adapter = SMT.getSystemAdapter();
 		this.id = id;
 		this.mode_id = true;
 	}
+	/**
+	 * Create a new touch binder that maps touches onto the display at the specified index in the display list.
+	 * @param  index the index of the desired display
+	 */
 	public DisplayTouchBinder( int index){
 		super();
 		adapter = SMT.getSystemAdapter();
@@ -37,6 +45,9 @@ public class DisplayTouchBinder extends TouchBinder {
 	}
 
 	//touch binder overrides
+	/**
+	 * Updates the bind matrix to match the current display layout and the current window position.
+	 */
 	@Override
 	public void update(){
 		//only update when needed
@@ -62,9 +73,17 @@ public class DisplayTouchBinder extends TouchBinder {
 	}
 
 	//accessors
+	/**
+	 * Get the id string of the desired display device.
+	 * @return the id string of the desired display device
+	 */
 	public String getID(){
 		return id;
 	}
+	/**
+	 * Get the index of the desired display device.
+	 * @return the index of the desired display device
+	 */
 	public int getIndex(){
 		return index;
 	}

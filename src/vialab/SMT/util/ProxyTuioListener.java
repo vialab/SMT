@@ -4,63 +4,66 @@ package vialab.SMT.util;
 import TUIO.*;
 
 /**
- * This class exists to all multiple tuio streams to be merged into one, by
- * being a proxy listener, and changing sessionId to
- * (port << 48+0x0000ffffffffffffl & sessionId) to give each of them their own space
- * for 2^48 ids
+ * This class exists to insert the port number of connections into session id of tuio cursors and objects . This enables the unification multiple tuio connections on different ports into a single tuio listener, while still being able to differentiate the connections source of individual cursors and objects.
  */
 public class ProxyTuioListener implements TuioListener {
 
 	// fields
 	private int port;
-	private TuioListener origin_listener;
+	private TuioListener actual_listener;
 
 	// constructors
-	public ProxyTuioListener( int port, TuioListener origin_listener) {
+	/**
+	 * Create a new proxy tuio listener.
+	 * @param  port The port of the connection
+	 * @param  actual_listener The tuio listener that will recieve the modified cursors and objects
+	 * @return
+	 */
+	public ProxyTuioListener( int port, TuioListener actual_listener) {
 		this.port = port;
-		this.origin_listener = origin_listener;
+		this.actual_listener = actual_listener;
 	}
 
 	// tuio listener functions
 	@Override
 	public synchronized void addTuioCursor( TuioCursor tcur) {
 		TuioCursor proxy_cursor = new ProxyTuioCursor( tcur, port);
-		origin_listener.addTuioCursor( proxy_cursor);
+		actual_listener.addTuioCursor( proxy_cursor);
 	}
 
 	@Override
 	public synchronized void updateTuioCursor( TuioCursor tcur) {
 		TuioCursor proxy_cursor = new ProxyTuioCursor( tcur, port);
-		origin_listener.updateTuioCursor( proxy_cursor);
+		actual_listener.updateTuioCursor( proxy_cursor);
 	}
 
 	@Override
 	public synchronized void removeTuioCursor( TuioCursor tcur) {
 		TuioCursor proxy_cursor = new ProxyTuioCursor( tcur, port);
-		origin_listener.removeTuioCursor( proxy_cursor);
+		actual_listener.removeTuioCursor( proxy_cursor);
 	}
 
 	@Override
 	public synchronized void addTuioObject( TuioObject tobj) {
 		TuioObject proxy_object = new ProxyTuioObject( tobj, port);
-		origin_listener.addTuioObject( proxy_object);
+		actual_listener.addTuioObject( proxy_object);
 	}
 
 	@Override
 	public synchronized void updateTuioObject( TuioObject tobj) {
 		TuioObject proxy_object = new ProxyTuioObject( tobj, port);
-		origin_listener.updateTuioObject( proxy_object);
+		actual_listener.updateTuioObject( proxy_object);
 	}
 
 	@Override
 	public synchronized void removeTuioObject(  TuioObject tobj) {
 		TuioObject proxy_object = new ProxyTuioObject( tobj, port);
-		origin_listener.removeTuioObject( proxy_object);
+		actual_listener.removeTuioObject( proxy_object);
 	}
 
 	@Override
 	public void refresh( TuioTime bundleTime) {
-		origin_listener.refresh( bundleTime);
+		actual_listener.refresh( bundleTime);
 	}
 
 	/**
@@ -77,6 +80,9 @@ public class ProxyTuioListener implements TuioListener {
 	}
 
 	//subclasses
+	/**
+	 * A proxy tuio cursor with the port written into the first four bytes of the session id.
+	 */
 	protected class ProxyTuioCursor extends TuioCursor {
 		private int port;
 		private TuioCursor origin;
@@ -98,6 +104,9 @@ public class ProxyTuioListener implements TuioListener {
 			this.origin = origin;
 		}
 	}
+	/**
+	 * A proxy tuio object with the port written into the first four bytes of the session id.
+	 */
 	protected class ProxyTuioObject extends TuioObject {
 		private int port;
 		private TuioObject origin;
