@@ -24,6 +24,7 @@ import vialab.SMT.util.*;
 public class Touch extends TuioCursor {
 
 	//Public Fields
+	private TuioCursor cursor;
 	/** The individual cursor ID number that is assigned to each TuioCursor. */
 	public int cursorID;
 	/** Reflects the current state of the TuioComponent. */
@@ -91,9 +92,10 @@ public class Touch extends TuioCursor {
 	 * 
 	 * @param tuioCursor TuioCursor: The TUIO Cursor
 	 */
-	public Touch( TuioCursor tuioCursor) {
+	public Touch( TuioCursor tuioCursor){
 		super( tuioCursor);
-		this.updateTouch( tuioCursor);
+		//if( true) throw new RuntimeException( "one");
+		this.update( tuioCursor);
 		this.startTimeMillis = System.currentTimeMillis();
 		this.originalTimeMillis = this.startTimeMillis;
 		//private fields
@@ -112,8 +114,9 @@ public class Touch extends TuioCursor {
 	 * @param xCoord X Coordinate
 	 * @param yCoord Y Coordinate
 	 */
-	public Touch( long sessionID, int cursorID, float xCoord, float yCoord) {
+	public Touch( long sessionID, int cursorID, float xCoord, float yCoord){
 		super( sessionID, cursorID, xCoord, yCoord);
+		//if( true) throw new RuntimeException( "two");
 		this.cursorID = getCursorID();
 		position = this.getBoundPosition();
 		x = Math.round( position.x);
@@ -145,12 +148,13 @@ public class Touch extends TuioCursor {
 	 * @param xCoord X Coordinate
 	 * @param yCoord Y Coordinate
 	 */
-	public Touch( TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord) {
+	public Touch( TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord){
 		super( ttime, sessionID, cursorID, xCoord, yCoord);
+		//if( true) throw new RuntimeException( "three");
 		this.cursorID = getCursorID();
 		position = this.getBoundPosition();
-		x = Math.round( position.x);
-		y = Math.round( position.y);
+		//x = Math.round( position.x);
+		//y = Math.round( position.y);
 		startTime = getStartTime();
 		currentTime = getTuioTime();
 		xSpeed = getXSpeed();
@@ -170,27 +174,28 @@ public class Touch extends TuioCursor {
 	/**
 	 * @return The Point containing the last point of the Touch
 	 */
-	public Point getLastPoint() {
+	public Point getLastPoint(){
 		return getPointOnPath(path.size() - 2);
 	}
 
 	/**
 	 * @return The Point containing the current point of the Touch
 	 */
-	public Point getCurrentPoint() {
+	public Point getCurrentPoint(){
 		return getPointOnPath(path.size() - 1);
 	}
 
 	/**
 	 * @param t TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
 	 */
-	public void updateTouch(TuioCursor tuioCursor) {
+	public void update( TuioCursor tuioCursor){
 		prevUpdateTime = currentTime;
 
 		cursorID = tuioCursor.getCursorID();
+		//xpos = tuioCursor.getX();
+		//ypos = tuioCursor.getY();
 		//System.out.println( tuioCursor.getClass().getName());
-		xpos = tuioCursor.getX();
-		ypos = tuioCursor.getY();
+		//System.out.printf( "x, y: %f, %f\n", xpos, ypos);
 
 		super.startTime = tuioCursor.getStartTime();
 		startTime = tuioCursor.getStartTime();
@@ -232,7 +237,7 @@ public class Touch extends TuioCursor {
 	 * @return A Point containing the x,y values of the Touch's path at the
 	 *   specified index, returns null if invalid index
 	 */
-	public Point getPointOnPath(int index) {
+	public Point getPointOnPath(int index){
 		if (index < 0 || index >= path.size())
 			return null;
 	
@@ -248,7 +253,7 @@ public class Touch extends TuioCursor {
 	 * @return A Zone[] containing all Zones that currently have this touch
 	 *         assigned
 	 */
-	public Zone[] getAssignedZones() {
+	public Zone[] getAssignedZones(){
 		return assignedZones.toArray(new Zone[assignedZones.size()]);
 	}
 
@@ -256,8 +261,8 @@ public class Touch extends TuioCursor {
 	 * @param zone
 	 *            The Zone to assign this Touch to
 	 */
-	public void assignZone(Zone zone) {
-		if (zone != null) {
+	public void assignZone(Zone zone){
+		if (zone != null){
 			assignedZones.add(zone);
 			if (!zone.isAssigned(this))
 				zone.assign(this);
@@ -270,8 +275,8 @@ public class Touch extends TuioCursor {
 	 * @param zone
 	 *            The Zone to unassign this Touch from
 	 */
-	public void unassignZone(Zone zone) {
-		if (zone != null) {
+	public void unassignZone(Zone zone){
+		if (zone != null){
 			assignedZones.remove(zone);
 			zone.unassign( this.sessionID);
 			this.startTimeMillis = this.originalTimeMillis;
@@ -282,7 +287,7 @@ public class Touch extends TuioCursor {
 	/**
 	 * @return Whether this Touch is currently assigned to a Zone
 	 */
-	public boolean isAssigned() {
+	public boolean isAssigned(){
 		return ! assignedZones.isEmpty();
 	}
 
@@ -290,7 +295,7 @@ public class Touch extends TuioCursor {
 	 * @param other Touch to calculate distance from
 	 * @return The distance between this and the given Touch
 	 */
-	float distance( Touch other) {
+	float distance( Touch other){
 		return (float)
 			getCurrentPoint().distance(
 				other.getCurrentPoint());
@@ -298,12 +303,12 @@ public class Touch extends TuioCursor {
 
 	//accessor methods
 	@Override
-	public float getX() {
+	public float getX(){
 		return getRawX();
 	}
 
 	@Override
-	public float getY() {
+	public float getY(){
 		return getRawX();
 	}
 
@@ -365,9 +370,9 @@ public class Touch extends TuioCursor {
 	/**
 	 * @return All the points on the path
 	 */
-	public Point[] getPathPoints() {
+	public Point[] getPathPoints(){
 		Vector<Point> points = new Vector<Point>();
-		for (int i = 0; i < path.size(); i++) {
+		for (int i = 0; i < path.size(); i++){
 			points.add( getPointOnPath(i));
 		}
 		return points.toArray(new Point[points.size()]);
@@ -376,7 +381,7 @@ public class Touch extends TuioCursor {
 	/**
 	 * @return All the points on the path since the previous update
 	 */
-	public Point[] getNewPathPoints() {
+	public Point[] getNewPathPoints(){
 		return getNewPathPoints(false);
 	}
 
@@ -387,14 +392,14 @@ public class Touch extends TuioCursor {
 	 */
 	public Point[] getNewPathPoints( boolean join){
 		Vector<Point> points = new Vector<Point>();
-		for( int i = path.size() - 1; i >= 0; i--) {
+		for( int i = path.size() - 1; i >= 0; i--){
 			TuioPoint tuioPoint = path.get( i);
 			TuioTime point_time = tuioPoint.getTuioTime();
 			// once the TuioTimes are greater than the prevUpdateTime we have
 			// got all of the new Points
 			if( prevUpdateTime != null &&
 					point_time.getTotalMilliseconds() <=
-					prevUpdateTime.getTotalMilliseconds()) {
+					prevUpdateTime.getTotalMilliseconds()){
 				if( join)
 					// one further back if we want to join it up
 					points.add( getPointOnPath( i));

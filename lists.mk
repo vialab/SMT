@@ -1,6 +1,5 @@
 #lists
 class_files = \
-	bin/vialab/SMT/SMTProxyTuioListener.class \
 	bin/vialab/SMT/AndroidToTUIO.class \
 	bin/vialab/SMT/ButtonZone.class \
 	bin/vialab/SMT/CheckBoxZone.class \
@@ -57,6 +56,7 @@ class_files = \
 	bin/vialab/SMT/TuioConnectionException.class \
 	bin/vialab/SMT/util/ActiveDisplayTouchBinder.class \
 	bin/vialab/SMT/util/DisplayTouchBinder.class \
+	bin/vialab/SMT/util/ProxyTuioListener.class \
 	bin/vialab/SMT/util/RectTouchBinder.class \
 	bin/vialab/SMT/util/ScreenTouchBinder.class \
 	bin/vialab/SMT/util/SketchTouchBinder.class \
@@ -67,7 +67,6 @@ class_files = \
 	bin/vialab/SMT/Zone.class \
 
 source_files = \
-	src/vialab/SMT/SMTProxyTuioListener.java \
 	src/vialab/SMT/AndroidToTUIO.java \
 	src/vialab/SMT/ButtonZone.java \
 	src/vialab/SMT/CheckBoxZone.java \
@@ -124,6 +123,7 @@ source_files = \
 	src/vialab/SMT/TuioConnectionException.java \
 	src/vialab/SMT/util/ActiveDisplayTouchBinder.java \
 	src/vialab/SMT/util/DisplayTouchBinder.java \
+	src/vialab/SMT/util/ProxyTuioListener.java \
 	src/vialab/SMT/util/RectTouchBinder.java \
 	src/vialab/SMT/util/ScreenTouchBinder.java \
 	src/vialab/SMT/util/SketchTouchBinder.java \

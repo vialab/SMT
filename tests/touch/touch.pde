@@ -28,8 +28,8 @@ void setup(){
 	//SMT.setTouchSourceBoundsDisplay( 1, TouchSource.MOUSE);
 	//SMT.setTouchSourceBoundsDisplay( ":0.0", TouchSource.MOUSE);
 	//SMT.setTouchSourceBoundsDisplay( ":0.1", TouchSource.MOUSE);
-	//SMT.setTouchSourceBoundsRect(
-	//	new Rectangle( 100, 100, 1000, 600), TouchSource.MOUSE);
+	SMT.setTouchSourceBoundsRect(
+		new Rectangle( 100, 100, 1000, 600), TouchSource.MOUSE);
 	//SMT.setTouchSourceBoundsScreen( TouchSource.MOUSE);
 	//SMT.setTouchSourceBoundsSketch( TouchSource.MOUSE);
 	//SMT.setTouchSourceBoundsCustom( TouchBinder, TouchSource.MOUSE);

@@ -61,14 +61,11 @@ public final class SMTUtilities {
 		for(Class<?> c : params){
 			s+=","+c.getSimpleName();
 		}
-		return name+s;
+		return name + s;
 	}
 
-	/**
-	 * Don't let anyone instantiate this class.
-	 */
-	private SMTUtilities() {
-	}
+	// Don't let anyone instantiate this class.
+	private SMTUtilities(){}
 
 	static Method getPMethod(PApplet parent, String methodName, Class<?>... parameterTypes) {
 		return methodMap.get(nameParamToString(methodName,parameterTypes));

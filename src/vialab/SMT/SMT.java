@@ -59,6 +59,7 @@ import vialab.SMT.util.*;
  * @version 4.0
  */
 public class SMT {
+	public static boolean debug = false;
 	static float box2dScale = 0.1f;
 	static World world;
 	protected static int MAX_PATH_LENGTH = 50;
@@ -123,7 +124,6 @@ public class SMT {
 
 	protected static int mainListenerPort;
 	protected static boolean inShutdown = false;
-	public static boolean debug = false;
 	public static File smt_tempdir = null;
 
 	// utility fields for the touch drawing methods
@@ -219,15 +219,11 @@ public class SMT {
 		//load system adapter
 		systemAdapter = new SystemAdapter( applet);
 
-		//load touch binders
-		EnumSet<TouchSource> sources_notmouse_set =
-			EnumSet.allOf( TouchSource.class);
-		sources_notmouse_set.remove( TouchSource.MOUSE);
-		sources_notmouse = (TouchSource[])
-			sources_notmouse_set.toArray(
-				new TouchSource[ 0]);
-		setTouchSourceBoundsSketch( TouchSource.MOUSE);
-		setTouchSourceBoundsActiveDisplay( sources_notmouse);
+		//load default touch bounds
+		SMT.setTouchSourceBoundsSketch( TouchSource.MOUSE);
+		SMT.setTouchSourceBoundsActiveDisplay( 
+			TouchSource.LEAP, TouchSource.SMART,
+			TouchSource.TUIO_DEVICE, TouchSource.WM_TOUCH);
 
 		//load touch drawer ( if necessary )
 		if( touchDrawMethod == TouchDraw.TEXTURED)
@@ -349,7 +345,8 @@ public class SMT {
 				catch( TuioConnectionException exception){
 					port++;
 				}
-			if( debug) System.out.printf("Trying to connect to %s on port %d\n",
+			if( SMT.debug) System.out.printf(
+				"Trying to connect to %s on port %d\n",
 				"android touch", port);
 			connect_android( port);
 		}
@@ -362,7 +359,8 @@ public class SMT {
 				catch( TuioConnectionException exception){
 					port++;
 				}
-			if( debug) System.out.printf("Trying to connect to %s on port %d\n",
+			if( SMT.debug) System.out.printf(
+				"Trying to connect to %s on port %d\n",
 				"leap motion", port);
 			connect_leap( port);
 
@@ -373,7 +371,8 @@ public class SMT {
 				catch( TuioConnectionException exception){
 					port++;
 				}
-			if( debug) System.out.printf("Trying to connect to %s on port %d\n",
+			if( SMT.debug) System.out.printf(
+				"Trying to connect to %s on port %d\n",
 				"windows touch", port);
 			connect_windows( port);
 		}
@@ -386,7 +385,8 @@ public class SMT {
 				catch( TuioConnectionException exception){
 					port++;
 				}
-			if( debug) System.out.printf("Trying to connect to %s on port %d\n",
+			if( SMT.debug) System.out.printf(
+				"Trying to connect to %s on port %d\n",
 				"mouse emulation", port);
 			connect_mouse( port);
 		}
@@ -445,8 +445,13 @@ public class SMT {
 	public static void setTouchSourceBoundsActiveDisplay(
 			TouchSource... sources){
 		TouchBinder binder = new ActiveDisplayTouchBinder();
-		for( TouchSource source : sources)
+		for( TouchSource source : sources){
 			touchBinders.put( source, binder);
+			if( SMT.debug)
+				System.out.printf(
+					"Set the touch bounds for %s input to active display mode.\n",
+					source);
+		}
 	}
 
 	// display binding method
@@ -476,8 +481,13 @@ public class SMT {
 	public static void setTouchSourceBoundsDisplay( int index,
 			TouchSource... sources){
 		TouchBinder binder = new DisplayTouchBinder( index);
-		for( TouchSource source : sources)
+		for( TouchSource source : sources){
 			touchBinders.put( source, binder);
+			if( SMT.debug)
+				System.out.printf(
+					"Set the touch bounds for %s input to indexed display mode.\n",
+					source);
+		}
 	}
 	/**
 	 * Sets the touch fitting method for the given touch sources to display mode.
@@ -489,8 +499,13 @@ public class SMT {
 	public static void setTouchSourceBoundsDisplay( String id,
 			TouchSource... sources){
 		TouchBinder binder = new DisplayTouchBinder( id);
-		for( TouchSource source : sources)
+		for( TouchSource source : sources){
 			touchBinders.put( source, binder);
+			if( SMT.debug)
+				System.out.printf(
+					"Set the touch bounds for %s input to id-referenced display mode.\n",
+					source);
+		}
 	}
 
 	// manual bounds binding method
@@ -512,8 +527,13 @@ public class SMT {
 	public static void setTouchSourceBoundsRect( Rectangle bounds,
 			TouchSource... sources){
 		TouchBinder binder = new RectTouchBinder( bounds);
-		for( TouchSource source : sources)
+		for( TouchSource source : sources){
 			touchBinders.put( source, binder);
+			if( SMT.debug)
+				System.out.printf(
+					"Set the touch bounds for %s input to rectangle mode.\n",
+					source);
+		}
 	}
 
 	// screen binding method
@@ -532,8 +552,13 @@ public class SMT {
 	public static void setTouchSourceBoundsScreen(
 			TouchSource... sources){
 		TouchBinder binder = new ScreenTouchBinder();
-		for( TouchSource source : sources)
+		for( TouchSource source : sources){
 			touchBinders.put( source, binder);
+			if( SMT.debug)
+				System.out.printf(
+					"Set the touch bounds for %s input to screen mode.\n",
+					source);
+		}
 	}
 
 	// window binding method
@@ -552,8 +577,13 @@ public class SMT {
 	public static void setTouchSourceBoundsSketch(
 			TouchSource... sources){
 		TouchBinder binder = new SketchTouchBinder();
-		for( TouchSource source : sources)
+		for( TouchSource source : sources){
 			touchBinders.put( source, binder);
+			if( SMT.debug)
+				System.out.printf(
+					"Set the touch bounds for %s input to asdf mode.\n",
+					source);
+		}
 	}
 
 	// window binding method
@@ -571,8 +601,13 @@ public class SMT {
 	 **/
 	public static void setTouchSourceBoundsCustom(
 			TouchBinder binder, TouchSource... sources){
-		for( TouchSource source : sources)
+		for( TouchSource source : sources){
 			touchBinders.put( source, binder);
+			if( SMT.debug)
+				System.out.printf(
+					"Set the touch bounds for %s input to asdf mode.\n",
+					source);
+		}
 	}
 
 
@@ -624,7 +659,7 @@ public class SMT {
 		//return if connection succeeded
 		if( client.isConnected()){
 			client.addTuioListener(
-				new SMTProxyTuioListener( port, listener));
+				new ProxyTuioListener( port, listener));
 			tuioClientList.add( client);
 			return client;}
 		else throw new TuioConnectionException(
