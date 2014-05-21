@@ -6,23 +6,40 @@ import processing.opengl.*;
 
 public class PGraphicsOpenGLDelegate extends PGraphicsOpenGL {
 	//static fields
-	public static final String CLASSNAME = PGraphicsOpenGLDelegate.class.getName();
+	public static final String CLASSNAME = class.getName();
+
 	//fields
+	// The current delegate that this object points to
 	private PGraphicsOpenGL delegate;
 
 	//construtor
+	/**
+	 * Creates a new PGraphicsOpenGL delegate that delegates to nothing.
+	 */
 	public PGraphicsOpenGLDelegate(){
 		super();
 		delegate = null;
 	}
 
 	//accessor methods
+	/**
+	 * Returns whether this object has been given a delegate or not.
+	 * @return whether this object has been given a delegate or not.
+	 */
 	public boolean hasDelegate(){
 		return delegate != null;
 	}
+	/**
+	 * Gets the delegate of this object.
+	 * @return this object's delegate
+	 */
 	public PGraphicsOpenGL getDelegate(){
 		return delegate == null ? this : delegate;
 	}
+	/**
+	 * Delegate all PGraphicsOpenGL calls on this object to another PGraphicsOpenGL object
+	 * @param delegate the desired object to delegate calls to
+	 */
 	public void setDelegate( PGraphicsOpenGL delegate){
 		this.delegate = delegate;
 	}
