@@ -10,7 +10,7 @@ import processing.core.*;
 import vialab.SMT.*;
 
 /**
- * Just a little class for describing how to map ([0,1], [0,1]) tuio coordinates to ([0,applet.width], [0,applet.height]) touch coordinates.
+ * A class that maps touch coordinates the current sketch's dimensions.
  **/
 public class SketchTouchBinder extends TouchBinder {
 
@@ -19,12 +19,18 @@ public class SketchTouchBinder extends TouchBinder {
 	private long last_update = - 1;
 
 	//contructors
+	/**
+	 * Create a new sketch touch binder that maps to the current sketch's dimensions.
+	 */
 	public SketchTouchBinder(){
 		super();
 		adapter = SMT.getSystemAdapter();
 	}
 
 	//touch binder overrides
+	/**
+	 * Updates the touch binder to match the current applet dimensions.
+	 */
 	@Override
 	public void update(){
 		//only update when needed
@@ -42,6 +48,4 @@ public class SketchTouchBinder extends TouchBinder {
 			last_update = adapter.getLastUpdateTime();
 		}
 	}
-
-	//accessors
 }

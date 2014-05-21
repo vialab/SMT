@@ -22,16 +22,22 @@ public class ZonePicker {
 	private final static int POSSIBLE_COLORS =
 		( MAX_COLOR - START_COLOR) + 1;
 	
-	//fields
+	//private fields
 	private ByteBuffer buffer;
 	private int currentColor;
-	public PGraphics3D picking_context;
 	private Map<Integer, Zone> zoneMap =
 		Collections.synchronizedMap(
 			new LinkedHashMap<Integer, Zone>());
 	private P3DDSRenderer renderer;
 
-	public ZonePicker() {
+	//public fields
+	// A reference to the graphics context used for picking
+	public PGraphics3D picking_context;
+
+	/**
+	 * Create a new zone picker. SMT.init() must have been called first.
+	 */
+	public ZonePicker(){
 		renderer = SMT.getRenderer();
 		this.picking_context = (PGraphics3D) SMT.getApplet().createGraphics(
 			renderer.width, renderer.height, PConstants.P3D);
@@ -40,19 +46,24 @@ public class ZonePicker {
 		currentColor = START_COLOR;
 	}
 
-	public void add(Zone zone) {
+	/**
+	 * Add a zone to the zone picker.
+	 * @param zone the zone to enable picking on.
+	 */
+	public void add( Zone zone){
 		//check if we already have this zone
 		if( zoneMap.containsValue( zone))
 			return;
 
 		if( zoneMap.size() == POSSIBLE_COLORS){
-			//We've run out of pick colours :( Maybe look into using the alpha
+			//We've run out of pick colours :( oh no
 			System.err.printf(
 				"The number of zones has exceeded the maximum number of pickable zones (%d). This recently added zone (%s) will not be pickable.",
 				POSSIBLE_COLORS, zone);
 			return;
 		}
 
+		//get a new colour
 		zone.setPickColor( new Color( currentColor, false));
 		int pixelColor = 0xff + ( currentColor << 8);
 		zoneMap.put( pixelColor, zone);
@@ -65,15 +76,26 @@ public class ZonePicker {
 			}
 		}
 
+		//add all of the zone's child zones
 		for( Zone child : zone.getChildren())
 			this.add( child);
 	}
 
-	public boolean contains( Zone zone) {
+	/**
+	 * Check whether this zone picker has already registered a zone
+	 * @param  zone a zone
+	 * @return whether the specified zone has already been added to the zone picker
+	 */
+	public boolean contains( Zone zone){
 		return zoneMap.containsValue( zone);
 	}
 
-	public Zone remove( Zone zone) {
+	/**
+	 * Remove the specified zone from the zone picker
+	 * @param  zone the zone to remove
+	 * @return The zone that was removed
+	 */
+	public Zone remove( Zone zone){
 		Color color = zone.getPickColor();
 		int pixelColor = color.getAlpha() + ( color.getRGB() << 8);
 		Zone removed = zoneMap.remove( pixelColor);
@@ -81,7 +103,13 @@ public class ZonePicker {
 		return removed;
 	}
 
-	public Zone pick( int x, int y) {
+	/**
+	 * Get the Zone under the specified coordinates.
+	 * @param  x x coordinate of the specified pixel
+	 * @param  y y coordinate of the specified pixel
+	 * @return If there is a Zone at the specified coordinates, that zone, otherwise null.
+	 */
+	public Zone pick( int x, int y){
 		//clamp x and y
 		if( y >= picking_context.height)
 			y = picking_context.height - 1;
@@ -108,7 +136,7 @@ public class ZonePicker {
 		}
 		picking_context.endPGL();
 
-		if( zoneMap.containsKey( pixel)) {
+		if( zoneMap.containsKey( pixel)){
 			// if mapped it is either a Zone or null (background)
 			Zone picked =  zoneMap.get( pixel);
 			Zone current = picked;
@@ -122,6 +150,9 @@ public class ZonePicker {
 		else return null;
 	}
 
+	/**
+	 * Prepare the picking graphics context for picking
+	 */
 	public void render(){
 		//set up for rendering the pick buffer
 		renderer.pushDelegate( picking_context);

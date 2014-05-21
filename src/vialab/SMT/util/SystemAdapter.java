@@ -52,6 +52,10 @@ public class SystemAdapter implements ComponentListener {
 	}
 
 	//functions
+	/**
+	 * Connect this adapter to a processing applet's window
+	 * @param applet the processing applet
+	 */
 	void connect( PApplet applet){
 		if( applet != null){
 			this.applet = applet;
@@ -71,6 +75,9 @@ public class SystemAdapter implements ComponentListener {
 		resetLastUpdateTime();
 	}
 
+	/**
+	 * Update the adapter's information to reflect the current display layout and sketch dimensions
+	 */
 	public void update(){
 		devices = environment.getScreenDevices();
 		//this should detect monitor disconnects
@@ -90,6 +97,9 @@ public class SystemAdapter implements ComponentListener {
 					sketch_bounds.width, sketch_bounds.height);
 		}
 	}
+	/**
+	 * Update the adapter's display layout information
+	 */
 	private void updateDisplays(){
 		devices = environment.getScreenDevices();
 		device_count = devices.length;
@@ -124,11 +134,17 @@ public class SystemAdapter implements ComponentListener {
 		screen_bounds.height = maxy - miny;
 		resetLastUpdateTime();
 	}
+	/**
+	 * Update the adapter's window bounds information
+	 */
 	private void updateWindow(){
 		window_bounds = window.getBounds();
 		window_update = false;
 		resetLastUpdateTime();
 	}
+	/**
+	 * Update the adapter's sketch bounds information
+	 */
 	private void updateSketch(){
 		int content_x = window.getX() + rootpane.getX();
 		int content_y = window.getY() + rootpane.getY();
@@ -142,22 +158,39 @@ public class SystemAdapter implements ComponentListener {
 		sketch_bounds.height = applet.height;
 		resetLastUpdateTime();
 	}
+	/**
+	 * Set the last update time to now
+	 */
 	private void resetLastUpdateTime(){
 		last_update = System.currentTimeMillis();
 	}
 
 	//accessors
+	/**
+	 * Get the bounds of the display that the sketch is currently on.
+	 * @return the bounds of the display that the sketch is currently on
+	 */
 	public Rectangle getActiveDisplayBounds(){
 		GraphicsDevice active_device =
 			window.getGraphicsConfiguration().getDevice();
 		String active_id = active_device.getIDstring();
 		return getDisplayBounds( active_id);
 	}
+	/**
+	 * Get the bounds of the display at the specified index in the display list.
+	 * @param  index the index of the display
+	 * @return the bounds of the display at the specified index in the display list
+	 */
 	public Rectangle getDisplayBounds( int index){
 		if( index >= 0 || index < display_bounds.length)
 			return display_bounds[ index];
 		else throw new ArrayIndexOutOfBoundsException( index);
 	}
+	/**
+	 * Get the bounds of the display with the specified id string.
+	 * @param  index the index of the display
+	 * @return the bounds of the display with the specified id string
+	 */
 	public Rectangle getDisplayBounds( String id){
 		for( int i = 0; i < devices.length; i++)
 			if( devices[i].getIDstring().equals( id))
@@ -166,32 +199,66 @@ public class SystemAdapter implements ComponentListener {
 			String.format(
 				"Could not find a display with the id %s", id));
 	}
+	/**
+	 * Get the bounds of all displays.
+	 * @return the bounds of all displays
+	 */
 	public Rectangle[] getDisplayBounds(){
 		return display_bounds;
 	}
+	/**
+	 * Get the number of displays
+	 * @return the number of displays
+	 */
 	public int getDisplayCount(){
 		return device_count;
 	}
+	/**
+	 * Get the display at the specified index in the display list.
+	 * @param  index the index of the desired display
+	 * @return the display at the specified index in the display list
+	 */
 	public GraphicsDevice getDisplay( int index){
 		return devices[ index];
 	}
+	/**
+	 * Get the display with the specified id string.
+	 * @param  id the id string of the desired display
+	 * @return the display with the specified id string
+	 */
 	public GraphicsDevice getDisplay( String id){
 		for( GraphicsDevice device : devices)
 			if( device.getIDstring().equals( id))
 				return device;
 		return null;
 	}
+	/**
+	 * Get all the displays.
+	 * @return all the displays
+	 */
 	public GraphicsDevice[] getDisplays(){
 		return devices;
 	}
 
+	/**
+	 * Get the bounds of the entire screen.
+	 * @return the bounds of the entire screen.
+	 */
 	public Rectangle getScreenBounds(){
 		return screen_bounds;
 	}
+	/**
+	 * Get the bounds of the connected applet's sketch
+	 * @return the bounds of the connected applet's sketch
+	 */
 	public Rectangle getSketchBounds(){
 		return sketch_bounds;
 	}
 	//other accessors
+	/**
+	 * Get the time at which the adapter last updated
+	 * @return the time at which the adapter last updated
+	 */
 	public long getLastUpdateTime(){
 		return last_update;
 	}

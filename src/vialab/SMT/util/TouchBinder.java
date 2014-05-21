@@ -46,29 +46,60 @@ public class TouchBinder {
 		return real;
 	}
 
+	/**
+	 * Update this touch binder.
+	 */
 	public void update(){}
 
 	//set accessors
+	/**
+	 * Set the bind matrix for this touch binder
+	 * @param matrix the desired bind matrix
+	 */
 	public void setBindMatrix( PMatrix2D matrix){
 		this.bind_matrix = matrix;
 	}
+	/**
+	 * Set the minimum desired values of x and y coordinates.
+	 * @param min the desired lower clamping bound of x and y coordinates
+	 */
 	public void setClampMin( PVector min){
 		clamp_min = min;
 	}
+	/**
+	 * Set the maximum desired values of x and y coordinates.
+	 * @param max the desired upper clamping bound of x and y coordinates
+	 */
 	public void setClampMax( PVector max){
 		clamp_max = max;
 	}
+	/**
+	 * Enables or disabled debug console output for this touch binder
+	 * @param enabled whether debug messages should be enabled or not.
+	 */
 	public void setDebug( boolean enabled){
 		this.debug = enabled;
 	}
 
 	//get accessors
+	/**
+	 * Get the bind matrix of this touch binder
+	 * @return the bind matrix of this touch binder
+	 */
 	public PMatrix2D getBindMatrix(){
 		return bind_matrix;
 	}
+	/**
+	 * Get the current minimum values of x and y coordinates.
+	 * @return the current lower clamping bound of x and y coordinates
+	 */
 	public PVector getClampMin(){
 		return clamp_min;
 	}
+	/**
+	 * Get the current maximum values of x and y coordinates.
+	 * @return the current upper clamping bound of x and y coordinates
+	 */
 	public PVector getClampMax(){
 		return clamp_max;
 	}
