@@ -8,7 +8,7 @@ git clone git@github.com/vialab/SMT
 ```
 ### Compilation Dependencies
  * ant
- * javac
+ * oracle jdk or openjdk
 
 ### Compiling
 Navigate to the SMT's folder in a terminal and run
@@ -17,7 +17,7 @@ ant build
 ```
 This will compile SMT and create library/SMT.jar
 
-### Building a package
+### Packaging
 Navigate to the SMT's folder in a terminal and run
 ```bash
 ant package
