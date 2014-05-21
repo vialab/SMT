@@ -4,25 +4,48 @@ import java.awt.Image;
 import processing.core.*;
 import processing.opengl.*;
 
+/**
+ * A delegate class for PGraphics3D objects
+ */
 public class PGraphics3DDelegate extends PGraphics3D {
 	//static fields
-	public static final String CLASSNAME = PGraphics3DDelegate.class.getName();
+	/**
+	 * Fully qualified class name of this class. Can be used for the renderer arguement in a PApplet's size function.
+	 */
+	public static final String CLASSNAME = class.getName();
+	
 	//fields
+	// The current delegate that this object points to
 	private PGraphics3D delegate;
 
 	//construtor
+	/**
+	 * Creates a new PGraphics3D delegate that delegates to nothing.
+	 */
 	public PGraphics3DDelegate(){
 		super();
 		delegate = null;
 	}
 
 	//accessor methods
+	/**
+	 * Returns whether this object has been given a delegate or not.
+	 * @return whether this object has been given a delegate or not.
+	 */
 	public boolean hasDelegate(){
 		return delegate != null;
 	}
+	/**
+	 * Gets the delegate of this object.
+	 * @return this object's delegate
+	 */
 	public PGraphics3D getDelegate(){
 		return delegate == null ? this : delegate;
 	}
+	/**
+	 * Delegate all PGraphics3D calls on this object to another PGraphics3D object
+	 * @param delegate the desired object to delegate calls to
+	 */
 	public void setDelegate( PGraphics3D delegate){
 		this.delegate = delegate;
 	}

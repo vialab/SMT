@@ -8,132 +8,71 @@ import java.lang.reflect.Method;
 import processing.core.*;
 import processing.opengl.*;
 
+/**
+ * A Renderer for processing. It adds a delegate stack feature to to the PGraphicsOpenGL class.
+ */
 public class PGLDSRenderer extends PGraphicsOpenGLDelegate {
+	//static fields
+	/**
+	 * Fully qualified class name of this class. Can be used for the renderer arguement in a PApplet's size function.
+	 */
+	public static final String CLASSNAME = class.getName();
+
 	//private fields
+	/**
+	 * The current delegate stack
+	 */
 	private Stack<PGraphicsOpenGL> delegates;
-	private static PGraphicsOpenGL temp1 = null;
-	private static PGraphicsOpenGL temp2 = null;
-	private static PGraphicsOpenGL temp3 = null;
 
 	//constructor
+	/**
+	 * Creates a new PGraphicsOpenGL delegate stack renderer that delegates to nothing.
+	 */
 	public PGLDSRenderer(){
 		super();
 		delegates = new Stack<PGraphicsOpenGL>();
 	}
 
 	//delegate functions
+	/**
+	 * Gets the current desired delegate for this object.
+	 * @return if the stack is not empty, the PGraphics3D object at the top of the stack, otherwise, this object.
+	 */
 	@Override
 	public PGraphicsOpenGL getDelegate(){
 		return delegates.isEmpty() ?
 			this : delegates.peek();
 	}
+	/**
+	 * Returns whether this object has objects in it's delegate stack.
+	 * @return whether this object has objects in it's delegate stack.
+	 */
+	@Override
+	public boolean hasDelegate(){
+		return delegates.isEmpty()
+	}
+	/**
+	 * Add an object to the delegate stack
+	 * @param delegate the object to add to the delegate stack
+	 */
 	@Override
 	public void setDelegate( PGraphicsOpenGL delegate){
 		pushDelegate( delegate);
 	}
+	/**
+	 * Add an object to the delegate stack
+	 * @param delegate the object to add to the delegate stack
+	 */
 	public void pushDelegate( PGraphicsOpenGL delegate){
 		if( delegate == null)
 			throw new NullPointerException(
 				"Cannot push a null to the delegate stack.");
 		delegates.push( delegate);
 	}
+	/**
+	 * Remove an object from the delegate stack
+	 */
 	public PGraphicsOpenGL popDelegate(){
 		return delegates.pop();
-	}
-
-	//render calls
-	public void pre(){
-		deltest_pre();
-	}
-	public void draw(){
-		deltest_draw();
-	}
-
-	//test functions
-	public void deltest_pre(){
-		pushDelegate( temp1);
-			pushDelegate( temp2);
-				pushDelegate( temp3);
-					beginDraw();
-					deltest_reflect();
-					endDraw();
-				popDelegate();
-				beginDraw();
-				image( temp3, 100, 100, temp3.width - 200, temp3.height - 200);
-				pushStyle();
-				noFill();
-				stroke( 250, 250, 250, 200);
-				strokeWeight( 5);
-				strokeCap( ROUND);
-				rect( 100, 100, width - 200, height - 200);
-				popStyle();
-				endDraw();
-			popDelegate();
-			beginDraw();
-			image( temp2, 100, 100, temp2.width - 200, temp2.height - 200);
-			pushStyle();
-			noFill();
-			stroke( 250, 250, 250, 200);
-			strokeWeight( 5);
-			strokeCap( ROUND);
-			rect( 100, 100, width - 200, height - 200);
-			popStyle();
-			endDraw();
-		popDelegate();
-	}
-	public void deltest_draw(){
-		image( temp1, 100, 100, width - 200, height - 200);
-		pushStyle();
-		noFill();
-		stroke( 250, 250, 250, 200);
-		strokeWeight( 5);
-		strokeCap( ROUND);
-		rect( 100, 100, width - 200, height - 200);
-		popStyle();
-	}
-	public static void deltest_reflect(){
-		Class applet_class = applet.getClass();
-		try{
-			Method drawMethod = applet_class.getMethod("drawMethod");
-			drawMethod.invoke( applet);}
-		catch( Exception exception){
-			exception.printStackTrace();}
-	}
-
-	//static fields
-	public static final String CLASSNAME = PGLDSRenderer.class.getName();
-	private static PApplet applet = null;
-	private static PGLDSRenderer renderer = null;
-
-	//static functions
-	public static void init( PApplet applet){
-		PGLDSRenderer.applet = applet;
-		//validate renderer
-		if( ! PGLDSRenderer.class.isInstance( applet.g))
-			throw new RuntimeException(
-				String.format( "To use this library you must use PGLDSRenderer.CLASSNAME as the renderer field in size(). For example: size( 800, 600, PGLDSRenderer.CLASSNAME). You used %s.",
-					applet.g.getClass().getName()));
-		renderer = (PGLDSRenderer) applet.g;
-		applet.registerMethod("pre", renderer);
-		applet.registerMethod("draw", renderer);
-
-		//initialize temp1		
-		temp1 = (PGraphicsOpenGL) applet.createGraphics(
-			renderer.width, renderer.height, PConstants.OPENGL);
-		temp1.beginDraw();
-		temp1.background( 0, 0, 0, 0);
-		temp1.endDraw();
-		//initialize temp2
-		temp2 = (PGraphicsOpenGL) applet.createGraphics(
-			renderer.width, renderer.height, PConstants.OPENGL);
-		temp2.beginDraw();
-		temp2.background( 0, 0, 0, 0);
-		temp2.endDraw();
-		//initialize temp3
-		temp3 = (PGraphicsOpenGL) applet.createGraphics(
-			renderer.width, renderer.height, PConstants.OPENGL);
-		temp3.beginDraw();
-		temp3.background( 0, 0, 0, 0);
-		temp3.endDraw();
 	}
 }
