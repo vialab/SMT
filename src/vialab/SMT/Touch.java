@@ -186,7 +186,7 @@ public class Touch extends TuioCursor {
 	}
 
 	/**
-	 * @param t TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
+	 * @param tuioCursor TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
 	 */
 	public void update( TuioCursor tuioCursor){
 		prevUpdateTime = currentTime;
@@ -429,10 +429,18 @@ public class Touch extends TuioCursor {
 	}
 
 	//private utility functions
+	/**
+	 * Add a new touch listener to this touch
+	 * @param listener the touch listener to add
+	 */
 	public void addTouchListener( TouchListener listener){
 		if( ! listeners.contains( listener))
 			listeners.add( listener);
 	}
+	/**
+	 * Remove a touch listener from this touch
+	 * @param listener the touch listener to remove
+	 */
 	public void removeTouchListener( TouchListener listener){
 		listeners.remove( listener);
 	}

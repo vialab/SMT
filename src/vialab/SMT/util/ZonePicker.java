@@ -14,6 +14,9 @@ import processing.opengl.*;
 import vialab.SMT.*;
 import vialab.SMT.renderer.*;
 
+/**
+ * A little utility class for mapping the pixel coordinates of touches to zones.
+ */
 public class ZonePicker {
 	//constants
 	private final static int BACKGROUND_COLOR = 0;

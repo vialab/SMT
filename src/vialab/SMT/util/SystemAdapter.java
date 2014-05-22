@@ -36,6 +36,9 @@ public class SystemAdapter implements ComponentListener {
 	private Rectangle sketch_bounds;
 
 	//constructor
+	/**
+	 * Create a new system adapter that is not bound to a sketch
+	 */
 	public SystemAdapter(){
 		environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		this.window = null;
@@ -46,6 +49,10 @@ public class SystemAdapter implements ComponentListener {
 		updateDisplays();
 		resetLastUpdateTime();
 	}
+	/**
+	 * Create a new system adapter that is bound to the specified sketch
+	 * @param  applet the applet to connect to
+	 */
 	public SystemAdapter( PApplet applet){
 		this();
 		connect( applet);
@@ -188,7 +195,7 @@ public class SystemAdapter implements ComponentListener {
 	}
 	/**
 	 * Get the bounds of the display with the specified id string.
-	 * @param  index the index of the display
+	 * @param  id the id string of the display
 	 * @return the bounds of the display with the specified id string
 	 */
 	public Rectangle getDisplayBounds( String id){

@@ -17,7 +17,6 @@ public class ProxyTuioListener implements TuioListener {
 	 * Create a new proxy tuio listener.
 	 * @param  port The port of the connection
 	 * @param  actual_listener The tuio listener that will recieve the modified cursors and objects
-	 * @return
 	 */
 	public ProxyTuioListener( int port, TuioListener actual_listener) {
 		this.port = port;
@@ -30,37 +29,31 @@ public class ProxyTuioListener implements TuioListener {
 		TuioCursor proxy_cursor = new ProxyTuioCursor( tcur, port);
 		actual_listener.addTuioCursor( proxy_cursor);
 	}
-
 	@Override
 	public synchronized void updateTuioCursor( TuioCursor tcur) {
 		TuioCursor proxy_cursor = new ProxyTuioCursor( tcur, port);
 		actual_listener.updateTuioCursor( proxy_cursor);
 	}
-
 	@Override
 	public synchronized void removeTuioCursor( TuioCursor tcur) {
 		TuioCursor proxy_cursor = new ProxyTuioCursor( tcur, port);
 		actual_listener.removeTuioCursor( proxy_cursor);
 	}
-
 	@Override
 	public synchronized void addTuioObject( TuioObject tobj) {
 		TuioObject proxy_object = new ProxyTuioObject( tobj, port);
 		actual_listener.addTuioObject( proxy_object);
 	}
-
 	@Override
 	public synchronized void updateTuioObject( TuioObject tobj) {
 		TuioObject proxy_object = new ProxyTuioObject( tobj, port);
 		actual_listener.updateTuioObject( proxy_object);
 	}
-
 	@Override
 	public synchronized void removeTuioObject(  TuioObject tobj) {
 		TuioObject proxy_object = new ProxyTuioObject( tobj, port);
 		actual_listener.removeTuioObject( proxy_object);
 	}
-
 	@Override
 	public void refresh( TuioTime bundleTime) {
 		actual_listener.refresh( bundleTime);

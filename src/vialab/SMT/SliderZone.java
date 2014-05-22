@@ -21,11 +21,11 @@ public class SliderZone extends Zone {
 
 	private int minorTickSpacing;
 
-	boolean warnDraw() {
+	boolean warnDraw(){
 		return false;
 	}
 
-	boolean warnTouch() {
+	boolean warnTouch(){
 		return false;
 	}
 
@@ -37,7 +37,7 @@ public class SliderZone extends Zone {
 	 * @param minValue  - int: Minimum value of the slider
 	 * @param maxValue  - int: Maximum value of the slider
 	 */
-	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue) {
+	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue){
 		this(null, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, null);
 	}
 
@@ -50,7 +50,7 @@ public class SliderZone extends Zone {
 	 * @param maxValue  - int: Maximum value of the slider
 	 * @param label   - String: Text label of the zone
 	 */
-	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue, String label) {
+	public SliderZone(int x, int y, int width, int height, int minValue, int maxValue, String label){
 		this(null, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, label);
 	}
 
@@ -63,7 +63,7 @@ public class SliderZone extends Zone {
 	 * @param minValue  - int: Minimum value of the slider
 	 * @param maxValue  - int: Maximum value of the slider
 	 */
-	public SliderZone(String name, int x, int y, int width, int height, int minValue, int maxValue) {
+	public SliderZone(String name, int x, int y, int width, int height, int minValue, int maxValue){
 		this(name, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, null);
 	}
 
@@ -78,7 +78,7 @@ public class SliderZone extends Zone {
 	 * @param label   - String: Text label of the zone
 	 */
 	public SliderZone(String name, int x, int y, int width, int height, int minValue, int maxValue,
-			String label) {
+			String label){
 		this(name, x, y, width, height, (maxValue - minValue) / 2, minValue, maxValue, 5, 25, label);
 	}
 
@@ -96,7 +96,7 @@ public class SliderZone extends Zone {
 	 * @param label   - String: Text label of the zone
 	 */
 	public SliderZone(String name, int x, int y, int width, int height, int currentValue,
-			int minValue, int maxValue, int minorTickSpacing, int majorTickSpacing, String label) {
+			int minValue, int maxValue, int minorTickSpacing, int majorTickSpacing, String label){
 		super(name, x, y, width, height);
 		this.currentValue = currentValue;
 		this.minValue = minValue;
@@ -106,57 +106,105 @@ public class SliderZone extends Zone {
 		this.label = label;
 	}
 
-	public int getCurrentValue() {
+	/**
+	 * Get the current value of the slider
+	 * @return the current value of the slider
+	 */
+	public int getCurrentValue(){
 		return currentValue;
 	}
 
-	public void setCurrentValue(int currentValue) {
+	/**
+	 * Set the value of the slider
+	 * @param currentValue the desired value of the slider
+	 */
+	public void setCurrentValue(int currentValue){
 		this.currentValue = currentValue;
 	}
 
-	public int getMinValue() {
+	/**
+	 * [getMinValue description]
+	 * @return [description]
+	 */
+	public int getMinValue(){
 		return minValue;
 	}
 
-	public void setMinValue(int minValue) {
+	/**
+	 * [setMinValue description]
+	 * @param minValue [description]
+	 */
+	public void setMinValue(int minValue){
 		this.minValue = minValue;
 	}
 
-	public int getMaxValue() {
+	/**
+	 * [getMaxValue description]
+	 * @return [description]
+	 */
+	public int getMaxValue(){
 		return maxValue;
 	}
 
-	public void setMaxValue(int maxValue) {
+	/**
+	 * [setMaxValue description]
+	 * @param maxValue [description]
+	 */
+	public void setMaxValue(int maxValue){
 		this.maxValue = maxValue;
 	}
 
-	public String getLabel() {
+	/**
+	 * [getLabel description]
+	 * @return [description]
+	 */
+	public String getLabel(){
 		return label;
 	}
 
-	public void setLabel(String label) {
+	/**
+	 * [setLabel description]
+	 * @param label [description]
+	 */
+	public void setLabel(String label){
 		this.label = label;
 	}
 
-	public int getMajorTickSpacing() {
+	/**
+	 * [getMajorTickSpacing description]
+	 * @return [description]
+	 */
+	public int getMajorTickSpacing(){
 		return majorTickSpacing;
 	}
 
-	public void setMajorTickSpacing(int majorTickSpacing) {
+	/**
+	 * [setMajorTickSpacing description]
+	 * @param majorTickSpacing [description]
+	 */
+	public void setMajorTickSpacing(int majorTickSpacing){
 		this.majorTickSpacing = majorTickSpacing;
 	}
 
-	public int getMinorTickSpacing() {
+	/**
+	 * [getMinorTickSpacing description]
+	 * @return [description]
+	 */
+	public int getMinorTickSpacing(){
 		return minorTickSpacing;
 	}
 
-	public void setMinorTickSpacing(int minorTickSpacing) {
+	/**
+	 * [setMinorTickSpacing description]
+	 * @param minorTickSpacing [description]
+	 */
+	public void setMinorTickSpacing(int minorTickSpacing){
 		this.minorTickSpacing = minorTickSpacing;
 	}
 
 	@Override
-	protected void touchImpl() {
-		for (Touch t : getTouches()) {
+	protected void touchImpl(){
+		for (Touch t : getTouches()){
 			// if(this.contains(t.x, t.y)){
 			PVector touchInZone = this.toZoneVector(new PVector(t.x, t.y));
 			this.currentValue = Math
@@ -169,7 +217,7 @@ public class SliderZone extends Zone {
 	}
 
 	@Override
-	protected void drawImpl() {
+	protected void drawImpl(){
 		fill(255);
 		rect(0, 0, width, height);
 
@@ -180,7 +228,7 @@ public class SliderZone extends Zone {
 		drawTicks();
 	}
 
-	protected void drawMinMaxCur() {
+	protected void drawMinMaxCur(){
 		fill(0);
 		textAlign(CENTER);
 		text(currentValue, width / 2, height*3/10);
@@ -188,16 +236,16 @@ public class SliderZone extends Zone {
 		text(maxValue, width*9/10, height*9/10);
 	}
 
-	protected void drawTicks() {
+	protected void drawTicks(){
 		// draw the ticks
-		for (int i = minValue; i <= maxValue; i++) {
-			if (i % majorTickSpacing == 0) {
+		for (int i = minValue; i <= maxValue; i++){
+			if (i % majorTickSpacing == 0){
 				// draw major tick
 				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
 						((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10),
 						height * 5 / 8);
 			}
-			else if (i % minorTickSpacing == 0) {
+			else if (i % minorTickSpacing == 0){
 				// draw minor tick
 				line(((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10), height * 3 / 8,
 						((i / (float) maxValue) * width * (float) 8 / 10) + (width / 10),
@@ -206,7 +254,7 @@ public class SliderZone extends Zone {
 		}
 	}
 
-	protected void drawKnob() {
+	protected void drawKnob(){
 		// draw something for the slider knob
 		fill(150,100);
 		rect((((currentValue - minValue) / (float) maxValue) * width * (float) 8 / 10)

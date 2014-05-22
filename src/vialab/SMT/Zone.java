@@ -220,10 +220,15 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 		this.direct = enabled;
 	}
+
+	/**
+	 * Ensures that the extra_graphics object is initialized if it's supposed to be.
+	 */
 	private void extraGraphicsNullCheck(){
 		if( ! direct)
 			if( extra_graphics == null)
-				setDirect( false);}
+				setDirect( false);
+	}
 
 	/**
 	 * Normally, zones "capture" touches. This means that normally when touches exit a zone, they remain assigned to that zone. This "capturing" behavior, however, can be disabled. This is commonly done with buttons and UI elements.
@@ -341,6 +346,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		zoneFixtureDef.friction = 0.3f;
 	}
 
+	/**
+	 * Prepares and invokes the appropriate draw function. If there is a draw funtion in the processing applet for this zone, that function is called. Otherwise, if there is drawImpl override from a subclass, that function is called. Otherwise, the draw function is called.
+	 */
 	public void invokeDraw(){
 		//setup
 		drawing_on = true;
@@ -404,6 +412,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		drawing_on = false;
 	}
 
+	/**
+	 * Prepares and invokes the appropriate pick draw function. If there is a pick draw funtion in the processing applet for this zone, that function is called. Otherwise, if there is pickDrawImpl override from a subclass, that function is called. Otherwise, the pickDraw function is called.
+	 */
 	public void invokePickDraw(){
 		//setup
 		//all calls need to be redirected through this so that color calls can be discarded and background calls changed
@@ -486,6 +497,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		drawing_on = false;
 	}
 
+	/**
+	 * Prepares and invokes the appropriate touch function. If there is a touch funtion in the processing applet for this zone, that function is called. Otherwise, if there is touchImpl override from a subclass, that function is called. Otherwise, the touch function is called.
+	 */
 	protected void invokeTouch(){
 		//setup
 		this.setDelegate( SMT.renderer);
@@ -548,6 +562,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		matrix.apply( change);
 	}
 
+	/**
+	 * Invokes the appropriate touchUp function for this zone.
+	 * @param touch the touch that went up from this zone
+	 */
 	protected void invokeTouchUpMethod( Touch touch){
 		if( method_touchUp != null)
 			SMTUtilities.invoke( method_touchUp, applet, this, touch);
@@ -556,6 +574,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		else
 			touchUp( touch);
 	}
+	/**
+	 * Invokes the appropriate touchDown function for this zone.
+	 * @param touch the touch that went down onto this zone
+	 */
 	protected void invokeTouchDownMethod( Touch touch){
 		if( method_touchDown != null)
 			SMTUtilities.invoke( method_touchDown, applet, this, touch);
@@ -564,6 +586,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		else
 			touchDown( touch);
 	}
+	/**
+	 * Invokes the appropriate press function for this zone.
+	 * @param touch the touch that pressed this zone
+	 */
 	protected void invokePressMethod( Touch touch){
 		if( method_press != null)
 			SMTUtilities.invoke( method_press, applet, this, touch);
@@ -572,6 +598,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		else
 			press( touch);
 	}
+	/**
+	 * Invokes the appropriate touchMoved function for this zone.
+	 * @param touch the touch moved on this zone
+	 */
 	protected void invokeTouchMovedMethod( Touch touch){
 		if( method_touchMoved != null)
 			SMTUtilities.invoke( method_touchMoved, applet, this, touch);
@@ -580,6 +610,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		else
 			touchMoved( touch);
 	}
+	/**
+	 * Invokes the appropriate touch function for this zone.
+	 * @param touch the touch that touched this zone
+	 */
 	protected void invokeTouchMethod(){
 		//invoke proper touch method
 		if( method_touch != null)
@@ -590,6 +624,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			touch();
 	}
 
+	/**
+	 * Invokes the appropriate keyPressed function for this zone.
+	 * @param event the key event that occured
+	 */
 	public void invokeKeyPressedMethod( KeyEvent event){
 		if( method_keyPressed != null)
 			SMTUtilities.invoke( method_keyPressed, applet, this, event);
@@ -599,6 +637,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			keyPressed( event);
 	}
 
+	/**
+	 * Invokes the appropriate keyReleased function for this zone.
+	 * @param event the key event that occured
+	 */
 	public void invokeKeyReleasedMethod( KeyEvent event){
 		if( method_keyReleased != null)
 			SMTUtilities.invoke( method_keyReleased, applet, this, event);
@@ -608,6 +650,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			keyReleased( event);
 	}
 
+	/**
+	 * Invokes the appropriate keyTyped function for this zone.
+	 * @param event the key event that occured
+	 */
 	public void invokeKeyTypedMethod( KeyEvent event){
 		if( method_keyTyped != null)
 			SMTUtilities.invoke( method_keyTyped, applet, this, event);
@@ -757,23 +803,59 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 
 	//touch registration methods
+	/**
+	 * Add a touch to the touch down list
+	 * @param touch the touch to add
+	 */
 	public void touchDownRegister(Touch touch){
 		touchDownList.add(touch);
 	}
+	/**
+	 * Add a touch to the touch up list
+	 * @param touch the touch to add
+	 */
 	public void touchUpRegister(Touch touch){
 		touchUpList.add(touch);
 	}
+	/**
+	 * Add a touch to the press list
+	 * @param touch the touch to add
+	 */
 	public void pressRegister(Touch touch){
 		pressList.add(touch);
 	}
+	/**
+	 * Add a touch to the touch moved list
+	 * @param touch the touch to add
+	 */
 	public void touchMovedRegister(Touch touch){
 		touchMovedList.add(touch);
 	}
 
 	//begin/end methods
+	/**
+	 * This is called before the pick draw function is called
+	 * @deprecated This is no longer needed by anything.
+	 */
+	@Deprecated
 	public void beginPickDraw(){}
+	/**
+	 * This is called after the pick draw function is called
+	 * @deprecated This is no longer needed by anything.
+	 */
+	@Deprecated
 	public void endPickDraw(){}
+	/**
+	 * This is called before the touch function is called
+	 * @deprecated This is no longer needed by anything.
+	 */
+	@Deprecated
 	public void beginTouch(){}
+	/**
+	 * This is called after the touch function is called
+	 * @deprecated This is no longer needed by anything.
+	 */
+	@Deprecated
 	public void endTouch(){}
 
 	/**
@@ -794,6 +876,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Prepares all of the methods for this zone.
+	 * 
 	 * @param name The name of the zone to load methods from, used as a suffix
 	 * @param warnDraw Display a warning when the draw method doesn't exist
 	 * @param warnTouch Display a warning when the touch method doesn't exist
@@ -975,7 +1059,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	// Zone 'Gesture' Transformations //
 	/////////////////////////////////////
 
-	/** Translates the zone, its group, and its children */
+	/** 
+	 * Translates the zone, its group, and its children
+	 */
 	public void drag(){
 		drag( true, true);
 	}
@@ -1221,8 +1307,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * 
 	 * @param rotate Whether rotation should happen
 	 * @param scale Whether scaling should happen
-	 * @param translateX Whether tranlation in the x direction should happen
-	 * @param translateY Whether tranlation in the y direction should happen
+	 * @param translate_x Whether tranlation in the x direction should happen
+	 * @param translate_y Whether tranlation in the y direction should happen
 	 */
 	public void rst( boolean rotate, boolean scale, boolean translate_x, boolean translate_y){
 
@@ -1413,13 +1499,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Horizontal Swipe. Uses a single touch. Only works inside the zone's touch
 	 * method, or between calls to beginTouch() and endTouch().
-	 * <P>
+	 * 
 	 * Limits are absolute and are in global coordinates.
 	 * 
-	 * @param leftLimit
-	 *            Limit on how far to be able to drag left
-	 * @param rightLimit
-	 *            Limit on how far to be able to drag right
+	 * @param leftLimit Limit on how far to be able to drag left
+	 * @param rightLimit Limit on how far to be able to drag right
 	 */
 	public void hSwipe(int leftLimit, int rightLimit){
 		drag(true, false, leftLimit, rightLimit, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -1436,13 +1520,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Vertical Swipe. Uses a single touch. Only works inside the zone's touch
 	 * method, or between calls to beginTouch() and endTouch().
-	 * <P>
+	 * 
 	 * Limits are absolute and are in global coordinates.
 	 * 
-	 * @param upLimit
-	 *            Limit on how far to be able to drag up
-	 * @param downLimit
-	 *            Limit on how far to be able to drag down
+	 * @param upLimit Limit on how far to be able to drag up
+	 * @param downLimit Limit on how far to be able to drag down
 	 */
 	public void vSwipe(int upLimit, int downLimit){
 		drag(false, true, Integer.MIN_VALUE, Integer.MAX_VALUE, upLimit, downLimit);
@@ -1483,6 +1565,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		drag(false, false, false, true);
 	}
 
+	/**
+	 * Tosses a zone. Acts similarly to drag while the touch is on the zone, but when the touch is released, the zone slides for a bit, then slows to a stop.
+	 */
 	public void toss(){
 		// enable physics on this zone to make sure it can move from the toss
 		setPhysicsEnabled( true);
@@ -1752,31 +1837,48 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			System.err.println( "Warning: removeFromParent where parent is null or this zone is not a child of");
 	}
 
+	/**
+	 * Removes multiple child zone from this zone.
+	 * @param  zones the zones to remove from this zone
+	 * @return whether all the zones were already children of this zone
+	 */
 	public boolean remove( Zone... zones){
-		boolean r = true;
-		for (Zone z : zones)
-			if(!remove(z))
-				r = false;
-		return r;
+		boolean result = true;
+		for( Zone zone : zones)
+			if( ! remove( zone))
+				result = false;
+		return result;
 	}
 
 	//////////////////////
 	// Other Accessors //
 	//////////////////////
 
+	/**
+	 * Get the current pick color of this zone.
+	 * @return the current pick color of this zone
+	 */
 	public Color getPickColor(){
 		return pickColor;
 	}
 
+	/**
+	 * Set the desired pick colour of this zone. Do not call this.
+	 * @param color the desired pick colour of this zone.
+	 */
 	public void setPickColor( Color color){
 		this.pickColor = color;
 	}
 
+	/**
+	 * Set the current pick colour to null
+	 */
 	public void removePickColor(){
 		pickColor = null;
 	}
 
 	/**
+	 * Change the name of this zone.
 	 * @param name The new name of the zone
 	 */
 	public void setName( String name){
@@ -1797,51 +1899,62 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Get the name of this zone
 	 * @return The name of the zone
 	 */
 	public String getName(){
 		return name;
 	}
 
+	/**
+	 * Get whether physics is enabled on this zone.
+	 * @return whether physics is enabled on this zone
+	 */
 	public boolean getPhysicsEnabled(){
 		return physics_enabled;
 	}
+	/**
+	 * Set whether physics should be enabled on this zone.
+	 * @param enabled whether physics should be enabled on this zone
+	 */
 	public void setPhysicsEnabled( boolean enabled){
 		physics = enabled;
 		physics_enabled = enabled;
 	}
 
 	/**
-	 * @return A Collection<Touch> containing all touches that are active on the
-	 *         zone
+	 * Get all the touches currently assigned to this zone.
+	 * @return A collection of touches containing all touches that are active on the zone
 	 */
 	public Collection<Touch> getTouchCollection(){
-		return Collections.unmodifiableCollection(activeTouches.values());
+		return Collections.unmodifiableCollection( activeTouches.values());
 	}
 
 	/**
-	 * @return A Touch[] containing all touches that are active on the zone
+	 * Get all the touches currently assigned to this zone.
+	 * @return An array of touches containing all touches that are active on the zone
 	 */
 	public Touch[] getTouches(){
 		return activeTouches.values().toArray( new Touch[0]);
 	}
 
 	/**
-	 * @return A Set<Long> containing the long id's of the zone's touches
+	 * Get the IDs of all the touches currently assigned to this zone.
+	 * @return A set of longs containing the long id's of the zone's touches
 	 */
 	public Set<Long> getIds(){
 		return Collections.unmodifiableSet(activeTouches.keySet());
 	}
 
 	/**
-	 * @return A Map<Long, Touch> which maps each touch id to the touch for the
-	 *         zones active touches
+	 * @return A Map<Long, Touch> which maps each touch id to the touch for the zones active touches
 	 */
 	public Map<Long, Touch> getTouchMap(){
 		return Collections.unmodifiableMap(activeTouches);
 	}
 
 	/**
+	 * Get the number of touches currently on the zone.
 	 * @return The number of touches currently on the zone
 	 */
 	public int getNumTouches(){
@@ -1849,6 +1962,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Whether this zone currently has any assigned touches
 	 * @return Whether the zone has touches currently on it
 	 */
 	public boolean isActive(){
@@ -1859,8 +1973,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * @return Whether the zone or one of its children has touches currently on
-	 *         it
+	 * Get whether the zone or one of its children has touches currently on it
+	 * @return Whether the zone or one of its children has touches currently on it
 	 */
 	public boolean hasActiveChild(){
 		for( Zone child : children)
@@ -1872,6 +1986,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Get the angle of the Zone in global coordinates
 	 * @return The angle of the Zone in global coordinates
 	 */
 	public float getRotationAngle(){
@@ -1881,6 +1996,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Get the x position of the touch in local coordinates
 	 * @return the x position of the touch in local coordinates
 	 */
 	public float getLocalX(){
@@ -1891,6 +2007,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Get the y position of zone in parent coordinates
 	 * @return the y position of zone in parent coordinates
 	 */
 	public float getLocalY(){
@@ -1901,8 +2018,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Get the x position of touch in local coordinates.
 	 * @param touch
-	 * @return the x position of zone in parent coordinates
+	 * @return the x position of touch in local coordinates
 	 */
 	public float getLocalX( Touch touch){
 		return toZoneVector( new PVector(
@@ -1910,6 +2028,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Get the y position of the touch in local coordinates.
 	 * @param touch
 	 * @return the y position of the touch in local coordinates
 	 */
@@ -2001,6 +2120,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Get the number of children of this zone
 	 * @return The number of children of this zone
 	 */
 	public int getChildCount(){
@@ -2008,6 +2128,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Get all of this zone's children
 	 * @return An array containing this zone's children
 	 */
 	public Zone[] getChildren(){
@@ -2015,6 +2136,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Get this zone's parent.
 	 * @return The zone that is the parent of this zone
 	 */
 	public Zone getParent(){
@@ -2047,8 +2169,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Moves the zone to a given location with a reset matrix
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x the desired x coordinate of this zone
+	 * @param y the desired y coordinate of this zone
 	 */
 	public void setLocation( float x, float y){
 		this.x = Math.round( x);
@@ -2056,6 +2178,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		resetMatrix();
 	}
 
+	/**
+	 * Set the size of this zone
+	 * @param width the desired width of this zone
+	 * @param height the desired height of this zone
+	 */
 	@Override
 	public void setSize(int width, int height){
 		super.setSize( width, height);
@@ -2065,12 +2192,20 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		this.halfDimension = new Dimension( width / 2, height / 2);
 	}
 
+	/**
+	 * Set the width of this zone
+	 * @param width the desired width of this zone
+	 */
 	public void setWidth( int width){
 		super.setSize( width, dimension.height);
 		this.width = width;
 		this.dimension.width = width;
 		this.halfDimension.width = width / 2;
 	}
+	/**
+	 * Set the height of this zone
+	 * @param height the desired height of this zone
+	 */
 	public void setHeight( int height){
 		super.setSize( dimension.width, height);
 		this.height = height;
@@ -2095,7 +2230,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Get the zone's original width.
+	 * Get the zone's width.
 	 * @return width int representing the width of the zone.
 	 */
 	public int getWidth(){
@@ -2106,7 +2241,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Get the zone's original height.
+	 * Get the zone's height.
 	 * @return height int representing the height of the zone.
 	 */
 	public int getHeight(){
@@ -2116,26 +2251,32 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			this.getOrigin()).mag();
 	}
 
+
+	/**
+	 * Set the dimensions of this zone
+	 * @return the dimensions of this zone
+	 */
 	public Dimension getSize(){
 		return dimension;
 	}
 
+	/**
+	 * Set the half dimensions of this zone
+	 * @return the half dimensions of this zone
+	 */
 	public Dimension getHalfSize(){
 		return halfDimension;
 	}
 
 	/**
-	 * @return The rotation radius of the zone, which is used by at least rnt()
-	 *         for now, controlling when rotation is done
+	 * @return The rotation radius of the zone, which is used by at least rnt() for now, controlling when rotation is done
 	 */
 	public float getRntRadius(){
 		return rntRadius;
 	}
 
 	/**
-	 * @param rntRadius
-	 *            The new rotation radius of the zone, which is used by at least
-	 *            rnt() for now, controlling when rotation is done
+	 * @param rntRadius The new rotation radius of the zone, which is used by at least rnt() for now, controlling when rotation is done
 	 */
 	public void setRntRadius(float rntRadius){
 		this.rntRadius = rntRadius;
@@ -2144,13 +2285,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Tests to see if the x and y coordinates are in the zone.
 	 * 
-	 * @param x
-	 *            float - X-coordinate to test
-	 * @param y
-	 *            float - Y-coordinate to test
+	 * @param x X-coordinate to test
+	 * @param y Y-coordinate to test
 	 * @return boolean True if x and y is in the zone, false otherwise.
 	 */
-	public boolean contains(float x, float y){
+	public boolean contains( float x, float y){
 		PVector mouse = new PVector(x, y);
 		PVector world = this.toZoneVector(mouse);
 		return
@@ -2158,7 +2297,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			(world.y > 0) && (world.y < this.height);
 	}
 
-	/** Draws the rotation radius of the zone */
+	/** 
+	 * Draws the rotation radius of the zone
+	 */
 	public void drawRntCircle(){
 		pushStyle();
 		pushMatrix();
@@ -2183,8 +2324,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * @return A PVector containing the origin of the Zone. The origin is
-	 *         defined to be at the top-left corner of the Zone
+	 * @return A PVector containing the origin of the Zone. The origin is defined to be at the top-left corner of the Zone
 	 */
 	public PVector getOrigin(){
 		return fromZoneVector( new PVector(0, 0));
@@ -2373,8 +2513,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * This makes a PVector into a global coordinates from the given local
 	 * zone's coordinate space
 	 * 
-	 * @param local
-	 *            The PVector to put into global coordinate space
+	 * @param local The PVector to put into global coordinate space
 	 * @return A PVector relative to the global coordinate space
 	 */
 	public PVector fromZoneVector( PVector local){
@@ -2412,8 +2551,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Changes the ordering of the child zones, placing the given one on top
 	 * 
-	 * @param zone
-	 *            The child to place on top of the others
+	 * @param zone The child to place on top of the others
 	 */
 	public void putChildOnTop( Zone zone){
 		// only remove and add if actually in the children arraylist and not
