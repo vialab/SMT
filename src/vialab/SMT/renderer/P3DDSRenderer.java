@@ -16,7 +16,7 @@ public class P3DDSRenderer extends PGraphics3DDelegate {
 	/**
 	 * Fully qualified class name of this class. Can be used for the renderer arguement in a PApplet's size function.
 	 */
-	public static final String CLASSNAME = class.getName();
+	public static final String CLASSNAME = P3DDSRenderer.class.getName();
 	
 	//private fields
 	/**
@@ -49,7 +49,7 @@ public class P3DDSRenderer extends PGraphics3DDelegate {
 	 */
 	@Override
 	public boolean hasDelegate(){
-		return delegates.isEmpty()
+		return delegates.isEmpty();
 	}
 	/**
 	 * Add an object to the delegate stack

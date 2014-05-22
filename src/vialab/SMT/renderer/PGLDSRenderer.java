@@ -16,7 +16,7 @@ public class PGLDSRenderer extends PGraphicsOpenGLDelegate {
 	/**
 	 * Fully qualified class name of this class. Can be used for the renderer arguement in a PApplet's size function.
 	 */
-	public static final String CLASSNAME = class.getName();
+	public static final String CLASSNAME = PGLDSRenderer.class.getName();
 
 	//private fields
 	/**
@@ -49,7 +49,7 @@ public class PGLDSRenderer extends PGraphicsOpenGLDelegate {
 	 */
 	@Override
 	public boolean hasDelegate(){
-		return delegates.isEmpty()
+		return delegates.isEmpty();
 	}
 	/**
 	 * Add an object to the delegate stack
