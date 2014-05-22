@@ -12,7 +12,8 @@ public class PGraphics3DDelegate extends PGraphics3D {
 	/**
 	 * Fully qualified class name of this class. Can be used for the renderer arguement in a PApplet's size function.
 	 */
-	public static final String CLASSNAME = class.getName();
+	public static final String CLASSNAME = 
+		PGraphics3DDelegate.class.getName();
 	
 	//fields
 	// The current delegate that this object points to

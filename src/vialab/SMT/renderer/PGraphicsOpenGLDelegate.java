@@ -6,7 +6,8 @@ import processing.opengl.*;
 
 public class PGraphicsOpenGLDelegate extends PGraphicsOpenGL {
 	//static fields
-	public static final String CLASSNAME = class.getName();
+	public static final String CLASSNAME = 
+		PGraphicsOpenGLDelegate.class.getName();
 
 	//fields
 	// The current delegate that this object points to
