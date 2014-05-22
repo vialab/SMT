@@ -159,8 +159,8 @@ public class SMT {
 	 * 
 	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 */
-	public static void init(PApplet parent){
-		init(parent, default_port, default_touchsource);
+	public static void init( PApplet applet){
+		init( applet, default_port, default_touchsource);
 	}
 
 	/**
@@ -170,8 +170,8 @@ public class SMT {
 	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 * @param port The port to listen on
 	 */
-	public static void init(PApplet applet, int port){
-		init(applet, port, default_touchsource);
+	public static void init( PApplet applet, int port){
+		init( applet, port, default_touchsource);
 	}
 
 	/**
@@ -181,8 +181,8 @@ public class SMT {
 	 * @param applet The Processing PApplet, usually just 'this' when using the Processing IDE
 	 * @param sources The touch devices to try to listen to. One or more of: TouchSource.MOUSE, TouchSource.TUIO_DEVICE, TouchSource.ANDROID, TouchSource.WM_TOUCH, TouchSource.SMART, TouchSource.AUTOMATIC.
 	 */
-	public static void init(PApplet applet, TouchSource... sources){
-		init(applet, default_port, sources);
+	public static void init( PApplet applet, TouchSource... sources){
+		init( applet, default_port, sources);
 	}
 
 	/**
@@ -513,7 +513,6 @@ public class SMT {
 	 * Sets the touch fitting method for all touch sources (except mouse) to rect mode.
 	 * Use this function if you want to manually change the touch source bounds.
 	 * @param bounds a rectangle describing the desired touch bounds.
-	 * @param 
 	 **/
 	public static void setTouchSourceBoundsRect( Rectangle bounds){
 		setTouchSourceBoundsRect( bounds, sources_notmouse);
@@ -522,7 +521,7 @@ public class SMT {
 	 * Sets the touch fitting method for the given touch sources to rect mode.
 	 * Use this function if you want to manually change the touch source bounds.
 	 * @param bounds a rectangle describing the desired touch bounds.
-	 * @param 
+	 * @param sources The touch sources that should should be bound by this method
 	 **/
 	public static void setTouchSourceBoundsRect( Rectangle bounds,
 			TouchSource... sources){
@@ -613,21 +612,46 @@ public class SMT {
 
 	//other functions
 
+	/**
+	 * Get smt's renderer.
+	 * @return the renderer used by smt
+	 */
 	public static P3DDSRenderer getRenderer(){
 		return renderer;
 	}
+	/**
+	 * Get the system adapter used by smt.
+	 * @return the system adapter used by smt
+	 */
 	public static SystemAdapter getSystemAdapter(){
 		return systemAdapter;
 	}
+	/**
+	 * Get the touch binder currently being used by smt for the specified touch source.
+	 * @param source the touch source
+	 * @return the touch binder used by the specified touch source
+	 */
 	public static TouchBinder getTouchBinder( TouchSource source){
 		return touchBinders.get( source);
 	}
+	/**
+	 * Get the root zone that smt uses to contain all other zones
+	 * @return smt's root zone
+	 */
 	public static Zone getRootZone(){
 		return sketch;
 	}
+	/**
+	 * Get the current applet that SMT is hooked to
+	 * @return smt's applet
+	 */
 	public static PApplet getApplet(){
 		return applet;
 	}
+	/**
+	 * Get whether fast picking is enabled or not
+	 * @return whether fast picking is enabled
+	 */
 	public static boolean fastPickingEnabled(){
 		return fastPicking;
 	}
@@ -857,17 +881,18 @@ public class SMT {
 		SMT.MAX_PATH_LENGTH = maxPathLength;
 	}
 
-	/** Sets the desired radius of a drawn touch
+	/**
+	 * Sets the duration of the fade animation that occurs when a touch dies
 	 * Note: this option is only obeyed when using TouchDraw.TEXTURED
-	 * @param radius the desired radius of a drawn touch, in pixels
+	 * @param duration_milliseconds the desired duration of the fade animation
 	 */
 	public static void setTouchFadeDuration( long duration_milliseconds){
 		texturedTouchDrawerNullCheck();
 		texturedTouchDrawer.setDeathDuration( duration_milliseconds);
 	}
-	/** Gets the current radius of a drawn touch
+	/** Gets the duration of the fade animation that occurs when a touch dies
 	 * Note: this function is only accurate when using TouchDraw.TEXTURED
-	 * @return the current radius of a drawn touch, in pixels
+	 * @return the current duration of the fade animation
 	 */
 	public static long getTouchFadeDuration(){
 		texturedTouchDrawerNullCheck();
@@ -1460,7 +1485,7 @@ public class SMT {
 
 	/**
 	 * Returns a Touch stored at the given index
-	 * 
+	 * @param index the index of the desired touch
 	 * @return Touch The touch at the desired index
 	 */
 	public static Touch getTouch( int index){
@@ -1781,6 +1806,7 @@ public class SMT {
 
 	/**
 	 * Runs an exe from a path, presumably for translating native events to tuio events
+	 * @param path the path of the executable
 	 */
 	public static void runExe(final String path){
 		new TouchSourceThread( path, path, path + " Process died").start();

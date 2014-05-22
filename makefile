@@ -1,6 +1,6 @@
 #globals
-default: build
-freshen: clean build
+default: build jar
+freshen: clean build jar
 clean: clean-specials
 	rm -rf bin/*
 clean-specials:

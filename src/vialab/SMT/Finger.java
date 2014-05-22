@@ -1,27 +1,27 @@
 /*
-  Modified version of TUIO Simulator - part of the reacTIVision project
-  http://reactivision.sourceforge.net/
+	Modified version of TUIO Simulator - part of the reacTIVision project
+	http://reactivision.sourceforge.net/
 
-  Copyright (c) 2005-2009 Martin Kaltenbrunner <mkalten@iua.upf.edu>
+	Copyright (c) 2005-2009 Martin Kaltenbrunner <mkalten@iua.upf.edu>
  
-  This version Copyright (c) 2011 
-  Erik Paluka, Christopher Collins - University of Ontario Institute of Technology
-  Mark Hancock - University of Waterloo
-  contact: christopher.collins@uoit.ca
+	This version Copyright (c) 2011 
+	Erik Paluka, Christopher Collins - University of Ontario Institute of Technology
+	Mark Hancock - University of Waterloo
+	contact: christopher.collins@uoit.ca
 
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU General Public
-  License Version 3 as published by the Free Software Foundation.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public
+	License Version 3 as published by the Free Software Foundation.
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  General Public License for more details.
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	General Public License for more details.
 
-  You should have received a copy of the GNU General
-  Public License along with this library; if not, write to the
-  Free Software Foundation, Inc., 59 Temple Place, Suite 330,
-  Boston, MA  02111-1307  USA
+	You should have received a copy of the GNU General
+	Public License along with this library; if not, write to the
+	Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
  */
 package vialab.SMT;
 
@@ -88,7 +88,7 @@ class Finger {
 		long currentTime = System.currentTimeMillis();
 		float dt = ( currentTime - lastTime) / 1000.0f;
 
-		if (dt > 0) {
+		if( dt > 0) {
 			float dx = ( xpos - lastPoint.x) / (float) windowWidth;
 			float dy = ( ypos - lastPoint.y) / (float) windowHeight;
 			float dist = (float) Math.sqrt( dx * dx + dy * dy);
@@ -147,5 +147,4 @@ class Finger {
 	public final int getTouchId() {
 		return touchID;
 	}
-
 }

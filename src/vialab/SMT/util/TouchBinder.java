@@ -20,6 +20,8 @@ public class TouchBinder {
 
 	/**
 	 * Binds the x and y components into 
+	 * @param x The x coordinate in [0,1] space to bind onto [0,applet.width] space
+	 * @param y The y coordinate in [0,1] space to bind onto [0,applet.height] space
 	 **/
 	public PVector bind( float x, float y){
 		PVector raw = new PVector( x, y);

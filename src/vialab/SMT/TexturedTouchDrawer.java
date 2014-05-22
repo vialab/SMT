@@ -85,7 +85,11 @@ public class TexturedTouchDrawer
 			"resources/trail_texture.png");
 	}
 
-	/** Implements the "Textured" touch draw method */
+	/** 
+	 * Implements the "Textured" touch draw method
+	 * @param touches  The touches to draw
+	 * @param graphics the graphics object on which to draw
+	 */
 	public void draw( Iterable<Touch> touches, PGraphics graphics){
 		//useful variables
 		TuioTime sessionTime = TuioTime.getSessionTime();
@@ -573,11 +577,20 @@ public class TexturedTouchDrawer
 	}
 
 	//touch listener functions
-	/** Do nothing on touch down **/
+	/** 
+	 * Do nothing on touch down
+	 * @param touchEvent the touch event to process
+	 */
 	public void handleTouchDown( TouchEvent touchEvent){}
-	/** Do nothing on touch moved **/
+	/** 
+	 * Do nothing on touch moved
+	 * @param touchEvent the touch event to process
+	 **/
 	public void handleTouchMoved( TouchEvent touchEvent){}
-	/** Add to our list of dead touches and stop listening **/
+	/** 
+	 * Add to our list of dead touches and stop listening
+	 * @param touchEvent the touch event to process
+	 */
 	public void handleTouchUp( TouchEvent touchEvent){
 		deadTouches.add( touchEvent.getTouch());
 	}

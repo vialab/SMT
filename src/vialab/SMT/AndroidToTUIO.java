@@ -33,11 +33,9 @@ import android.view.View.OnTouchListener;
  * message. Currently Processing (2.x) does not support registering "touchEvent"
  * to the parenting PApplet, so a walk-around is used: make this class listen to
  * and handle touchEvents explicitly.
- * <P>
  * 
  * University of Ontario Institute of Technology. Summer Research Assistant with
  * Dr. Christopher Collins (Summer 2011) collaborating with Dr. Mark Hancock.
- * <P>
  * 
  * @author Victor Cheung
  * @author Zach Cook
@@ -64,28 +62,23 @@ class AndroidToTUIO implements OnTouchListener {
 	 * to TUIO messages. Sets the screen to be full-screen if the boolean/flag
 	 * is set to true.
 	 * 
-	 * @param width
-	 *            int - width of the screen
-	 * @param height
-	 *            int - height of the screen
-	 * @param port
-	 *            int - port to connect to
+	 * @param width width of the screen
+	 * @param height height of the screen
+	 * @param port port to connect to
 	 */
-	public AndroidToTUIO(int width, int height, int port) {
+	public AndroidToTUIO( int width, int height, int port) {
 		super();
-		sim = new Simulation(width, height, port);
+		sim = new Simulation( width, height, port);
 	}
 
 	/**
 	 * Updates the selected cursor, used when Processing supports
 	 * registerMethod("touchEvent", this)
 	 * 
-	 * @param v
-	 *            View - The view receiving the touch
-	 * @param me
-	 *            MotionEvent - The Android touch event
+	 * @param v The view receiving the touch
+	 * @param me The Android touch event
 	 */
-	public boolean onTouch(View v, MotionEvent me) {
+	public boolean onTouch( View v, MotionEvent me) {
 
 		// set up the last update time for the touch cursor
 		long timeStamp = System.currentTimeMillis() - startTime;
@@ -180,8 +173,7 @@ class AndroidToTUIO implements OnTouchListener {
 	 * Updates the selected cursor, used when Processing supports
 	 * registerMethod("touchEvent", this)
 	 * 
-	 * @param me
-	 *            MotionEvent - The Android touch event
+	 * @param me The Android touch event
 	 */
 	public boolean onTouchEvent(Object me) {
 		MotionEvent ame = (MotionEvent) me;

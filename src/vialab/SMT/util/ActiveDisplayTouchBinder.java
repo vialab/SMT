@@ -21,7 +21,6 @@ public class ActiveDisplayTouchBinder extends TouchBinder {
 	//contructors
 	/**
 	 * Create a new touch binder that maps touches onto the display that the current sketch is on.
-	 * @return
 	 */
 	public ActiveDisplayTouchBinder(){
 		super();
