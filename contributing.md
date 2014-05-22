@@ -8,7 +8,7 @@ For the most part, just try to be as consise and specific as possible. Please al
  * the version of processing that you're using
  * the version of smt that you're using
  * your current operating system
- * the code of the sketh that caused the issue
+ * the code of the sketch that caused the issue
  * the console output
  * maybe a screenshot?
 
