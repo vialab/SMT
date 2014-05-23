@@ -189,9 +189,9 @@ public class PieMenuZone extends Zone {
 	}
 	/**
 	 * [addSubmenu description]
-	 * @param parent [description]
-	 * @param text [description]
-	 * @param image [description]
+	 * @param parent   [description]
+	 * @param textName [description]
+	 * @param image    [description]
 	 */
 	public void addSubmenu(String parent, String textName, PImage image){
 		addSubmenu(parent, textName, image, textName.replaceAll("\\s", ""));
