@@ -15,7 +15,7 @@ import processing.core.*;
 public class SystemAdapter implements ComponentListener {
 
 	//fields
-	private boolean debug = true;
+	private boolean debug = false;
 	private long last_update;
 
 	//display fields
