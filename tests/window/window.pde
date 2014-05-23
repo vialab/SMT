@@ -7,39 +7,45 @@ import vialab.SMT.util.*;
 int window_width = 1200;
 int window_height = 800;
 SystemAdapter adapter = null;
+long last_update = -1;
+
+//bounds
+Rectangle[] display_bounds;
+Rectangle screen_bounds;
+Rectangle sketch_bounds;
 
 void setup(){
 	size( window_width, window_height, SMT.RENDERER);
 	frame.setResizable( true);
 	SMT.init( this, TouchSource.AUTOMATIC);
 	SMT.setTrailEnabled( true);
-	SMT.setTouchSourceBoundsActiveDisplay( TouchSource.MOUSE);
 	adapter = SMT.getSystemAdapter();
-	adapter.update();
-
-	int display_count = adapter.getDisplayCount();
-	Rectangle screen_bounds = adapter.getScreenBounds();
-	System.out.printf(
-		"display count: %d\n",
-		display_count);
-	System.out.printf(
-		"screen bounds: %d, %d, %d, %d\n",
-		screen_bounds.x, screen_bounds.y,
-		screen_bounds.width, screen_bounds.height);
-}
+}	
 
 void draw(){
 	//update info
 	adapter.update();
+	if( adapter.getLastUpdateTime() > last_update){
+		last_update = adapter.getLastUpdateTime();
+		display_bounds = adapter.getDisplayBounds();
+		screen_bounds = adapter.getScreenBounds();
+		sketch_bounds = adapter.getSketchBounds();
+	}
 
 	//draw background
 	background( 30);
 
-	//draw test ret
+	//setup
 	pushStyle();
-	fill( 240, 240, 240, 180);
-	noStroke();
-	rect( 10, 10, 100, 100);
+	ortho();
+	
+	//draw screen
+
+	//draw displays
+
+	//draw sketch
+
+	//cleanup
 	popStyle();
 }
 

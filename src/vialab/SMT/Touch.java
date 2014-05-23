@@ -21,9 +21,10 @@ import vialab.SMT.util.*;
  * @see <a href=http://www.tuio.org/api/java/TUIO/TuioCursor.html>TuioCursor
  *      Javadoc</a>
  */
-public class Touch extends TuioCursor {
+public class Touch {
 
 	//Public Fields
+	/** The underlying cursor object for this touch */
 	private TuioCursor cursor;
 	/** The individual cursor ID number that is assigned to each TuioCursor. */
 	public int cursorID;
@@ -55,14 +56,12 @@ public class Touch extends TuioCursor {
 	/** The time at which the TuioCursor/Touch was unassigned */
 	public TuioTime deathTime;
 	/**
-	 * A Vector of TuioPoints containing all the previous positions of the TUIO
-	 * component.
+	 * A Vector of TuioPoints containing all the previous positions of the TUIO component.
 	 */
 	public Vector<TuioPoint> path;
 
 	/**
-	 * True means the touch is currently down on the screen, false means that
-	 * the touch has been lifted up.
+	 * True means the touch is currently down on the screen, false means that the touch has been lifted up.
 	 */
 	public boolean isDown;
 
@@ -93,7 +92,7 @@ public class Touch extends TuioCursor {
 	 * @param tuioCursor TuioCursor: The TUIO Cursor
 	 */
 	public Touch( TuioCursor tuioCursor){
-		super( tuioCursor);
+		this.cursor = tuioCursor;
 		//if( true) throw new RuntimeException( "one");
 		this.update( tuioCursor);
 		this.startTimeMillis = System.currentTimeMillis();
@@ -114,7 +113,7 @@ public class Touch extends TuioCursor {
 	 * @param xCoord X Coordinate
 	 * @param yCoord Y Coordinate
 	 */
-	public Touch( long sessionID, int cursorID, float xCoord, float yCoord){
+	/*public Touch( long sessionID, int cursorID, float xCoord, float yCoord){
 		super( sessionID, cursorID, xCoord, yCoord);
 		//if( true) throw new RuntimeException( "two");
 		this.cursorID = getCursorID();
@@ -135,7 +134,7 @@ public class Touch extends TuioCursor {
 		unassignTime = null;
 		deathTime = null;
 		listeners = new Vector<TouchListener>();
-	}
+	}*/
 
 	/**
 	 * This constructor takes a TuioTime argument and assigns it along with the
@@ -149,26 +148,26 @@ public class Touch extends TuioCursor {
 	 * @param yCoord Y Coordinate
 	 */
 	public Touch( TuioTime ttime, long sessionID, int cursorID, float xCoord, float yCoord){
-		super( ttime, sessionID, cursorID, xCoord, yCoord);
+		cursor = new TuioCursor( ttime, sessionID, cursorID, xCoord, yCoord);
 		//if( true) throw new RuntimeException( "three");
-		this.cursorID = getCursorID();
-		position = this.getBoundPosition();
+		this.cursorID = cursor.getCursorID();
+		this.position = getBoundPosition();
 		//x = Math.round( position.x);
 		//y = Math.round( position.y);
-		startTime = getStartTime();
-		currentTime = getTuioTime();
-		xSpeed = getXSpeed();
-		ySpeed = getYSpeed();
-		motionSpeed = getMotionSpeed();
-		motionAcceleration = getMotionAccel();
-		path = getPath();
-		this.sessionID = getSessionID();
-		state = getTuioState();
+		this.startTime = cursor.getStartTime();
+		this.currentTime = cursor.getTuioTime();
+		this.xSpeed = cursor.getXSpeed();
+		this.ySpeed = cursor.getYSpeed();
+		this.motionSpeed = cursor.getMotionSpeed();
+		this.motionAcceleration = cursor.getMotionAccel();
+		this.path = cursor.getPath();
+		this.sessionID = cursor.getSessionID();
+		this.state = cursor.getTuioState();
 		//private fields
-		assignTime = null;
-		unassignTime = null;
-		deathTime = null;
-		listeners = new Vector<TouchListener>();
+		this.assignTime = null;
+		this.unassignTime = null;
+		this.deathTime = null;
+		this.listeners = new Vector<TouchListener>();
 	}
 
 	/**
@@ -188,45 +187,23 @@ public class Touch extends TuioCursor {
 	/**
 	 * @param tuioCursor TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
 	 */
-	public void update( TuioCursor tuioCursor){
+	public void update( TuioCursor cursor){
 		prevUpdateTime = currentTime;
 
-		cursorID = tuioCursor.getCursorID();
-		//xpos = tuioCursor.getX();
-		//ypos = tuioCursor.getY();
-		//System.out.println( tuioCursor.getClass().getName());
-		//System.out.printf( "x, y: %f, %f\n", xpos, ypos);
-
-		super.startTime = tuioCursor.getStartTime();
-		startTime = tuioCursor.getStartTime();
-
-		super.currentTime = tuioCursor.getTuioTime();
-		currentTime = tuioCursor.getTuioTime();
-
-		super.x_speed = tuioCursor.getXSpeed();
-		xSpeed = tuioCursor.getXSpeed();
-
-		super.y_speed = tuioCursor.getYSpeed();
-		ySpeed = tuioCursor.getYSpeed();
-
-		super.motion_speed = tuioCursor.getMotionSpeed();
-		motionSpeed = tuioCursor.getMotionSpeed();
-
-		super.motion_accel = tuioCursor.getMotionAccel();
-		motionAcceleration = tuioCursor.getMotionAccel();
-
-		super.path = tuioCursor.getPath();
-		path = tuioCursor.getPath();
-
-		super.session_id = tuioCursor.getSessionID();
-		sessionID = tuioCursor.getSessionID();
-
-		super.state = tuioCursor.getTuioState();
-		state = tuioCursor.getTuioState();
-
-		position = this.getBoundPosition();
-		x = Math.round( position.x);
-		y = Math.round( position.y);
+		this.cursor = cursor;
+		this.cursorID = cursor.getCursorID();
+		this.startTime = cursor.getStartTime();
+		this.currentTime = cursor.getTuioTime();
+		this.xSpeed = cursor.getXSpeed();
+		this.ySpeed = cursor.getYSpeed();
+		this.motionSpeed = cursor.getMotionSpeed();
+		this.motionAcceleration = cursor.getMotionAccel();
+		this.path = cursor.getPath();
+		this.sessionID = cursor.getSessionID();
+		this.state = cursor.getTuioState();
+		this.position = this.getBoundPosition();
+		this.x = Math.round( position.x);
+		this.y = Math.round( position.y);
 	}
 
 	/**
@@ -302,27 +279,50 @@ public class Touch extends TuioCursor {
 	}
 
 	//accessor methods
-	@Override
+	
+	public TuioCursor getTuioCursor(){
+		return cursor;
+	}
+	
+	public long getSessionID(){
+		return cursor.getSessionID();
+	}
+	
 	public float getX(){
-		return getRawX();
+		return position.x;
 	}
 
-	@Override
 	public float getY(){
-		return getRawX();
+		return position.y;
 	}
 
 	//raw gets
 	public float getRawX(){
-		return super.getX();
+		return cursor.getX();
 	}
 
 	public float getRawY(){
-		return super.getY();
+		return cursor.getY();
 	}
 
 	public PVector getPositionVector(){
 		return position;
+	}
+
+	public PVector getPositionAtTime( TuioTime time){
+		Vector<TuioPoint> path = cursor.getPath();
+		long time_millis = time.getTotalMilliseconds();
+		//search through the path in reverse order
+		for( int i = path.size() - 1; i >=0; i--){
+			//get the time at that point
+			TuioPoint point = path.get( i);
+			long point_millis = point.getTuioTime().getTotalMilliseconds();
+			//return if the point was before the specified time
+			if( point_millis <= time_millis)
+				return getTouchBinder().bind(
+					point.getX(), point.getY());
+		}
+		return null;
 	}
 	public PVector getBoundPosition(){
 		PVector position = getTouchBinder().bind(
@@ -368,14 +368,33 @@ public class Touch extends TuioCursor {
 	}
 
 	/**
+	 * Get the path of the touch as an array of PVectors
+	 * @return All the points on the path
+	 */
+	public PVector[] getPath(){
+		Vector<PVector> points = new Vector<PVector>();
+		TouchBinder binder = this.getTouchBinder();
+		for( TuioPoint point : this.getTuioPath())
+			points.add(
+				binder.bind(
+					point.getX(), point.getY()));
+		return points.toArray( new PVector[ points.size()]);
+	}
+	/**
+	 * Get the raw data path points
+	 * @return [description]
+	 */
+	public Vector<TuioPoint> getTuioPath(){
+		return cursor.getPath();
+	}
+	/**
 	 * @return All the points on the path
 	 */
 	public Point[] getPathPoints(){
 		Vector<Point> points = new Vector<Point>();
-		for (int i = 0; i < path.size(); i++){
-			points.add( getPointOnPath(i));
-		}
-		return points.toArray(new Point[points.size()]);
+		for (int i = 0; i < path.size(); i++)
+			points.add( getPointOnPath( i));
+		return points.toArray( new Point[points.size()]);
 	}
 
 	/**

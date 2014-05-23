@@ -64,7 +64,7 @@ cp-to-usb: package
 	cp SMT.zip /mnt/stronghold/
 
 #test commands
-test: test-touch
+test: test-window
 
 # feature tests
 test-keyboard: build jar

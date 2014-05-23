@@ -29,9 +29,8 @@ void setup(){
 	frameRate( fps_limit);
 	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
-	SMT.setTouchSourceBoundsActiveDisplay( TouchSource.MOUSE);
-	//SMT.setTouchDraw( TouchDraw.NONE);
-	SMT.setTouchDraw( TouchDraw.TEXTURED);
+
+	//set touch drawing options
 	SMT.setTouchRadius( 10);
 	SMT.setTouchColour( 20, 20, 20, 255);
 	SMT.setTrailColour( 20, 20, 20, 180);
