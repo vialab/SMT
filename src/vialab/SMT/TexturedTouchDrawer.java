@@ -13,6 +13,7 @@ import TUIO.*;
 
 //local imports
 import vialab.SMT.event.*;
+import vialab.SMT.util.*;
 
 /**
  * This class uses some nice textures to render touches and their paths.
@@ -127,7 +128,8 @@ public class TexturedTouchDrawer
 			//select points that are within the time threshold
 			Vector<TuioPoint> pathPoints = selectPoints( touch, currentTime);
 			//interpolate the points
-			Vector<CurvePoint> curvePoints = interpolatePoints( graphics, pathPoints);
+			Vector<CurvePoint> curvePoints = interpolatePoints(
+				touch.getTouchBinder(), pathPoints);
 			//draw the points
 			drawCurvePoints( graphics, touch, curvePoints, alpha);
 		}
@@ -195,7 +197,7 @@ public class TexturedTouchDrawer
 	private Vector<TuioPoint> selectPoints( Touch touch, long currentTime){
 		//result points
 		Vector<TuioPoint> points = new Vector<TuioPoint>();
-		Vector<TuioPoint> touch_path = touch.getPath();
+		Vector<TuioPoint> touch_path = touch.getTuioPath();
 		//for every point along the path
 		TuioPoint previous = null;
 		for( int i = touch_path.size() - 1; i >= 0; i--){
@@ -229,7 +231,7 @@ public class TexturedTouchDrawer
 	 * @return the interpolated points
 	 **/
 	private Vector<CurvePoint> interpolatePoints(
-			PGraphics graphics, Vector<TuioPoint> points){
+			TouchBinder binder, Vector<TuioPoint> points){
 		//convenience variables
 		int point_n = points.size();
 		if( point_n < 2) return null;
@@ -261,10 +263,11 @@ public class TexturedTouchDrawer
 			}
 			//avoid death
 			if( sum == 0) continue;
-			x *= graphics.width / sum;
-			y *= graphics.height / sum;
+			PVector result = binder.bind(
+				x / sum, y / sum);
 			//add point
-			CurvePoint curvePoint = new CurvePoint( x, y);
+			CurvePoint curvePoint = new CurvePoint(
+				result.x, result.y);
 			curvePoints.add( curvePoint);
 		}
 		int curvePoints_size = curvePoints.size();

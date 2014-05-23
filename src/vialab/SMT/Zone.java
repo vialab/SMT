@@ -1324,14 +1324,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 		//get first touch
 		Touch first = touches[0];
-		Touch first_old =
-			SMTUtilities.getLastTouchAtTime( first, lastUpdate);
-		if( first_old == null)
-			first_old = first;
 
 		//get touch locations in current co-ordinate system
 		PVector t00_g = first.getPositionVector();
-		PVector t01_g = first_old.getPositionVector();
+		PVector t01_g = first.getPositionAtTime( lastUpdate);
+		if( t01_g == null) t01_g = t00_g;
 		PVector t00 = global_inv.mult( t00_g, null);
 		PVector t01 = global_inv.mult( t01_g, null);
 
@@ -1354,14 +1351,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		else {
 			//get second touch
 			Touch second = touches[1];
-			Touch second_old =
-				SMTUtilities.getLastTouchAtTime( second, lastUpdate);
-			if( second_old == null)
-				second_old = second;
 
 			//get touch locations in current co-ordinate system
 			PVector t10_g = second.getPositionVector();
-			PVector t11_g = second_old.getPositionVector();
+			PVector t11_g = second.getPositionAtTime( lastUpdate);
+			if( t11_g == null) t11_g = t10_g;
 			PVector t10 = global_inv.mult( t10_g, null);
 			PVector t11 = global_inv.mult( t11_g, null);
 
@@ -2416,7 +2410,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 				pairs.add(
 					new TouchPair(
 						SMTUtilities.getLastTouchAtTime(
-							touch, lastUpdate), touch));
+							touch.getTuioCursor(), lastUpdate), touch));
 			}
 		}
 		return pairs;

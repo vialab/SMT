@@ -1572,24 +1572,25 @@ public class SMT {
 		return SMTTouchManager.currentTouchState.getById(s_id);
 	}
 
-	/**
+	/** wtf is this for...
 	 * @param s_id
 	 *            The session_id of the Touch to get the path start of
 	 * @return A new Touch containing the state of the touch at path start
 	 */
-	public static Touch getPathStartTouch(long s_id){
+	/*public static Touch getPathStartTouch(long s_id){
 		TuioCursor c = listener.getTuioCursor(s_id);
 		Vector<TuioPoint> path = new Vector<TuioPoint>(c.getPath());
 
 		TuioPoint start = path.firstElement();
 		return new Touch(start.getTuioTime(), c.getSessionID(), c.getCursorID(), start.getX(),
 				start.getY());
-	}
+	}*/
 
+	// bla bla Touch from bla touch fds touch touch touch update what?
 	/**
 	 * This creates a new Touch object from the last touch of a given Touch
 	 * object, the new Touch will not update.
-	 * <P>
+	 * 
 	 * It is easier to just create a new Touch with the given Touch object as
 	 * its parameter "new Touch(current)" where current is the Touch we want the
 	 * last touch of, so this is deprecated.
@@ -1600,7 +1601,7 @@ public class SMT {
 	 *         consistent
 	 * @deprecated
 	 */
-	public static Touch getLastTouch( Touch current){
+	/*public static Touch getLastTouch( Touch current){
 		Vector<TuioPoint> path = current.path;
 		if( path.size() > 1){
 			TuioPoint last = path.get(path.size() - 2);
@@ -1609,7 +1610,7 @@ public class SMT {
 				last.getX(), last.getY());
 		}
 		else return null;
-	}
+	}*/
 
 	/**
 	 * Returns the number of current Touches (TuioCursors)

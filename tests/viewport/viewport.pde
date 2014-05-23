@@ -11,7 +11,7 @@ void setup(){
 
 	//create zones
 	Zone frame = new Zone( "Frame", 50, 50, 440, 440);
-	ViewPortZone viewport = new ViewPortZone( 20, 20, 400, 400);
+	ViewportZone viewport = new ViewportZone( 20, 20, 400, 400);
 	Zone blue = new Zone( "Blue", 10, 50, 100, 100);
 	Zone red = new Zone( "Red", 50, 10, 100, 100);
 	Zone purple = new Zone( "Purple", 150, 300, 100, 100);
@@ -47,7 +47,7 @@ void touchFrame( Zone zone){
 }
 
 //methods for viewport zone
-void drawViewPortZone( Zone zone){
+void drawViewportZone( Zone zone){
 	background( 10, 10, 10, 180);
 }
 
