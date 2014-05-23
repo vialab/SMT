@@ -1067,8 +1067,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * Performs translate on this zone, using the first assigned touch's movement.
 	 * 
 	 * @param dragX Whether to drag along the x-axis
 	 * @param dragY Whether to drag along the y-axis
@@ -1078,8 +1077,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * Performs translate on this zone, using the first assigned touch's movement.
 	 * 
 	 * @param dragLeft Allow dragging left
 	 * @param dragRight Allow dragging Right
@@ -1096,32 +1094,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
-	 * 
-	 * @param dragLeft Allow dragging left
-	 * @param dragRight Allow dragging Right
-	 * @param dragUp Allow dragging Up
-	 * @param dragDown Allow dragging Down
-	 * @param leftLimit Limit on how far to be able to drag left
-	 * @param rightLimit Limit on how far to be able to drag right
-	 * @param upLimit Limit on how far to be able to drag up
-	 * @param downLimit Limit on how far to be able to drag down
-	 */
-	public void drag(
-			boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown,
-			int leftLimit, int rightLimit, int upLimit, int downLimit){
-		if (!activeTouches.isEmpty()){
-			List<TouchPair> pairs = getTouchPairs(1);
-			drag( pairs.get(0),
-				dragLeft, dragRight, dragUp, dragDown,
-				leftLimit, rightLimit, upLimit, downLimit);
-		}
-	}
-
-	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * Performs translate on this zone, using the first assigned touch's movement.
 	 * 
 	 * @param dragX Allow dragging along the x-axis
 	 * @param dragY Allow dragging along the y-axis
@@ -1139,150 +1112,73 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
+	 * Performs translate on this zone, using the first assigned touch's movement.
 	 * 
-	 * @param from The Touch to drag from
-	 * @param to The Touch to drag to
-	 */
-	public void drag( Touch from, Touch to){
-		drag( from, to, true, true);
-	}
-
-	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
-	 * 
-	 * @param from The Touch to drag from
-	 * @param to The Touch to drag to
-	 * @param dragX Whether to drag along the x-axis
-	 * @param dragY Whether to drag along the y-axis
-	 */
-	public void drag(Touch from, Touch to, boolean dragX, boolean dragY){
-		drag(from, to, dragX, dragX, dragY, dragY);
-	}
-
-	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
-	 * 
-	 * @param from The Touch to drag from
-	 * @param to The Touch to drag to
-	 * @param dragLeft Allow dragging left
-	 * @param dragRight Allow dragging Right
-	 * @param dragUp Allow dragging Up
-	 * @param dragDown Allow dragging Down
-	 */
-	public void drag(Touch from, Touch to, boolean dragLeft, boolean dragRight, boolean dragUp,
-			boolean dragDown){
-		drag(new TouchPair(from, to), dragLeft, dragRight, dragUp, dragDown);
-	}
-
-	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
-	 * 
-	 * @param pair The TouchPair to drag to/from
-	 * @param dragLeft Allow dragging left
-	 * @param dragRight Allow dragging Right
-	 * @param dragUp Allow dragging Up
-	 * @param dragDown Allow dragging Down
-	 */
-	protected void drag(TouchPair pair, boolean dragLeft, boolean dragRight, boolean dragUp,
-			boolean dragDown){
-		drag(pair, dragLeft, dragRight, dragUp, dragDown, Integer.MIN_VALUE, Integer.MAX_VALUE,
-				Integer.MIN_VALUE, Integer.MAX_VALUE);
-	}
-
-	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
-	 * 
-	 * @param pair The TouchPair to drag to/from
-	 * @param dragLeft Allow dragging left
-	 * @param dragRight Allow dragging Right
-	 * @param dragUp Allow dragging Up
-	 * @param dragDown Allow dragging Down
-	 * @param leftLimit Limit on how far to be able to drag left
-	 * @param rightLimit Limit on how far to be able to drag right
-	 * @param upLimit Limit on how far to be able to drag up
-	 * @param downLimit Limit on how far to be able to drag down
-	 */
-	protected void drag(
-			TouchPair pair,
-			boolean dragLeft, boolean dragRight, boolean dragUp, boolean dragDown,
-			int leftLimit, int rightLimit, int upLimit, int downLimit){
-		if (pair.matches()){
-			lastUpdate = maxTime(pair);
-			return;
-		}
-		float tx = pair.to.x;
-		float ty = pair.to.y;
-		if(getParent() != null){
-			tx = getParent().getLocalX( pair.to);
-			ty = getParent().getLocalY( pair.to);
-		}
-		
-		if( ! dragSeenTouch.contains( pair.from.sessionID)){
-			//the first time we see a touch we use its position for the offset
-			//of the Zone from the touch
-			offsetX = pair.from.x - getLocalX();
-			offsetY = pair.from.y - getLocalY();
-			if(getParent() != null){
-				offsetX = getParent().getLocalX( pair.from) - getLocalX();
-				offsetY = getParent().getLocalY( pair.from) - getLocalY();
-			}
-			dragSeenTouch.add(pair.from.sessionID);
-		}
-		
-		if(!dragUp)
-			upLimit = (int) getLocalY();
-		if(!dragDown)
-			downLimit = (int) getLocalY();
-		if(!dragLeft)
-			leftLimit = (int) getLocalX();
-		if(!dragRight)
-			rightLimit = (int) getLocalX();
-		if(dragUp || dragDown)
-			setY( Math.max( upLimit, Math.min( downLimit - height, ty - offsetY)));
-		if(dragLeft || dragRight)
-			setX( Math.max( leftLimit, Math.min( rightLimit - width, tx - offsetX)));
-		
-		lastUpdate = maxTime(pair);
-	}
-
-	/**
-	 * * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
-	 * 
-	 * @param fromX The x value to drag from
-	 * @param fromY The y value to drag from
-	 * @param toX The x value to drag to
-	 * @param toY The y value to drag to
-	 */
-	public void drag(int fromX, int fromY, int toX, int toY){
-		drag(fromX, fromY, toX, toY, true, true);
-	}
-
-	/**
-	 * Performs translate on the current graphics context. Should typically be
-	 * called inside a {@link Zone#beginTouch()} and {@link Zone#endTouch()}.
-	 * 
-	 * @param fromX The x value to drag from
-	 * @param fromY The y value to drag from
-	 * @param toX The x value to drag to
-	 * @param toY The y value to drag to
-	 * @param dragX Whether to drag along the x-axis
-	 * @param dragY Whether to drag along the y-axis
+	 * @param drag_left Allow dragging left
+	 * @param drag_right Allow dragging Right
+	 * @param drag_up Allow dragging Up
+	 * @param drag_down Allow dragging Down
+	 * @param limit_left Limit on how far to be able to drag left
+	 * @param limit_right Limit on how far to be able to drag right
+	 * @param limit_up Limit on how far to be able to drag up
+	 * @param limit_down Limit on how far to be able to drag down
 	 */
 	public void drag(
-			int fromX, int fromY, int toX, int toY, boolean dragX, boolean dragY){
-		if (dragX)
-			translate(toX - fromX, 0);
-		if (dragY)
-			translate(0, toY - fromY);
-	}
+			boolean drag_left, boolean drag_right, boolean drag_up, boolean drag_down,
+			int limit_left, int limit_right, int limit_up, int limit_down){
+		//get touches
+		Touch[] touches = this.getTouches();
+		if( touches.length < 0)
+			return;
 
+		//get global inverse
+		PMatrix3D global = (PMatrix3D) getGlobalMatrix();
+		PMatrix3D global_inv = new PMatrix3D( global);
+		global_inv.invert();
+
+		//get first touch
+		Touch first = touches[0];
+
+		//get touch locations in current co-ordinate system
+		PVector t0_g = first.getPositionVector();
+		PVector t1_g = first.getPositionAtTime( lastUpdate);
+		if( t1_g == null) t1_g = t0_g;
+		PVector t0 = global_inv.mult( t0_g, null);
+		PVector t1 = global_inv.mult( t1_g, null);
+		PVector delta = PVector.sub( t0, t1);
+
+		//clamp right delta
+		if( delta.x > 0)
+			if( ! drag_right || limit_right <= this.x)
+				delta.x = 0;
+			else
+				delta.x = Math.min( delta.x, limit_right - this.x);
+		//clamp left delta
+		if( delta.x < 0)
+			if( ! drag_left || limit_left >= this.x)
+				delta.x = 0;
+			else
+				delta.x = Math.max( delta.x, this.x - limit_left);
+		//clamp up delta
+		if( delta.y > 0)
+			if( ! drag_down || limit_down <= this.y)
+				delta.y = 0;
+			else
+				delta.y = Math.min( delta.y, limit_down - this.y);
+		//clamp down delta
+		if( delta.y < 0)
+			if( ! drag_up || limit_up >= this.y)
+				delta.y = 0;
+			else
+				delta.y = Math.max( delta.y, this.y - limit_up);
+
+		//apply delta
+		translate( delta.x, delta.y);
+
+		//reset last update time
+		lastUpdate = maxTuioTime(
+			lastUpdate, first.currentTime);
+	}
 
 	/**
 	 * Performs rotate/scale/translate 'gesture' on the zone.
@@ -1576,7 +1472,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	public void dragWithinParent(){
 		Zone parent = getParent();
 		if (parent != null)
-			drag( true, true, 0, parent.width, 0, parent.height);
+			drag( true, true,
+				0, parent.width - this.width,
+				0, parent.height - this.height);
 	}
 
 	/////////////////////
