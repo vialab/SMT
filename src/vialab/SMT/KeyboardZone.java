@@ -794,7 +794,7 @@ public class KeyboardZone extends Zone {
 
 	/**
 	 * [getAlpha description]
-	 * @return [description]
+	 * @param alpha [description]
 	 */
 	public void setAlpha(int alpha) {
 		this.alpha = alpha;

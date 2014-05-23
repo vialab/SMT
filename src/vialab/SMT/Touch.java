@@ -185,7 +185,7 @@ public class Touch {
 	}
 
 	/**
-	 * @param tuioCursor TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
+	 * @param cursor TuioCursor to update the Touch with, since Touch extends TuioCursor, it can also take a Touch
 	 */
 	public void update( TuioCursor cursor){
 		prevUpdateTime = currentTime;

@@ -1,7 +1,5 @@
 ## How to get started with helping develop SMT
 
-==============================================
-
 
 ### Submitting Issues
 For the most part, just try to be as consise and specific as possible. Please also include the following ( when relevant ):
@@ -34,5 +32,5 @@ make package
 ```
 This will build SMT and create SMT.zip
 
-### What else...
-
+### Tests
+A number of basic tests are located in the tests folder. Some of these are feature tests, some are just basic functionality tests.

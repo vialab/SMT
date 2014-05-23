@@ -612,7 +612,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 	/**
 	 * Invokes the appropriate touch function for this zone.
-	 * @param touch the touch that touched this zone
 	 */
 	protected void invokeTouchMethod(){
 		//invoke proper touch method
