@@ -361,6 +361,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			extra_graphics.ortho();
 		}
 
+		//translate up a bit to prevent z-fighting
+		//translate( 0f, 0f, 0.5f);
+
 		//push transformations
 		if( this.isDirect()){
 			pushMatrix();
@@ -432,6 +435,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 		beginPickDraw();
 
+		//translate up a bit to prevent z-fighting
+		//translate( 0f, 0f, 0.5f);
+
 		//push transformations
 		if( this.isDirect()){
 			pushMatrix();
@@ -465,8 +471,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		popStyle();
 
 		//draw children
-		for( Zone child : children)
+		for( Zone child : children){
+			//translate up a bit to prevent z-fighting
+			translate( 0f, 0f, 0.5f);
 			child.invokePickDraw();
+		}
 
 		//pop transformations
 		if( this.isDirect())
@@ -541,12 +550,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		PMatrix3D posttouch = (PMatrix3D) super.getMatrix();
 
 		//tell our children to invoke touch
-		for( Zone child : children){
-			//translate up a bit to prevent z-fighting
-			translate( 0f, 0f, 0.5f);
+		for( Zone child : children)
 			if( child.isActive() || child.hasActiveChild())
 				child.invokeTouch();
-		}
 
 		//clean up
 		endTouch();

@@ -20,6 +20,7 @@ import vialab.SMT.swipekeyboard.*;
  */
 
 // display properties
+boolean window_fullscreen = false;
 int window_width = 1600;
 int window_height = 900;
 int window_halfWidth;
@@ -42,8 +43,10 @@ boolean arrow_up_visible;
 
 // main functions
 public void setup(){
-	window_width = displayWidth;
-	window_height = displayHeight;
+	if( window_fullscreen){
+		window_width = displayWidth;
+		window_height = displayHeight;
+	}
 	window_halfWidth = window_width / 2;
 	window_halfHeight = window_height / 2;
 	//processing library setup

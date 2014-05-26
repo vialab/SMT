@@ -1373,10 +1373,17 @@ public class SMT {
 	 */
 	public static void draw(){
 
+		//invoke zone's draw methods
 		renderer.pushStyle();
 		renderer.pushMatrix();
 		renderer.ortho();
 		sketch.invokeDraw();
+		renderer.popMatrix();
+		renderer.popStyle();
+		//invoke zone's touch methods
+		renderer.pushStyle();
+		renderer.pushMatrix();
+		renderer.ortho();
 		sketch.invokeTouch();
 		renderer.popMatrix();
 		renderer.popStyle();

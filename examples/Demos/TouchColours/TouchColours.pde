@@ -2,6 +2,7 @@
 import vialab.SMT.*;
 
 //constants
+boolean window_fullscreen = false;
 int window_width = 1200;
 int window_height = 800;
 int window_halfWidth;
@@ -12,6 +13,10 @@ int fps_limit = 60;
 
 //main functions
 void setup(){
+	if( window_fullscreen){
+		window_width = displayWidth;
+		window_height = displayHeight;
+	}
 	window_halfWidth = window_width / 2;
 	window_halfHeight = window_height / 2;
 	//processing window setup

@@ -11,6 +11,7 @@ import java.util.Vector;
 import vialab.SMT.*;
 
 //constants
+boolean window_fullscreen = false;
 int display_width = 1200;
 int display_height = 800;
 final int fps_limit = 60;
@@ -34,8 +35,10 @@ public int display_halfHeight;
 
 //main functions
 void setup(){
-	display_width = displayWidth;
-	display_height = displayHeight;
+	if( window_fullscreen){
+		window_width = displayWidth;
+		window_height = displayHeight;
+	}
 	display_halfWidth = display_width / 2;
 	display_halfHeight = display_height / 2;
 	//processing library setup
