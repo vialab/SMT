@@ -74,15 +74,15 @@ test-touchcolours: build jar
 
 # examples
 test-tablehockey: build jar
-	pshell -p examples/Demos/TableHockey
+	pshell examples/Demos/TableHockey
 
 # tutorials
 test-tutorial1: build jar
-	pshell -p examples/Tutorial/One
+	pshell examples/Tutorial/One
 test-tutorial2: build jar
-	pshell -p examples/Tutorial/Two
+	pshell examples/Tutorial/Two
 test-tutorial3: build jar
-	pshell -p examples/Tutorial/Three
+	pshell examples/Tutorial/Three
 test-tutorial4: build jar
 	pshell examples/Tutorial/Four
 

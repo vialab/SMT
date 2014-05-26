@@ -362,7 +362,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 
 		//translate up a bit to prevent z-fighting
-		translate( 0f, 0f, 0.5f);
+		translate( 0f, 0f, 0.05f);
 
 		//push transformations
 		if( this.isDirect()){
@@ -436,7 +436,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		beginPickDraw();
 
 		//translate up a bit to prevent z-fighting
-		translate( 0f, 0f, 0.5f);
+		translate( 0f, 0f, 0.05f);
 
 		//push transformations
 		if( this.isDirect()){
