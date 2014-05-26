@@ -372,11 +372,11 @@ public class TexturedTouchDrawer
 			//place the next two bits of the quad strip
 			graphics.vertex(
 				(float) ( point.x + nx * scale),
-				(float) ( point.y + ny * scale),
+				(float) ( point.y + ny * scale), 100f,
 				(float) t, 0.0f);
 			graphics.vertex(
 				(float) ( point.x - nx * scale),
-				(float) ( point.y - ny * scale),
+				(float) ( point.y - ny * scale), 100f,
 				(float) t, 1.0f);
 		}
 		//clean up

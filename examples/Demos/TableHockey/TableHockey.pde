@@ -12,8 +12,8 @@ import vialab.SMT.*;
 
 //constants
 boolean window_fullscreen = false;
-int display_width = 1200;
-int display_height = 800;
+int window_width = 1200;
+int window_height = 800;
 final int fps_limit = 60;
 final int puck_count = 10;
 
@@ -30,8 +30,8 @@ public PVector bottomRightCorner;
 public Net player;
 public Net enemy;
 //other
-public int display_halfWidth;
-public int display_halfHeight;
+public int window_halfWidth;
+public int window_halfHeight;
 
 //main functions
 void setup(){
@@ -39,11 +39,11 @@ void setup(){
 		window_width = displayWidth;
 		window_height = displayHeight;
 	}
-	display_halfWidth = display_width / 2;
-	display_halfHeight = display_height / 2;
+	window_halfWidth = window_width / 2;
+	window_halfHeight = window_height / 2;
 	//processing library setup
 	frameRate( fps_limit);
-	size( display_width, display_height, SMT.RENDERER);
+	size( window_width, window_height, SMT.RENDERER);
 	//smt library setup
 	SMT.init( this, TouchSource.AUTOMATIC);
 	SMT.setTouchColour( 30, 30, 30, 150);
@@ -62,9 +62,9 @@ void setup(){
 
 	//create corners
 	topLeftCorner = new PVector( 0, 0);
-	topRightCorner = new PVector( display_width, 0);
-	bottomLeftCorner = new PVector( 0, display_height);
-	bottomRightCorner = new PVector( display_width, display_height);
+	topRightCorner = new PVector( window_width, 0);
+	bottomLeftCorner = new PVector( 0, window_height);
+	bottomRightCorner = new PVector( window_width, window_height);
 
 	//create walls
 	walls = new Vector<Wall>();
@@ -74,8 +74,8 @@ void setup(){
 	walls.add( new Wall( bottomLeftCorner, topLeftCorner));
 
 	//create nets
-	player = new Net( "Player", 0, display_halfHeight, 50, 400);
-	enemy = new Net( "Enemy", display_width, display_halfHeight, 50, 400);
+	player = new Net( "Player", 0, window_halfHeight, 50, 400);
+	enemy = new Net( "Enemy", window_width, window_halfHeight, 50, 400);
 	SMT.add( player);
 	SMT.add( enemy);
 
@@ -93,7 +93,7 @@ void setup(){
 void draw(){
 	fill( 255, 255, 255);
 	//draw background
-	rect( 0, 0, display_width, display_height);
+	rect( 0, 0, window_width, window_height);
 	
 	//draw scores
 	textSize(32);
@@ -101,13 +101,13 @@ void draw(){
 	
 	//draw player score
 	textAlign( RIGHT);
-	text( String.format( "%d", player.score), display_halfWidth - 15, 32);
+	text( String.format( "%d", player.score), window_halfWidth - 15, 32);
 	//draw separator
 	textAlign( CENTER);
-	text( ":", display_halfWidth, 32);
+	text( ":", window_halfWidth, 32);
 	//draw enemy score
 	textAlign( LEFT);
-	text( String.format( "%d", enemy.score), display_halfWidth + 15, 32);
+	text( String.format( "%d", enemy.score), window_halfWidth + 15, 32);
 }
 
 void stop(){
@@ -211,8 +211,8 @@ class Puck extends Zone {
 			random( -initialSpeedBound, initialSpeedBound),
 			random( -initialSpeedBound, initialSpeedBound));
 		position = new PVector(
-			display_halfWidth + (int) random(-5, 5),
-			display_halfHeight + (int) random(-5, 5));
+			window_halfWidth + (int) random(-5, 5),
+			window_halfHeight + (int) random(-5, 5));
 		for( Touch touch : this.getTouches()){
 			touch.unassignZone( this);
 		}

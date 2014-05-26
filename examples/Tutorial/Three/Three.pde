@@ -8,18 +8,21 @@ void setup(){
 
 	//Make a new Zone
 	Zone zone = new Zone( "MyZone");
-	SMT.add( zone);
+	zone.setSize( 400, 400);
 	zone.translate( 100, 100);
+	SMT.add( zone);
 
 	//Make a child Zone
 	Zone child = new Zone( "ChildZone");
-	zone.add( child);
+	child.setSize( 200, 200);
 	child.translate( 100, 100);
+	zone.add( child);
 
 	//Make a grandchild Zone
 	Zone grandchild = new Zone( "GrandChildZone");
-	child.add( grandchild);
+	grandchild.setSize( 100, 100);
 	grandchild.translate( 50, 50);
+	child.add( grandchild);
 }
 
 //Draw function for the sketch
