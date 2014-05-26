@@ -1,9 +1,17 @@
 import vialab.SMT.*;
 
+boolean window_fullscreen = false;
+int window_width = 1600;
+int window_height = 900;
+
 //Setup function for the applet
 void setup(){
+  if( window_fullscreen){
+    window_width = displayWidth;
+    window_height = displayHeight;
+  }
 	//SMT and Processing setup
-	size( displayWidth, displayHeight, SMT.RENDERER);
+	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//Make a new Zone

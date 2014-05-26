@@ -40,5 +40,9 @@ void setup(){
 
 void draw(){
 	//draw background
-	background( 50, 50, 50);
+	background( 30);
+}
+
+void touchZone( Zone zone){
+	zone.rst();
 }

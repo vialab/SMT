@@ -12,8 +12,8 @@ import vialab.SMT.*;
 
 //constants
 boolean window_fullscreen = false;
-int window_width = 1200;
-int window_height = 800;
+int window_width = 1600;
+int window_height = 900;
 final int fps_limit = 60;
 final int puck_count = 10;
 
@@ -85,7 +85,7 @@ void setup(){
 
 	//start up the physics engine
 	try{
-		Thread.sleep( 1000);
+		Thread.sleep( 0);
 	} catch( InterruptedException e){}
 	physics.start();
 }
