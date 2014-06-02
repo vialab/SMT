@@ -1254,9 +1254,8 @@ public class SMT {
 	 * @param zones The zones to add to the parent as children
 	 */
 	public static boolean addChild(Zone parent, Zone... zones){
-		if (parent != null){
-			return parent.add(zones);
-		}
+		if (parent != null)
+			return parent.add( zones);
 		else {
 			System.err.println("Warning: parent specified in addChild() is null");
 			return false;
@@ -1272,7 +1271,7 @@ public class SMT {
 	 *            The zones to add to the parent as children
 	 */
 	public static boolean addChild(String parentName, Zone... zones){
-		return addChild(get(parentName), zones);
+		return addChild( get( parentName), zones);
 	}
 
 	/**

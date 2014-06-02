@@ -2095,9 +2095,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	public void setWidth( int width){
 		super.setSize( width, dimension.height);
-		this.width = width;
-		this.dimension.width = width;
-		this.halfDimension.width = width / 2;
 	}
 	/**
 	 * Set the height of this zone
@@ -2105,9 +2102,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	public void setHeight( int height){
 		super.setSize( dimension.width, height);
-		this.height = height;
-		this.dimension.height = height;
-		this.halfDimension.height = height / 2;
 	}
 
 	/**
