@@ -283,6 +283,9 @@ public class Touch {
 	public TuioCursor getTuioCursor(){
 		return cursor;
 	}
+	public TuioTime getTuioTime(){
+		return cursor.getTuioTime();
+	}
 	
 	public long getSessionID(){
 		return cursor.getSessionID();
