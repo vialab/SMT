@@ -178,10 +178,25 @@ public class SystemAdapter implements ComponentListener {
 	 * @return the bounds of the display that the sketch is currently on
 	 */
 	public Rectangle getActiveDisplayBounds(){
+		String active_id = getActiveDisplayID();
+		return getDisplayBounds( active_id);
+	}
+	/**
+	 * Get the index of the active display in the display array
+	 * @return the index of the currently active display
+	 */
+	public int getActiveDisplayIndex(){
+		String active_id = getActiveDisplayID();
+		return getDisplayIndex( active_id);
+	}
+	/**
+	 * Get the id of the active display
+	 * @return the id of the active display
+	 */
+	public String getActiveDisplayID(){
 		GraphicsDevice active_device =
 			window.getGraphicsConfiguration().getDevice();
-		String active_id = active_device.getIDstring();
-		return getDisplayBounds( active_id);
+		return active_device.getIDstring();
 	}
 	/**
 	 * Get the bounds of the display at the specified index in the display list.
@@ -199,12 +214,8 @@ public class SystemAdapter implements ComponentListener {
 	 * @return the bounds of the display with the specified id string
 	 */
 	public Rectangle getDisplayBounds( String id){
-		for( int i = 0; i < devices.length; i++)
-			if( devices[i].getIDstring().equals( id))
-				return display_bounds[ i];
-		throw new NoSuchElementException(
-			String.format(
-				"Could not find a display with the id %s", id));
+		int index = getDisplayIndex( id);
+		return display_bounds[ index];
 	}
 	/**
 	 * Get the bounds of all displays.
@@ -220,6 +231,43 @@ public class SystemAdapter implements ComponentListener {
 	public int getDisplayCount(){
 		return device_count;
 	}
+
+	/**
+	 * Get the ID string of the display at the specified index
+	 * @param index the index of the display
+	 * @return the ID string of the display at the specified index
+	 */
+	public String getDisplayID( int index){
+		if( index >= 0 || index < display_bounds.length)
+		return devices[ index].getIDstring();
+		else
+			throw new ArrayIndexOutOfBoundsException( index);
+	}
+	/**
+	 * Get the ID string of the display at the specified index
+	 * @param index the index of the display
+	 * @return the ID string of the display at the specified index
+	 */
+	public String[] getDisplayIDs(){
+		String[] result = new String[ devices.length];
+		for( int i = 0; i < devices.length; i++)
+			result[i] = devices[i].getIDstring();
+		return result;
+	}
+	/**
+	 * Get the index of the display with the specified id string
+	 * @param id the ID string of the display
+	 * @return the index of the display
+	 */
+	public int getDisplayIndex( String id){
+		for( int i = 0; i < devices.length; i++)
+			if( devices[i].getIDstring().equals( id))
+				return i;
+		throw new NoSuchElementException(
+			String.format(
+				"Could not find a display with the id %s", id));
+	}
+
 	/**
 	 * Get the display at the specified index in the display list.
 	 * @param  index the index of the desired display
