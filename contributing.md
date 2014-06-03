@@ -34,3 +34,9 @@ This will build SMT and create SMT.zip
 
 ### Tests
 A number of basic tests are located in the tests folder. Some of these are feature tests, some are just basic functionality tests.
+
+### Code Style
+asdfasdfasdf
+
+### Commit Guidelines
+texttext
