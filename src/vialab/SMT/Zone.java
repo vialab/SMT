@@ -168,85 +168,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	private PGraphics3D extra_graphics;
 
 	/**
-	 * Check state of the direct flag.
-	 * 
-	 * The direct flag controls whether rendering directly onto
-	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
-	 * drawing into an image we have assured size(cant draw outside of zone),
-	 * and background() will work for just the zone, but we lose a large amount
-	 * of performance.
-	 * 
-	 * @return whether zone is rendering directly onto screen/pickBuffer, or not
-	 */
-	public boolean isDirect(){
-		return direct;
-	}
-
-	/**
-	 * Change state of the direct flag.
-	 * 
-	 * The direct flag controls whether rendering directly onto
-	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
-	 * drawing into an image we have assured size(cant draw outside of zone),
-	 * and background() will work for just the zone, but we lose a large amount
-	 * of performance.
-	 *
-	 * @param enabled Whether the direct flag should be enabled
-	 */
-	public void setDirect( boolean enabled){
-		if( enabled){
-			this.vertices = null;
-			this.tessGeo = null;
-			this.texCache = null;
-			this.inGeo = null;
-			this.extra_graphics = null;
-		}
-		else{
-			//create offscreen graphics context
-			PGraphics extra_object = applet.createGraphics(
-				this.dimension.width,
-				this.dimension.height,
-				this.renderer_name);
-			//double-check the class
-			if( ! PGraphics3D.class.isInstance( extra_object))
-				throw new ClassCastException(
-					"Must use PGraphics3D, or a class that extends PGraphics3D as the renderer for zones.");
-			extra_graphics = (PGraphics3D) extra_object;
-			//draw the background
-			extra_graphics.beginDraw();
-			extra_graphics.background( 0, 0);
-			extra_graphics.endDraw();
-			setModified();
-		}
-		this.direct = enabled;
-	}
-
-	/**
-	 * Ensures that the extra_graphics object is initialized if it's supposed to be.
-	 */
-	private void extraGraphicsNullCheck(){
-		if( ! direct)
-			if( extra_graphics == null)
-				setDirect( false);
-	}
-
-	/**
-	 * Normally, zones "capture" touches. This means that normally when touches exit a zone, they remain assigned to that zone. This "capturing" behavior, however, can be disabled. This is commonly done with buttons and UI elements.
-	 *
-	 * @param enabled whether touch capturing should be enabled
-	 */
-	public void setCaptureTouchesEnabled( boolean enabled){
-		captureTouches = enabled;
-	}
-
-	/**
-	 * Normally, zones "capture" touches. This means that normally when touches exit a zone, they remain assigned to that zone. This "capturing" behavior, however, can be disabled. This is commonly done with buttons and UI elements.
-	 */
-	public boolean getCaptureTouchesEnabled(){
-		return captureTouches;
-	}
-
-	/**
 	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are 1
 	 */
 	public Zone(){
@@ -1750,6 +1671,85 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	//////////////////////
 	// Other Accessors //
 	//////////////////////
+
+	/**
+	 * Check state of the direct flag.
+	 * 
+	 * The direct flag controls whether rendering directly onto
+	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
+	 * drawing into an image we have assured size(cant draw outside of zone),
+	 * and background() will work for just the zone, but we lose a large amount
+	 * of performance.
+	 * 
+	 * @return whether zone is rendering directly onto screen/pickBuffer, or not
+	 */
+	public boolean isDirect(){
+		return direct;
+	}
+
+	/**
+	 * Change state of the direct flag.
+	 * 
+	 * The direct flag controls whether rendering directly onto
+	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
+	 * drawing into an image we have assured size(cant draw outside of zone),
+	 * and background() will work for just the zone, but we lose a large amount
+	 * of performance.
+	 *
+	 * @param enabled Whether the direct flag should be enabled
+	 */
+	public void setDirect( boolean enabled){
+		if( enabled){
+			this.vertices = null;
+			this.tessGeo = null;
+			this.texCache = null;
+			this.inGeo = null;
+			this.extra_graphics = null;
+		}
+		else{
+			//create offscreen graphics context
+			PGraphics extra_object = applet.createGraphics(
+				this.dimension.width,
+				this.dimension.height,
+				this.renderer_name);
+			//double-check the class
+			if( ! PGraphics3D.class.isInstance( extra_object))
+				throw new ClassCastException(
+					"Must use PGraphics3D, or a class that extends PGraphics3D as the renderer for zones.");
+			extra_graphics = (PGraphics3D) extra_object;
+			//draw the background
+			extra_graphics.beginDraw();
+			extra_graphics.background( 0, 0);
+			extra_graphics.endDraw();
+			setModified();
+		}
+		this.direct = enabled;
+	}
+
+	/**
+	 * Ensures that the extra_graphics object is initialized if it's supposed to be.
+	 */
+	private void extraGraphicsNullCheck(){
+		if( ! direct)
+			if( extra_graphics == null)
+				setDirect( false);
+	}
+
+	/**
+	 * Normally, zones "capture" touches. This means that normally when touches exit a zone, they remain assigned to that zone. This "capturing" behavior, however, can be disabled. This is commonly done with buttons and UI elements.
+	 *
+	 * @param enabled whether touch capturing should be enabled
+	 */
+	public void setCaptureTouchesEnabled( boolean enabled){
+		captureTouches = enabled;
+	}
+
+	/**
+	 * Normally, zones "capture" touches. This means that normally when touches exit a zone, they remain assigned to that zone. This "capturing" behavior, however, can be disabled. This is commonly done with buttons and UI elements.
+	 */
+	public boolean getCaptureTouchesEnabled(){
+		return captureTouches;
+	}
 
 	/**
 	 * Get the current pick color of this zone.
