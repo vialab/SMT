@@ -1,6 +1,6 @@
 #globals
-default: build jar
-freshen: clean build jar
+default: build
+freshen: clean build
 clean: clean-specials
 	rm -rf bin/*
 clean-specials:
@@ -27,7 +27,7 @@ $(class_files): bin/%.class : src/%.java
 	javac -cp $(cp) $(dest) $(java_version) $(warnings) $<
 
 #basic commands
-build: $(class_files)
+build: $(class_files) $(jar_file)
 
 $(jar_file): $(class_files)
 	jar cf $(jar_file) -C bin vialab/
@@ -67,41 +67,41 @@ cp-to-usb: package
 test: test-window
 
 # feature tests
-test-keyboard: build jar
+test-keyboard: build
 	pshell examples/Demos/Keyboard
-test-touchcolours: build jar
+test-touchcolours: build
 	pshell examples/Demos/TouchColours
 
 # examples
-test-tablehockey: build jar
+test-tablehockey: build
 	pshell examples/Demos/TableHockey
 
 # tutorials
-test-tutorial1: build jar
+test-tutorial1: build
 	pshell examples/Tutorial/One
-test-tutorial2: build jar
+test-tutorial2: build
 	pshell examples/Tutorial/Two
-test-tutorial3: build jar
+test-tutorial3: build
 	pshell examples/Tutorial/Three
-test-tutorial4: build jar
+test-tutorial4: build
 	pshell examples/Tutorial/Four
 
 # prototypes
-test-ripple: build jar
+test-ripple: build
 	pshell tests/ripple
-test-trail: build jar
+test-trail: build
 	pshell tests/trail
-test-viewport: build jar
+test-viewport: build
 	pshell tests/viewport
 
 # other tests
-test-anon: build jar
+test-anon: build
 	pshell tests/anon
-test-basic: build jar
+test-basic: build
 	pshell tests/basic
-test-methods: build jar
+test-display: build
+	pshell tests/display
+test-methods: build
 	pshell tests/methods
-test-touch: build jar
+test-touch: build
 	pshell tests/touch
-test-window: build jar
-	pshell tests/window

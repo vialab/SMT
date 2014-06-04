@@ -1,6 +1,9 @@
-//imports
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
+//standard library imports
+import java.awt.*;
+import java.awt.geom.*;
+import javax.swing.*;
+
+//smt imports
 import vialab.SMT.*;
 import vialab.SMT.util.*;
 
@@ -131,14 +134,16 @@ void draw(){
 	drawSketch();
 
 	//draw mouse
+	drawMouse();
 
 	//draw touches
-
+	drawTouches();
 
 	//cleanup
 	popMatrix();
 	popStyle();
 }
+void touchView( Zone zone){}
 
 void drawDisplay( int i){
 	//prep
@@ -161,7 +166,28 @@ void drawDisplay( int i){
 	fill( 180, 230, 200, 240);
 	textAlign( LEFT, TOP);
 	textSize( 50);
+	textMode( MODEL);
 	text( text, bounds.x + 50, bounds.y + 50);
+}
+
+void drawMouse(){
+	PointerInfo pinfo = MouseInfo.getPointerInfo();
+	Point mouse = pinfo.getLocation();
+	String mouse_text = String.format(
+		"Mouse:\n%d, %d", mouse.x, mouse.y);
+	// draw circle
+	noFill();
+	stroke( 140, 220, 200, 200);
+	strokeWeight( 2);
+	ellipse( mouse.x, mouse.y, 35, 35);
+	// draw dot
+	fill( 140, 220, 200, 200);
+	noStroke();
+	ellipse( mouse.x, mouse.y, 5, 5);
+	// draw mouse text
+	textAlign( LEFT, CENTER);
+	textSize( 35);
+	text( mouse_text, mouse.x + 30, mouse.y + 5);
 }
 
 void drawScreenBounds(){
@@ -179,6 +205,7 @@ void drawScreenText(){
 	noStroke();
 	textAlign( CENTER, BOTTOM);
 	textSize( 25);
+	textMode( MODEL);
 	text( screen_text, window_width / 2, window_height);
 }
 
@@ -195,7 +222,10 @@ void drawSketch(){
 	fill( 180, 230, 200, 180);
 	textAlign( CENTER, TOP);
 	textSize( 60);
+	textMode( MODEL);
 	text( sketch_text,
 		sketch_bounds.x + sketch_bounds.width / 2 + 20,
 		sketch_bounds.y + 20);
 }
+
+void drawTouches(){}
