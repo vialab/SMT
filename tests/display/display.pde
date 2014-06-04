@@ -228,4 +228,24 @@ void drawSketch(){
 		sketch_bounds.y + 20);
 }
 
-void drawTouches(){}
+void drawTouches(){
+	translate( sketch_bounds.x, sketch_bounds.y);
+	Touch[] touches = SMT.getTouches();
+	for( Touch touch : touches){
+		String touch_text = String.format(
+			"Touch:\n%.0f, %.0f", touch.getX(), touch.getY());
+		// draw circle
+		noFill();
+		stroke( 140, 220, 200, 200);
+		strokeWeight( 2);
+		ellipse( touch.getX(), touch.getY(), 35, 35);
+		// draw dot
+		fill( 140, 220, 200, 200);
+		noStroke();
+		ellipse( touch.getX(), touch.getY(), 5, 5);
+		// draw touch getT()ext
+		textAlign( LEFT, CENTER);
+		textSize( 35);
+		text( touch_text, touch.getX() + 30, touch.getY() + 5);
+	}
+}
