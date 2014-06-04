@@ -35,7 +35,7 @@ void draw(){
 void drawFrame( Zone zone){
 	pushMatrix();
 	pushStyle();
-	fill( 30, 60, 30, 180);
+	fill( 30, 30, 30, 180);
 	stroke( 240, 240, 240, 220);
 	strokeWeight( 5);
 	rect( 0, 0, zone.width + 00, zone.height + 00, 0);
@@ -48,7 +48,10 @@ void touchFrame( Zone zone){
 
 //methods for viewport zone
 void drawViewportZone( Zone zone){
-	background( 10, 10, 10, 180);
+	background( 40, 70, 70, 180);
+}
+void touchViewportZone( Zone zone){
+	zone.rst( false, true, true);
 }
 
 //methods for the "blue" zone

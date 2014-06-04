@@ -15,10 +15,7 @@ public class ViewportZone extends Zone {
 	 * Create a new viewport zone with the default initial position and size
 	 */
 	public ViewportZone(){
-		super();
-		this.setDirect( false);
-		container = new Container();
-		super.add( container);
+		this( null, 0, 0, 100, 100);
 	}
 	/**
 	 * Create a new viewport zone with the specified initial position and size
@@ -28,9 +25,20 @@ public class ViewportZone extends Zone {
 	 * @param height the desired height of the viewport zone
 	 */
 	public ViewportZone( int x, int y, int width, int height){
-		super( x, y, width, height);
+		this( null, x, y, width, height);
+	}
+	/**
+	 * Create a new viewport zone with the specified initial position and size
+	 * @param name the desired name of the zone
+	 * @param x the desired x position of the viewport zone, relative to it's parent zone
+	 * @param y the desired y position of the viewport zone, relative to it's parent zone
+	 * @param width the desired width of the viewport zone
+	 * @param height the desired height of the viewport zone
+	 */
+	public ViewportZone( String name, int x, int y, int width, int height){
+		super( name, x, y, width, height);
 		this.setDirect( false);
-		container = new Container();
+		container = new Container( this.getName());
 		super.add( container);
 	}
 
@@ -56,26 +64,11 @@ public class ViewportZone extends Zone {
 		return container.add( zone);
 	}
 
-	/**
-	 * Viewport zone overrides the invokeTouch function in order to redirect any changes to it's transformation matrix to the internal container zone.
-	 */
 	@Override
-	public void invokeTouch(){
-		//save our current matrix
-		PMatrix3D pretouch = new PMatrix3D( matrix);
-		PMatrix3D pretouch_inv = new PMatrix3D( matrix);
-		pretouch_inv.invert();
-		//do the touching stuff
-		super.invokeTouch();
-		//get the change
-		PMatrix3D posttouch = new PMatrix3D( matrix);
-		PMatrix3D change = new PMatrix3D();
-		change.apply( pretouch_inv);
-		change.apply( posttouch);
-		//apply the change to our container instead
-		container.matrix.apply( change);
-		//revert the change to our matrix
-		this.matrix = pretouch;
+	public void setName( String name){
+		super.setName( name);
+		if( container != null)
+			container.setName( name);
 	}
 
 	/**
@@ -87,29 +80,83 @@ public class ViewportZone extends Zone {
 	}
 	/**
 	 * The viewport zone does nothing on touch - because all the touches are assigned to the container zone.
+	 *
+	 * This method should never be invoked, but could be, theoretically.
 	 */
 	@Override
 	public void touch(){}
+
+	//warn overrides
+	@Override
+	boolean warnDraw(){
+		return false;
+	}
+	@Override
+	boolean warnTouch(){
+		return false;
+	}
+
+	//accessor functions
+	/**
+	 * Sets the name of the zone used to contain all children so that it's touchMyZone( Zone) method can be written in the PApplet.
+	 * @param name the desired name of the container
+	 */
+	public void setContainerName( String name){
+		container.setName( name);
+	}
+	/**
+	 * Sets the zone used to contain all children.
+	 * 
+	 * Use this if you want to use a custom class that extends ViewportZone.Container for this viewport's container. This function will not migrate any current children from the old container to this new contain. It is recommended that if a migration is required or desireable, it be done manually.
+	 * @param name the desired container
+	 */
+	public void setContainer( Container container){
+		this.container = container;
+	}
+	/**
+	 * Gets the zone currently being used to contain all children.
+	 * 
+	 * Use this if you want to access the container directly, or if you want to be able to switch containers in a viewport zone, then be able to switch them back.
+	 *
+	 * One does not need to use this function to add zones to the viewport. ViewportZone.add( Zone) actually adds the zones to the viewport's container.
+	 *
+	 * @return the zone currently being used to contain all children.
+	 */
+	public Container getContainer(){
+		return this.container;
+	}
 
 	//subclasses
 	/**
 	 * A little subclass used for containing all the zones added to the viewport zone
 	 */
-	private class Container extends Zone {
-		//do nothing for the zone methods
-		/**
-		 * Draws nothing
-		 */
-		public void draw(){}
-		/**
-		 * Cannot be picked
-		 */
-		public void pickDraw(){}
-		/**
-		 * RSTs on touch
-		 */
+	protected class Container extends Zone {
+		public Container(){
+			this( "ViewportContainerZone");
+		}
+		public Container( String name){
+			super( name, 0, 0, 100, 100);
+		}
+		//override the drawing method invokation functions to permanantly disable draing and pick-drawing, as well as prevent conflicts with the PApplet methods for the parent view-port's draw and pick draw methods.
+		@Override
+		public void invokeDrawMethod(){}
+		@Override
+		public void invokePickDrawMethod(){}
+
+		//default touch method is rst
+		@Override
 		public void touch(){
 			this.rst();
+		}
+
+		//warn overrides
+		@Override
+		boolean warnDraw(){
+			return false;
+		}
+		@Override
+		boolean warnTouch(){
+			return false;
 		}
 	}
 }

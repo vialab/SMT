@@ -296,12 +296,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 
 		//invoke proper draw method
-		if( method_draw != null)
-			SMTUtilities.invoke( method_draw, applet, this);
-		else if( drawImpl_overridden)
-			drawImpl();
-		else
-			draw();
+		invokeDrawMethod();
 
 		//drawing cleanup
 		popStyle();
@@ -334,6 +329,18 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		//cleanup
 		this.setDelegate( null);
 		drawing_on = false;
+	}
+
+	/**
+	 * Selects and invokes the appropriate draw method
+	 */
+	public void invokeDrawMethod(){
+		if( method_draw != null)
+			SMTUtilities.invoke( method_draw, applet, this);
+		else if( drawImpl_overridden)
+			drawImpl();
+		else
+			draw();
 	}
 
 	/**
@@ -380,12 +387,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		picking_on = true;
 
 		//invoke proper draw method
-		if( method_pickDraw != null)
-			SMTUtilities.invoke( method_pickDraw, applet, this);
-		else if( pickDrawImpl_overridden)
-			pickDrawImpl();
-		else
-			pickDraw();
+		invokePickDrawMethod();
 
 		//picking cleanup
 		picking_on = false;
@@ -425,6 +427,18 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		SMT.renderer.popDelegate();
 		this.setDelegate( null);
 		drawing_on = false;
+	}
+
+	/**
+	 * Selects and invokes the appropriate pick draw method
+	 */
+	public void invokePickDrawMethod(){
+		if( method_pickDraw != null)
+			SMTUtilities.invoke( method_pickDraw, applet, this);
+		else if( pickDrawImpl_overridden)
+			pickDrawImpl();
+		else
+			pickDraw();
 	}
 
 	/**
