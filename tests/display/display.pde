@@ -38,6 +38,15 @@ void setup(){
 	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
 	adapter = SMT.getSystemAdapter();
+
+	//choose touch source bounds method
+	//SMT.setTouchSourceBoundsActiveDisplay();
+	//SMT.setTouchSourceBoundsDisplay( 0);
+	//SMT.setTouchSourceBoundsDisplay( ":0.1");
+	//SMT.setTouchSourceBoundsRect(
+	//	new Rectangle( 100, 100, window_width - 200, window_height - 200));
+	//SMT.setTouchSourceBoundsScreen();
+	//SMT.setTouchSourceBoundsSketch();
 }
 
 void update(){
@@ -246,6 +255,7 @@ void drawTouches(){
 		// draw touch getT()ext
 		textAlign( LEFT, CENTER);
 		textSize( 35);
+		textMode( MODEL);
 		text( touch_text, touch.getX() + 30, touch.getY() + 5);
 	}
 }
