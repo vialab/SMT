@@ -140,13 +140,7 @@ public class SwipeKeyboard extends Zone
 		//setup swipe resolver
 		this.resolver = resolver;
 		if( this.resolver == null)
-			try{
-				this.resolver = new DefaultSwipeResolver();
-			}
-			catch( FileNotFoundException exception){
-				System.err.println(
-				"[SwipeKeyboard] Loading the default swipe resolver failed because the wordlist could not be found. Swiping words will not work. Try setting the resolver to your own implementation via the SwipeKeyboard.setSwipeResolver( SwipeResolver) function or the SwipeKeyboard( SwipeResolver) constructor.");
-			}
+			this.resolver = new DefaultSwipeResolver();
 
 		//other
 		swipe_inProgress = false;

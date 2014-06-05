@@ -1,11 +1,7 @@
 package vialab.SMT.swipekeyboard;
 
 //standard library imports
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -24,22 +20,21 @@ public class DefaultSwipeResolver implements SwipeResolver{
 	 * @throws FileNotFoundException Thrown if the word list file,
 	 * resources/dictionary.txt, cannot be found.
 	 */
-	public DefaultSwipeResolver()
-			throws FileNotFoundException {
+	public DefaultSwipeResolver(){
 		wordlist = new Vector<String>();
-		InputStream input =
+		InputStream wordfile =
 			getClass().getResourceAsStream(
-				"/classpath/to/my/file");
-		File wordfile = new File("resources/dictionary.txt");
+				"/resources/dictionary.txt");
 		BufferedReader reader = new BufferedReader(
-			new FileReader( wordfile));
+			new InputStreamReader( wordfile));
 		String word = "";
 		try {
 			while( ( word = reader.readLine()) != null)
 				wordlist.add( word);
 			reader.close();
 		}
-		catch( IOException exception){}
+		catch( IOException exception){
+			exception.printStackTrace();}
 	}
 
 	/**
