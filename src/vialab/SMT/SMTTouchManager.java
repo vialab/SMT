@@ -92,7 +92,7 @@ class SMTTouchManager {
 				else {
 					boolean first = true;
 					for( Zone assigned_zone : touch.getAssignedZones())
-						if( assigned_zone.getCaptureTouchesEnabled()){
+						if( ! assigned_zone.getCaptureTouchesEnabled()){
 							//if the zone defines a press method, make sure to unassign when we no longer pick to the Zone, meaning that the touchUp can rely on the previous pick of the Touch to determine if the zone was pressed
 							if ( first){
 								zone = pick( touch);

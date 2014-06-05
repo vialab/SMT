@@ -117,10 +117,10 @@ void draw(){
 	textAlign( LEFT, CENTER);
 	textMode( MODEL);
 	textSize( 25);
-	//text( "Touch to set individual touch colour", 50, 15);
-	//text( "Touch to set global touch colour", 50, 140);
-	//text( "Touch to set individual trail colour", 50, 530);
-	//text( "Touch to set global trail colour", 50, 670);
+	text( "Touch to set individual touch colour", 50, 15);
+	text( "Touch to set global touch colour", 50, 140);
+	text( "Touch to set individual trail colour", 50, 530);
+	text( "Touch to set global trail colour", 50, 670);
 	popStyle();
 }
 public void drawFrameRate(){
@@ -150,6 +150,7 @@ private class ColourSetter extends Zone {
 		this.colour_green = colour_green;
 		this.colour_blue = colour_blue;
 		this.colour_alpha = colour_alpha;
+		this.setCaptureTouchesEnabled( false);
 	}
 	//draw method
 	public void draw(){
