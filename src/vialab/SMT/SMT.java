@@ -120,7 +120,9 @@ public class SMT {
 			new LinkedHashMap<Integer, TouchSource>());
 	private static EnumMap<TouchSource, TouchBinder> touchBinders =
 		new EnumMap<TouchSource, TouchBinder>( TouchSource.class);
-	private static TouchSource[] sources_notmouse = null;
+	private static TouchSource[] sources_notmouse = new TouchSource[]{
+		TouchSource.TUIO_DEVICE, TouchSource.WM_TOUCH,
+		TouchSource.SMART, TouchSource.LEAP};
 
 	protected static int mainListenerPort;
 	protected static boolean inShutdown = false;
