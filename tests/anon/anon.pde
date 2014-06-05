@@ -33,9 +33,9 @@ void setup(){
 			drag();
 		}
 	};
+
 	SMT.add( asdf);
 	SMT.add( new Zone( 10, 10, 100, 100));
-	//SMT.add( new SwipeKeyboard());
 }
 
 void draw(){

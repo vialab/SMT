@@ -282,24 +282,30 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			extra_graphics.ortho();
 		}
 
-		//translate up a bit to prevent z-fighting
-		translate( 0f, 0f, 0.05f);
-
-		//push transformations
+		//push base transformations
 		if( this.isDirect()){
 			pushMatrix();
 			applyMatrix( matrix);
+			//translate to the desired z-level
+			pushMatrix();
+			translate( 0, 0, SMT.getNextZone_Z());
 		}
 
 		//drawing setup
 		pushStyle();
-		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
+		pushMatrix();
+		//hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 
 		//invoke proper draw method
 		invokeDrawMethod();
 
 		//drawing cleanup
+		popMatrix();
 		popStyle();
+
+		//pop z-level translation
+		if( this.isDirect())
+			popMatrix();
 
 		//draw children
 		for( Zone child : children)
@@ -316,6 +322,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			//push transformations
 			pushMatrix();
 			applyMatrix( matrix);
+			//translate to the desired z-level
+			translate( 0, 0, SMT.getNextZone_Z());
 			//draw extra_graphics
 			pushStyle();
 			noTint();
@@ -363,17 +371,21 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 		beginPickDraw();
 
-		//translate up a bit to prevent z-fighting
-		translate( 0f, 0f, 0.05f);
+		//translate to the desired z-level
+		//translate( 0, 0, SMT.getNextZone_Z());
 
 		//push transformations
 		if( this.isDirect()){
 			pushMatrix();
 			applyMatrix( matrix);
+			//translate to the desired z-level
+			pushMatrix();
+			translate( 0, 0, SMT.getNextZone_Z());
 		}
 
 		//picking setup
 		pushStyle();
+		pushMatrix();
 		colorMode( RGB, 255, 255, 255, 255);
 		noStroke();
 		if( pickColor != null)
@@ -390,8 +402,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		invokePickDrawMethod();
 
 		//picking cleanup
+		popMatrix();
 		picking_on = false;
 		popStyle();
+
+		//pop z-level translation
+		if( this.isDirect())
+			popMatrix();
 
 		//draw children
 		for( Zone child : children){
@@ -413,6 +430,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			//push transformations
 			pushMatrix();
 			applyMatrix( matrix);
+			//translate to the desired z-level
+			translate( 0, 0, SMT.getNextZone_Z());
 			//draw extra_graphics
 			pushStyle();
 			noTint();
@@ -1524,15 +1543,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 				SMT.picker.add(zone);
 
-				// make sure the matrix is up to date, these calls should not
-				// occur if we do not call begin/endTouch once per
-				// frame and once at Zone initialization
-				//zone.endTouch();
-				//zone.beginTouch();
-
-				if (!children.contains(zone)){
-					return children.add(zone);
-				}
+				if( ! children.contains( zone))
+					return children.add( zone);
 			}
 			else
 				try { throw new RuntimeException(
@@ -1647,15 +1659,19 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @return Whether the zone was successfully removed or not
 	 */
 	public boolean remove( Zone child){
-		if (child != null){
-			if(children.contains(child)){
+		if( child != null){
+			if( children.contains( child)){
 				child.cleanUp();
 				child.parent = null;
-				return children.remove(child);
-			} else
-				System.err.println("Warning: Removed a Zone that was not a child");
-		} else
-			System.err.println("Warning: Removed a null Zone");
+				return children.remove( child);
+			}
+			else
+				System.err.println(
+					"Warning: Removed a Zone that was not a child");
+		}
+		else
+			System.err.println(
+				"Warning: Removed a null Zone");
 		return false;
 	}
 
@@ -2108,14 +2124,14 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param width the desired width of this zone
 	 */
 	public void setWidth( int width){
-		super.setSize( width, dimension.height);
+		this.setSize( width, dimension.height);
 	}
 	/**
 	 * Set the height of this zone
 	 * @param height the desired height of this zone
 	 */
 	public void setHeight( int height){
-		super.setSize( dimension.width, height);
+		this.setSize( dimension.width, height);
 	}
 
 	/**

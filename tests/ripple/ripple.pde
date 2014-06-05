@@ -176,5 +176,5 @@ class Prototype extends Zone {
 		dtime = (time - time_old) / 1e9;
 		step += dtime / ani_period;
 		if( step >= 1)
-			SMT.remove( this);}
+			this.getParent().remove( this);}
 }

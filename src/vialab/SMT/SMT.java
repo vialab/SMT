@@ -127,6 +127,9 @@ public class SMT {
 	protected static int mainListenerPort;
 	protected static boolean inShutdown = false;
 	public static File smt_tempdir = null;
+	protected static int zone_count = 0;
+	protected static float zonedraw_deltaz = 0.5f;
+	protected static int zonedraw_i = 0;
 
 	// utility fields for the touch drawing methods
 	private static TexturedTouchDrawer texturedTouchDrawer = null;
@@ -139,6 +142,8 @@ public class SMT {
 	private static int p21_revision = 223;
 	private static int p211_revision = 224;
 	private static int p212_revision = 225;
+	private static int p22_revision = 226;
+	private static int p221_revision = 227;
 	//supported processing versions
 	private static int revision_unknown = -1;
 	private static int revision_min = p211_revision;
@@ -794,6 +799,11 @@ public class SMT {
 		return getDescendents( sketch).toArray( new Zone[0]);
 	}
 
+	//i hate having to write this... it feels bad
+	protected static float getNextZone_Z(){
+		return zonedraw_deltaz * ( zonedraw_i++);
+	}
+
 	private static List<Zone> getDescendents(Zone parent){
 		ArrayList<Zone> descendents = new ArrayList<Zone>();
 		for(Zone child : parent.getChildren()){
@@ -1358,8 +1368,8 @@ public class SMT {
 	 * @param zones  The zones to remove
 	 * @return Whether all of the zones were removed successfully
 	 */
-	public static boolean remove(Zone... zones){
-		return SMT.sketch.remove(zones);
+	public static boolean remove( Zone... zones){
+		return SMT.sketch.remove( zones);
 	}
 
 	public static void clearZones(){
@@ -1375,6 +1385,7 @@ public class SMT {
 	public static void draw(){
 
 		//invoke zone's draw methods
+		zonedraw_i = 0;
 		renderer.pushStyle();
 		renderer.pushMatrix();
 		renderer.ortho();
@@ -1640,6 +1651,7 @@ public class SMT {
 		for( TouchBinder binder : touchBinders.values())
 			binder.update();
 		// TODO: provide some default assignment of touches
+		zonedraw_i = 0;
 		manager.handleTouches();
 
 		if( mtt != null){

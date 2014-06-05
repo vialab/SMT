@@ -64,7 +64,7 @@ cp-to-usb: package
 	cp SMT.zip /mnt/stronghold/
 
 #test commands
-test: test-window
+test: test-display
 
 # feature tests
 test-keyboard: build
@@ -89,19 +89,15 @@ test-tutorial4: build
 # prototypes
 test-ripple: build
 	pshell tests/ripple
-test-trail: build
-	pshell tests/trail
-test-viewport: build
-	pshell tests/viewport
 
 # other tests
 test-anon: build
 	pshell tests/anon
-test-basic: build
-	pshell tests/basic
 test-display: build
 	pshell tests/display
-test-methods: build
-	pshell tests/methods
 test-touch: build
 	pshell tests/touch
+test-trail: build
+	pshell tests/trail
+test-viewport: build
+	pshell tests/viewport

@@ -135,7 +135,7 @@ private class SwipeDisplayer extends Zone
 	}
 	public void drawImpl(){
 		pushStyle();
-		noFill();
+		fill( 10, 10, 10, 80);
 		strokeWeight( 3);
 		stroke( 200, 120, 120, 150);
 		rect( 0, 0, width, height);
