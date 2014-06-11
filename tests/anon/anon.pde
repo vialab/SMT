@@ -21,10 +21,11 @@ void setup(){
 	//stuff
 	Zone asdf = new Zone( 120, 10, 100, 100){
 		public void drawImpl(){
-			pushStyle();
+			background( 180, 100, 100);
+			/*pushStyle();
 			fill( 180, 100, 100);
 			rect( 0, 0, 100, 100, 5);
-			popStyle();
+			popStyle();*/
 		}
 		public void pickDrawImpl(){
 			rect( 0, 0, 100, 100, 5);
@@ -45,4 +46,8 @@ void draw(){
 
 void touchZone( Zone zone){
 	zone.rst();
+}
+
+void drawZone( Zone zone){
+	zone.background( 230);
 }
