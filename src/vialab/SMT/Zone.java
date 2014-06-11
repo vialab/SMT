@@ -179,7 +179,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *   are 1
 	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
 	 */
-	public Zone(String name){
+	public Zone( String name){
 		this(name, SMT.zone_renderer);
 	}
 
@@ -189,7 +189,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param name  - String: Name of the zone, used in the draw, touch ,etc methods
 	 * @param renderer - String: The PGraphics renderer that draws the Zone
 	 */
-	public Zone(String name, String renderer){
+	public Zone( String name, String renderer){
 		this(name, 0, 0, 100, 100, renderer);
 	}
 
@@ -199,7 +199,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param width The width of the zone
 	 * @param height The height of the zone
 	 */
-	public Zone(int x, int y, int width, int height){
+	public Zone( int x, int y, int width, int height){
 		this(x, y, width, height, SMT.zone_renderer);
 	}
 
@@ -212,6 +212,17 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	public Zone( int x, int y, int width, int height, String renderer){
 		this( null, x, y, width, height, renderer);
+	}
+
+	/**
+	 * Zone constructor, with a name, (x,y) position is (0,0)
+	 * 
+	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
+	 * @param width The width of the zone
+	 * @param height The height of the zone
+	 */
+	public Zone( String name, int width, int height){
+		this(name, 0, 0, width, height);
 	}
 
 	/**
