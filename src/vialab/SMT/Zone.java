@@ -1775,32 +1775,25 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		//get needed info
 		Dimension screen_size = this.getScreenSize();
 
-		if( extra_graphics == null){
-			//create offscreen graphics context
-			PGraphics extra_object = applet.createGraphics(
-				screen_size.width,
-				screen_size.height,
-				this.renderer_name);
-			//check the class
-			if( ! ( extra_object instanceof PGraphics3D))
-				throw new ClassCastException(
-					"Must use PGraphics3D, or a class that extends PGraphics3D as the renderer 	for zones.");
-			extra_graphics = (PGraphics3D) extra_object;
-			extra_matrix = new PMatrix3D();
-		}
-		else{
-			//just resize the context we've already got :).
-			extra_graphics.setSize(
-				screen_size.width,
-				screen_size.height);
-			extra_graphics.ortho();
-		}
+		//create offscreen graphics context
+		PGraphics extra_object = applet.createGraphics(
+			screen_size.width,
+			screen_size.height,
+			this.renderer_name);
+		//check the class
+		if( ! ( extra_object instanceof PGraphics3D))
+			throw new ClassCastException(
+				"Must use PGraphics3D, or a class that extends PGraphics3D as the renderer 	for zones.");
+		extra_graphics = (PGraphics3D) extra_object;
 
 		//reset extra_graphics's scale matrix
-		extra_matrix.reset();
+		if( extra_matrix == null)
+			extra_matrix = new PMatrix3D();
+		else
+			extra_matrix.reset();
 		float scale_x = (float) screen_size.width / dimension.width;
 		float scale_y = (float) screen_size.height / dimension.height;
-		//extra_matrix.scale( scale_x, scale_y);
+		extra_matrix.scale( scale_x, scale_y);
 		//finish up
 		setModified();
 	}
