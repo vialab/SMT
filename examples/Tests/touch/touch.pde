@@ -40,7 +40,7 @@ public void drawTouchCount(){
 	String count_text = String.valueOf( count);
 	pushStyle();
 	fill( 240, 240, 240, 180);
-	textAlign(CENTER, CENTER);
+	textAlign( CENTER, CENTER);
 	textMode( SHAPE);
 	textSize( 200);
 	text( count_text, window_width / 2, window_height / 2);

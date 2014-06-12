@@ -96,6 +96,14 @@ public class ViewportZone extends Zone {
 		return false;
 	}
 
+	//little utility function
+	/**
+	 * Refreshes this viewport's graphics object.
+	 */
+	public void refresh(){
+		this.refreshOffscreenGraphics();
+	}
+
 	//accessor functions
 	/**
 	 * Sets the name of the zone used to contain all children so that it's touchMyZone( Zone) method can be written in the PApplet.
@@ -143,10 +151,14 @@ public class ViewportZone extends Zone {
 		@Override
 		public void invokePickDrawMethod(){}
 
-		//default touch method is rst
 		@Override
+		public void draw(){}
+		@Override
+		public void pickDraw(){}
+		@Override
+		//default touch method is pinch
 		public void touch(){
-			this.rst();
+			this.pinch();
 		}
 
 		//warn overrides

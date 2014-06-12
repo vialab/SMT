@@ -3,6 +3,12 @@ import vialab.SMT.*;
 //vars
 int window_width = 1200;
 int window_height = 800;
+boolean draw_fps = true;
+
+//zones
+Zone frame;
+ViewportZone viewport;
+Zone blue, red, purple, green;
 
 void setup(){
 	//basic setup
@@ -10,12 +16,12 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//create zones
-	Zone frame = new Zone( "Frame", 50, 50, 440, 440);
-	ViewportZone viewport = new ViewportZone( 20, 20, 400, 400);
-	Zone blue = new Zone( "Blue", 10, 50, 100, 100);
-	Zone red = new Zone( "Red", 50, 10, 100, 100);
-	Zone purple = new Zone( "Purple", 150, 300, 100, 100);
-	Zone green = new Zone( "Green", 300, 150, 100, 100);
+	frame = new Zone( "Frame", 50, 50, 440, 440);
+	viewport = new ViewportZone( 20, 20, 400, 400);
+	blue = new Zone( "Blue", 10, 50, 100, 100);
+	red = new Zone( "Red", 50, 10, 100, 100);
+	purple = new Zone( "Purple", 150, 300, 100, 100);
+	green = new Zone( "Green", 300, 150, 100, 100);
 	//set up zone structure
 	SMT.add( purple);
 	SMT.add( green);
@@ -27,6 +33,29 @@ void setup(){
 
 void draw(){
 	background( 30);
+	if( draw_fps) drawFrameRate();
+}
+//drawing methods
+public void drawFrameRate(){
+	float fps = this.frameRate;
+	String fps_text = String.format( "fps: %.0f", fps);
+	pushStyle();
+	fill( 240, 240, 240, 180);
+	textAlign( RIGHT, TOP);
+	textSize( 32);
+	text( fps_text, window_width - 10, 10);
+	popStyle();
+}
+
+//keyboard handle
+void keyPressed(){
+	//println( key);
+	switch( key){
+		case 'f':{
+			draw_fps = ! draw_fps;
+			break;}
+		default: break;
+	}
 }
 
 //zone functions
@@ -45,14 +74,17 @@ void drawFrame( Zone zone){
 void touchFrame( Zone zone){
 	zone.rst();
 }
+void touchUpFrame( Zone zone, Touch touch){
+	viewport.refresh();
+}
 
 //methods for viewport zone
 void drawViewportZone( Zone zone){
 	background( 40, 70, 70, 180);
 }
-void touchViewportZone( Zone zone){
-	zone.rst( false, true, true);
-}
+/*void touchViewportZone( Zone zone){
+	zone.pinch();
+}*/
 
 //methods for the "blue" zone
 void drawBlue( Zone zone){

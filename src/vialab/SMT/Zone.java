@@ -166,6 +166,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	private float offsetY;
 	private HashSet<Long> dragSeenTouch = new HashSet<Long>();
 	private PGraphics3D extra_graphics;
+	private PMatrix3D extra_matrix;
 
 	/**
 	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are 1
@@ -291,6 +292,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			extra_graphics.beginDraw();
 			extra_graphics.clear();
 			extra_graphics.ortho();
+			extra_graphics.applyMatrix( extra_matrix);
 		}
 
 		//push base transformations
@@ -379,6 +381,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			this.setDelegate( extra_graphics);
 			extra_graphics.beginDraw();
 			extra_graphics.clear();
+			extra_graphics.ortho();
+			extra_graphics.applyMatrix( extra_matrix);
 		}
 		beginPickDraw();
 
@@ -1740,40 +1744,81 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param enabled Whether the direct flag should be enabled
 	 */
 	public void setDirect( boolean enabled){
+		this.direct = enabled;
 		if( enabled){
 			this.vertices = null;
 			this.tessGeo = null;
 			this.texCache = null;
 			this.inGeo = null;
-			this.extra_graphics = null;
 		}
-		else{
-			//create offscreen graphics context
-			PGraphics extra_object = applet.createGraphics(
-				this.dimension.width,
-				this.dimension.height,
-				this.renderer_name);
-			//double-check the class
-			if( ! PGraphics3D.class.isInstance( extra_object))
-				throw new ClassCastException(
-					"Must use PGraphics3D, or a class that extends PGraphics3D as the renderer for zones.");
-			extra_graphics = (PGraphics3D) extra_object;
-			//draw the background
-			extra_graphics.beginDraw();
-			extra_graphics.background( 0, 0);
-			extra_graphics.endDraw();
-			setModified();
-		}
-		this.direct = enabled;
+		else
+			refreshOffscreenGraphics();
 	}
 
 	/**
 	 * Ensures that the extra_graphics object is initialized if it's supposed to be.
 	 */
-	private void extraGraphicsNullCheck(){
+	protected void extraGraphicsNullCheck(){
 		if( ! direct)
 			if( extra_graphics == null)
-				setDirect( false);
+				refreshOffscreenGraphics();
+	}
+
+	/**
+	 * If this is an indirect zone, this method refreshes this zone's offscreen graphics buffer's size to match the size it's being drawn at.
+	 *
+	 * To put it simply, if you scale an indirect zone, it'll get fuzzy. If you scale an indirect zone, then call this method, it won't get fuzzy.
+	 */
+	public void refreshOffscreenGraphics(){
+		//don't bother if we're direct
+		if( direct) return;
+		//get needed info
+		Dimension screen_size = this.getScreenSize();
+
+		if( extra_graphics == null){
+			//create offscreen graphics context
+			PGraphics extra_object = applet.createGraphics(
+				screen_size.width,
+				screen_size.height,
+				this.renderer_name);
+			//check the class
+			if( ! ( extra_object instanceof PGraphics3D))
+				throw new ClassCastException(
+					"Must use PGraphics3D, or a class that extends PGraphics3D as the renderer 	for zones.");
+			extra_graphics = (PGraphics3D) extra_object;
+			extra_matrix = new PMatrix3D();
+		}
+		else{
+			//just resize the context we've already got :).
+			extra_graphics.setSize(
+				screen_size.width,
+				screen_size.height);
+			extra_graphics.ortho();
+		}
+
+		//reset extra_graphics's scale matrix
+		extra_matrix.reset();
+		float scale_x = (float) screen_size.width / dimension.width;
+		float scale_y = (float) screen_size.height / dimension.height;
+		//extra_matrix.scale( scale_x, scale_y);
+		//finish up
+		setModified();
+	}
+
+	/**
+	 * Resizes the extra_graphics object to match the current dimensions of the Zone
+	 */
+	protected void initExtraGraphics(){
+		//create offscreen graphics context
+		PGraphics extra_object = applet.createGraphics(
+			this.dimension.width,
+			this.dimension.height,
+			this.renderer_name);
+		//double-check the class
+		if( ! ( extra_object instanceof PGraphics3D))
+		throw new ClassCastException(
+		 "Must use PGraphics3D, or a class that extends PGraphics3D as the renderer for zones.");
+		extra_graphics = (PGraphics3D) extra_object;
 	}
 
 	/**
@@ -2185,11 +2230,34 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 
 	/**
-	 * Set the dimensions of this zone
+	 * Get the dimensions of this zone
 	 * @return the dimensions of this zone
 	 */
 	public Dimension getSize(){
 		return dimension;
+	}
+	/**
+	 * Get the dimensions of this zone, as it appears on the screen
+	 * @return the dimensions of this zone
+	 */
+	public Dimension getScreenSize(){
+		PMatrix3D global = this.getGlobalMatrix();
+		//origin vector
+		PVector o0 = new PVector( 0, 0);
+		//width vector
+		PVector w0 = new PVector(
+			dimension.width, 0);
+		//height vector
+		PVector h0 = new PVector(
+			0, dimension.height);
+		PVector o1 = global.mult( o0, null);
+		PVector w1 = global.mult( w0, null);
+		PVector h1 = global.mult( h0, null);
+		float width = o1.dist( w1);
+		float height = o1.dist( h1);
+		return new Dimension(
+			Math.round( width),
+			Math.round( height));
 	}
 
 	/**

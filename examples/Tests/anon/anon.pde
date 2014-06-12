@@ -1,4 +1,5 @@
 //SMT library imports
+import java.awt.*;
 import vialab.SMT.*;
 
 //constants
