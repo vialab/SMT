@@ -1,3 +1,4 @@
+//imports
 import vialab.SMT.*;
 import java.awt.*;
 
@@ -7,18 +8,13 @@ int window_height = 800;
 //others
 boolean draw_fps = true;
 boolean draw_count = true;
-boolean draw_info = false;
-
+boolean draw_info = true;
 
 //main methods
-
 void setup(){
 	size( window_width, window_height, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
-	textMode( SHAPE);
-
-	//select touch drawer
-	SMT.setTouchDraw( TouchDraw.TEXTURED);
+	textMode( MODEL);
 }
 
 void draw(){
@@ -45,31 +41,35 @@ public void drawTouchCount(){
 	pushStyle();
 	fill( 240, 240, 240, 180);
 	textAlign(CENTER, CENTER);
+	textMode( SHAPE);
 	textSize( 200);
 	text( count_text, window_width / 2, window_height / 2);
 	popStyle();
 }
 public void drawTouchInfo(){
 	for( Touch touch : SMT.getTouches()){
-		PVector position = touch.getBoundPosition();
-		String text = String.format(
+		String touch_text = String.format(
 			"id: %d\n" +
 				"port: %d\n" +
 				"source: %s\n" +
-				"raw: %.3f, %.3f\n" +
-				"fitted: %.3f, %.3f\n" +
-				"bound: %.3f, %.3f",
+				"raw: %.2f, %.2f\n" +
+				"fitted: %.2f, %.2f\n" +
+				"rounded: %d, %d",
 			touch.cursorID, touch.sessionID >> 48,
 			touch.getTouchSource(),
 			touch.getRawX(), touch.getRawY(),
 			touch.getX(), touch.getY(),
-			position.x, position.y);
+			touch.x, touch.y);
 		
 		pushStyle();
+		noFill();
+		stroke( 240, 240, 240, 180);
+		strokeWeight( 8);
+		ellipse( touch.getX(), touch.getY(), 50, 50);
 		fill( 240, 240, 240, 180);
 		textAlign(LEFT, TOP);
 		textSize( 30);
-		text( text, touch.x + 10, touch.y);
+		text( touch_text, touch.x + 50, touch.y - 20);
 		popStyle();
 	}
 }

@@ -1021,8 +1021,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 					this.getClass());
 		}
 
-		this.setCaptureTouchesEnabled(
-			pressImpl_overridden || method_press != null);
+		this.setCaptureTouches(
+			! ( pressImpl_overridden || method_press != null));
 	}
 
 	/////////////////////////////////////
@@ -1781,14 +1781,14 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *
 	 * @param enabled whether touch capturing should be enabled
 	 */
-	public void setCaptureTouchesEnabled( boolean enabled){
+	public void setCaptureTouches( boolean enabled){
 		captureTouches = enabled;
 	}
 
 	/**
 	 * Normally, zones "capture" touches. This means that normally when touches exit a zone, they remain assigned to that zone. This "capturing" behavior, however, can be disabled. This is commonly done with buttons and UI elements.
 	 */
-	public boolean getCaptureTouchesEnabled(){
+	public boolean getCaptureTouches(){
 		return captureTouches;
 	}
 
