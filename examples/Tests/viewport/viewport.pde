@@ -43,7 +43,7 @@ public void drawFrameRate(){
 	fill( 240, 240, 240, 180);
 	textAlign( RIGHT, TOP);
 	textSize( 32);
-	text( fps_text, window_width - 10, 10);
+	text( fps_text, window_width - 20, 20);
 	popStyle();
 }
 
@@ -82,9 +82,9 @@ void touchUpFrame( Zone zone, Touch touch){
 void drawViewportZone( Zone zone){
 	background( 40, 70, 70, 180);
 }
-/*void touchViewportZone( Zone zone){
+void touchViewportZone( Zone zone){
 	zone.pinch();
-}*/
+}
 
 //methods for the "blue" zone
 void drawBlue( Zone zone){
