@@ -101,7 +101,7 @@ public class ViewportZone extends Zone {
 	 * Refreshes this viewport's graphics object.
 	 */
 	public void refresh(){
-		this.refreshOffscreenGraphics();
+		this.refreshResolution();
 	}
 
 	//accessor functions

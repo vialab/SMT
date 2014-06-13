@@ -1752,7 +1752,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			this.inGeo = null;
 		}
 		else
-			refreshOffscreenGraphics();
+			refreshResolution();
 	}
 
 	/**
@@ -1761,24 +1761,37 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected void extraGraphicsNullCheck(){
 		if( ! direct)
 			if( extra_graphics == null)
-				refreshOffscreenGraphics();
+				refreshResolution();
 	}
 
 	/**
-	 * If this is an indirect zone, this method refreshes this zone's offscreen graphics buffer's size to match the size it's being drawn at.
+	 * This method refreshes this zone's offscreen graphics buffer's resolution to match the size the zone is being drawn at.
 	 *
 	 * To put it simply, if you scale an indirect zone, it'll get fuzzy. If you scale an indirect zone, then call this method, it won't get fuzzy.
+	 *
+	 * This method does nothing to normal, 'direct', zones.
 	 */
-	public void refreshOffscreenGraphics(){
-		//don't bother if we're direct
-		if( direct) return;
+	//public void autoSizeResolution(){
+	//public void autoResizeGraphics(){
+	public void refreshResolution(){
 		//get needed info
 		Dimension screen_size = this.getScreenSize();
+		setResolution( screen_size);
+	}
+
+	/**
+	 * Set the resolution of the internal graphics object used by this zone (if it is indirect).
+	 *
+	 * This method does nothing to normal, 'direct', zones.
+	 */
+	public void setResolution( Dimension desired_size){
+		//don't bother if we're direct
+		if( direct) return;
 
 		//create offscreen graphics context
 		PGraphics extra_object = applet.createGraphics(
-			screen_size.width,
-			screen_size.height,
+			desired_size.width,
+			desired_size.height,
 			this.renderer_name);
 		//check the class
 		if( ! ( extra_object instanceof PGraphics3D))
@@ -1791,8 +1804,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 			extra_matrix = new PMatrix3D();
 		else
 			extra_matrix.reset();
-		float scale_x = (float) screen_size.width / dimension.width;
-		float scale_y = (float) screen_size.height / dimension.height;
+		float scale_x = (float) desired_size.width / dimension.width;
+		float scale_y = (float) desired_size.height / dimension.height;
 		extra_matrix.scale( scale_x, scale_y);
 		//finish up
 		setModified();

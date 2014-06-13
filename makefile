@@ -59,7 +59,7 @@ cp-to-usb: package
 	rm -rf /mnt/stronghold/SMT
 	mkdir /mnt/stronghold/SMT
 	cp -r examples library library.properties \
-		$(docs_dir) release_notes.md readme.md src tests \
+		$(docs_dir) release_notes.md readme.md src \
 		/mnt/stronghold/SMT
 	cp SMT.zip /mnt/stronghold/
 

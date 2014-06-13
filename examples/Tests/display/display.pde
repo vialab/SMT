@@ -36,6 +36,7 @@ void setup(){
 		window_height = displayHeight;
 	}
 	size( window_width, window_height, SMT.RENDERER);
+	SMT.setWarnUnimplemented( false);
 	SMT.init( this, TouchSource.AUTOMATIC);
 	adapter = SMT.getSystemAdapter();
 
