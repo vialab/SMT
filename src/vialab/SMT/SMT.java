@@ -1352,8 +1352,7 @@ public class SMT {
 	 * drawn anymore or be assigned touches, but can be added back with a call
 	 * to add(zone);
 	 * 
-	 * @param name
-	 *            The name of the zone to remove
+	 * @param name The name of the zone to remove
 	 * @return Whether all of the zones were removed successfully
 	 */
 	public static boolean remove(String name){
