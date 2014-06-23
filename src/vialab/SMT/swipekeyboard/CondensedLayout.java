@@ -53,7 +53,7 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		//initialize keys
 		//normal keys
 		KeyZone key_backspace = new KeyZone( "key backspace",
-			KeyEvent.VK_BACK_SPACE);
+			KeyEvent.VK_BACK_SPACE, '\b');
 		KeyZone key_nums = new KeyZone( "key nums", KeyEvent.VK_NUM_LOCK);
 		KeyZone key_comma = new KeyZone( "key comma", KeyEvent.VK_COMMA, ',');
 		KeyZone key_space = new KeyZone( "key space", KeyEvent.VK_SPACE, ' ');
