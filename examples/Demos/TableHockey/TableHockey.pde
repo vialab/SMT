@@ -79,10 +79,6 @@ void setup(){
 	SMT.add( player);
 	SMT.add( enemy);
 
-	//add score text areas
-	add( new TextArea("asdf", 1, 4));
-
-
 	//start up the physics engine
 	try{
 		Thread.sleep( 0);
