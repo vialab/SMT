@@ -2968,9 +2968,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	@Override
 	public void scale( float s){
 		if( drawing_on || picking_on || touching_on)
-			super.scale( s);
+			super.scale( s, s);
 		else
-			matrix.scale( s);
+			matrix.scale( s, s);
 	}
 	@Override
 	public void scale( float x, float y){
