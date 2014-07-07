@@ -132,7 +132,8 @@ public class ImageZone extends Zone {
 	 * @param imageZone ImageZone The ImageZone that is copied.
 	 **/
 	public ImageZone( ImageZone imageZone) {
-		this( imageZone.name, imageZone.image, imageZone.x, imageZone.y, imageZone.width, imageZone.height);
+		this( imageZone.name, imageZone.image,
+			imageZone.x, imageZone.y, imageZone.width, imageZone.height);
 	}
 	
 	/**

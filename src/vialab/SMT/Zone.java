@@ -2256,9 +2256,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		//height vector
 		PVector h0 = new PVector(
 			0, dimension.height);
+		//apply matrix
 		PVector o1 = global.mult( o0, null);
 		PVector w1 = global.mult( w0, null);
 		PVector h1 = global.mult( h0, null);
+		//extract differences
 		float width = o1.dist( w1);
 		float height = o1.dist( h1);
 		return new Dimension(
