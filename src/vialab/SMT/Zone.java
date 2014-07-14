@@ -307,7 +307,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		//drawing setup
 		pushStyle();
 		pushMatrix();
-		//hint( PConstants.DISABLE_OPTIMIZED_STROKE);
+		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 
 		//invoke proper draw method
 		invokeDrawMethod();
@@ -1771,8 +1771,6 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 *
 	 * This method does nothing to normal, 'direct', zones.
 	 */
-	//public void autoSizeResolution(){
-	//public void autoResizeGraphics(){
 	public void refreshResolution(){
 		//get needed info
 		Dimension screen_size = this.getScreenSize();
@@ -1815,16 +1813,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Resizes the extra_graphics object to match the current dimensions of the Zone
 	 */
 	protected void initExtraGraphics(){
-		//create offscreen graphics context
-		PGraphics extra_object = applet.createGraphics(
-			this.dimension.width,
-			this.dimension.height,
-			this.renderer_name);
-		//double-check the class
-		if( ! ( extra_object instanceof PGraphics3D))
-		throw new ClassCastException(
-		 "Must use PGraphics3D, or a class that extends PGraphics3D as the renderer for zones.");
-		extra_graphics = (PGraphics3D) extra_object;
+		setResolution( this.dimension);
 	}
 
 	/**
