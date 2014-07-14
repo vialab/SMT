@@ -111,7 +111,7 @@ void setup(){
 void draw(){
 	//draw background
 	background( 50, 50, 50);
-	drawFrameRate();
+	//drawFrameRate();
 	pushStyle();
 	fill( 240, 240, 240, 180);
 	textAlign( LEFT, CENTER);
@@ -150,7 +150,7 @@ private class ColourSetter extends Zone {
 		this.colour_green = colour_green;
 		this.colour_blue = colour_blue;
 		this.colour_alpha = colour_alpha;
-		this.setCaptureTouchesEnabled( false);
+		this.setCaptureTouches( false);
 	}
 	//draw method
 	public void draw(){

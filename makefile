@@ -85,6 +85,8 @@ test-tutorial3: build
 	pshell examples/Tutorial/Three
 test-tutorial4: build
 	pshell examples/Tutorial/Four
+test-tutorial-java: build
+	pshell examples/Advanced/Java
 
 # prototypes
 test-ripple: build
