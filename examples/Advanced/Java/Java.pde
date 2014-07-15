@@ -94,4 +94,21 @@ class HappyFaceZone extends Zone {
 		if( this.getNumTouches() == 0)
 			happy = true;
 	}
+	//touch moved method
+	@Override
+	public void touchMoved( Touch touch){}
+
+	//advanced overridden methods
+	@Override
+	public void assign( Touch... touches){
+		super.assign( touches);
+	}
+	@Override
+	public boolean add( Zone zone){
+		return super.add( zone);
+	}
+	@Override
+	public boolean remove( Zone zone){
+		return super.remove( zone);
+	}
 }
