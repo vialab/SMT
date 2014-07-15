@@ -8,12 +8,13 @@ clean-specials:
 	rm -rf javadoc/ SMT/
 
 #variables
+version = 4.1b3
 cp = src:bin:lib/*:lib/processing/*
 dest = -d bin
 docscp = src:lib/*:lib/processing/*
 docs_dir = javadoc
 jar_file = library/SMT.jar
-package_file = pkg/game-$(version).tar.gz
+package_file = SMT-$(version).zip
 java_version = -source 1.6 -target 1.6
 #warnings = -Xlint:-options
 warnings = -Xlint:-deprecation -Xlint:-options
@@ -46,7 +47,7 @@ $(package_file): $(class_files) $(jar_file) $(docs_dir)
 	cp -r examples library library.properties \
 		$(docs_dir) readme.md release_notes.md src \
 		SMT
-	zip -r SMT.zip SMT
+	zip -r $(package_file) SMT
 	rm -rf SMT
 package: $(package_file)
 
