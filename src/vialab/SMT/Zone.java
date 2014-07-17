@@ -103,7 +103,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected boolean touchDown_overridden = false;
 	protected boolean touchMoved_overridden = false;
 	protected boolean press_overridden = false;
-	//imple override detection fields
+	//impl override detection fields
 	protected boolean drawImpl_overridden = false;
 	protected boolean pickDrawImpl_overridden = false;
 	protected boolean touchImpl_overridden = false;
@@ -115,7 +115,12 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected boolean touchMovedImpl_overridden = false;
 	protected boolean pressImpl_overridden = false;
 
-	//picking variables
+	//method enabled flags
+	private boolean drawing_enabled = true;
+	private boolean picking_enabled = true;
+	private boolean touching_enabled = true;
+
+	//state variables
 	private boolean drawing_on = false;
 	private boolean picking_on = false;
 	private boolean touching_on = false;
@@ -142,7 +147,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	private Object boundObject = null;
 	protected int maxWidth, maxHeight;
 	protected int minWidth, minHeight;
-	/** @deprecated We're working on a better alternative */
+	/** @deprecated we're working on a better alternative */
 	@Deprecated
 	public boolean stealChildrensTouch = false;
 
@@ -169,15 +174,15 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	private PMatrix3D extra_matrix;
 
 	/**
-	 * Zone constructor, no name, (x,y) position is (0,0) , width and height are 1
+	 * Zone constructor, no name, position of (0,0), width and height of 100
 	 */
 	public Zone(){
 		this(null);
 	}
 
 	/**
-	 * Zone constructor, with a name, (x,y) position is (0,0) , width and height
-	 *   are 1
+	 * Zone constructor, with a name, position of (0,0), width and height of 100
+	 *
 	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
 	 */
 	public Zone( String name){
@@ -185,8 +190,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Zone constructor, with a name, (x,y) position is (0,0) , width and height
-	 *   are 1
+	 * Zone constructor, with a name, position of (0,0), width and height of 100
+	 *
 	 * @param name  - String: Name of the zone, used in the draw, touch ,etc methods
 	 * @param renderer - String: The PGraphics renderer that draws the Zone
 	 */
@@ -216,7 +221,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Zone constructor, with a name, (x,y) position is (0,0)
+	 * Zone constructor, with a name, position of (0,0)
 	 * 
 	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
 	 * @param width The width of the zone
@@ -310,7 +315,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 
 		//invoke proper draw method
-		invokeDrawMethod();
+		if( drawing_enabled)
+			invokeDrawMethod();
 
 		//drawing cleanup
 		popMatrix();
@@ -414,7 +420,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		picking_on = true;
 
 		//invoke proper draw method
-		invokePickDrawMethod();
+		if( picking_enabled)
+			invokePickDrawMethod();
 
 		//picking cleanup
 		popMatrix();
@@ -493,25 +500,29 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		pretouch_inv.invert();
 
 		//invoke touch up
+		if( touching_enabled)
 		for( Touch touch : touchUpList)
 			this.invokeTouchUpMethod( touch);
 		touchUpList.clear();
 
 		//invoke touch down
+		if( touching_enabled)
 		for( Touch touch : touchDownList)
 			this.invokeTouchDownMethod( touch);
 		touchDownList.clear();
 
 		//invoke touch press
-		for( Touch touch : pressList)
-			this.invokePressMethod( touch);
+		if( touching_enabled)
+			for( Touch touch : pressList)
+				this.invokePressMethod( touch);
 		pressList.clear();
 
 		//invoke touch moved
-		for( Touch touch : touchMovedList)
-			this.invokeTouchMovedMethod( touch);
+		if( touching_enabled)
+			for( Touch touch : touchMovedList)
+				this.invokeTouchMovedMethod( touch);
 		//invoke touch
-		if( ! touchMovedList.isEmpty())
+		if( touching_enabled && ! touchMovedList.isEmpty())
 			this.invokeTouchMethod();
 		touchMovedList.clear();
 
@@ -1718,13 +1729,38 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	//////////////////////
 
 	/**
+	 * Enable or disable drawing for this zone.
+	 *
+	 * This will not disable pick-drawing nor touching. See setPickable( boolean) or setTouchable( boolean) for disabling pick drawing or touching, respectively
+	 * 
+	 * @param enabled whether this zone should draw
+	 */
+	public void setVisible( boolean enabled){
+		drawing_enabled = enabled;
+	}
+	/**
+	 * Enable or disable picking for this zone.
+	 * 
+	 * @param enabled whether this zone should pick-draw
+	 */
+	public void setPickable( boolean enabled){
+		picking_enabled = enabled;
+	}
+	/**
+	 * Enable or disable touching for this zone.
+	 *
+	 * This will not disable picking for this zone, nor will it unassign any touches already assigned to this zone. See setPickable( false) or unassignAll(), respectively.
+	 *
+	 * @param enabled whether this zone can be touched
+	 */
+	public void setTouchable( boolean enabled){
+		touching_enabled = enabled;
+	}
+
+	/**
 	 * Check state of the direct flag.
 	 * 
-	 * The direct flag controls whether rendering directly onto
-	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
-	 * drawing into an image we have assured size(cant draw outside of zone),
-	 * and background() will work for just the zone, but we lose a large amount
-	 * of performance.
+	 * The direct flag controls whether rendering directly onto parent/screen/pickBuffer (direct), or into an image (not direct) If drawing into an image we have assured size(cant draw outside of zone), and background() will work for just the zone, but we lose a large amount of performance.
 	 * 
 	 * @return whether zone is rendering directly onto screen/pickBuffer, or not
 	 */
@@ -1735,11 +1771,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Change state of the direct flag.
 	 * 
-	 * The direct flag controls whether rendering directly onto
-	 * parent/screen/pickBuffer (direct), or into an image (not direct) If
-	 * drawing into an image we have assured size(cant draw outside of zone),
-	 * and background() will work for just the zone, but we lose a large amount
-	 * of performance.
+	 * The direct flag controls whether rendering directly onto parent/screen/pickBuffer (direct), or into an image (not direct) If drawing into an image we have assured size(cant draw outside of zone), and background() will work for just the zone, but we lose a large amount of performance.
 	 *
 	 * @param enabled Whether the direct flag should be enabled
 	 */
