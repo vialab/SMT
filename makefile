@@ -39,8 +39,6 @@ $(docs_dir): $(source_files)
 	rm -rf $(docs_dir)
 	javadoc -classpath $(docscp) -d $(docs_dir) $(source_files)
 docs: $(docs_dir)
-docs-test: docs
-	chromium $(docs_dir)/index.html
 
 $(package_file): $(class_files) $(jar_file) $(docs_dir)
 	mkdir SMT
@@ -67,15 +65,19 @@ cp-to-usb: package
 #test commands
 test: test-display
 
-# feature tests
+# demos
 test-keyboard: build
 	pshell examples/Demos/Keyboard
+test-tablehockey: build
+	pshell examples/Demos/TableHockey
 test-touchcolours: build
 	pshell examples/Demos/TouchColours
 
-# examples
-test-tablehockey: build
-	pshell examples/Demos/TableHockey
+# tests
+test-display: build
+	pshell examples/Tests/Display
+test-touch: build
+	pshell examples/Tests/Touch
 
 # tutorials
 test-tutorial1: build
@@ -92,15 +94,5 @@ test-tutorial-java: build
 # prototypes
 test-ripple: build
 	pshell tests/ripple
-
-# other tests
-test-anon: build
-	pshell tests/anon
-test-display: build
-	pshell tests/display
-test-touch: build
-	pshell tests/touch
-test-trail: build
-	pshell tests/trail
 test-viewport: build
 	pshell tests/viewport
