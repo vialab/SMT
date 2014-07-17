@@ -1,3 +1,7 @@
+/**
+ * Demo of touch colours and other touch visualization customization features
+ */
+
 //SMT library imports
 import vialab.SMT.*;
 

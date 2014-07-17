@@ -1,3 +1,7 @@
+/**
+ * Sketch for testing display info and touch source bindings
+ */
+
 //standard library imports
 import java.awt.*;
 import java.awt.geom.*;

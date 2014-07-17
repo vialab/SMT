@@ -1,3 +1,7 @@
+/**
+ * Sketch for Basics Tutorial 3
+ */
+
 import vialab.SMT.*;
 
 boolean window_fullscreen = false;

@@ -1,3 +1,7 @@
+/**
+ * Sketch for ViewportZone Tutorial
+ */
+
 import vialab.SMT.*;
 
 //Setup function for the applet

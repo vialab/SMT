@@ -1,3 +1,7 @@
+/**
+ * Sketch for Basics Tutorial 2
+ */
+
 import vialab.SMT.*;
 
 //variables for this applet

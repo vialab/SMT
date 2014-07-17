@@ -1,3 +1,7 @@
+/**
+ * Sketch for Basics Tutorial 4
+ */
+
 import vialab.SMT.*;
 
 //Setup function for the applet

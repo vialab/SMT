@@ -1,3 +1,7 @@
+/**
+ * Sketch for testing touch input data
+ */
+
 //imports
 import vialab.SMT.*;
 import java.awt.*;
@@ -5,6 +9,11 @@ import java.awt.*;
 //vars
 int window_width = 1200;
 int window_height = 800;
+//keyboard shortcuts
+char key_fps = 'a';
+char key_count = 's';
+char key_info = 'd';
+char key_trail = 'f';
 //others
 boolean draw_fps = true;
 boolean draw_count = true;
@@ -78,16 +87,16 @@ public void drawTouchInfo(){
 void keyPressed(){
 	//println( key);
 	switch( key){
-		case 'a':{
+		case key_fps:{
 			draw_fps = ! draw_fps;
 			break;}
-		case 's':{
+		case key_count:{
 			draw_count = ! draw_count;
 			break;}
-		case 'd':{
+		case key_info:{
 			draw_info = ! draw_info;
 			break;}
-		case 'f':{
+		case key_trail:{
 			SMT.setTrailEnabled( ! SMT.getTrailEnabled());
 			break;}
 		default: break;

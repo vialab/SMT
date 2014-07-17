@@ -1,3 +1,7 @@
+/**
+ * Sketch for Touch-source-bounds Tutorial
+ */
+
 import vialab.SMT.*;
 
 //Setup function for the applet

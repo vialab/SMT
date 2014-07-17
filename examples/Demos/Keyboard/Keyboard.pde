@@ -1,3 +1,7 @@
+/**
+ * Demo of the swipe keyboard
+ */
+
 //standard library imports
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

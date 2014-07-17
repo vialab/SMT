@@ -1,3 +1,7 @@
+/**
+ * Demos the ButtonZone class.
+ */
+
 import vialab.SMT.*;
 void setup() {
   size(400, 400, SMT.RENDERER);

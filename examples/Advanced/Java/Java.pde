@@ -1,3 +1,7 @@
+/**
+ * Sketch for Java Tutorial.
+ */
+
 import vialab.SMT.*;
 
 //vars
