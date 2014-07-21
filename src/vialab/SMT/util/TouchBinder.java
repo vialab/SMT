@@ -4,7 +4,7 @@ package vialab.SMT.util;
 import processing.core.*;
 
 /**
- * Just a little class for describing how to map ([0,1], [0,1]) tuio coordinates to ([0,applet.width], [0,applet.height]) touch coordinates.
+ * Just a little class for describing how to map ([0,1], [0,1]) tuio coordinates onto ([0,applet.width], [0,applet.height]) touch coordinates.
  **/
 public class TouchBinder {
 	private PMatrix2D bind_matrix;
@@ -33,15 +33,19 @@ public class TouchBinder {
 			System.out.printf( "real: %f, %f\n",
 				real.x, real.y);
 		//clamp min bounds
-		if( real.x < clamp_min.x)
-			real.x = clamp_min.x;
-		if( real.y < clamp_min.y)
-			real.y = clamp_min.y;
+		if( clamp_min != null){
+			if( real.x < clamp_min.x)
+				real.x = clamp_min.x;
+			if( real.y < clamp_min.y)
+				real.y = clamp_min.y;
+		}
 		//clamp max bounds
-		if( real.x > clamp_max.x)
-			real.x = clamp_max.x;
-		if( real.y > clamp_max.y)
-			real.y = clamp_max.y;
+		if( clamp_max != null){
+			if( real.x > clamp_max.x)
+				real.x = clamp_max.x;
+			if( real.y > clamp_max.y)
+				real.y = clamp_max.y;
+		}
 		if( debug)
 			System.out.printf( "clamped: %f, %f\n",
 				real.x, real.y);
