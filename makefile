@@ -80,16 +80,22 @@ test-touch: build
 	pshell examples/Tests/Touch
 
 # tutorials
-test-tutorial1: build
+test-tutorial-1: build
 	pshell examples/Tutorial/One
-test-tutorial2: build
+test-tutorial-2: build
 	pshell examples/Tutorial/Two
-test-tutorial3: build
+test-tutorial-3: build
 	pshell examples/Tutorial/Three
-test-tutorial4: build
+test-tutorial-4: build
 	pshell examples/Tutorial/Four
 test-tutorial-java: build
 	pshell examples/Advanced/Java
+test-tutorial-swipekb: build
+	pshell examples/Advanced/Keyboard
+test-tutorial-tsbounds: build
+	pshell examples/Advanced/TouchSourceBounds
+test-tutorial-viewport: build
+	pshell examples/Advanced/Viewport
 
 # prototypes
 test-ripple: build
