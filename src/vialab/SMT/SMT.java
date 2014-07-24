@@ -587,7 +587,7 @@ public class SMT {
 			touchBinders.put( source, binder);
 			if( SMT.debug)
 				System.out.printf(
-					"Set the touch bounds for %s input to asdf mode.\n",
+					"Set the touch bounds for %s input to sketch mode.\n",
 					source);
 		}
 	}
@@ -611,7 +611,7 @@ public class SMT {
 			touchBinders.put( source, binder);
 			if( SMT.debug)
 				System.out.printf(
-					"Set the touch bounds for %s input to asdf mode.\n",
+					"Set the touch bounds for %s input to custom mode.\n",
 					source);
 		}
 	}
