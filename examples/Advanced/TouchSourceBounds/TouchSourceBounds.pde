@@ -63,33 +63,25 @@ void keyPressed(){
 	switch( key){
 		case 'q':{
 			SMT.setTouchSourceBoundsActiveDisplay();
-			SMT.setTouchSourceBoundsActiveDisplay( TouchSource.MOUSE);
 			break;}
 		case 'w':{
 			SMT.setTouchSourceBoundsDisplay( 0);
-			SMT.setTouchSourceBoundsDisplay( 0, TouchSource.MOUSE);
 			break;}
 		case 'e':{
 			SMT.setTouchSourceBoundsDisplay( ":0.1");
-			SMT.setTouchSourceBoundsDisplay( ":0.1", TouchSource.MOUSE);
 			break;}
 		case 'r':{
 			SMT.setTouchSourceBoundsRect(
 				new Rectangle( 100, 100, 1000, 600));
-			SMT.setTouchSourceBoundsRect(
-				new Rectangle( 100, 100, 1000, 600), TouchSource.MOUSE);
 			break;}
 		case 's':{
 			SMT.setTouchSourceBoundsScreen();
-			SMT.setTouchSourceBoundsScreen( TouchSource.MOUSE);
 			break;}
 		case 'd':{
 			SMT.setTouchSourceBoundsSketch();
-			SMT.setTouchSourceBoundsSketch( TouchSource.MOUSE);
 			break;}
 		case 'f':{
 			SMT.setTouchSourceBoundsCustom( binder_custom);
-			SMT.setTouchSourceBoundsCustom( binder_custom, TouchSource.MOUSE);
 			break;}
 		default: break;
 	}
