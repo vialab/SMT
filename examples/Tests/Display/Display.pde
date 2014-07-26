@@ -246,21 +246,28 @@ void drawTouches(){
 	translate( sketch_bounds.x, sketch_bounds.y);
 	Touch[] touches = SMT.getTouches();
 	for( Touch touch : touches){
+		//get and apply the bind matrix directly to work around clamping
+		PMatrix2D bind_matrix =
+			touch.getTouchBinder().getBindMatrix();
+		PVector touch_pos = bind_matrix.mult(
+			new PVector( touch.getRawX(), touch.getRawY()), null);
+
+		//draw touch
 		String touch_text = String.format(
-			"Touch:\n%.0f, %.0f", touch.getX(), touch.getY());
+			"Touch:\n%.0f, %.0f", touch_pos.x, touch_pos.y);
 		// draw circle
 		noFill();
 		stroke( 140, 220, 200, 200);
 		strokeWeight( 2);
-		ellipse( touch.getX(), touch.getY(), 35, 35);
+		ellipse( touch_pos.x, touch_pos.y, 35, 35);
 		// draw dot
 		fill( 140, 220, 200, 200);
 		noStroke();
-		ellipse( touch.getX(), touch.getY(), 5, 5);
+		ellipse( touch_pos.x, touch_pos.y, 5, 5);
 		// draw touch getT()ext
 		textAlign( LEFT, CENTER);
 		textSize( 35);
 		textMode( MODEL);
-		text( touch_text, touch.getX() + 30, touch.getY() + 5);
+		text( touch_text, touch_pos.x + 30, touch_pos.y + 5);
 	}
 }
