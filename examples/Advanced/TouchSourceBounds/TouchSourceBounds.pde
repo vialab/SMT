@@ -36,6 +36,16 @@ void setup(){
 	binder_custom.setBindMatrix( bind_matrix);
 	binder_custom.setClampMin( new PVector( 0, 0));
 	binder_custom.setClampMax( new PVector( 1200, 800));
+
+	//choose default touch binding method
+	//SMT.setTouchSourceBoundsActiveDisplay();
+	//SMT.setTouchSourceBoundsDisplay( 0);
+	//SMT.setTouchSourceBoundsDisplay( ":0.1");
+	//SMT.setTouchSourceBoundsRect(
+	//	new Rectangle( 100, 100, 1000, 600));
+	//SMT.setTouchSourceBoundsScreen();
+	//SMT.setTouchSourceBoundsSketch();
+	//SMT.setTouchSourceBoundsCustom( binder_custom);
 }
 
 //Draw function for the sketch
