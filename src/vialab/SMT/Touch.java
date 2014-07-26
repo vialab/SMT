@@ -290,7 +290,7 @@ public class Touch {
 	public long getSessionID(){
 		return cursor.getSessionID();
 	}
-	
+
 	public float getX(){
 		return position.x;
 	}
