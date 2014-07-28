@@ -1355,8 +1355,8 @@ public class SMT {
 	 * @param name The name of the zone to remove
 	 * @return Whether all of the zones were removed successfully
 	 */
-	public static boolean remove(String name){
-		return remove(get(name));
+	public static boolean remove( String name){
+		return remove( get( name));
 	}
 
 	/**

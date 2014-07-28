@@ -655,6 +655,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		stroke( 255, 255, 255, 150);
 		rect( 0, 0, width, height);
 		fill( 255, 255, 255, 150);
+		textSize( 16);
 		text("No Draw Method", 0, 0, width, height);
 	}
 	/** Override to specify a behavior for pickDraw */
@@ -1727,6 +1728,27 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	//////////////////////
 	// Other Accessors //
 	//////////////////////
+
+	/**
+	 * Indicates whether another object is equal to this one
+	 * @param other the object with which to compare
+	 * @return true if this object's hashcode equals the other's
+	 */
+	@Override
+	public boolean equals( Object other){
+		return this.hashCode() == other.hashCode();
+	}
+
+	/**
+	 * Create a hashcode for this zone
+	 * @return a hashcode for this zone
+	 */
+	@Override
+	public int hashCode(){
+		return Objects.hash(
+			applet, parent, name, x, y, height, width, dimension,
+			matrix, pickColor, renderer_name, direct);
+	}
 
 	/**
 	 * Enable or disable drawing for this zone.
