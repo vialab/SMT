@@ -116,7 +116,7 @@ public class ViewportZone extends Zone {
 	 * Sets the zone used to contain all children.
 	 * 
 	 * Use this if you want to use a custom class that extends ViewportZone.Container for this viewport's container. This function will not migrate any current children from the old container to this new contain. It is recommended that if a migration is required or desireable, it be done manually.
-	 * @param name the desired container
+	 * @param container the desired container
 	 */
 	public void setContainer( Container container){
 		this.container = container;

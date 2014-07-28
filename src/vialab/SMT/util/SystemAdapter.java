@@ -244,9 +244,8 @@ public class SystemAdapter implements ComponentListener {
 			throw new ArrayIndexOutOfBoundsException( index);
 	}
 	/**
-	 * Get the ID string of the display at the specified index
-	 * @param index the index of the display
-	 * @return the ID string of the display at the specified index
+	 * Get the IDs of every display
+	 * @return an array containing every display's ID string
 	 */
 	public String[] getDisplayIDs(){
 		String[] result = new String[ devices.length];
