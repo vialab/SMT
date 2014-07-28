@@ -1745,7 +1745,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 */
 	@Override
 	public int hashCode(){
-		return Objects.hash(
+		return java.util.Objects.hash(
 			applet, parent, name, x, y, height, width, dimension,
 			matrix, pickColor, renderer_name, direct);
 	}
