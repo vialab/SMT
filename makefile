@@ -66,6 +66,8 @@ cp-to-usb: package
 test: test-display
 
 # demos
+test-bubblepop: build
+	pshell examples/Demos/BubblePop/
 test-keyboard: build
 	pshell examples/Demos/Keyboard
 test-tablehockey: build
@@ -102,3 +104,7 @@ test-ripple: build
 	pshell tests/ripple
 test-viewport: build
 	pshell tests/viewport
+
+# bug tests
+#test-asdf: build
+#	pshell tests/asdf

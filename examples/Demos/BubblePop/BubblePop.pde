@@ -1,41 +1,75 @@
 /**
- *  This sketch emulates coloured bubbles being popped by touch.
- *  It shows dynamic add and remove of Zones.
+ *	This sketch emulates coloured bubbles being popped by touch.
+ *	It shows dynamic add and remove of Zones.
  */
 import vialab.SMT.*;
 
+//vars
+int window_width = 1200;
+int window_height = 800;
+//other
+int zone_count = 0;
+boolean draw_fps = true;
+
 class BubbleZone extends Zone {
-  color c;
-  BubbleZone(String name, int x, int y, int w, int h, color c) {
-    super(name, x, y, w, h);
-    this.c=c;
-    translate(random(displayWidth-100), random(displayHeight-100));
-  }
+  public boolean dead = false;
+  public int red;
+  public int green;
+  public int blue;
+	public BubbleZone(){
+		super( "BubbleZone", 0, 0, 100, 100);
+		this.red = (int)( 60 + random( 160));
+		this.green = (int)( 60 + random( 160));
+		this.blue = (int)( 60 + random( 160));
+		this.translate(
+			50 + random( window_width - 100),
+			50 + random( window_height - 100));
+	}
 }
 
-void setup() {
-  size(displayWidth, displayHeight, SMT.RENDERER);
-  SMT.init(this, TouchSource.AUTOMATIC);
+void setup(){
+	size( window_width, window_height, SMT.RENDERER);
+	SMT.init( this, TouchSource.AUTOMATIC);
+  registerMethod( "pre", this);
 }
 
-void draw() {
-  if (SMT.getZones().length<100) {
-    SMT.add(new BubbleZone("Bubble", 0, 0, 100, 100, color(random(255), random(255), random(255))));
-  }
-  background(79, 129, 189);
-  fill(255);
-  text(round(frameRate)+"fps, # of zones: "+SMT.getZones().length, width/2, 10);
+void pre(){
+	while( zone_count < 100){
+		SMT.add( new BubbleZone());
+		zone_count++;
+	}
 }
 
-void drawBubble(BubbleZone zone) {
-  fill(zone.c);
-  ellipse(zone.width/2, zone.height/2, zone.width, zone.height);
+//draw method
+void draw(){
+  background( 30);
+  if( draw_fps) drawFrameRate();
 }
 
-void pickDrawBubble(BubbleZone zone) {
-  ellipse(zone.width/2, zone.height/2, zone.width, zone.height);
+//bubble zone methods
+void drawBubbleZone( BubbleZone zone){
+	noStroke();
+	fill( zone.red, zone.green, zone.blue, 200);
+  //ellipseMode( CORNER);
+  ellipse( 0, 0, zone.width, zone.height);
+}
+void pickDrawBubbleZone( BubbleZone zone){
+  if( ! zone.dead)
+    ellipse( 0, 0, zone.width, zone.height);
+}
+void touchDownBubbleZone( BubbleZone zone, Touch touch){
+  println("asdf");
+	SMT.remove( zone);
 }
 
-void touchBubble(BubbleZone zone) {
-  SMT.remove(zone);
+//drawing methods
+public void drawFrameRate(){
+  float fps = this.frameRate;
+  String fps_text = String.format( "fps: %.0f", fps);
+  pushStyle();
+  fill( 240, 240, 240, 180);
+  textAlign( LEFT, TOP);
+  textSize( 32);
+  text( fps_text, 10, 10);
+  popStyle();
 }
