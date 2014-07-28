@@ -30,6 +30,7 @@ class BubbleZone extends Zone {
 
 void setup(){
 	size( window_width, window_height, SMT.RENDERER);
+	((javax.swing.JFrame) frame).setResizable( true);
 	SMT.init( this, TouchSource.AUTOMATIC);
 	registerMethod( "pre", this);
 }
@@ -59,7 +60,7 @@ void drawBubbleZone( BubbleZone zone){
 		(float)( zone.width * ( 1 + zone.ani_step)),
 		(float)( zone.height * ( 1 + zone.ani_step)));
 	if( zone.dead){
-		zone.ani_step += 0.14;
+		zone.ani_step += 0.10;
 		//remove if animation finished
 		if( zone.ani_step > 1){
 			SMT.remove( zone);
