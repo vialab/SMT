@@ -10,10 +10,10 @@ import java.awt.*;
 int window_width = 1200;
 int window_height = 800;
 //keyboard shortcuts
-char key_fps = 'a';
-char key_count = 's';
-char key_info = 'd';
-char key_trail = 'f';
+final char key_fps = 'a';
+final char key_count = 's';
+final char key_info = 'd';
+final char key_trail = 'f';
 //others
 boolean draw_fps = true;
 boolean draw_count = true;
@@ -56,7 +56,7 @@ public void drawTouchCount(){
 	popStyle();
 }
 public void drawTouchInfo(){
-	for( Touch touch : SMT.getTouches()){
+	for( vialab.SMT.Touch touch : SMT.getTouches()){
 		String touch_text = String.format(
 			"id: %d\n" +
 				"port: %d\n" +

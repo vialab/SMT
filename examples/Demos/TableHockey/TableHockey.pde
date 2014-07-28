@@ -131,7 +131,7 @@ public PVector scale( PVector vector, double scalar){
 class Puck extends Zone {
 	//static fields
 	final static String name = "Puck";
-	final static float aniStepsPerDraw = 0.05;
+	final static float aniStepsPerDraw = 0.15;
 	final static float maxSpeed = 100.0;
 	final static int defaultRadius = 30;
 	final static float initialSpeedBound = 10;
@@ -163,7 +163,7 @@ class Puck extends Zone {
 	}
 
 	//SMT override methods
-	public void drawImpl(){
+	public void draw(){
 		if( !scored){
 			stroke( 255, 255, 255, 50);
 			fill( 150, 50, 50, 255);
@@ -183,13 +183,13 @@ class Puck extends Zone {
 			}
 		}
 	}
-	public void pickDrawImpl() {
+	public void pickDraw() {
 		if( ! scored)
 			ellipse(
 				position.x, position.y,
 				this.width, this.height);
 	}
-	public void touchImpl(){
+	public void touch(){
 		Touch touch = getActiveTouch(0);
 		assert( touch != null);
 
