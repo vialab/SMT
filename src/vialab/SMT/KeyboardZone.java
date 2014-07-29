@@ -32,12 +32,14 @@ public class KeyboardZone extends Zone {
 			return false;
 		}
 		
-		protected void touchImpl(){}
+		@Override
+		public void touch(){}
 		
-		protected void pickDrawImpl(){}
+		@Override
+		public void pickDraw(){}
 
 		@Override
-		public void drawImpl() {
+		public void draw() {
 			KeyboardZone kb = (KeyboardZone) getParent();
 			smooth(8);
 			fill(kb.backgroundColor, kb.alpha);
@@ -152,6 +154,9 @@ public class KeyboardZone extends Zone {
 				keyDown();
 			}
 		}
+
+		@Override
+		public void touchImpl(){}
 		
 		@Override
 		public void assign(Touch... touches) {

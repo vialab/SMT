@@ -23,7 +23,8 @@ void setup(){
 	keyboard.setLocation( 45, 300);
 	keyboard.addKeyListener( this);
 	System.out.printf(
-		"w,h: %d, %d\n", keyboard.getWidth(), keyboard.getHeight());
+		"w,h: %d, %d\n",
+		keyboard.getWidth(), keyboard.getHeight());
 
 	//add our zones to the sketch
 	SMT.add( usernameZone);
