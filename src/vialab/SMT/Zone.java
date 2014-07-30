@@ -288,6 +288,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Prepares and invokes the appropriate draw function. If there is a draw funtion in the processing applet for this zone, that function is called. Otherwise, if there is drawImpl override from a subclass, that function is called. Otherwise, the draw function is called.
 	 */
 	public void invokeDraw(){
+		//is drawing enabled?
+		if( ! drawing_enabled)
+			return;
 		//setup
 		drawing_on = true;
 		this.setDelegate( SMT.renderer);
@@ -315,8 +318,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		hint( PConstants.DISABLE_OPTIMIZED_STROKE);
 
 		//invoke proper draw method
-		if( drawing_enabled)
-			invokeDrawMethod();
+		invokeDrawMethod();
 
 		//drawing cleanup
 		popMatrix();
@@ -374,6 +376,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Prepares and invokes the appropriate pick draw function. If there is a pick draw funtion in the processing applet for this zone, that function is called. Otherwise, if there is pickDrawImpl override from a subclass, that function is called. Otherwise, the pickDraw function is called.
 	 */
 	public void invokePickDraw(){
+		//is picking enabled?
+		if( ! picking_enabled)
+			return;
 		//setup
 		//all calls need to be redirected through this so that color calls can be discarded and background calls changed
 		drawing_on = true;
@@ -420,8 +425,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		picking_on = true;
 
 		//invoke proper draw method
-		if( picking_enabled)
-			invokePickDrawMethod();
+		invokePickDrawMethod();
 
 		//picking cleanup
 		popMatrix();
@@ -486,6 +490,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Prepares and invokes the appropriate touch function. If there is a touch funtion in the processing applet for this zone, that function is called. Otherwise, if there is touchImpl override from a subclass, that function is called. Otherwise, the touch function is called.
 	 */
 	protected void invokeTouch(){
+		//is touching enabled?
+		if( ! touching_enabled)
+			return;
 		//setup
 		this.setDelegate( SMT.renderer);
 		touching_on = true;
@@ -500,29 +507,25 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		pretouch_inv.invert();
 
 		//invoke touch up
-		if( touching_enabled)
 		for( Touch touch : touchUpList)
 			this.invokeTouchUpMethod( touch);
 		touchUpList.clear();
 
 		//invoke touch down
-		if( touching_enabled)
 		for( Touch touch : touchDownList)
 			this.invokeTouchDownMethod( touch);
 		touchDownList.clear();
 
 		//invoke touch press
-		if( touching_enabled)
-			for( Touch touch : pressList)
-				this.invokePressMethod( touch);
+		for( Touch touch : pressList)
+			this.invokePressMethod( touch);
 		pressList.clear();
 
 		//invoke touch moved
-		if( touching_enabled)
-			for( Touch touch : touchMovedList)
-				this.invokeTouchMovedMethod( touch);
+		for( Touch touch : touchMovedList)
+			this.invokeTouchMovedMethod( touch);
 		//invoke touch
-		if( touching_enabled && ! touchMovedList.isEmpty())
+		if( ! touchMovedList.isEmpty())
 			this.invokeTouchMethod();
 		touchMovedList.clear();
 
@@ -1751,17 +1754,18 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Enable or disable drawing for this zone.
+	 * Enable or disable drawing for this zone and its children.
 	 *
-	 * This will not disable pick-drawing nor touching. See setPickable( boolean) or setTouchable( boolean) for disabling pick drawing or touching, respectively
+	 * This will also disable pick-drawing, but not touching. See setPickable( boolean)  for toggling pick drawing and setTouchable( boolean) for toggling touching.
 	 * 
 	 * @param enabled whether this zone should draw
 	 */
 	public void setVisible( boolean enabled){
 		drawing_enabled = enabled;
+		picking_enabled = enabled;
 	}
 	/**
-	 * Enable or disable picking for this zone.
+	 * Enable or disable picking for this zone and its children.
 	 * 
 	 * @param enabled whether this zone should pick-draw
 	 */
@@ -1769,7 +1773,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		picking_enabled = enabled;
 	}
 	/**
-	 * Enable or disable touching for this zone.
+	 * Enable or disable touching for this zone and its children.
 	 *
 	 * This will not disable picking for this zone, nor will it unassign any touches already assigned to this zone. See setPickable( false) or unassignAll(), respectively.
 	 *
