@@ -22,9 +22,10 @@ void setup(){
 	keyboard = new SwipeKeyboard();
 	keyboard.setLocation( 45, 300);
 	keyboard.addKeyListener( this);
+	keyboard.setVisible( false);
 
 	//add our zones to the sketch
-	SMT.add( usernameZone);
+	SMT.add( usernameZone, keyboard);
 }
 
 //draw the background
@@ -48,7 +49,7 @@ void touchDownUsernameZone( Zone zone){
 	//clear the username field and show the keyboard
 	username = "";
 	username_selected = true;
-	SMT.add( keyboard);
+	keyboard.setVisible( true);
 }
 
 //keyboard handle
@@ -62,7 +63,7 @@ void keyPressed(){
 				break;
 			case '\n': //enter
 				if( username.isEmpty()) break;
-				SMT.remove( keyboard);
+				keyboard.setVisible( false);
 				username_selected = false;
 				username = ":: Access Granted ::";
 				break;
