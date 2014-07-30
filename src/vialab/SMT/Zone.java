@@ -2168,7 +2168,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @return An array containing this zone's children
 	 */
 	public Zone[] getChildren(){
-		return Collections.unmodifiableList(children).toArray(new Zone[getChildCount()]);
+		return Collections.unmodifiableList(children).toArray(
+			new Zone[ getChildCount()]);
 	}
 
 	/**
@@ -2185,7 +2186,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	@Override
 	public void resetMatrix(){
 		matrix.reset();
-		matrix.translate(x, y);
+		matrix.translate( x, y);
 	}
 
 	/**
@@ -2220,7 +2221,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param height the desired height of this zone
 	 */
 	@Override
-	public void setSize(int width, int height){
+	public void setSize( int width, int height){
 		super.setSize( width, height);
 		this.width = width;
 		this.height = height;

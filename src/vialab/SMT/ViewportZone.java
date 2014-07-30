@@ -96,12 +96,19 @@ public class ViewportZone extends Zone {
 		return false;
 	}
 
-	//little utility function
+	//utility functions
 	/**
 	 * Refreshes this viewport's graphics object.
 	 */
 	public void refresh(){
 		this.refreshResolution();
+	}
+
+	/**
+	 * Refreshes this viewport's view matrix.
+	 */
+	public void resetView(){
+		container.resetMatrix();
 	}
 
 	//accessor functions
