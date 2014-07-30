@@ -146,7 +146,7 @@ class Puck extends Zone {
 
 	//constructor
 	public Puck(){
-		super(name, 0, 0, defaultRadius*2, defaultRadius*2 );
+		super( name, 0, 0, defaultRadius*2, defaultRadius*2 );
 		this.radius = defaultRadius;
 		this.mass = 1;
 		reset();

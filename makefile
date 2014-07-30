@@ -66,13 +66,15 @@ cp-to-usb: package
 test: test-display
 
 # demos
-test-bubblepop: build
+test-demo-bubblepop: build
 	pshell examples/Demos/BubblePop/
-test-keyboard: build
+test-demo-keyboard: build
 	pshell examples/Demos/Keyboard
-test-tablehockey: build
+test-demo-nodes: build
+	pshell examples/Demos/Nodes
+test-demo-tablehockey: build
 	pshell examples/Demos/TableHockey
-test-touchcolours: build
+test-demo-touchcolours: build
 	pshell examples/Demos/TouchColours
 
 # tests
@@ -92,12 +94,10 @@ test-tutorial-4: build
 	pshell examples/Tutorial/Four
 test-tutorial-java: build
 	pshell examples/Advanced/Java
-test-tutorial-swipekb: build
+test-tutorial-keyboard: build
 	pshell examples/Advanced/Keyboard
 test-tutorial-tsbounds: build
 	pshell examples/Advanced/TouchSourceBounds
-test-tutorial-viewport: build
-	pshell examples/Advanced/Viewport
 
 # prototypes
 test-ripple: build
