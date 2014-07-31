@@ -64,6 +64,17 @@ public class ViewportZone extends Zone {
 		return container.add( zone);
 	}
 
+	/**
+	 * Add the specified zone as a child of this zone.
+	 * @param zone 
+	 * @return true, if the specified zone was already a child of this zone, false otherwise
+	 */
+	@Override
+	public boolean remove( Zone zone){
+		//remove the container instead
+		return container.remove( zone);
+	}
+
 	@Override
 	public void setName( String name){
 		super.setName( name);
@@ -126,7 +137,9 @@ public class ViewportZone extends Zone {
 	 * @param container the desired container
 	 */
 	public void setContainer( Container container){
+		super.remove( this.container);
 		this.container = container;
+		super.add( this.container);
 	}
 	/**
 	 * Gets the zone currently being used to contain all children.
