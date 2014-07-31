@@ -112,7 +112,7 @@ public class SwipeKeyboard extends Zone
 	 * @param  resolver The desired swipe resolver.
 	 */
 	public SwipeKeyboard( SwipeKeyboardLayout layout, SwipeResolver resolver){
-		super( "Swipe Keyboard");
+		super( "SwipeKeyboard");
 		anchors = new Vector<AnchorZone>();
 		keys = new Vector<KeyZone>();
 		modifierKeys = new Vector<ModifierKeyZone>();
