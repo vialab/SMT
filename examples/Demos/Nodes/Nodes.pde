@@ -11,10 +11,14 @@ boolean window_fullscreen = false;
 int window_width = 1200;
 int window_height = 800;
 //draw toggles
+boolean draw_edges = true;
 boolean draw_fps = true;
 //zones
 ViewportZone viewport;
-Zone frame;
+Zone edge_drawer, frame;
+Button reset_view, reset_nodes;
+//zone toggles
+boolean buttons_enabled = true;
 //other vars
 Physics physics;
 Vector<Node> nodes;
@@ -25,6 +29,10 @@ PFont text_font;
 
 //Setup function for the applet
 void setup(){
+	if( window_fullscreen){
+		window_width = displayWidth;
+		window_height = displayHeight;
+	}
 	//SMT and Processing setup
 	size( window_width, window_height, SMT.RENDERER);
 	this.registerMethod( "pre", this);
@@ -39,23 +47,28 @@ void setup(){
 		"Viewport", 50, 50, window_width - 100, window_height - 100);
 	frame = new Zone( "Frame",
 		viewport.x, viewport.y, viewport.width, viewport.height);
-	frame.setPickable( false);
 	SMT.add( viewport, frame);
 
 	//create and add reset buttons
-	ResetButton reset_view = new ResetButton( "Reset View"){
+	reset_view = new Button( "Reset View"){
 		@Override
 		public void touchDown( Touch touch){
-			println("asdf");
 			resetView();}};
-	ResetButton reset_nodes = new ResetButton( "Reset Nodes"){
+	reset_nodes = new Button( "Reset Nodes"){
 		@Override
 		public void touchDown( Touch touch){
-			println("asdf");
 			resetNodes();}};
-	reset_view.setLocation( 10, - 45);
-	reset_nodes.setLocation( 20 + reset_view.width, - 45);
+	reset_view.setLocation( 0, - 45);
+	reset_nodes.setLocation( 10 + reset_view.width, - 45);
+	reset_view.setVisible( buttons_enabled);
+	reset_nodes.setVisible( buttons_enabled);
 	frame.add( reset_view, reset_nodes);
+
+	//create and add edge drawer
+	edge_drawer = new Zone( "EdgeDrawer");
+	edge_drawer.setVisible( draw_edges);
+	edge_drawer.setPickable( false);
+	viewport.add( edge_drawer);
 
 	//setup nodes and edges
 	edges = new Vector<Edge>();
@@ -70,20 +83,42 @@ void setup(){
 void resetView(){
 	viewport.resetView();
 }
-void resetNodes(){}
+void resetNodes(){
+	edges.clear();
+	for( Node node : nodes)
+		viewport.remove( node);
+	nodes.clear();
+	nodeGen();
+	edgeGen();
+	System.gc();
+}
 void nodeGen(){
-	float extra_space = 1000.0f;
+	float extra_space = 300.0f;
 	float min_x = - extra_space;
 	float min_y = - extra_space;
 	float max_x = viewport.width + extra_space;
 	float max_y = viewport.height + extra_space;
-	nodes.add( new Node(
-		viewport.width / 2, viewport.height / 2));
+	for( int i = 0; i < node_count; i++)
+		nodes.add( new Node(
+			random( min_x, max_x),
+			random( min_y, max_y)));
 	for( Node node : nodes)
 		viewport.add( node);
 }
-void edgeGen(){}
-
+void edgeGen(){
+	int i = 0;
+	Random dice = new Random( System.nanoTime());
+	while( i < edge_count){
+		Node node_a = nodes.get(
+			dice.nextInt( nodes.size()));
+		Node node_b = nodes.get(
+			dice.nextInt( nodes.size()));
+		if( node_a == node_b) continue;
+		if( node_a.connectsTo( node_b)) continue;
+		node_a.connect( node_b);
+		i++;
+	}
+}
 
 //applet methods
 void pre(){
@@ -117,7 +152,13 @@ void keyPressed(){
 			resetView();
 			break;}
 		case 'e':{
-			resetView();
+			draw_edges = ! draw_edges;
+			edge_drawer.setVisible( draw_edges);
+			break;}
+		case 'a':{
+			buttons_enabled = ! buttons_enabled;
+			reset_view.setVisible( buttons_enabled);
+			reset_nodes.setVisible( buttons_enabled);
 			break;}
 		case 'f':{
 			draw_fps = ! draw_fps;
@@ -132,10 +173,16 @@ void drawViewport( Zone zone){
 	noStroke();
 	rect( 0, 0, zone.width, zone.height);
 }
-void drawEdges(){}
 void touchViewport( Zone zone){
 	zone.pinch(); //aka. rst( false, true, true)
 }
+
+void drawEdgeDrawer(){
+	for( Edge edge : edges)
+		edge.draw();
+}
+void pickDrawEdgeDrawer( Zone zone){}
+
 
 void drawFrame( Zone zone){
 	noFill();
@@ -143,6 +190,7 @@ void drawFrame( Zone zone){
 	strokeWeight( 5);
 	rect( 0, 0, zone.width, zone.height);
 }
+void pickDrawFrame( Zone zone){}
 
 //static functions
 //projection of one onto other
@@ -169,6 +217,26 @@ class Edge {
 		this.a = a;
 		this.b = b;
 	}
+	public void draw(){
+		strokeWeight( 2);
+		stroke( 140, 200);
+		line(
+			a.position.x, a.position.y,
+			b.position.x, b.position.y);
+		stroke( 240, getAlpha());
+		strokeWeight( 4);
+		line(
+			a.position.x, a.position.y,
+			b.position.x, b.position.y);
+	}
+	public float getAlpha(){
+		return Math.max(
+			a.getAlpha(),
+			b.getAlpha());
+	}
+	public boolean contains( Node node){
+		return a == node || b == node;
+	}
 };
 
 class Node extends Zone {
@@ -179,6 +247,7 @@ class Node extends Zone {
 	public Vector<Edge> edges;
 	public PVector velocity;
 	public PVector position;
+	public float inset = 5.0f;
 	public float radius = 25.0f;
 	public boolean selected;
 	public boolean animating;
@@ -186,36 +255,42 @@ class Node extends Zone {
 	//constructors
 	public Node( float x, float y){
 		super();
+		this.edges = new Vector<Edge>();
 		this.position = new PVector( x, y);
 		this.velocity = new PVector();
 		this.selected = false;}
 	//public functions
-	public void connect( Node other){}
+	public boolean connectsTo( Node other){
+		for( Edge edge : edges)
+			if( edge.contains( other))
+				return true;
+		return false;
+	}
+	public void connect( Node other){
+		Edge edge = new Edge( this, other);
+		this.edges.add( edge);
+		other.edges.add( edge);
+		Nodes.this.edges.add( edge);}
 	//zone overrides
 	@Override
 	public void draw(){
-		if( ! animating){
-			strokeWeight( 5);
-			stroke( 240, 240, 240, selected ? 140 : 0);
-			fill( 150, 50, 50, 200);
-			ellipseMode( RADIUS);
-			ellipse(
-				position.x, position.y,
-				this.radius, this.radius);
-		} else {
-			strokeWeight( 5);
-			float alpha = ( selected ? ani_step : ( 1.0 - ani_step));
-			stroke( 240, 240, 240, 140 * alpha);
-			fill( 150, 50, 50, 200);
-			ellipseMode( RADIUS);
-			ellipse(
-				position.x, position.y,
-				this.radius, this.radius);
+		stroke( 240, this.getAlpha());
+		strokeWeight( 5);
+		fill( 150, 50, 50, 240);
+		ellipseMode( RADIUS);
+		ellipse(
+			position.x, position.y,
+			this.radius, this.radius);
+		if( animating){
 			ani_step += aniStepsPerDraw;
-			if( ani_step > 1.0){
+			if( ani_step > 1.0)
 				animating = false;
-			}
 		}
+	}
+	public float getAlpha(){
+		return animating ?
+			( 180 * ( selected ? ani_step : ( 1.0 - ani_step))) :
+			( selected ? 180 : 0);
 	}
 	public void pickDraw(){
 		ellipseMode( RADIUS);
@@ -230,53 +305,80 @@ class Node extends Zone {
 		float dx = touch_rel.x - position.x;
 		float dy = touch_rel.y - position.y;
 		velocity.x = dx * 20;
-		velocity.y = dy * 20;}
+		velocity.y = dy * 20;
+	}
 	public void touchDown( Touch touch){}
 	public void touchMoved( Touch touch){}
 	public void assign( Touch... touches){
 		super.assign( touches);
 		selected = true;
 		ani_step = animating ? ( 1.0 - ani_step) : 0.0;
-		animating = true;}
+		animating = true;
+	}
 	public void unassign( Touch touch){
 		super.unassign( touch);
 		if( this.getNumTouches() == 0){
 			selected = false;
 			ani_step = animating ? ( 1.0 - ani_step) : 0.0;
-			animating = true;}}
+			animating = true;
+		}
+	}
 };
 
-class ResetButton extends Zone {
+class Button extends Zone {
+	//constants
+	private static final float aniStepsPerDraw = 0.25;
 	//private fields
 	private String text;
 	private PGraphics text_graphics = null;
 	private boolean selected;
+	public boolean animating;
+	public float ani_step;
 	//constructors
-	public ResetButton( String text){
-		super( 0, 0, 200, 40);
+	public Button( String text){
+		super( 0, 0, 160, 40);
 		this.text = text;
 		this.setCaptureTouches( false);
 	}
 	//zone overrides
 	public void draw(){
-		fill( 40, 220);
-		stroke( 240, 200);
-		rect( 0, 0, this.width, this.height);
+		if( animating){
+			float alpha = ( selected ? ani_step : ( 1.0 - ani_step));
+			stroke( 220, 140 * alpha);
+		} else {
+			stroke( 220, selected ? 140 : 0);
+		}
+		strokeWeight( 3);
+		fill( 15, 220);
+		rect( 0, 0, this.width, this.height, 4);
 		textAlign( CENTER, CENTER);
 		textFont( text_font);
-		fill( 200, 220);
+		fill( 220, 220);
 		text( this.text, this.width / 2, this.height / 2);
+		if( animating){
+			ani_step += aniStepsPerDraw;
+			if( ani_step > 1.0)
+				animating = false;
+		}
 	}
 	public void pickDraw(){
-		rect( 0, 0, this.width, this.height);
+		rect( 0, 0, this.width, this.height, 5);
 	}
-	public void touch(){
-		println("asdf");
-		selected = true;}
+	public void touch(){}
+	public void assign( Touch... touches){
+		super.assign( touches);
+		selected = true;
+		ani_step = animating ? ( 1.0 - ani_step) : 0.0;
+		animating = true;
+	}
 	public void unassign( Touch touch){
 		super.unassign( touch);
-		if( this.getNumTouches() == 0)
-			selected = false;}
+		if( this.getNumTouches() == 0){
+			selected = false;
+			ani_step = animating ? ( 1.0 - ani_step) : 0.0;
+			animating = true;
+		}
+	}
 };
 
 // we're probably not gonna use this as a thread... but we could.
@@ -338,7 +440,9 @@ class Physics extends Thread {
 
 			PVector difference = PVector.sub(
 				other.position, node.position);
-			float distance = difference.mag() - 2 * node.radius - other.radius;
+			float distance = difference.mag()
+				- node.inset - node.inset
+				- node.radius - other.radius;
 			if( distance < 0){
 				difference.normalize();
 				

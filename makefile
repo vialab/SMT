@@ -63,7 +63,7 @@ cp-to-usb: package
 	cp SMT.zip /mnt/stronghold/
 
 #test commands
-test: test-display
+test: test-demo-nodes
 
 # demos
 test-demo-bubblepop: build
