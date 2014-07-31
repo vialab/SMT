@@ -61,12 +61,15 @@ void setup(){
 	reset_view.setLocation( 0, - 45);
 	reset_nodes.setLocation( 10 + reset_view.width, - 45);
 	reset_view.setVisible( buttons_enabled);
+	reset_view.setPickable( buttons_enabled);
 	reset_nodes.setVisible( buttons_enabled);
+	reset_nodes.setPickable( buttons_enabled);
 	frame.add( reset_view, reset_nodes);
 
 	//create and add edge drawer
 	edge_drawer = new Zone( "EdgeDrawer");
 	edge_drawer.setVisible( draw_edges);
+	edge_drawer.setPickable( draw_edges);
 	edge_drawer.setPickable( false);
 	viewport.add( edge_drawer);
 
@@ -161,11 +164,14 @@ void keyPressed(){
 		case 'e':{
 			draw_edges = ! draw_edges;
 			edge_drawer.setVisible( draw_edges);
+			edge_drawer.setPickable( draw_edges);
 			break;}
 		case 'a':{
 			buttons_enabled = ! buttons_enabled;
 			reset_view.setVisible( buttons_enabled);
+			reset_view.setPickable( buttons_enabled);
 			reset_nodes.setVisible( buttons_enabled);
+			reset_nodes.setPickable( buttons_enabled);
 			break;}
 		case 'f':{
 			draw_fps = ! draw_fps;

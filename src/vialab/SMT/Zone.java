@@ -1756,13 +1756,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Enable or disable drawing for this zone and its children.
 	 *
-	 * This will also disable pick-drawing, but not touching. See setPickable( boolean)  for toggling pick drawing and setTouchable( boolean) for toggling touching.
+	 * This will not disable pick-drawing nor touching. See setPickable( boolean) for  and setTouchable( boolean), respectively.
 	 * 
 	 * @param enabled whether this zone should draw
 	 */
 	public void setVisible( boolean enabled){
 		drawing_enabled = enabled;
-		picking_enabled = enabled;
+		//picking_enabled = enabled;
 	}
 	/**
 	 * Enable or disable picking for this zone and its children.

@@ -23,6 +23,7 @@ void setup(){
 	keyboard.setLocation( 45, 300);
 	keyboard.addKeyListener( this);
 	keyboard.setVisible( false);
+	keyboard.setPickable( false);
 
 	//add our zones to the sketch
 	SMT.add( usernameZone, keyboard);
@@ -50,6 +51,7 @@ void touchDownUsernameZone( Zone zone){
 	username = "";
 	username_selected = true;
 	keyboard.setVisible( true);
+	keyboard.setPickable( true);
 }
 
 //keyboard handle
@@ -64,6 +66,7 @@ void keyPressed(){
 			case '\n': //enter
 				if( username.isEmpty()) break;
 				keyboard.setVisible( false);
+				keyboard.setPickable( false);
 				username_selected = false;
 				username = ":: Access Granted ::";
 				break;
