@@ -84,13 +84,14 @@ void resetView(){
 	viewport.resetView();
 }
 void resetNodes(){
+	//clean up old data
 	edges.clear();
 	for( Node node : nodes)
 		viewport.remove( node);
 	nodes.clear();
+	//generate new data
 	nodeGen();
 	edgeGen();
-	System.gc();
 }
 void nodeGen(){
 	float extra_space = 300.0f;
@@ -98,23 +99,29 @@ void nodeGen(){
 	float min_y = - extra_space;
 	float max_x = viewport.width + extra_space;
 	float max_y = viewport.height + extra_space;
+	//create nodes with randomized positions
 	for( int i = 0; i < node_count; i++)
 		nodes.add( new Node(
 			random( min_x, max_x),
 			random( min_y, max_y)));
+	//add nodes to viewport
 	for( Node node : nodes)
 		viewport.add( node);
 }
 void edgeGen(){
 	int i = 0;
 	Random dice = new Random( System.nanoTime());
+	//while we still need edges
 	while( i < edge_count){
+		//pick two random nodes
 		Node node_a = nodes.get(
 			dice.nextInt( nodes.size()));
 		Node node_b = nodes.get(
 			dice.nextInt( nodes.size()));
+		//checks
 		if( node_a == node_b) continue;
 		if( node_a.connectsTo( node_b)) continue;
+		//add edge
 		node_a.connect( node_b);
 		i++;
 	}
@@ -183,7 +190,6 @@ void drawEdgeDrawer(){
 }
 void pickDrawEdgeDrawer( Zone zone){}
 
-
 void drawFrame( Zone zone){
 	noFill();
 	stroke( 240, 200);
@@ -193,7 +199,7 @@ void drawFrame( Zone zone){
 void pickDrawFrame( Zone zone){}
 
 //static functions
-//projection of one onto other
+// projection of one onto other
 public PVector projection( PVector one, PVector other){
 	PVector result = new PVector( other.x, other.y);
 	result.normalize();
@@ -218,11 +224,13 @@ class Edge {
 		this.b = b;
 	}
 	public void draw(){
+		//draw base line
 		strokeWeight( 2);
 		stroke( 140, 200);
 		line(
 			a.position.x, a.position.y,
 			b.position.x, b.position.y);
+		//draw highlight line
 		stroke( 240, getAlpha());
 		strokeWeight( 4);
 		line(
@@ -243,12 +251,13 @@ class Node extends Zone {
 	//constants
 	public static final float mass = 1.0f;
 	private static final float aniStepsPerDraw = 0.15;
-	//fields
+	//data fields
 	public Vector<Edge> edges;
 	public PVector velocity;
 	public PVector position;
 	public float inset = 5.0f;
 	public float radius = 25.0f;
+	//drawing fields
 	public boolean selected;
 	public boolean animating;
 	public float ani_step;
@@ -270,10 +279,12 @@ class Node extends Zone {
 		Edge edge = new Edge( this, other);
 		this.edges.add( edge);
 		other.edges.add( edge);
-		Nodes.this.edges.add( edge);}
+		Nodes.this.edges.add( edge);
+	}
 	//zone overrides
 	@Override
 	public void draw(){
+		//draw ellipse
 		stroke( 240, this.getAlpha());
 		strokeWeight( 5);
 		fill( 150, 50, 50, 240);
@@ -281,6 +292,7 @@ class Node extends Zone {
 		ellipse(
 			position.x, position.y,
 			this.radius, this.radius);
+		//increment animation step
 		if( animating){
 			ani_step += aniStepsPerDraw;
 			if( ani_step > 1.0)
@@ -342,15 +354,12 @@ class Button extends Zone {
 	}
 	//zone overrides
 	public void draw(){
-		if( animating){
-			float alpha = ( selected ? ani_step : ( 1.0 - ani_step));
-			stroke( 220, 140 * alpha);
-		} else {
-			stroke( 220, selected ? 140 : 0);
-		}
+		//draw rect
+		stroke( 220, getAlpha());
 		strokeWeight( 3);
 		fill( 15, 220);
 		rect( 0, 0, this.width, this.height, 4);
+		//draw text
 		textAlign( CENTER, CENTER);
 		textFont( text_font);
 		fill( 220, 220);
@@ -360,6 +369,11 @@ class Button extends Zone {
 			if( ani_step > 1.0)
 				animating = false;
 		}
+	}
+	public float getAlpha(){
+		return animating ?
+			( 180 * ( selected ? ani_step : ( 1.0 - ani_step))) :
+			( selected ? 180 : 0);
 	}
 	public void pickDraw(){
 		rect( 0, 0, this.width, this.height, 5);
