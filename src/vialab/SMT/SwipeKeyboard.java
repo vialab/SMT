@@ -27,9 +27,9 @@ public class SwipeKeyboard extends Zone
 	/** Enables and disables debug print statements */
 	private static final boolean debug = false;
 
-	////////////////////
-	// public fields //
-	////////////////////
+	////////////
+	// zones //
+	////////////
 	/** A list of all the anchors contained by this keyboard */
 	private Vector<AnchorZone> anchors;
 	/** A list of all the keys contained by this keyboard */
@@ -68,12 +68,14 @@ public class SwipeKeyboard extends Zone
 	private boolean shift_enabled = false;
 	/** The current modifier mask */
 	private int modifierMask = 0;
+	/** Whether the anchors are enabled */
+	private boolean anchors_enabled = false;
 
 	/////////////////////////////KeyEvent.VK_NUM_LOCK
 	// private drawing fields //
 	/////////////////////////////
 	/** Indicates whether the keyboard's background should be drawn. */
-	private boolean drawBackground = false;
+	private boolean background_enabled = false;
 	/** The location of the keyboard. */
 	protected PVector position;
 	/** The degree of rounding of the top left corner of this key. */
@@ -217,7 +219,7 @@ public class SwipeKeyboard extends Zone
 	 */
 	@Override
 	public void drawImpl() {
-		if( drawBackground){
+		if( background_enabled){
 			fill( 0, 0, 0, 200);
 			noStroke();
 			rect(
@@ -471,12 +473,37 @@ public class SwipeKeyboard extends Zone
 	// public methods //
 	/////////////////////
 	/**
-	 * Defines whether or not the background of the keyboard should be drawn.
-	 * @param enabled True, if the background should be drawn, or false, if it
-	 *                should not be.
+	 * Get whether or not the anchors of the keyboard are enabled or not.
+	 * @return whether anchors is enabled
+	 */
+	public boolean getAnchorsEnabled(){
+		return this.anchors_enabled;
+	}
+	/**
+	 * Toggles whether the anchors of the keyboard are enabled or not.
+	 * @param enabled 
+	 */
+	public void setAnchorsEnabled( boolean enabled){
+		this.anchors_enabled = enabled;
+		for( AnchorZone anchor : anchors){
+			anchor.setVisible( enabled);
+			anchor.setPickable( enabled);
+			anchor.setTouchable( enabled);
+		}
+	}
+	/**
+	 * Get whether or not the background of the keyboard is enabled or not.
+	 * @return whether the background is enabled
+	 */
+	public boolean getBackgroundEnabled(){
+		return background_enabled;
+	}
+	/**
+	 * Toggles whether or not the background of the keyboard should be drawn.
+	 * @param enabled whether the background should be drawn
 	 */
 	public void setBackgroundEnabled( boolean enabled){
-		drawBackground = enabled;
+		background_enabled = enabled;
 	}
 	/**
 	 * Sets the degree of rounding of the key's corners.
