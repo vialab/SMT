@@ -70,6 +70,8 @@ test-demo-bubblepop: build
 	pshell examples/Demos/BubblePop/
 test-demo-keyboard: build
 	pshell examples/Demos/Keyboard
+test-demo-login: build
+	pshell examples/Demos/Login
 test-demo-nodes: build
 	pshell examples/Demos/Nodes
 test-demo-tablehockey: build
@@ -94,8 +96,6 @@ test-tutorial-4: build
 	pshell examples/Tutorial/Four
 test-tutorial-java: build
 	pshell examples/Advanced/Java
-test-tutorial-keyboard: build
-	pshell examples/Advanced/Keyboard
 test-tutorial-tsbounds: build
 	pshell examples/Advanced/TouchSourceBounds
 
@@ -106,5 +106,5 @@ test-viewport: build
 	pshell tests/viewport
 
 # bug tests
-#test-asdf: build
-#	pshell tests/asdf
+test-asdf: build
+	pshell tests/asdf
