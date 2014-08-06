@@ -156,9 +156,9 @@ public class SMT {
 	public static boolean pversion_override = false;
 
 	//SMT version information
-	public static final int revision = 19;
-	public static final String version = "4.1b3";
-	public static final String version_pretty = "SMT 4.1 Beta 3";
+	public static final int revision = 20;
+	public static final String version = "4.1";
+	public static final String version_pretty = "SMT 4.1";
 
 	/**
 	 * Prevent SMT initialization (kinda) with protected constructor
