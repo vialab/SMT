@@ -155,6 +155,11 @@ public class SMT {
 	//supported processing version override
 	public static boolean pversion_override = false;
 
+	//SMT version information
+	public static final int revision = 19;
+	public static final String version = "4.1b3";
+	public static final String version_pretty = "SMT 4.1 Beta 3";
+
 	/**
 	 * Prevent SMT initialization (kinda) with protected constructor
 	 */
@@ -618,6 +623,33 @@ public class SMT {
 
 
 	//other functions
+
+	/**
+	 * Get the current revision number.
+	 * This number increments once for each official release and pre-release.
+	 * 
+	 * @return an integer unique to this SMT release and greater than all older SMT releases and pre-releases
+	 */
+	public static int getRevision(){
+		return SMT.revision;
+	}
+	/**
+	 * Get a string representing the current SMT version.
+	 * This string represents the git tag of this release or pre-release.
+	 *
+	 * @return a string representing the current SMT version
+	 */
+	public static String getVersion(){
+		return SMT.version;
+	}
+	/**
+	 * Get a pretty, human-readable string representing the current SMT version.
+	 *
+	 * @return a pretty, nicely formatted string representing the current SMT version
+	 */
+	public static String getPrettyVersion(){
+		return SMT.version_pretty;
+	}
 
 	/**
 	 * Get smt's renderer.
