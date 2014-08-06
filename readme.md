@@ -35,6 +35,7 @@ Installation Instructions:
  **1.**  Install Processing 2.2.1 if you do not have it already.  
  **2.**  Processing Menu bar -> sketch -> Import Library -> Add Library  
  **3.**  Search for smt in the I/O category, click Install  
+Alternatively, you can download SMT from [our website](http://vialab.science.uoit.ca/smt/download.php) or [releases page](https://github.com/vialab/SMT/graphs/contributors), and install it manually.
 
 Javadocs for SMT are available at [vialab.science.uoit.ca/smt/javadoc/](http://vialab.science.uoit.ca/smt/javadoc/)
 
