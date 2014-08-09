@@ -738,7 +738,7 @@ public class SMT {
 	 * Check that this build of SMT is compatible with the current version of processing.
 	 */
 	public static boolean checkProcessingVersion(){
-		int revision = processing.app.Base.getRevision();
+		/*int revision = processing.app.Base.getRevision();
 		String revision_name = processing.app.Base.getVersionName();
 		//check revision lower bound
 		if( revision < revision_min){
@@ -751,7 +751,7 @@ public class SMT {
 			System.out.printf(
 				"You are using Processing build %s. This build of SMT requires, at maximum, Processing %s ( build %s ). Either downgrade processing or upgrade SMT. You might find a compatible build of SMT at vialab.science.uoit.ca/smt/download.php. Alternatively, to disable this check, set SMT.pversion_override = true.\n",
 				revision_name, revision_max_name, revision_max_build);
-			return false;}
+			return false;}*/
 		//all's good :)
 		return true;
 	}
