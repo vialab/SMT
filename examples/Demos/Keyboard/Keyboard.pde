@@ -101,17 +101,24 @@ public void draw_shapes(){
 	//setup drawing options
 	pushStyle();
 	noFill();
+	pushMatrix();
+	translate( 20f, 20f);
+	float pad_x = 20;
+	float pad_y = 20;
+	float shape_w = 40;
+	float shape_h = shape_w * 2;
 	//draw pics
-	if( arrow_down_visible)
-		shape( arrow_down, 100f, 0f);
 	if( arrow_left_visible)
-		shape( arrow_left, 200f, 0f);
+		shape( arrow_left, 000f, 030f, shape_w, shape_h);
 	if( arrow_right_visible)
-		shape( arrow_right, 300f, 0f);
+		shape( arrow_right, 130f, 030f, shape_w, shape_h);
 	if( arrow_up_visible)
-		shape( arrow_up, 400f, 0f);
+		shape( arrow_up, 045f, 000f, shape_h, shape_w);
+	if( arrow_down_visible)
+		shape( arrow_down, 045f, 045f, shape_h, shape_w);
 	//clean up
 	popStyle();
+	popMatrix();
 }
 
 public void debug_shapes(){
@@ -139,9 +146,9 @@ private class SwipeDisplayer extends Zone
 	}
 	public void drawImpl(){
 		pushStyle();
-		fill( 10, 10, 10, 80);
+		fill( 20, 20, 20, 180);
 		strokeWeight( 3);
-		stroke( 200, 120, 120, 150);
+		stroke( 200, 120, 120, 180);
 		rect( 0, 0, width, height);
 		drawText( content);
 		popStyle();
