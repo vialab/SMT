@@ -1272,8 +1272,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 				//apply scale
 				if( scale){
-					//clamp ratio
 					float ratio = bar0_mag / bar1_mag;
+					//clamp ratio ?
 					scale( ratio, ratio, 1);
 				}
 			}
@@ -2622,6 +2622,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	// changing the return of this method to true will cause indirect zones only redraw if setModified(true) is called on it.
 	protected boolean updateOnlyWhenModified(){ return false;}
 
+	/**
+	 * @deprecated this feature is currently broken with no immediate plans for repair
+	 */
+	@Deprecated
 	public void enableScalingLimit( int maxW, int maxH, int minW, int minH){
 		this.scalingLimit = true;
 		this.maxWidth = maxW;
@@ -2630,6 +2634,10 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		this.minHeight = minH;
 	}
 
+	/**
+	 * @deprecated this feature is currently broken with no immediate plans for repair
+	 */
+	@Deprecated
 	public void disableScalingLimit(){
 		this.scalingLimit = false;
 	}
