@@ -12,8 +12,8 @@ import vialab.SMT.*;
 
 //constants
 boolean window_fullscreen = false;
-int window_width = 1600;
-int window_height = 900;
+int window_width = 1200;
+int window_height = 800;
 final int fps_limit = 60;
 final int puck_count = 10;
 
