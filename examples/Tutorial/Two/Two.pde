@@ -10,7 +10,7 @@ color myZone_color = #00dddd;
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
-	size( displayWidth, displayHeight, SMT.RENDERER);
+	size( 1400, 800, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//Make a new Zone

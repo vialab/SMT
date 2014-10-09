@@ -7,7 +7,7 @@ import vialab.SMT.*;
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
-	size( 1200, 800, SMT.RENDERER);
+	size( 1400, 800, SMT.RENDERER);
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//Single transformation zones

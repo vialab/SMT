@@ -5,8 +5,8 @@
 import vialab.SMT.*;
 
 boolean window_fullscreen = false;
-int window_width = 1600;
-int window_height = 900;
+int window_width = 1400;
+int window_height = 800;
 
 //Setup function for the applet
 void setup(){
