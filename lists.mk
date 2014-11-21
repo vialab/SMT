@@ -46,6 +46,7 @@ class_files = \
 	bin/vialab/SMT/TexturedTouchDrawer.class \
 	bin/vialab/SMT/TextureZone.class \
 	bin/vialab/SMT/TextZone.class \
+	bin/vialab/SMT/TextBox.class \
 	bin/vialab/SMT/Touch.class \
 	bin/vialab/SMT/TouchClient.class \
 	bin/vialab/SMT/TouchDraw.class \
