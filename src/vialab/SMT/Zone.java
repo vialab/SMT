@@ -177,7 +177,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Zone constructor, no name, position of (0,0), width and height of 100
 	 */
 	public Zone(){
-		this(null);
+		this( null);
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param name - String: Name of the zone, used in the draw, touch ,etc methods
 	 */
 	public Zone( String name){
-		this(name, SMT.zone_renderer);
+		this( name, SMT.zone_renderer);
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param renderer - String: The PGraphics renderer that draws the Zone
 	 */
 	public Zone( String name, String renderer){
-		this(name, 0, 0, 100, 100, renderer);
+		this( name, 0, 0, 100, 100, renderer);
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param height The height of the zone
 	 */
 	public Zone( int x, int y, int width, int height){
-		this(x, y, width, height, SMT.zone_renderer);
+		this( x, y, width, height, SMT.zone_renderer);
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * @param height The height of the zone
 	 */
 	public Zone( String name, int width, int height){
-		this(name, 0, 0, width, height);
+		this( name, 0, 0, width, height);
 	}
 
 	/**
@@ -707,17 +707,14 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Override to specify a behavior for keyPressed 
 	 */
-	@Deprecated
 	protected void keyPressed( KeyEvent event){}
 	/**
 	 * Override to specify a behavior for keyReleased
 	 */
-	@Deprecated
 	protected void keyReleased( KeyEvent event){}
 	/**
 	 * Override to specify a behavior for keyTyped 
 	 */
-	@Deprecated
 	protected void keyTyped( KeyEvent event){}
 
 	//impl methods
