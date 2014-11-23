@@ -104,6 +104,8 @@ test-ripple: build
 	pshell tests/ripple
 test-viewport: build
 	pshell tests/viewport
+test-textbox: build
+	pshell tests/textbox
 
 # bug tests
 test-asdf: build

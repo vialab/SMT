@@ -18,12 +18,14 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//create zones
-	Zone textzone = new TextZone( 10, 10, 200, 50,
-		"test test", false, false, false);
+	TextBox textbox = new TextBox( "test test");
+	textbox.translate( 400, 20);
 	SwipeKeyboard keyboard = new SwipeKeyboard();
+	keyboard.translate( 100, 400);
+	keyboard.addKeyListener( textbox);
 
 	//add our zones to the sketch
-	SMT.add( textzone, keyboard);
+	SMT.add( textbox, keyboard);
 }
 
 void draw(){
