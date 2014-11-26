@@ -7,7 +7,7 @@ import processing.event.KeyEvent;
  * The TextBox zone displays text inside a rectangle.
  */
 public class TextBox extends Zone {
-	//private fields
+	/// private fields
 	private String content;
 	private PFont font;
 	private boolean bg_enabled;
@@ -37,17 +37,46 @@ public class TextBox extends Zone {
 	private float text_blue = 255f;
 	//text's alpha element
 	private float text_alpha = 200f;
+	//padding's left element
+	private float padding_left = 10f;
+	//padding's right element
+	private float padding_right = 10f;
+	//padding's top element
+	private float padding_top = 10f;
+	//padding's bottom element
+	private float padding_bottom = 10f;
 
-	//constructor
+	/// constructor
+	public TextBox(){
+		this( new String());
+	}
 	public TextBox( String content){
-		super();
+		this( content, null);
+	}
+	public TextBox( String content, int width, int height){
+		this( content, null, width, height);
+	}
+	public TextBox( String content,
+			int x, int y, int width, int height){
+		this( content, null, x, y, width, height);
+	}
+	public TextBox( String content, String name){
+		this( content, name, 300, 100);
+	}
+	public TextBox( String content, String name, int width, int height){
+		this( content, name, 0, 0, width, height);
+	}
+	public TextBox( String content, String name,
+			int x, int y, int width, int height){
+		super( name, x, y, width, height);
 		this.content = content;
 		this.font = null;
 		this.bg_enabled = true;
 		this.frame_enabled = true;
-		this.autowidth_enabled = false;}
+		this.autowidth_enabled = false;
+	}
 
-	//zone methods
+	/// zone methods
 	@Override
 	public void draw(){
 		pushStyle();
@@ -67,39 +96,81 @@ public class TextBox extends Zone {
 		fill( text_red, text_green, text_blue, text_alpha);
 		textSize( 16);
 		text( content, 0, 0, width, height);
-		popStyle();}
+		popStyle();
+	}
 	@Override
 	public void pickDraw(){
-		rect( 0, 0, width, height);}
+		rect( 0, 0, width, height);
+	}
 	@Override
 	public void touch(){
-		drag();}
+		drag();
+	}
 
-	//key event handling
-	protected void keyPressed( KeyEvent event){
-		System.out.printf( "key event: %c\n", event.getKey());}
-	protected void keyReleased( KeyEvent event){
-		System.out.printf( "key event: %c\n", event.getKey());}
-	protected void keyTyped( KeyEvent event){
-		System.out.printf( "key event: %c\n", event.getKey());}
+	/// utility methods
+	/**
+	 * Automatically adjust width to accommodate all curent text
+	 */
+	public void adjustWidth(){}
 
-	//accessors
+	/// key event handling
+	@Override
+	public void keyPressed( KeyEvent event){
+		System.out.printf( "key pressed: %c\n", event.getKey());
+	}
+	@Override
+	public void keyReleased( KeyEvent event){
+		System.out.printf( "key released: %c\n", event.getKey());
+	}
+	@Override
+	public void keyTyped( KeyEvent event){
+		System.out.printf( "key typed: %c\n", event.getKey());
+		this.appendContent( String.valueOf( event.getKey()));
+	}
+
+	/// accessors
+	/**
+	 * Set whether automatic width adjustment should be enabled
+	 * @param enabled whether automatic width adjustment should be enabled
+	 */
+	public void setAutoWidthEnabled( boolean enabled){
+		this.autowidth_enabled = enabled;
+	}
+	/**
+	 * Get whether automatic width adjustment is enabled
+	 * @return whether automatic width adjustment is enabled
+	 */
+	public boolean getAutoWidthEnabled(){
+		return this.autowidth_enabled;
+	}
 	/**
 	 * Set the content of the textbox
 	 * @param content the desired content of the textbox
 	 */
 	public void setContent( String content){
-		this.content = content;}
+		this.content = content;
+		if( autowidth_enabled)
+			this.adjustWidth();
+	}
 	/**
 	 * Append to the content of the textbox
 	 * @param append content to add to the text box
 	 */
 	public void appendContent( String append){
-		this.content += append;}
+		this.content = content.concat( append);
+		if( autowidth_enabled)
+			this.adjustWidth();
+	}
+	/**
+	 * Get the content of the textbox
+	 * @return the current content of the textbox
+	 */
 	public String getContent(){
-		return this.content;}
+		return this.content;
+	}
 
-	/** Sets the desired color of the text box's frame.
+	/**
+	 * Sets the desired color of the text box's frame.
 	 * @param red The desired color's red element
 	 * @param green The desired color's green element
 	 * @param blue The desired color's blue element
@@ -109,8 +180,10 @@ public class TextBox extends Zone {
 		this.frame_red = red;
 		this.frame_green = green;
 		this.frame_blue = blue;
-		this.frame_alpha = alpha;}
-	/** Sets the desired color of the text box's background.
+		this.frame_alpha = alpha;
+	}
+	/**
+	 * Sets the desired color of the text box's background.
 	 * @param red The desired color's red element
 	 * @param green The desired color's green element
 	 * @param blue The desired color's blue element
@@ -120,18 +193,62 @@ public class TextBox extends Zone {
 		this.bg_red = red;
 		this.bg_green = green;
 		this.bg_blue = blue;
-		this.bg_alpha = alpha;}
-	/** Sets the desired color of the text box's text.
+		this.bg_alpha = alpha;
+	}
+	/**
+	 * Sets the desired color of the text box's text.
 	 * @param red The desired color's red element
 	 * @param green The desired color's green element
 	 * @param blue The desired color's blue element
 	 * @param alpha The desired color's alpha element
 	 */
-	public void settextColor( float red, float green, float blue, float alpha){
+	public void setTextColor( float red, float green, float blue, float alpha){
 		this.text_red = red;
 		this.text_green = green;
 		this.text_blue = blue;
-		this.text_alpha = alpha;}
+		this.text_alpha = alpha;
+	}
+	/**
+	 * Sets the text padding of the text box
+	 * @param left The desired padding's left component
+	 * @param right The desired padding's right component
+	 * @param top The desired padding's down component
+	 * @param bottom The desired padding's up component
+	 **/
+	public void setPadding( float left, float right, float top, float bottom){
+		this.padding_left = left;
+		this.padding_right = right;
+		this.padding_top = top;
+		this.padding_bottom = bottom;
+	}
+	/**
+	 * Sets the text padding of the text box
+	 * @param left The desired padding's left component
+	 **/
+	public void setPaddingLeft( float padding){
+		this.padding_left = padding;
+	}
+	/**
+	 * Sets the text padding of the text box
+	 * @param right The desired padding's right component
+	 **/
+	public void setPaddingRight( float padding){
+		this.padding_right = padding;
+	}
+	/**
+	 * Sets the text padding of the text box
+	 * @param top The desired padding's top component
+	 **/
+	public void setPaddingTop( float padding){
+		this.padding_top = padding;
+	}
+	/**
+	 * Sets the text padding of the text box
+	 * @param bottom The desired padding's bottom component
+	 **/
+	public void setPaddingBottom( float padding){
+		this.padding_bottom = padding;
+	}
 	/**
 	 * Gets the red aspect of the color of the textbox's frame.
 	 * @return The desired color's red element

@@ -63,7 +63,7 @@ cp-to-usb: package
 	cp $(package_file) /mnt/stronghold/
 
 #test commands
-test: test-demo-nodes
+test: test-textbox
 
 # demos
 test-demo-bubblepop: build

@@ -10,7 +10,8 @@ int window_height = 800;
 boolean draw_fps = true;
 
 //zones
-Zone asdf;
+TextBox textbox;
+SwipeKeyboard keyboard;
 
 void setup(){
 	//basic setup
@@ -18,10 +19,14 @@ void setup(){
 	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//create zones
-	TextBox textbox = new TextBox( "test test");
+	textbox = new TextBox( "test test");
+	textbox.setAutoWidthEnabled( true);
 	textbox.translate( 400, 20);
-	SwipeKeyboard keyboard = new SwipeKeyboard();
-	keyboard.translate( 100, 400);
+	keyboard = new SwipeKeyboard();
+	keyboard.setAnchorsEnabled( false);
+	keyboard.translate(
+		( window_width - keyboard.getWidth()) / 2,
+		window_height - keyboard.getHeight() - 40);
 	keyboard.addKeyListener( textbox);
 
 	//add our zones to the sketch
@@ -43,4 +48,15 @@ public void drawFrameRate(){
 	textSize( 32);
 	text( fps_text, 10, 10);
 	popStyle();
+}
+
+//keyboard handle
+void keyPressed(){
+	//println( key);
+	switch( key){
+		case 'r':{
+			textbox.setContent( "");
+			break;}
+		default: break;
+	}
 }
