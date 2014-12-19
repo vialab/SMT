@@ -1281,6 +1281,66 @@ public class SMT {
 		return SMT.sketch.add(zones);
 	}
 
+
+	/**
+	 * Add a new zone, with the given name and default position and size.
+	 *
+	 * @param name name of the zone, used in the draw, touch ,etc methods
+	 */
+	public static void addZone( String name){
+		SMT.add( new Zone( name));
+	}
+
+	/**
+	 * Add a new zone, with the given name and renderer, and default position and size.
+	 *
+	 * @param name name of the zone, used in the draw, touch ,etc methods
+	 * @param renderer the PGraphics renderer that draws the Zone
+	 */
+	public static void addZone( String name, String renderer){
+		SMT.add( new Zone( name, renderer));
+	}
+
+	/**
+	 * Add a new zone, with the given name and size, and default position.
+	 * 
+	 * @param name name of the zone, used in the draw, touch ,etc methods
+	 * @param width the width of the zone
+	 * @param height the height of the zone
+	 */
+	public static void addZone( String name, int width, int height){
+		SMT.add( new Zone( name, width, height));
+	}
+
+	/**
+	 * Add a new zone, with the given name, position, and size.
+	 * 
+	 * @param name The name of the zone, used for the reflection methods
+	 *   (drawname(),touchname(),etc)
+	 * @param x The x position of the zone
+	 * @param y The y position of the zone
+	 * @param width The width of the zone
+	 * @param height The height of the zone
+	 */
+	public static void addZone( String name, int x, int y, int width, int height){
+		SMT.add( new Zone( name, x, y, width, height));
+	}
+
+	/**
+	 * Add a new zone, with the given name, renderer, position, and size.
+	 * 
+	 * @param name The name of the zone, used for the reflection methods (drawname(),touchname(),etc)
+	 * @param x The x position of the zone
+	 * @param y The y position of the zone
+	 * @param width The width of the zone
+	 * @param height The height of the zone
+	 * @param renderer The renderer that draws the zone
+	 */
+	public static void addZone( String name, int x, int y,
+			int width, int height, String renderer){
+		SMT.add( new Zone( name, x, y, width, height, renderer));
+	}
+
 	/**
 	 * This adds zones by creating them from XML specs, the XML needs "zone"
 	 * tags, and currently supports the following variables: name, x, y, width,
