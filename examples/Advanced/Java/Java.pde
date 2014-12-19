@@ -64,7 +64,7 @@ class HappyFaceZone extends Zone {
 	public void draw(){
 		//draw circle
 		fill( 100, 150, 60, 200);
-		stroke( 0, 220);
+		stroke( 35, 220);
 		strokeWeight( 5);
 		ellipse( 100, 100, 200, 200);
 		fill( 0, 220);
