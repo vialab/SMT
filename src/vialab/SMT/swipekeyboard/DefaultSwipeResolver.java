@@ -17,18 +17,15 @@ public class DefaultSwipeResolver implements SwipeResolver{
 	/**
 	 * Create a new swipe resolver using the word list contained in the file
 	 * "resources/dictionary.txt.
-	 * @throws FileNotFoundException Thrown if the word list file,
-	 * resources/dictionary.txt, cannot be found.
 	 */
-	public DefaultSwipeResolver()
-			throws FileNotFoundException {
+	public DefaultSwipeResolver(){
 		wordlist = new Vector<String>();
 		InputStream wordfile =
 			getClass().getResourceAsStream(
 				"/resources/dictionary.txt");
-		if( wordfile == null)
-			throw new FileNotFoundException(
-				"Could not find the default wordlist");
+		if( wordfile == null){
+			System.err.println( "Could not find the default wordlist");
+			return;}
 		BufferedReader reader = new BufferedReader(
 			new InputStreamReader( wordfile));
 		String word = "";

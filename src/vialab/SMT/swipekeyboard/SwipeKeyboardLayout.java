@@ -10,7 +10,7 @@ public abstract class SwipeKeyboardLayout {
 	/**
 	 * Defines all the actions required to set a keyboard's layout, including
 	 * creation, organization, and linking of keys.
-	 * @param  keyboard The keyboard to be set up.
+	 * @param keyboard The keyboard to be set up.
 	 */
 	public abstract void setup( SwipeKeyboard keyboard);
 }
