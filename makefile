@@ -8,7 +8,7 @@ clean-specials:
 	rm -rf javadoc/ SMT/
 
 #variables
-version = 4.2a2
+version = 4.2
 cp = src:bin:lib/*:lib/processing/*
 dest = -d bin
 docscp = src:lib/*:lib/processing/*
