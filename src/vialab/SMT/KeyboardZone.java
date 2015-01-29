@@ -21,11 +21,13 @@ public class KeyboardZone extends Zone {
 	//used when we add Zones to the KeyboardZones to auto listen to its
 	//key events
 	class IndirectDrawingChildZone extends Zone{
-		
-		protected boolean updateOnlyWhenModified(){return true;}
+
+		protected boolean updateOnlyWhenModified(){
+			return true;
+		}
 		
 		IndirectDrawingChildZone(int width, int height){
-			super(0, 0, width, height);
+			super( 0, 0, width, height);
 		}
 		
 		boolean warnDraw(){
@@ -361,6 +363,8 @@ public class KeyboardZone extends Zone {
 
 	/**
 	 * [KeyboardZone description]
+	 * @param x	X-coordinate of the upper left corner of the zone
+	 * @param y	Y-coordinate of the upper left corner of the zone
 	 */
 	public KeyboardZone( int x, int y) {
 		this(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, true);
@@ -368,6 +372,8 @@ public class KeyboardZone extends Zone {
 
 	/**
 	 * [KeyboardZone description]
+	 * @param x	X-coordinate of the upper left corner of the zone
+	 * @param y	Y-coordinate of the upper left corner of the zone
 	 * @param keysSentToApplet	Sets if the key input is sent to Applet
 	 */
 	public KeyboardZone( int x, int y, boolean keysSentToApplet) {
@@ -480,7 +486,7 @@ public class KeyboardZone extends Zone {
 	 * @param alpha	Transparency level for keyboard
 	 */
 	public KeyboardZone( String name, int x, int y, int width, int height, int alpha) {
-		this(name, x, y, width, height, true, alpha);
+		this( name, x, y, width, height, true, alpha);
 	}
 
 	/**
@@ -490,11 +496,12 @@ public class KeyboardZone extends Zone {
 	 * @param y	Y-coordinate of the upper left corner of the zone
 	 * @param width	Width of the zone
 	 * @param height	Height of the zone
+	 * @param alpha	Transparency level for keyboard
 	 * @param keysSentToApplet	Sets if the key input is sent to Applet
 	 */
-	public KeyboardZone( String name, int x, int y, int width, int height, boolean keysSentToApplet,
-			int alpha) {
-		this(name, x, y, width, height, keysSentToApplet, alpha, 0, 200, 150, 0);
+	public KeyboardZone( String name, int x, int y, int width, int height,
+			boolean keysSentToApplet, int alpha) {
+		this( name, x, y, width, height, keysSentToApplet, alpha, 0, 200, 150, 0);
 	}
 	
 	/**
@@ -511,9 +518,11 @@ public class KeyboardZone extends Zone {
 	 * @param keyPressedColor	Colour of the keyboard keys when they are pressed down
 	 * @param textColor	Colour of the text in the keyboard keys
 	 */
-	public KeyboardZone( String name, int x, int y, int width, int height, boolean keysSentToApplet,
-			int alpha, int backgroundColor, int keyColor, int keyPressedColor, int textColor) {
-		this(name, x, y, width, height, keysSentToApplet, alpha, backgroundColor, keyColor, keyPressedColor, textColor, null);
+	public KeyboardZone( String name, int x, int y, int width, int height,
+			boolean keysSentToApplet, int alpha, int backgroundColor, int keyColor,
+			int keyPressedColor, int textColor) {
+		this( name, x, y, width, height, keysSentToApplet, alpha, backgroundColor,
+			keyColor, keyPressedColor, textColor, null);
 	}
 
 	/**
@@ -689,9 +698,8 @@ public class KeyboardZone extends Zone {
 	/**
 	 * This removes a KeyListener from this keyboard
 	 * 
-	 * @param listener
-	 *            The KeyListener to remove from the keyboard, usually a Zone,
-	 *            which implements the KeyListener interface
+	 * @param listener The KeyListener to remove from the keyboard,
+	 *  usually a Zone that implements the KeyListener interface
 	 */
 	public void removeKeyListener(KeyListener listener) {
 		this.keyListeners.remove(listener);
@@ -700,7 +708,7 @@ public class KeyboardZone extends Zone {
 	/**
 	 * This clears all KeyListeners from this keyboard
 	 */
-	public void clearKeyListeners(KeyListener listener) {
+	public void clearKeyListeners(){
 		this.keyListeners.clear();
 	}
 

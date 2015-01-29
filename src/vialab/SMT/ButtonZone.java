@@ -192,6 +192,7 @@ public class ButtonZone extends Zone {
 
 	/**
 	 * Gets the zone's text.
+	 * @return the text of the button zone
 	 */
 	public String getText() {
 		return text;
@@ -207,6 +208,7 @@ public class ButtonZone extends Zone {
 		
 	/**
 	 * Gets the zone's font
+	 * @return this button's font
 	 */
 	public PFont getFont() {
 		return font;
@@ -222,6 +224,7 @@ public class ButtonZone extends Zone {
 
 	/**
 	 * Gets the angle used to display the zone's text.
+	 * @return the angle of this zone's text
 	 */
 	public float getAngle() {
 		return angle;
@@ -285,6 +288,7 @@ public class ButtonZone extends Zone {
 
 	/**
 	 * Gets the font size that is used to display the zone's text
+	 * @return this zone's font size
 	 */
 	public int getFontSize() {
 		return fontSize;

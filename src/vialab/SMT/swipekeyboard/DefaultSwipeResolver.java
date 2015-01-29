@@ -20,11 +20,15 @@ public class DefaultSwipeResolver implements SwipeResolver{
 	 * @throws FileNotFoundException Thrown if the word list file,
 	 * resources/dictionary.txt, cannot be found.
 	 */
-	public DefaultSwipeResolver(){
+	public DefaultSwipeResolver()
+			throws FileNotFoundException {
 		wordlist = new Vector<String>();
 		InputStream wordfile =
 			getClass().getResourceAsStream(
 				"/resources/dictionary.txt");
+		if( wordfile == null)
+			throw new FileNotFoundException(
+				"Could not find the default wordlist");
 		BufferedReader reader = new BufferedReader(
 			new InputStreamReader( wordfile));
 		String word = "";

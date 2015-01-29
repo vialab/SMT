@@ -670,18 +670,31 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	public void touch(){
 		this.drag();
 	}
+
 	//other touch methods
-	/** Override to specify a behavior for touchDown */
+	/**
+	 * Override to specify a behavior for touchDown 
+	 * @param touch the touch that caused the touch-down event
+	 */
 	public void touchDown( Touch touch){
 		addPhysicsMouseJoint();
 	}
-	/** Override to specify a behavior for touchMoved */
+	/**
+	 * Override to specify a behavior for touchMoved
+	 * @param touch the touch that caused the touch-moved event
+	 */
 	public void touchMoved( Touch touch){
 		addPhysicsMouseJoint();
 	}
-	/** Override to specify a behavior for touchUp */
+	/**
+	 * Override to specify a behavior for touchUp
+	 * @param touch the touch that caused the touch-up event
+	 */
 	public void touchUp( Touch touch){}
-	/** Override to specify a behavior for press */
+	/**
+	 * Override to specify a behavior for press
+	 * @param touch the touch that caused the touch-press event
+	 */
 	public void press( Touch touch){}
 
 	//keyboard methods
@@ -705,15 +718,18 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Override to specify a behavior for keyPressed 
+	 * Override to specify a behavior for keyPressed
+	 * @param event the details of the key-pressed event
 	 */
 	protected void keyPressed( KeyEvent event){}
 	/**
 	 * Override to specify a behavior for keyReleased
+	 * @param event the details of the key-released event
 	 */
 	protected void keyReleased( KeyEvent event){}
 	/**
-	 * Override to specify a behavior for keyTyped 
+	 * Override to specify a behavior for keyTyped
+	 * @param event the details of the key-typed event
 	 */
 	protected void keyTyped( KeyEvent event){}
 
@@ -743,45 +759,53 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected void touchImpl(){
 		touch();
 	}
+
 	/**
 	 * Override to specify a default behavior for touchDown 
+	 * @param touch the touch thatcaused the touch-down event
 	 * @deprecated override touchDown instead
 	 */
 	@Deprecated
 	protected void touchDownImpl( Touch touch){}
 	/**
 	 * Override to specify a default behavior for touchUp 
+	 * @param touch the touch that caused the touch-up event
 	 * @deprecated override touchUp instead
 	 */
 	@Deprecated
 	protected void touchUpImpl( Touch touch){}
 	/**
 	 * Override to specify a default behavior for press 
+	 * @param touch the touch that caused the touch-press event
 	 * @deprecated override press instead
 	 */
 	@Deprecated
 	protected void pressImpl( Touch touch){}
 	/**
 	 * Override to specify a default behavior for touchMoved 
+	 * @param touch the touch that caused the touch-moved event
 	 * @deprecated override touchMoved instead
 	 */
 	@Deprecated
-	protected void touchMovedImpl(Touch touch){}
+	protected void touchMovedImpl( Touch touch){}
 
 	/**
 	 * Override to specify a default behavior for keyPressed 
+	 * @param event the details of the key-pressed event
 	 * @deprecated override keyPressed instead
 	 */
 	@Deprecated
 	protected void keyPressedImpl( KeyEvent event){}
 	/**
 	 * Override to specify a default behavior for keyReleased
+	 * @param event the details of the key-released event
 	 * @deprecated override keyReleased instead
 	 */
 	@Deprecated
 	protected void keyReleasedImpl( KeyEvent event){}
 	/**
 	 * Override to specify a default behavior for keyTyped 
+	 * @param event the details of the key-typed event
 	 * @deprecated override keyTyped instead
 	 */
 	@Deprecated
@@ -1334,34 +1358,29 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Rotates the zone around the specified x- & y-coordinates
+	 * Rotates the zone around the specified x and y coordinates
 	 * 
-	 * @param angle
-	 *            The angle to rotate specified in radians
-	 * @param x
-	 * @param y
+	 * @param angle The angle to rotate specified in radians
+	 * @param x the x coordinate to rotate around
+	 * @param y the y coordinate to rotate around
 	 */
 	public void rotateAbout( float angle, int x, int y){
-		translate(x, y);
-		rotate(angle);
-		translate(-x, -y);
+		translate( x, y);
+		rotate( angle);
+		translate( -x, -y);
 	}
 
 	/**
 	 * Rotates the zone around either the centre or corner
 	 * 
-	 * @param angle
-	 *            The angle to rotate specified in radians
-	 * @param mode
-	 *            CENTER or CORNER
+	 * @param angle the angle to rotate specified in radians
+	 * @param mode CENTER or CORNER
 	 */
 	public void rotateAbout(float angle, int mode){
-		if (mode == CORNER){
-			rotateAbout(angle, x, y);
-		}
-		else if (mode == CENTER){
-			rotateAbout(angle, x + width / 2, y + height / 2);
-		}
+		if( mode == CORNER)
+			rotateAbout( angle, x, y);
+		else if ( mode == CENTER)
+			rotateAbout( angle, x + width / 2, y + height / 2);
 	}
 
 	/**
@@ -1489,7 +1508,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	/**
 	 * Unassigns the given Touch from this zone, removing it from activeTouches.
-	 * @param touch
+	 * @param touch the touch to remove from this zone
 	 */
 	public void unassign( Touch touch){
 		unassign( touch.sessionID);
@@ -1498,7 +1517,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	/**
 	 * Unassigns the Touch corresponding to the sessionID given from this zone,
 	 * removing it from activeTouches.
-	 * @param sessionID
+	 * @param sessionID the session id of the touch to remove from this zone
 	 */
 	public void unassign( long sessionID){
 		Touch t = activeTouches.get(sessionID);
@@ -1530,7 +1549,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * @param touch
+	 * Check whether the given touch is assigned to this zone.
+	 * @param touch the touch to check for assignment
 	 * @return Whether the given touch is assigned to this zone
 	 */
 	public boolean isAssigned( Touch touch){
@@ -1538,7 +1558,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * @param id
+	 * Check whether the given touch is assigned to this zone.
+	 * @param id the id of the touch to check for assignment
 	 * @return Whether the Touch corresponding to the given id is assigned to
 	 * this zone
 	 */
@@ -1546,6 +1567,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		return activeTouches.containsKey( id);
 	}
 
+	/**
+	 * Add one or more child zones to this zone.
+	 * @param zones the list of zones to add
+	 * @return true if every given zone was added sucessfully, false otherwise
+	 */
 	public boolean add( Zone... zones){
 		boolean result = true;
 		for( Zone zone : zones)
@@ -1559,6 +1585,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	///////////////////////////
 
 	/**
+	 * Add a child zone to this zone.
 	 * @param zone The zone to add to this zone
 	 * @return Whether the zone was successfully added or not
 	 */
@@ -1589,8 +1616,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * tags, and currently supports the following variables: name, x, y, width,
 	 * height, img
 	 * 
-	 * @param xmlFilename
-	 *            The XML file to read in for zone configuration
+	 * @param xmlFilename The XML file to read in for zone configuration
 	 * @return The array of zones created from the XML File
 	 */
 	/**public Zone[] addXMLZone(String xmlFilename){
@@ -1861,6 +1887,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * Set the resolution of the internal graphics object used by this zone (if it is indirect).
 	 *
 	 * This method does nothing to normal, 'direct', zones.
+	 *
+	 * @param desired_size the desired resolution of the internal graphics object
 	 */
 	public void setResolution( Dimension desired_size){
 		//don't bother if we're direct
@@ -1897,7 +1925,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * Normally, zones "capture" touches. This means that normally when touches exit a zone, they remain assigned to that zone. This "capturing" behavior, however, can be disabled. This is commonly done with buttons and UI elements.
+	 * Set whether this zone will capture touches or not.
+	 *
+	 * Normally, zones "capture" touches. This means that normally when touches exit a zone, they remain assigned to that zone. This "capturing" behavior, however, can be disabled. This is commonly done with buttons and other undraggable UI elements.
 	 *
 	 * @param enabled whether touch capturing should be enabled
 	 */
@@ -1906,7 +1936,11 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
+	 * Check whether this zone will capture touches or not.
+	 *
 	 * Normally, zones "capture" touches. This means that normally when touches exit a zone, they remain assigned to that zone. This "capturing" behavior, however, can be disabled. This is commonly done with buttons and UI elements.
+	 *
+	 * @return whether this zone will capture touches or not
 	 */
 	public boolean getCaptureTouches(){
 		return captureTouches;
@@ -2005,7 +2039,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * @return A Map<Long, Touch> which maps each touch id to the touch for the zones active touches
+	 * @return A Map&lt;Long, Touch&gt; which maps each touch id to the touch for the zones active touches
 	 */
 	public Map<Long, Touch> getTouchMap(){
 		return Collections.unmodifiableMap(activeTouches);
@@ -2077,7 +2111,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	/**
 	 * Get the x position of touch in local coordinates.
-	 * @param touch
+	 * @param touch the touch to get local coordinates for
 	 * @return the x position of touch in local coordinates
 	 */
 	public float getLocalX( Touch touch){
@@ -2087,7 +2121,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	/**
 	 * Get the y position of the touch in local coordinates.
-	 * @param touch
+	 * @param touch the touch to get local coordinates for
 	 * @return the y position of the touch in local coordinates
 	 */
 	public float getLocalY( Touch touch){
@@ -2097,7 +2131,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	/**
 	 * Sets the local x position
-	 * @param x
+	 * @param x the desired value of the x coordinate
 	 */
 	public void setX(float x){
 		if (getParent() == null)
@@ -2108,7 +2142,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	/**
 	 * Sets the local y position
-	 * @param y
+	 * @param y the desired value of the y coordinate
 	 */
 	public void setY(float y){
 		if (getParent() == null)
@@ -2119,7 +2153,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 
 	/**
-	 * @param zone
+	 * Check whether the given zone is a parent, grandparent, great-grandparent, etc. of this zone.
+	 * @param zone the zone to check for ancestor status
 	 * @return Whether the given zone is an ancestor of this one.
 	 */
 	public boolean isAncestor( Zone zone){
@@ -2136,7 +2171,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	 * This cleans up (unassign touches, remove from picker, and remove zoneBody) the Zone and its children
 	 */
 	private void cleanUp(){
-		for (Zone child : getChildren())
+		for( Zone child : getChildren())
 			child.cleanUp();
 
 		SMT.picker.remove(this);
@@ -2165,7 +2200,8 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	}
 
 	/**
-	 * @param index
+	 * Get a child of this zone.
+	 * @param index the index of the desired zone
 	 * @return The child at the given index, or null if the index is invalid
 	 */
 	public Zone getChild( int index){
@@ -2502,40 +2538,40 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	/**
 	 * Clones the zone and all child zones
+	 * @return a clone of this zone and its children
 	 */
 	@Override
 	public Zone clone(){
-		return clone(Integer.MAX_VALUE, null);
+		return clone( Integer.MAX_VALUE, null);
 	}
 
 	/**
 	 * Clones the zone and optionally any child zones up to the specified
 	 * generation of children
 	 * 
-	 * @param cloneMaxChildGenerations
-	 *            - Max limit on how many generations of children to clone (0 -
-	 *            None, 1 - First Generation children, ... , Integer.MAX_VALUE -
-	 *            All generations of children)
+	 * @param maxChildGenerations the upper limit on how many generations
+	 *  of children to clone (0 - None, 1 - First Generation children, 
+	 *  ... Integer.MAX_VALUE - All generations of children)
+	 * @return a clone of this zone and its children
 	 */
-	public Zone clone(int cloneMaxChildGenerations){
-		return clone(cloneMaxChildGenerations, null);
+	public Zone clone( int maxChildGenerations){
+		return clone( maxChildGenerations, null);
 	}
 
 	/**
 	 * Clones the zone and optionally any child zones up to the specified
 	 * generation of children
 	 * 
-	 * @param cloneMaxChildGenerations
-	 *            - Max limit on how many generations of children to clone (0 -
-	 *            None, 1 - First Generation children, ... , Integer.MAX_VALUE -
-	 *            All generations of children)
+	 * @param maxChildGenerations the upper limit on how many generations
+	 *  of children to clone (0 - None, 1 - First Generation children, 
+	 *  ... Integer.MAX_VALUE - All generations of children)
 	 * 
-	 * @param enclosingClass
-	 *            - The enclosingClass of the Zone (needed when cloning a Zone
-	 *            that is an inner class and refereneces its data, otherwise
-	 *            passing null is fine)
+	 * @param enclosingClass  The enclosingClass of the Zone (needed when
+	 *  cloning a Zone that is an inner class and refereneces its data,
+	 *  otherwise passing null is fine)
+	 * @return a clone of this zone and its children
 	 */
-	public Zone clone(int cloneMaxChildGenerations, Object enclosingClass){
+	public Zone clone(int maxChildGenerations, Object enclosingClass){
 		Zone clone;
 		try {
 			// if inner class, call its constructor properly by passing its
@@ -2567,9 +2603,9 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 		}
 		clone.inverse = this.inverse.get();
 
-		if (cloneMaxChildGenerations > 0){
+		if (maxChildGenerations > 0){
 			for (Zone child : this.getChildren()){
-				clone.add(child.clone(cloneMaxChildGenerations - 1, clone));
+				clone.add(child.clone(maxChildGenerations - 1, clone));
 			}
 		}
 		return clone;
@@ -2645,6 +2681,13 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 	protected boolean updateOnlyWhenModified(){ return false;}
 
 	/**
+	 * Set a limit for all scaling built-in gestures
+	 *
+	 * @param maxW the maximum width to scale to
+	 * @param maxH the maximum height to scale to
+	 * @param minW the minimum width to scale to
+	 * @param minH the minimum height to scale to
+	 *
 	 * @deprecated this feature is currently broken with no immediate plans for repair
 	 */
 	@Deprecated
@@ -2742,6 +2785,7 @@ public class Zone extends PGraphics3DDelegate implements PConstants, KeyListener
 
 	/**
 	 * Gets the object this zone is currently bound to.
+	 * @return the object this zone is currently bound to
 	 * @deprecated Do not use this method - See <a href="https://github.com/vialab/SMT/issues/174">this github issue</a>
 	 */
 	@Deprecated

@@ -470,7 +470,7 @@ public class SMT {
 	/**
 	 * Sets the touch fitting method for all touch sources (except mouse) to display mode.
 	 * Interprets which display to fit to by the index in the graphics environment's display array.
-	 * @param index
+	 * @param index the index of the display to bind touches onto
 	 **/
 	public static void setTouchSourceBoundsDisplay( int index){
 		setTouchSourceBoundsDisplay( index, sources_notmouse);
@@ -478,7 +478,7 @@ public class SMT {
 	/**
 	 * Sets the touch fitting method for all touch sources (except mouse) to display mode.
 	 *
-	 * Uses the display in the graphics environment's display array that matches id.equals( device.getIDString()). The display id string format is different on every platform. I recommend you use the indexed version of this function instead.
+	 * This uses the display in the graphics environment's display array that matches id.equals( device.getIDString()). The display id string format is different on every platform. It is recommended to use the indexed version of this function instead.
 	 * @param id The string id for the desired display.
 	 **/
 	public static void setTouchSourceBoundsDisplay( String id){
@@ -487,11 +487,11 @@ public class SMT {
 	/**
 	 * Sets the touch fitting method for the given touch sources to display mode.
 	 * Interprets which display to fit to by the index in the graphics environment's display array.
-	 * @param index
+	 * @param index the index of the display to bind touches onto
 	 * @param sources The touch sources that should should be bound by this method
 	 **/
-	public static void setTouchSourceBoundsDisplay( int index,
-			TouchSource... sources){
+	public static void setTouchSourceBoundsDisplay(
+			int index, TouchSource... sources){
 		TouchBinder binder = new DisplayTouchBinder( index);
 		for( TouchSource source : sources){
 			touchBinders.put( source, binder);
@@ -504,7 +504,7 @@ public class SMT {
 	/**
 	 * Sets the touch fitting method for the given touch sources to display mode.
 	 *
-	 * Uses the display in the graphics environment's display array that matches id.equals( device.getIDString()). The display id string format is different on every platform. I recommend you use the indexed version of this function instead.
+	 * This uses the display in the graphics environment's display array that matches id.equals( device.getIDString()). The display id string format is different on every platform. I recommend you use the indexed version of this function instead.
 	 * @param id The string id for the desired display.
 	 * @param sources The touch sources that should should be bound by this method
 	 **/
@@ -736,6 +736,7 @@ public class SMT {
 
 	/**
 	 * Check that this build of SMT is compatible with the current version of processing.
+	 * @return true if the current processing version is compatible with this version of SMT, false otherwise
 	 */
 	public static boolean checkProcessingVersion(){
 		/*int revision = processing.app.Base.getRevision();
@@ -796,6 +797,7 @@ public class SMT {
 	 * @param y Y-position
 	 * @param w Width
 	 * @param h Height
+	 * @return a jbox2d box body
 	 */
 	public static Body createStaticBox( float x, float y, float w, float h){
 		BodyDef boxDef = new BodyDef();
@@ -1356,6 +1358,7 @@ public class SMT {
 	 * This adds a set of zones to a parent Zone
 	 * @param parent The Zone to add the given zones to
 	 * @param zones The zones to add to the parent as children
+	 * @return true if the given zones were sucessfully added, false otherwise
 	 */
 	public static boolean addChild(Zone parent, Zone... zones){
 		if (parent != null)
@@ -1369,10 +1372,9 @@ public class SMT {
 	/**
 	 * This adds a set of zones to a parent Zone
 	 * 
-	 * @param parentName
-	 *            The name of the Zone to add the given zones to
-	 * @param zones
-	 *            The zones to add to the parent as children
+	 * @param parentName The name of the Zone to add the given zones to
+	 * @param zones The zones to add to the parent as children
+	 * @return true if the given zones were sucessfully added, false otherwise
 	 */
 	public static boolean addChild(String parentName, Zone... zones){
 		return addChild( get( parentName), zones);
@@ -1381,10 +1383,9 @@ public class SMT {
 	/**
 	 * This removes a set of zones to a parent Zone
 	 * 
-	 * @param parent
-	 *            The Zone to add the given zones to
-	 * @param zones
-	 *            The zones to add to the parent as children
+	 * @param parent The Zone to add the given zones to
+	 * @param zones The zones to add to the parent as children
+	 * @return true if the given zones were sucessfully removed, false otherwise
 	 */
 	public static boolean removeChild(Zone parent, Zone... zones){
 		if (parent != null){
@@ -1399,10 +1400,9 @@ public class SMT {
 	/**
 	 * This removes a set of zones to a parent Zone
 	 * 
-	 * @param parentName
-	 *            The name of the Zone to add the given zones to
-	 * @param zones
-	 *            The zones to add to the parent as children
+	 * @param parentName The name of the Zone to add the given zones to
+	 * @param zones The zones to add to the parent as children
+	 * @return true if the given zones were sucessfully removed, false otherwise
 	 */
 	public static boolean removeChild(String parentName, Zone... zones){
 		return removeChild(get(parentName), zones);
@@ -1530,7 +1530,7 @@ public class SMT {
 	/**
 	 * Returns a vector containing all the current TuioObjects.
 	 * 
-	 * @return Vector<TuioObject>
+	 * @return Vector&lt;TuioObject&gt;
 	 */
 	public static Vector<TuioObject> getTuioObjects(){
 		return new Vector<TuioObject>(listener.getTuioObjects());
@@ -1578,7 +1578,7 @@ public class SMT {
 	/**
 	 * Returns a collection containing all the current Touches(TuioCursors).
 	 * 
-	 * @return Collection<Touch>
+	 * @return Collection&lt;Touch&gt;
 	 */
 	public static Collection<Touch> getTouchCollection(){
 		return getTouchMap().values();
@@ -1605,7 +1605,7 @@ public class SMT {
 	}
 
 	/**
-	 * @return A Map<Long,Touch> indexing all touches by their session_id's
+	 * @return A Map&lt;Long,Touch&gt; indexing all touches by their session_id's
 	 */
 	public static Map<Long, Touch> getTouchMap(){
 		return SMTTouchManager.currentTouchState.idToTouches;
@@ -1645,7 +1645,7 @@ public class SMT {
 	/**
 	 * @param zone
 	 *            The zone to get the touches of
-	 * @return A Collection<Touch> containing all touches from the given zone
+	 * @return A Collection&lt;Touch&gt; containing all touches from the given zone
 	 */
 	public static Collection<Touch> getTouchCollectionFromZone(Zone zone){
 		return zone.getTouchCollection();
@@ -1934,11 +1934,12 @@ public class SMT {
 	/**
 	 * This finds a zone by its name, returning the first zone with the given
 	 * name or null.
-	 * <br/>
+	 *
 	 * This will throw ClassCastException if the Zone is not an instance of the
 	 * given class , and non-applicable type compile errors when the given class
 	 * does not extend Zone.
-	 * 
+	 *
+	 * @param <T> the expected class of the zone
 	 * @param name The name of the zone to find
 	 * @param type a class type to cast the Zone to (e.g. Zone.class)
 	 * @return a Zone with the given name or null if it cannot be found
