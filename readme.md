@@ -1,5 +1,7 @@
 ## SMT :: Simple Multi-Touch Toolkit for Processing
 
+**SMT** is **Open Source** and licensed under **[GPL3](http://www.gnu.org/copyleft/gpl.html)**
+
 **Latest Release:** [4.2](https://github.com/vialab/SMT/releases/tag/v4.2)  
 **Latest Pre-Release:** [4.2a1](https://github.com/vialab/SMT/releases/tag/v4.2a1)  
 **Auto-Build:** [smt@drone.io](https://drone.io/github.com/vialab/SMT) :: [![Auto-Build Status](https://drone.io/github.com/vialab/SMT/status.png)](https://drone.io/github.com/vialab/SMT/latest)
