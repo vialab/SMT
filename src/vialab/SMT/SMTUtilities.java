@@ -25,17 +25,13 @@ public final class SMTUtilities {
 
 	private static class TuioTimeComparator implements Comparator<TuioTime> {
 		@Override
-		public int compare(TuioTime timeA, TuioTime timeB) {
-			Long timeALong = new Long(timeA.getSeconds());
-			int temp = timeALong.compareTo(timeB.getSeconds());
-			// int temp = Long.compare(timeA.getSeconds(), timeB.getSeconds());
-			if (temp != 0) {
+		public int compare( TuioTime timeA, TuioTime timeB) {
+			Long timeALong = new Long( timeA.getSeconds());
+			int temp = timeALong.compareTo( timeB.getSeconds());
+			if ( temp != 0)
 				return temp;
-			}
-			timeALong = new Long(timeA.getMicroseconds());
-			// return Long.compare(timeA.getMicroseconds(),
-			// timeB.getMicroseconds());
-			return timeALong.compareTo(timeB.getMicroseconds());
+			timeALong = new Long( timeA.getMicroseconds());
+			return timeALong.compareTo( timeB.getMicroseconds());
 		}
 	}
 
@@ -65,14 +61,11 @@ public final class SMTUtilities {
 		for(Class<?> c : params){
 			s+=","+c.getSimpleName();
 		}
-		return name+s;
+		return name + s;
 	}
 
-	/**
-	 * Don't let anyone instantiate this class.
-	 */
-	private SMTUtilities() {
-	}
+	// Don't let anyone instantiate this class.
+	private SMTUtilities(){}
 
 	static Method getPMethod(PApplet parent, String methodName, Class<?>... parameterTypes) {
 		return methodMap.get(nameParamToString(methodName,parameterTypes));
@@ -147,16 +140,16 @@ public final class SMTUtilities {
 	 * Use this method when creating Classes extending Zone, to acquires a
 	 * Method which can be called by invoke(Method, Zone)
 	 * 
-	 * @param callingClass    - Class< ?>: The class
-	 * @param methodPrefix   - String: The prefix to look for on a method
-	 * @param zone       - Zone: The Zone whose name is used as the method suffix
-	 * @param warnMissing - boolean: If True, shows a warning when the method does not exist for the
-	 *            given Zone
+	 * @param callingClass Class&lt; ?&gt;: The class
+	 * @param methodPrefix String: The prefix to look for on a method
+	 * @param zone Zone: The Zone whose name is used as the method suffix
+	 * @param warnMissing boolean: If True, shows a warning when the method
+	 *  does not exist for the given Zone
 	 * @return A Method, which can be called by invoke(Method, Zone)
 	 */
 	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone,
 			boolean warnMissing) {
-		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name,
+		return SMTUtilities.getZoneMethod(callingClass, SMT.applet, methodPrefix, zone.name,
 				warnMissing, zone.getClass());
 	}
 
@@ -164,18 +157,18 @@ public final class SMTUtilities {
 	 * Use this method when creating Classes extending Zone, to acquires a
 	 * Method which can be called by invoke(Method, Zone)
 	 * 
-	 * @param callingClass    - Class< ?>: The class
+	 * @param callingClass    - Class&lt; ?&gt;: The class
 	 * @param methodPrefix   - String: The prefix to look for on a method
 	 * @param zone       - Zone: The Zone whose name is used as the method suffix
 	 * @param warnMissing - boolean: If True, shows a warning when the method does not exist for the given Zone
-	 * @param parameters  - Class< ?>: The parameters that the method will have (use getClass() on an
+	 * @param parameters  - Class&lt; ?&gt;: The parameters that the method will have (use getClass() on an
 	 *            object to get its class to use here)
 	 * 
 	 * @return A Method, which can be called by invoke(Method, parameters... )
 	 */
 	public static Method getZoneMethod(Class<?> callingClass, String methodPrefix, Zone zone,
 			boolean warnMissing, Class<?>... parameters) {
-		return SMTUtilities.getZoneMethod(callingClass, Zone.applet, methodPrefix, zone.name,
+		return SMTUtilities.getZoneMethod(callingClass, SMT.applet, methodPrefix, zone.name,
 				warnMissing, parameters);
 	}
 
@@ -184,11 +177,12 @@ public final class SMTUtilities {
 		// uppercase the first letter of the name so that we have consistent
 		// naming warnings
 		name = name.substring(0, 1).toUpperCase() + name.substring(1);
-		Method method = getAnyPMethod(parent, methodPrefix, name, true, parameters);
-		if (method == null) {
-			method = getAnyPMethod(parent, methodPrefix, name, false, parameters);
-		}
-		if (method == null) {
+		Method method = getAnyPMethod(
+			parent, methodPrefix, name, true, parameters);
+		if( method == null)
+			method = getAnyPMethod(
+				parent, methodPrefix, name, false, parameters);
+		if( method == null){
 
 			// warn only if the flag is set, the methodSet doesn't contain it(to
 			// only warn once per method)
@@ -196,7 +190,7 @@ public final class SMTUtilities {
 			// itself
 			if( warnMissing && ! methodSet.contains( methodPrefix + name)
 					&& ! checkImpl( callingClass, methodPrefix, parameters)) {
-				if(! warned) {
+				if( ! warned) {
 					System.err.println(
 						"Call SMT.setWarnUnimplemented(false) before zone creation to disable No such method warnings");
 					warned = true;
@@ -208,7 +202,7 @@ public final class SMTUtilities {
 						first = false;
 					else
 						System.err.print(", ");
-					System.err.print(c.getName());
+					System.err.print( c.getName());
 				}
 				System.err.print( "), using default " + methodPrefix + " method");
 				for( Method methodInMap : methodMap.values()){
@@ -260,66 +254,61 @@ public final class SMTUtilities {
 	 *            methodPrefix, the first of this array should be the Zone class
 	 * @return Whether the given class has a method with the given Prefix
 	 */
-	public static boolean checkImpl(Class<?> callingClass, String methodPrefix,
-			Class<?>... parameters) {
+	public static boolean checkImpl(
+			Class<?> callingClass, String methodPrefix, Class<?>... parameters) {
 		if (parameters[0] == null) {
 			System.err.println("Error: CheckImpl() first class parameter was null.");
 			return false;
 		}
 
-		if (parameters[0] == callingClass) {
+		if( parameters[0] == callingClass) {
 			return false;
 		}
 
-		if (!(Zone.class.isAssignableFrom(parameters[0]))) {
-			System.err
-					.println("Error: CheckImpl() first class parameter ("
-							+ parameters[0]
-							+ ") was not Zone or a subclass, please give the current Zone class (using this.getClass()) as the first class parameter.");
+		if ( ! ( Zone.class.isAssignableFrom( parameters[0]))) {
+			System.err.printf(
+				"Error: CheckImpl() first class parameter (%s) was not Zone or a subclass, please give the current Zone class (using this.getClass()) as the first class parameter.\n",
+				parameters[0]);
 			return false;
 		}
 
 		Method impl = null;
-		Class<?>[] firstRemoved = new Class<?>[parameters.length - 1];
+		Class<?>[] firstRemoved = new Class<?>[ parameters.length - 1];
 		System.arraycopy(parameters, 1, firstRemoved, 0, parameters.length - 1);
 		try {
-			// get the method if the class declared the prefix+Impl
-			// method,
+			//get the method if the class declared the prefix+Impl method,
 			// otherwise null
-			impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl", firstRemoved);
+			impl = parameters[0].getDeclaredMethod(
+				methodPrefix + "Impl", firstRemoved);
 		}
 		catch (Exception e) {}
 		if (impl == null) {
 			try {
-				// check if we find the method with the parameter Zone,
-				// and
-				// give warning
-				impl = parameters[0].getDeclaredMethod(methodPrefix + "Impl", parameters);
-				if (impl != null) {
-					System.err.println(methodPrefix + "Impl() in the class "
-							+ parameters[0].getName()
-							+ " should not have Zone as a parameter, please remove it to override "
-							+ methodPrefix + "Impl() correctly.");
-					// make sure we don't set impl as to return the
-					// wrong
-					// result when this method is called, as we just
-					// want to
-					// add the error
+				//check if we find the method with the parameter Zone, and give warning
+				impl = parameters[0].getDeclaredMethod(
+					methodPrefix + "Impl", parameters);
+				if( impl != null){
+					System.err.printf(
+						"%sImpl() in the class %s should not have Zone as a parameter, please remove it to override %sImpl() correctly.\n",
+						methodPrefix, parameters[0].getName(), methodPrefix);
+					//make sure we don't set impl as to return the wrong result when
+					// this method is called, as we just want to add the error
 					impl = null;
 				}
 			}
-			catch (Exception e) {}
+			catch( Exception e) {}
 		}
-		// check if a super-class implements it, and the superclass is not Zone,
+		//check if a super-class implements it, and the superclass is not Zone,
 		// and also that this class is not Zone, as we shouldn't check the
 		// superclass in that case either
-		if (impl == null && parameters[0].getSuperclass() != null
-				&& parameters[0].getSuperclass() != Zone.class && parameters[0] != Zone.class) {
+		if (impl == null && parameters[0].getSuperclass() != null &&
+				parameters[0].getSuperclass() != Zone.class &&
+				parameters[0] != Zone.class){
 			Class<?> superClass = parameters[0].getSuperclass();
-			Class<?>[] firstSupered = new Class<?>[parameters.length];
+			Class<?>[] firstSupered = new Class<?>[ parameters.length];
 			System.arraycopy(parameters, 0, firstSupered, 0, parameters.length);
 			firstSupered[0] = superClass;
-			if (checkImpl(callingClass, methodPrefix, firstSupered)) {
+			if ( checkImpl( callingClass, methodPrefix, firstSupered)) {
 				return true;
 			}
 		}
@@ -368,7 +357,7 @@ public final class SMTUtilities {
 	 * @return The return of the method that was invoked
 	 */
 	public static Object invoke(Method method, Zone zone) {
-		return SMTUtilities.invoke(method, Zone.applet, zone);
+		return SMTUtilities.invoke(method, SMT.applet, zone);
 	}
 
 	/**

@@ -13,6 +13,7 @@ import TUIO.*;
 
 //local imports
 import vialab.SMT.event.*;
+import vialab.SMT.util.*;
 
 /**
  * This class uses some nice textures to render touches and their paths.
@@ -38,7 +39,7 @@ public class TexturedTouchDrawer
 	private int touch_sections;
 	//the radius to use when drawing touches
 	private float touch_radius;
-	//the duration of the fade-out animation
+	//the duration of the fade-out animation in seconds
 	private static long death_duration = 250;
 	//touch tinting's red element
 	private float touch_tint_red = 255f;
@@ -78,14 +79,18 @@ public class TexturedTouchDrawer
 		//update the circle's points
 		update();
 		//load touch texture
-		touch_texture = SMT.parent.loadImage(
+		touch_texture = SMT.getApplet().loadImage(
 			"resources/touch_texture.png");
 		//load trail texture
-		trail_texture = SMT.parent.loadImage(
+		trail_texture = SMT.getApplet().loadImage(
 			"resources/trail_texture.png");
 	}
 
-	/** Implements the "Textured" touch draw method */
+	/** 
+	 * Implements the "Textured" touch draw method
+	 * @param touches  The touches to draw
+	 * @param graphics the graphics object on which to draw
+	 */
 	public void draw( Iterable<Touch> touches, PGraphics graphics){
 		//useful variables
 		TuioTime sessionTime = TuioTime.getSessionTime();
@@ -123,9 +128,10 @@ public class TexturedTouchDrawer
 			//select points that are within the time threshold
 			Vector<TuioPoint> pathPoints = selectPoints( touch, currentTime);
 			//interpolate the points
-			Vector<CurvePoint> curvePoints = interpolatePoints( graphics, pathPoints);
+			Vector<CurvePoint> curvePoints = interpolatePoints(
+				touch.getTouchBinder(), pathPoints);
 			//draw the points
-			drawCurvePoints( graphics, curvePoints, alpha);
+			drawCurvePoints( graphics, touch, curvePoints, alpha);
 		}
 		
 		//setup
@@ -137,15 +143,23 @@ public class TexturedTouchDrawer
 		graphics.pushMatrix();
 		graphics.beginShape( PGraphics.TRIANGLE_FAN);
 		graphics.texture( touch_texture);
-		graphics.tint( 
-			touch_tint_red,
-			touch_tint_green,
-			touch_tint_blue,
-			touch_tint_alpha * alpha);
+		Color touch_override = touch.getTint();
+		if( touch_override != null)
+			graphics.tint( 
+				(float) touch_override.getRed(),
+				(float) touch_override.getGreen(),
+				(float) touch_override.getBlue(),
+				(float) touch_override.getAlpha() * alpha);
+		else
+			graphics.tint( 
+				touch_tint_red,
+				touch_tint_green,
+				touch_tint_blue,
+				touch_tint_alpha * alpha);
 		graphics.translate( touch.x, touch.y);
-		graphics.vertex( 0, 0, 0, 1);
+		graphics.vertex( 0, 0, 100, 0, 1);
 		for( PVector vert : vertices)
-			graphics.vertex( vert.x, vert.y, 0, 0);
+			graphics.vertex( vert.x, vert.y, 100, 0, 0);
 		graphics.endShape();
 		graphics.popMatrix();
 		graphics.popStyle();
@@ -183,12 +197,13 @@ public class TexturedTouchDrawer
 	private Vector<TuioPoint> selectPoints( Touch touch, long currentTime){
 		//result points
 		Vector<TuioPoint> points = new Vector<TuioPoint>();
+		Vector<TuioPoint> touch_path = touch.getTuioPath();
 		//for every point along the path
 		TuioPoint previous = null;
-		for( int i = touch.path.size() - 1; i >= 0; i--){
+		for( int i = touch_path.size() - 1; i >= 0; i--){
 			//stop when we have too many points
 			if( points.size() >= trail_point_threshold) break;
-			TuioPoint point = touch.path.get( i);
+			TuioPoint point = touch_path.get( i);
 			//get point time
 			long pointTime = point.getTuioTime().getTotalMilliseconds();
 			//add points that are within the time threshold
@@ -216,7 +231,7 @@ public class TexturedTouchDrawer
 	 * @return the interpolated points
 	 **/
 	private Vector<CurvePoint> interpolatePoints(
-			PGraphics graphics, Vector<TuioPoint> points){
+			TouchBinder binder, Vector<TuioPoint> points){
 		//convenience variables
 		int point_n = points.size();
 		if( point_n < 2) return null;
@@ -248,10 +263,11 @@ public class TexturedTouchDrawer
 			}
 			//avoid death
 			if( sum == 0) continue;
-			x *= graphics.width / sum;
-			y *= graphics.height / sum;
+			PVector result = binder.bind(
+				x / sum, y / sum);
 			//add point
-			CurvePoint curvePoint = new CurvePoint( x, y);
+			CurvePoint curvePoint = new CurvePoint(
+				result.x, result.y);
 			curvePoints.add( curvePoint);
 		}
 		int curvePoints_size = curvePoints.size();
@@ -315,7 +331,7 @@ public class TexturedTouchDrawer
 	 * @param alpha the desired transparency of the curve
 	 */
 	private void drawCurvePoints(
-			PGraphics graphics, Vector<CurvePoint> curvePoints, float alpha){
+			PGraphics graphics, Touch touch, Vector<CurvePoint> curvePoints, float alpha){
 		if( curvePoints == null) return;
 		int curvePoints_size = curvePoints.size();
 		//just a safety check
@@ -328,11 +344,19 @@ public class TexturedTouchDrawer
 		graphics.textureMode( PConstants.NORMAL);
 		graphics.beginShape( PConstants.QUAD_STRIP);
 		graphics.texture( trail_texture);
-		graphics.tint(
-			trail_tint_red,
-			trail_tint_green,
-			trail_tint_blue,
-			trail_tint_alpha * alpha);
+		Color trail_override = touch.getTrailTint();
+		if( trail_override != null)
+			graphics.tint( 
+				(float) trail_override.getRed(),
+				(float) trail_override.getGreen(),
+				(float) trail_override.getBlue(),
+				(float) trail_override.getAlpha() * alpha);
+		else
+			graphics.tint( 
+				trail_tint_red,
+				trail_tint_green,
+				trail_tint_blue,
+				trail_tint_alpha * alpha);
 		//for each curve point
 		for( int i = 0 ; i < curvePoints_size; i++){
 			CurvePoint point = curvePoints.get( i);
@@ -348,11 +372,11 @@ public class TexturedTouchDrawer
 			//place the next two bits of the quad strip
 			graphics.vertex(
 				(float) ( point.x + nx * scale),
-				(float) ( point.y + ny * scale),
+				(float) ( point.y + ny * scale), 100f,
 				(float) t, 0.0f);
 			graphics.vertex(
 				(float) ( point.x - nx * scale),
-				(float) ( point.y - ny * scale),
+				(float) ( point.y - ny * scale), 100f,
 				(float) t, 1.0f);
 		}
 		//clean up
@@ -362,9 +386,19 @@ public class TexturedTouchDrawer
 
 	//Accessor methods
 
-	/** Sets whether trail drawing is enabled **/
+	/**
+	 * Sets whether touch drawing is enabled
+	 * @param enabled whether touch drawing should be enabled 
+	 **/
 	public void setTouchEnabled( boolean enabled){
-		touch_enabled = enabled;
+		this.touch_enabled = enabled;
+	}
+	/**
+	 * Sets how long it takes for a touch to got from 100% visible to 0% visible after it "dies".
+	 * @param duration desired length of the death animation
+	 **/
+	public void setDeathDuration( long duration){
+		this.death_duration = duration;
 	}
 	/** Sets the desired tint of drawn touches.
 	 * @param red The desired tint's red element
@@ -374,10 +408,24 @@ public class TexturedTouchDrawer
 	 */
 	public void setTouchTint( float red, float green, float blue, float alpha){
 		//do validation?
-		touch_tint_red = red;
-		touch_tint_green = green;
-		touch_tint_blue = blue;
-		touch_tint_alpha = alpha;
+		this.touch_tint_red = red;
+		this.touch_tint_green = green;
+		this.touch_tint_blue = blue;
+		this.touch_tint_alpha = alpha;
+	}
+	/**
+	 * Gets whether touch drawing is enabled
+	 * @return whether touch drawing is enabled 
+	 **/
+	public boolean getTouchEnabled(){
+		return touch_enabled;
+	}
+	/**
+	 * Gets how long it takes for a touch to got from 100% visible to 0% visible after it "dies".
+	 * @return the current length of the death animation 
+	 **/
+	public long getDeathDuration(){
+		return death_duration;
 	}
 	/** Gets the red aspect of tint of drawn touches.
 	 * @return The desired tint's red element
@@ -414,10 +462,10 @@ public class TexturedTouchDrawer
 	 */
 	public void setTrailTint( float red, float green, float blue, float alpha){
 		//do validation?
-		trail_tint_red = red;
-		trail_tint_green = green;
-		trail_tint_blue = blue;
-		trail_tint_alpha = alpha;
+		this.trail_tint_red = red;
+		this.trail_tint_green = green;
+		this.trail_tint_blue = blue;
+		this.trail_tint_alpha = alpha;
 	}
 	/** Gets the red aspect of tint of the drawn trail.
 	 * @return The desired tint's red element
@@ -449,35 +497,35 @@ public class TexturedTouchDrawer
 	 * @param enabled whether trail drawing should be enabled 
 	 **/
 	public void setTrailEnabled( boolean enabled){
-		trail_enabled = enabled;
+		this.trail_enabled = enabled;
 	}
 	/**
 	 * Set the time threshold for touch path point selection 
 	 * @param threshold the desired time threshold for touch path point selection
 	 **/
 	public void setTrailTimeThreshold( int threshold){
-		trail_time_threshold = threshold;
+		this.trail_time_threshold = threshold;
 	}
 	/**
 	 * Set the point count threshold for touch path point selection 
 	 * @param threshold the desired point count threshold for touch path point selection
 	 **/
 	public void setTrailPointThreshold( int threshold){
-		trail_point_threshold = threshold;
+		this.trail_point_threshold = threshold;
 	}
 	/**
 	 * Set the C parameter of the smoothing function 
 	 * @param c the desired C parameter of the smoothing function
 	 **/
 	public void setTrailC( float c){
-		trail_c = c;
+		this.trail_c = c;
 	}
 	/**
 	 * Set the base number of points on the curve 
 	 * @param t_n the desired base number of points on the curve
 	 **/
 	public void setTrailT_N( int t_n){
-		trail_t_n = t_n;
+		this.trail_t_n = t_n;
 	}
 	/**
 	 * Set the desired width of the trail.
@@ -485,7 +533,7 @@ public class TexturedTouchDrawer
 	 * @param width the desired width of the trail
 	 **/
 	public void setTrailWidth( float width){
-		trail_width = width;
+		this.trail_width = width;
 	}
 
 	/**
@@ -532,11 +580,20 @@ public class TexturedTouchDrawer
 	}
 
 	//touch listener functions
-	/** Do nothing on touch down **/
+	/** 
+	 * Do nothing on touch down
+	 * @param touchEvent the touch event to process
+	 */
 	public void handleTouchDown( TouchEvent touchEvent){}
-	/** Do nothing on touch moved **/
+	/** 
+	 * Do nothing on touch moved
+	 * @param touchEvent the touch event to process
+	 **/
 	public void handleTouchMoved( TouchEvent touchEvent){}
-	/** Add to our list of dead touches and stop listening **/
+	/** 
+	 * Add to our list of dead touches and stop listening
+	 * @param touchEvent the touch event to process
+	 */
 	public void handleTouchUp( TouchEvent touchEvent){
 		deadTouches.add( touchEvent.getTouch());
 	}

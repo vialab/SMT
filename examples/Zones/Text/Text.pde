@@ -6,8 +6,8 @@
 
 import vialab.SMT.*;
 void setup() {
-  size(400, 400, P3D);
-  SMT.init(this, TouchSource.MULTIPLE);
+  size(400, 400, SMT.RENDERER);
+  SMT.init(this, TouchSource.AUTOMATIC);
   SMT.add(new TextZone(0,0,200,200,true));
 }
 void draw() {

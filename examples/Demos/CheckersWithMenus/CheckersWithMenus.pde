@@ -41,8 +41,8 @@ class CheckerZone extends Zone{
 }
 
 void setup() {
-	size(displayWidth, displayHeight, OPENGL);
-	SMT.init(this, TouchSource.MULTIPLE);
+	size(displayWidth, displayHeight, SMT.RENDERER);
+	SMT.init(this, TouchSource.AUTOMATIC);
 	
 	//call this to not display warnings for unimplemented methods
 	//client.setWarnUnimplemented(false);

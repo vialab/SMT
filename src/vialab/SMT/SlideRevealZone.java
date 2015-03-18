@@ -16,7 +16,7 @@ public class SlideRevealZone extends Zone {
 		}
 
 		protected void touchImpl() {
-			hSwipe(0, getParent().width);
+			//hSwipe(0, getParent().width);
 			xPosSlider = (int) (getParent().toZoneVector(getOrigin()).x);
 		}
 
@@ -74,6 +74,7 @@ public class SlideRevealZone extends Zone {
 
 	/**
 	 * The current x position of the slider
+	 * @return the current x position of the slider
 	 */
 	public int getCurrentX() {
 		return xPosSlider;
@@ -81,6 +82,7 @@ public class SlideRevealZone extends Zone {
 
 	/**
 	 * Returns true if the slider has been moved
+	 * @return whether the slider has been moved
 	 */
 	public boolean hasStarted() {
 		return (xPosSlider > 0);
@@ -88,6 +90,7 @@ public class SlideRevealZone extends Zone {
 
 	/**
 	 * Returns true if the slider has moved all the way
+	 * @return whether the slider has finished moving
 	 */
 	public boolean hasFinished() {
 		return (xPosSlider >= (width - height));
@@ -95,6 +98,7 @@ public class SlideRevealZone extends Zone {
 
 	/**
 	 * Returns the maximum length of the slider
+	 * @return the maximum length of the slider
 	 */
 	public int getMaxX() {
 		return width - height;
@@ -102,6 +106,7 @@ public class SlideRevealZone extends Zone {
 
 	/**
 	 * Returns the minimum length of the slider
+	 * @return the minimum length of the slider
 	 */
 	public int getMinX() {
 		return 0;

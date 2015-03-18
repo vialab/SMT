@@ -1,13 +1,17 @@
+/**
+ * Sketch for Basics Tutorial 2
+ */
+
 import vialab.SMT.*;
 
 //variables for this applet
-color myZone_color;
+color myZone_color = #00dddd;
 
 //Setup function for the applet
 void setup(){
 	//SMT and Processing setup
-	size(displayWidth, displayHeight, P3D);
-	SMT.init(this, TouchSource.AUTOMATIC);
+	size( 1400, 800, SMT.RENDERER);
+	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//Make a new Zone
 	Zone zone = new Zone( "MyZone");
@@ -18,25 +22,19 @@ void setup(){
 	Zone other = new Zone( "MyOtherZone");
 	other.translate( 400, 200);
 	SMT.add( other);
-
-	myZone_color = #00dddd;
 }
 
 //Draw function for the sketch
 void draw(){
-	background( 51);
+	background( 30);
 }
 
-// "MyZone" functions
 
+// "MyZone" functions
 //Draw functions for "MyZone"
 void drawMyZone( Zone zone){
 	noStroke();
 	fill( myZone_color);
-	rect(0, 0, 100, 100);
-}
-
-void pickDrawMyZone( Zone zone){
 	rect(0, 0, 100, 100);
 }
 
@@ -57,15 +55,10 @@ void touchUpMyZone( Zone zone){
 
 
 // "MyOtherZone" functions
-
 //Draw functions for "MyOtherZone"
 void drawMyOtherZone( Zone zone){
 	noStroke();
 	fill( #88dd88);
-	rect(0, 0, 100, 100);
-}
-
-void pickDrawMyOtherZone( Zone zone){
 	rect(0, 0, 100, 100);
 }
 

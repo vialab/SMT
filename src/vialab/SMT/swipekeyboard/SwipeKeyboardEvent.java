@@ -2,6 +2,7 @@ package vialab.SMT.swipekeyboard;
 
 //standard library imports
 import java.util.Collection;
+import java.util.Vector;
 
 /**
  * A class to contain the information related to swipe keyboard state changes.
@@ -45,8 +46,11 @@ public class SwipeKeyboardEvent extends java.util.EventObject{
 	 * with the swipe
 	 */
 	public Collection<String> getSuggestions(){
-		if( words == null && resolver != null)
-			words = resolver.resolve( swipe);
+		if( words == null){
+			if( resolver != null)
+				words = resolver.resolve( swipe);
+			else return new Vector<String>();
+		}
 		return words;
 	}
 	/**

@@ -132,7 +132,8 @@ public class ImageZone extends Zone {
 	 * @param imageZone ImageZone The ImageZone that is copied.
 	 **/
 	public ImageZone( ImageZone imageZone) {
-		this( imageZone.name, imageZone.image, imageZone.x, imageZone.y, imageZone.width, imageZone.height);
+		this( imageZone.name, imageZone.image,
+			imageZone.x, imageZone.y, imageZone.width, imageZone.height);
 	}
 	
 	/**
@@ -140,7 +141,7 @@ public class ImageZone extends Zone {
 	 * @param url The URL of an image
 	 **/
 	public ImageZone( String url) {
-		this( applet.loadImage(url));
+		this( SMT.getApplet().loadImage( url));
 	}
 
 	/** Used to override what is drawn into the zone **/

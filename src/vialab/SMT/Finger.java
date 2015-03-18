@@ -1,27 +1,27 @@
 /*
-  Modified version of TUIO Simulator - part of the reacTIVision project
-  http://reactivision.sourceforge.net/
+	Modified version of TUIO Simulator - part of the reacTIVision project
+	http://reactivision.sourceforge.net/
 
-  Copyright (c) 2005-2009 Martin Kaltenbrunner <mkalten@iua.upf.edu>
+	Copyright (c) 2005-2009 Martin Kaltenbrunner <mkalten@iua.upf.edu>
  
-  This version Copyright (c) 2011 
-  Erik Paluka, Christopher Collins - University of Ontario Institute of Technology
-  Mark Hancock - University of Waterloo
-  contact: christopher.collins@uoit.ca
+	This version Copyright (c) 2011 
+	Erik Paluka, Christopher Collins - University of Ontario Institute of Technology
+	Mark Hancock - University of Waterloo
+	contact: christopher.collins@uoit.ca
 
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU General Public
-  License Version 3 as published by the Free Software Foundation.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public
+	License Version 3 as published by the Free Software Foundation.
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  General Public License for more details.
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	General Public License for more details.
 
-  You should have received a copy of the GNU General
-  Public License along with this library; if not, write to the
-  Free Software Foundation, Inc., 59 Temple Place, Suite 330,
-  Boston, MA  02111-1307  USA
+	You should have received a copy of the GNU General
+	Public License along with this library; if not, write to the
+	Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
  */
 package vialab.SMT;
 
@@ -58,14 +58,14 @@ class Finger {
 	 * Touch Constructor, creates a touch cursor with the given session ID, and
 	 * coordinates.
 	 * 
-	 * @param sID     - int: Session ID
-	 * @param xPos    - int: x-coordinate
-	 * @param yPos    - int: y-coordinate
+	 * @param sID Session ID
+	 * @param xPos x-coordinate
+	 * @param yPos y-coordinate
 	 */
 	public Finger(int sID, int xPos, int yPos) {
 		this.sessionID = sID;
 		path = new Vector<Point>();
-		path.addElement(new Point(xPos, yPos));
+		path.addElement( new Point( xPos, yPos));
 		this.xSpeed = 0.0f;
 		this.ySpeed = 0.0f;
 		this.mAccel = 0.0f;
@@ -75,24 +75,23 @@ class Finger {
 	/**
 	 * Updates the touch cursor with the new coordinates
 	 * 
-	 * @param xPos    - int: New x-coordinate
-	 * @param yPos    - int: New y-coordinate
-     * @param windowWidth    - int: Window width
-	 * @param windowHeight    - int: Window height
+	 * @param xPos New x-coordinate
+	 * @param yPos New y-coordinate
+	 * @param windowWidth Window width
+	 * @param windowHeight Window height
 	 */
-	public final void update(int xpos, int ypos, int windowWidth, int windowHeight) {
+	public final void update( int xpos, int ypos, int windowWidth, int windowHeight) {
 		Point lastPoint = getPosition();
-		path.addElement(new Point(xpos, ypos));
+		path.addElement( new Point( xpos, ypos));
 
 		// time difference in seconds
 		long currentTime = System.currentTimeMillis();
-		float dt = (currentTime - lastTime) / 1000.0f;
+		float dt = ( currentTime - lastTime) / 1000.0f;
 
-		if (dt > 0) {
-
-			float dx = (xpos - lastPoint.x) / (float) windowWidth;
-			float dy = (ypos - lastPoint.y) / (float) windowHeight;
-			float dist = (float) Math.sqrt(dx * dx + dy * dy);
+		if( dt > 0) {
+			float dx = ( xpos - lastPoint.x) / (float) windowWidth;
+			float dy = ( ypos - lastPoint.y) / (float) windowHeight;
+			float dist = (float) Math.sqrt( dx * dx + dy * dy);
 			float newSpeed = dist / dt;
 			this.xSpeed = dx / dt;
 			this.ySpeed = dy / dt;
@@ -134,7 +133,7 @@ class Finger {
 	/**
 	 * Sets the touch ID for Android touches
 	 * 
-	 * @param tID   -int: ID of the Android touch
+	 * @param tID ID of the Android touch
 	 */
 	public final void setTouchId(int tID) {
 		touchID = tID;
@@ -143,10 +142,9 @@ class Finger {
 	/**
 	 * Returns the touch ID of the associated Android touch
 	 * 
-	 * @return touchID int
+	 * @return touchID
 	 */
 	public final int getTouchId() {
 		return touchID;
 	}
-
 }

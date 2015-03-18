@@ -7,8 +7,8 @@
 
 import vialab.SMT.*;
 void setup() {
-  size(400, 400, P3D);
-  SMT.init(this, TouchSource.MULTIPLE);
+  size(400, 400, SMT.RENDERER);
+  SMT.init(this, TouchSource.AUTOMATIC);
   SMT.add(new LeftPopUpMenuZone(300, 100, 50, 50, 200, 100, "Button1", "Button2"));
 }
 void draw() {

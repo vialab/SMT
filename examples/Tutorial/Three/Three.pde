@@ -1,76 +1,78 @@
+/**
+ * Sketch for Basics Tutorial 3
+ */
+
 import vialab.SMT.*;
+
+boolean window_fullscreen = false;
+int window_width = 1400;
+int window_height = 800;
 
 //Setup function for the applet
 void setup(){
+  if( window_fullscreen){
+    window_width = displayWidth;
+    window_height = displayHeight;
+  }
 	//SMT and Processing setup
-	size(displayWidth, displayHeight, P3D);
-	textMode( SHAPE);
-	SMT.init(this, TouchSource.AUTOMATIC);
+	size( window_width, window_height, SMT.RENDERER);
+	SMT.init( this, TouchSource.AUTOMATIC);
 
 	//Make a new Zone
 	Zone zone = new Zone( "MyZone");
-	SMT.add( zone);
+	zone.setSize( 400, 400);
 	zone.translate( 100, 100);
+	SMT.add( zone);
 
 	//Make a child Zone
 	Zone child = new Zone( "ChildZone");
-	SMT.add( child);
-	zone.add( child);
+	child.setSize( 200, 200);
 	child.translate( 100, 100);
+	zone.add( child);
 
 	//Make a grandchild Zone
 	Zone grandchild = new Zone( "GrandChildZone");
-	SMT.add( grandchild);
-	child.add( grandchild);
+	grandchild.setSize( 100, 100);
 	grandchild.translate( 50, 50);
+	child.add( grandchild);
 }
 
 //Draw function for the sketch
 void draw(){
-	background( 51);
+	background( 30);
 }
 
 
 // "MyZone" functions
 
-//Draw functions for "MyZone"
+//Functions for "MyZone"
 void drawMyZone( Zone zone){
 	noStroke();
 	fill( #00bbbb);
 	rect(0, 0, 400, 400);
 }
-void pickDrawMyZone( Zone zone){
-	rect(0, 0, 400, 400);
-}
 void touchMyZone( Zone zone){
 	zone.rst();
-	System.out.printf("%d\n",
-		zone.getTouches().length);
 }
 
 // "ChildZone" functions
 
-//Draw functions for "MyZone"
+//Functions for "ChildZone"
 void drawChildZone( Zone zone){
 	noStroke();
 	fill( #88dd88);
 	rect(0, 0, 200, 200);
 }
-void pickDrawChildZone( Zone zone){
-	rect(0, 0, 200, 200);
-}
 void touchChildZone( Zone zone){
 	zone.rst();
 }
+
 // "GrandChildZone" functions
 
-//Draw functions for "MyZone"
+//Functions for "GrandChildZone"
 void drawGrandChildZone( Zone zone){
 	noStroke();
 	fill( #aa66aa);
-	rect(0, 0, 100, 100);
-}
-void pickDrawGrandChildZone( Zone zone){
 	rect(0, 0, 100, 100);
 }
 void touchGrandChildZone( Zone zone){

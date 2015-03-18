@@ -552,7 +552,7 @@ public class KeyZone extends Zone {
 			KeyEvent.VK_UNDEFINED : this.keyCode;
 		int keyLocation = ( id == KeyEvent.KEY_TYPED) ?
 			KeyEvent.KEY_LOCATION_UNKNOWN : this.keyLocation;
-		char keyChar = ( id == KeyEvent.KEY_TYPED && alternate_enabled) ?
+		char keyChar = ( alternate_enabled) ?
 			this.keyChar_alternate : this.keyChar;
 		if( shift_down) keyChar = Character.toUpperCase( keyChar);
 		//make and return event

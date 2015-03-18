@@ -1,3 +1,7 @@
+/**
+ * Demo of the swipe keyboard
+ */
+
 //standard library imports
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -20,6 +24,7 @@ import vialab.SMT.swipekeyboard.*;
  */
 
 // display properties
+boolean window_fullscreen = false;
 int window_width = 1600;
 int window_height = 900;
 int window_halfWidth;
@@ -42,17 +47,18 @@ boolean arrow_up_visible;
 
 // main functions
 public void setup(){
+	if( window_fullscreen){
+		window_width = displayWidth;
+		window_height = displayHeight;
+	}
 	window_halfWidth = window_width / 2;
 	window_halfHeight = window_height / 2;
 	//processing library setup
 	frameRate( fps_limit);
-	size( window_width, window_height, P3D);
+	size( window_width, window_height, SMT.RENDERER);
 	frame.setTitle("Swipe Keyboard Test");
 	//smt library setup
 	SMT.init( this, TouchSource.AUTOMATIC);
-	SMT.setTouchDraw( TouchDraw.TEXTURED);
-	SMT.setTouchColour( 200, 150, 200, 150);
-	SMT.setTrailColour( 200, 150, 200, 150);
 
 	//add keyboards
 	keyboard = new SwipeKeyboard( SwipeKeyboard.condensedLayout);
@@ -84,7 +90,7 @@ public void setup(){
 }
 
 public void draw(){
-	fill( 222, 222, 222);
+	fill( 40, 40, 40);
 	//draw background
 	rect( 0, 0, window_width, window_height);
 	//draw textures
@@ -95,17 +101,24 @@ public void draw_shapes(){
 	//setup drawing options
 	pushStyle();
 	noFill();
+	pushMatrix();
+	translate( 20f, 20f);
+	float pad_x = 20;
+	float pad_y = 20;
+	float shape_w = 40;
+	float shape_h = shape_w * 2;
 	//draw pics
-	if( arrow_down_visible)
-		shape( arrow_down, 100f, 0f);
 	if( arrow_left_visible)
-		shape( arrow_left, 200f, 0f);
+		shape( arrow_left, 000f, 030f, shape_w, shape_h);
 	if( arrow_right_visible)
-		shape( arrow_right, 300f, 0f);
+		shape( arrow_right, 130f, 030f, shape_w, shape_h);
 	if( arrow_up_visible)
-		shape( arrow_up, 400f, 0f);
+		shape( arrow_up, 045f, 000f, shape_h, shape_w);
+	if( arrow_down_visible)
+		shape( arrow_down, 045f, 045f, shape_h, shape_w);
 	//clean up
 	popStyle();
+	popMatrix();
 }
 
 public void debug_shapes(){
@@ -133,9 +146,9 @@ private class SwipeDisplayer extends Zone
 	}
 	public void drawImpl(){
 		pushStyle();
-		noFill();
+		fill( 20, 20, 20, 180);
 		strokeWeight( 3);
-		stroke( 200, 120, 120, 150);
+		stroke( 200, 120, 120, 180);
 		rect( 0, 0, width, height);
 		drawText( content);
 		popStyle();

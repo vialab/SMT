@@ -53,7 +53,7 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		//initialize keys
 		//normal keys
 		KeyZone key_backspace = new KeyZone( "key backspace",
-			KeyEvent.VK_BACK_SPACE);
+			KeyEvent.VK_BACK_SPACE, '\b');
 		KeyZone key_nums = new KeyZone( "key nums", KeyEvent.VK_NUM_LOCK);
 		KeyZone key_comma = new KeyZone( "key comma", KeyEvent.VK_COMMA, ',');
 		KeyZone key_space = new KeyZone( "key space", KeyEvent.VK_SPACE, ' ');
@@ -72,10 +72,10 @@ public class CondensedLayout extends SwipeKeyboardLayout{
 		key_enter.setLabel( "<_|");
 
 		//load icons
-		PShape icon_backspace = SMT.parent.loadShape( "resources/backspace.svg");
-		PShape icon_enter = SMT.parent.loadShape( "resources/enter.svg");
-		PShape icon_shift = SMT.parent.loadShape( "resources/shift.svg");
-		PShape icon_space = SMT.parent.loadShape( "resources/space.svg");
+		PShape icon_backspace = SMT.getApplet().loadShape( "resources/backspace.svg");
+		PShape icon_enter = SMT.getApplet().loadShape( "resources/enter.svg");
+		PShape icon_shift = SMT.getApplet().loadShape( "resources/shift.svg");
+		PShape icon_space = SMT.getApplet().loadShape( "resources/space.svg");
 		key_backspace.setIcon( icon_backspace);
 		key_enter.setIcon( icon_enter);
 		key_shift.setIcon( icon_shift);

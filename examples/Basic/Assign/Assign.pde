@@ -6,29 +6,30 @@
  */
 import vialab.SMT.*;
 
-Zone z;
+Zone zone;
 
 void setup() {
-  size(displayWidth, displayHeight, P3D);
-  SMT.init(this, TouchSource.MULTIPLE);
-  z = new Zone("Test",0,0,50,50);
-  SMT.add(z);
+	//initial setup
+	size( displayWidth, displayHeight, SMT.RENDERER);
+	SMT.init( this, TouchSource.AUTOMATIC);
+	zone = new Zone("Test",0,0,50,50);
+	SMT.add(zone);
 }
 
 void draw() {
-  background(79, 129, 189);
-  text(round(frameRate)+"fps", width/2, 10);
+	background(79, 129, 189);
+	text(round(frameRate)+"fps", width/2, 10);
 }
 
-void drawTest(Zone z){
-  background(255);
+void drawTest(Zone zone){
+	background(255);
 }
 
-void touchTest(Zone z){
-  z.rst(); 
+void touchTest(Zone zone){
+	zone.rst(); 
 }
 
 void touchDown(){
-  z.assign(SMT.getTouches()); 
+	zone.assign(SMT.getTouches()); 
 }
 
