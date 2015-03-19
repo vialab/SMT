@@ -42,7 +42,7 @@ docs: $(docs_dir)
 
 $(package_file): $(class_files) $(jar_file) $(docs_dir)
 	mkdir SMT
-	cp -r examples library library.properties \
+	cp -r examples library library.properties license.txt \
 		$(docs_dir) readme.md release_notes.md src \
 		SMT
 	zip -r $(package_file) SMT
