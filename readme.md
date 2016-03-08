@@ -10,7 +10,7 @@
 
 --------------------------------------------
 
-### Project Website: [vialab.science.uoit.ca/SMT](http://vialab.science.uoit.ca/SMT/)
+### Project Website: [vialab.science.uoit.ca/smt](http://vialab.science.uoit.ca/smt/)
 
 The project website includes:  
  * Examples
